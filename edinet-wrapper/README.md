@@ -1,180 +1,175 @@
-# edinet-wrapper
+# edinet2dataset
+📚 [Paper](https://arxiv.org/abs/2506.08762) | 📝 [Blog](https://sakana.ai/edinet-bench/) | 📁 [Dataset](https://huggingface.co/datasets/SakanaAI/EDINET-Bench) | 🧑‍💻 [Code](https://github.com/SakanaAI/EDINET-Bench)
 
-`edinet2dataset` モジュールを使用するためのラッパープロジェクトです。
+edinet2dataset is a tool to construct financial datasets using [EDINET](https://disclosure2.edinet-fsa.go.jp). 
 
-`edinet2dataset` は他の人のコードなので触らずに、このプロジェクト内でモジュールとして使用できます。
+edinet2dataset has two classes to build Japanese financial dataset using EDINET.
+- **Downloader**: Download financial reports of Japanese listed companies using the EDINET API.
+- **Parser**: Extract key items such as the balance sheet (BS), cash flow statement (CF), profit and loss statement (PL), summary, and text from the downloaded TSV reports.
 
-## プロジェクト構造
 
-```
-edinet-wagatoushi/
-├── edinet2dataset/          # 他の人のコード（Git submodule、触らない）
-│   ├── src/
-│   │   └── edinet2dataset/
-│   └── pyproject.toml
-│
-├── edinet-wrapper/          # このプロジェクト（自分のコード）
-│   ├── src/
-│   │   └── edinet_wrapper/
-│   │       └── __init__.py  # edinet2datasetのラッパー
-│   ├── scripts/             # 自分のスクリプトをここに配置
-│   │   └── example_usage.py
-│   ├── pyproject.toml
-│   └── README.md
-│
-└── edinet-screener/         # 既存のTypeScriptプロジェクト
-```
+edinet2dataset is used to construct [EDINET-Bench](https://huggingface.co/datasets/SakanaAI/EDINET-Bench), a challenging Japanese financial benchmark dataset.
 
-## セットアップ
+## Installation
 
-### 1. Git Submoduleの設定（初回のみ）
-
-`edinet2dataset` をGit submoduleとして設定する場合：
-
+Install the dependencies using uv.
 ```bash
-# リポジトリのルートで実行
-cd /Users/dangpee/Git/edinet-wagatoushi
-
-# edinet2datasetが既に存在する場合、submoduleとして追加
-# （edinet2datasetのGitリポジトリURLが必要）
-# git submodule add <repository_url> edinet2dataset
-
-# または、既存のディレクトリをsubmoduleとして設定
-# git submodule init
-# git submodule update
-```
-
-**注意**: 現在 `edinet2dataset` がGitリポジトリでない場合は、そのまま使用することもできます。
-
-### 2. 依存関係のインストール
-
-```bash
-cd edinet-wrapper
-
-# edinet2datasetを開発モードでインストール
-pip install -e ../edinet2dataset
-
-# edinet-wrapperをインストール
-pip install -e .
-```
-
-または、`uv` を使用する場合：
-
-```bash
-cd edinet-wrapper
 uv sync
 ```
 
-### 3. 動作確認
+To use EDINET-API, configure your EDINET-API key in a .env file.
+Please refer to the [official documentation](https://disclosure2dl.edinet-fsa.go.jp/guide/static/disclosure/WZEK0110.html) to obtain the API key.
+
+## Basic Usage
+
+- Search for a company name using a substring match query.
+  
+```bash
+$ python src/edinet2dataset/downloader.py --query トヨタ
+```
+<table border="1" cellspacing="0" cellpadding="5">
+  <thead>
+    <tr>
+      <th>提出者名</th>
+      <th>ＥＤＩＮＥＴコード</th>
+      <th>提出者業種</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>トヨタ紡織株式会社</td>
+      <td>E00540</td>
+      <td>輸送用機器</td>
+    </tr>
+    <tr>
+      <td>トヨタ自動車株式会社</td>
+      <td>E02144</td>
+      <td>輸送用機器</td>
+    </tr>
+    <tr>
+      <td>トヨタファイナンス株式会社</td>
+      <td>E05031</td>
+      <td>サービス業</td>
+    </tr>
+    <tr>
+      <td>トヨタ モーター クレジット コーポレーション</td>
+      <td>E05904</td>
+      <td>外国法人・組合</td>
+    </tr>
+    <tr>
+      <td>トヨタ ファイナンス オーストラリア リミテッド</td>
+      <td>E05954</td>
+      <td>外国法人・組合</td>
+    </tr>
+    <tr>
+      <td>トヨタ モーター ファイナンス（ネザーランズ）ビーブイ</td>
+      <td>E20989</td>
+      <td>外国法人・組合</td>
+    </tr>
+    <tr>
+      <td>トヨタファイナンシャルサービス株式会社</td>
+      <td>E23700</td>
+      <td>内国法人・組合（有価証券報告書等の提出義務者以外）</td>
+    </tr>
+  </tbody>
+</table>
+
+
+- Download the annual report submitted by Toyota Motor Corporation for the period from June 1, 2024, to June 28, 2024.
 
 ```bash
-# インポートテストを実行
-python scripts/test_import.py
-
-# サンプルスクリプトを実行
-python scripts/example_usage.py
+$ uv run python src/edinet2dataset/downloader.py --start_date 2024-06-01 --end_date 2024-06-28 --company_name "トヨタ自動車株式会社" --doc_type annual  
+Downloading documents (2024-06-01 - 2024-06-28): 100%|███████████████████████████████████████████| 28/28 [00:02<00:00,  9.76it/s]
 ```
 
-## 使用方法
-
-### 方法1: edinet_wrapper経由でインポート（推奨）
-
-```python
-from edinet_wrapper import parse_tsv, FinancialData, download_edinetinfo_csv
-
-# 使用例
-financial_data = parse_tsv("path/to/file.tsv")
-```
-
-### 方法2: 直接edinet2datasetをインポート
-
-```python
-from edinet2dataset.parser import parse_tsv, FinancialData
-from edinet2dataset.downloader import download_edinetinfo_csv
-
-# 使用例
-financial_data = parse_tsv("path/to/file.tsv")
-```
-
-## 自分のスクリプトの配置
-
-`scripts/` ディレクトリに自分のスクリプトを配置してください。
-
-例：
-```bash
-edinet-wrapper/
-└── scripts/
-    ├── example_usage.py      # サンプル
-    ├── my_analysis.py        # 自分の分析スクリプト
-    └── my_download.py        # 自分のダウンロードスクリプト
-```
-
-スクリプト内では以下のようにインポートできます：
-
-```python
-# scripts/my_analysis.py
-from edinet_wrapper import parse_tsv, FinancialData
-
-def main():
-    # 自分の処理を書く
-    pass
-
-if __name__ == "__main__":
-    main()
-```
-
-## 注意事項
-
-1. **edinet2datasetは触らない**: `edinet2dataset/` ディレクトリ内のファイルは編集しないでください。
-
-2. **パスの問題**: `edinet2dataset` 内のスクリプトが相対パスを使用している場合、動作に影響する可能性があります。必要に応じて環境変数や設定ファイルでパスを調整してください。
-
-3. **データディレクトリ**: `edinet2dataset/data/` へのアクセスが必要な場合は、パスを適切に設定してください。
-
-4. **依存関係**: `edinet2dataset` の依存関係（polars, loguru等）も自動的にインストールされます。
-
-## Git Submoduleの管理
-
-### Submoduleの更新
+- Extract balance sheet (BS) items from the annual report.
 
 ```bash
-# edinet2datasetを最新の状態に更新
-git submodule update --remote edinet2dataset
+$ uv run python src/edinet2dataset/parser.py --file_path data/E02144/S100TR7I.tsv --category_list BS
+2025-04-26 22:03:16.026 | INFO     | __main__:parse_tsv:130 - Found 2179 unique elements in data/E02144/S100TR7I.tsv
+{'現金及び預金': {'Prior1Year': '2965923000000', 'CurrentYear': '4278139000000'}, '現金及び現金同等物': {'Prior2Year': '6113655000000', 'Prior1Year': '1403311000000', 'CurrentYear': '9412060000000'}, '売掛金': {'Prior1Year': '1665651000000', 'CurrentYear': '1888956000000'}, '有価証券': {'Prior1Year': '1069082000000', 'CurrentYear': '3938698000000'}, '商品及び製品': {'Prior1Year': '271851000000', 'CurrentYear': '257113000000'}
 ```
 
-### Submoduleの初期化（他のマシンでクローンした場合）
+
+## Reproduce EDINET-Bench
+
+You can reproduce [EDINET-Bench](https://huggingface.co/datasets/SakanaAI/EDINET-Bench) by running following commands. 
+
+> [!NOTE]  
+> Since only the past 10 years of annual reports are available via the EDINET API, the time window used to construct the dataset shifts with each execution. As a result, datasets generated at different times may not be identical.
+### Construct EDINET-Corpus
+Download all annual reports for the year 2024.
 
 ```bash
-# リポジトリをクローンした後
-git submodule init
-git submodule update
+$ python scripts/prepare_edinet_corpus.py --doc_type annual --start_date 2024-01-01 --end_date 2025-01-01
 ```
 
-または、一度に：
-
+Download securities reports spanning 10 years for approximately 4,000 companies from EDINET.
 ```bash
-git clone --recursive <repository_url>
+$ bash edinet_corpus.sh
 ```
 
-## トラブルシューティング
+> [!NOTE]
+> Please be careful not to send too many requests in parallel, as downloading reports from the past 10 years could place a significant load on EDINET.
 
-### インポートエラーが発生する場合
 
+You will get the following directories
+```
+edinet_corpus
+├── annual
+│   ├── E00004
+│   │   ├── S1005SBA.json
+│   │   ├── S1005SBA.pdf
+│   │   ├── S1005SBA.tsv
+│   │   ├── S1008JYI.json
+│   │   ├── S1008JYI.pdf
+│   │   ├── S1008JYI.tsv
+```
+
+### Construct Accounting Fraud Detection Task
+
+Build a benchmark to detect accounting fraud in the securities report of a given fiscal year.
 ```bash
-# edinet2datasetが正しくインストールされているか確認
-pip list | grep edinet2dataset
-
-# 再インストール
-pip install -e ../edinet2dataset
+$ python scripts/fraud_detection/prepare_fraud.py
+$ python scripts/fraud_detection/prepare_nonfraud.py
+$ python scripts/fraud_detection/prepare_dataset.py
 ```
 
-### パスの問題
 
-`edinet2dataset` 内のスクリプトが相対パスを使用している場合、実行時のカレントディレクトリに注意してください。
-
-```python
-# スクリプト内でパスを明示的に指定
-from pathlib import Path
-base_dir = Path(__file__).parent.parent.parent
-edinet_data_dir = base_dir / "edinet2dataset" / "data"
+You can analyze the amended report classified as fraud-related by running the following command:
+```bash
+$ python scripts/fraud_detection/analyze_fraud_explanation.py 
 ```
+
+
+### Construct Earnings Forecasting Task
+
+Build a benchmark to forecast the following year’s profit based on the securities report of a given fiscal year.
+```bash
+$ python scripts/profit_forecast/prepare_dataset.py 
+```
+
+
+### Construct Industry Prediction Task
+
+Buid a benchmark to predict industry given an annual report.
+```bash
+$ python scripts/industry_prediction/prepare_dataset.py 
+```
+
+## Citation
+```
+@misc{sugiura2025edinet,
+  author={Issa Sugiura and Takashi Ishida and Taro Makino and Chieko Tazuke and Takanori Nakagawa and Kosuke Nakago and David Ha},
+  title={{EDINET-Bench: Evaluating LLMs on Complex Financial Tasks using Japanese Financial Statements}},
+  year={2025},
+  eprint={2506.08762},
+  archivePrefix={arXiv},
+  primaryClass={q-fin.ST},
+  url={https://arxiv.org/abs/2506.08762}, 
+}
+```
+
+## Acknowledgement
+We acknowledge [edgar-crawler](https://github.com/lefterisloukas/edgar-crawler) as an inspiration for our tool.
+We also thank [EDINET](https://disclosure2.edinet-fsa.go.jp), which served as the primary resource for constructing our benchmark.

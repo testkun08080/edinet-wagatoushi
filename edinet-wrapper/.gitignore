@@ -42,3 +42,9 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+
+data/
+dataset/
+edinet_corpus/
+fraud_detection/
