@@ -1,3 +1,3 @@
 [submodule "edinet2dataset"]
 	path = edinet2dataset
-	url = https://github.com/SakanaAI/EDINET-Bench.git
+	url = https://github.com/SakanaAI/edinet2dataset
