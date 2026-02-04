@@ -26,8 +26,6 @@ on:
         required: false
         type: string
   schedule:
-    # 必要ならスケジュール実行を有効に（例: 毎週日曜 2:00 JST）
-    # - cron: "0 17 * * 0"
     - cron: "0 0 1 1 *" # 未使用時は年1回で実質オフ
 
 env:
@@ -41,7 +39,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 未指定なら 1～12、指定時はカンマ区切り（例: "1,2,3" で1〜3月だけ）
         month: ${{ fromJson(format('[{0}]', inputs.months || '1,2,3,4,5,6,7,8,9,10,11,12')) }}
     steps:
       - name: Checkout
@@ -58,9 +55,11 @@ jobs:
         run: uv python install 3.12
 
       - name: Install dependencies
+        working-directory: edinet-wrapper
         run: uv sync
 
       - name: Run corpus (one month)
+        working-directory: edinet-wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           DOC_TYPE: ${{ inputs.doc_type || 'quarterly' }}
@@ -73,5 +72,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: edinet_corpus-${{ inputs.doc_type || 'quarterly' }}-${{ inputs.year || '2019' }}-${{ matrix.month }}
-          path: edinet_corpus/
+          path: edinet-wrapper/edinet_corpus/
           retention-days: 7
