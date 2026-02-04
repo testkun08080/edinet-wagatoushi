@@ -1,0 +1,77 @@
+# EDINET コーパスを月単位で取得（1ジョブ ≒ 1ヶ月分で 6 時間以内に収める）
+name: EDINET Corpus
+
+on:
+  workflow_dispatch:
+    inputs:
+      doc_type:
+        description: "書類種別"
+        required: true
+        default: "quarterly"
+        type: choice
+        options:
+          - annual
+          - quarterly
+          - semiannual
+          - annual_amended
+          - quarterly_amended
+          - semiannual_amended
+      year:
+        description: "年"
+        required: true
+        default: "2019"
+        type: string
+      months:
+        description: "月（カンマ区切り 1-12）。未指定で全12ヶ月を別ジョブで実行"
+        required: false
+        type: string
+  schedule:
+    # 必要ならスケジュール実行を有効に（例: 毎週日曜 2:00 JST）
+    # - cron: "0 17 * * 0"
+    - cron: "0 0 1 1 *" # 未使用時は年1回で実質オフ
+
+env:
+  UV_COMPILE_BYTECODE: 0
+
+jobs:
+  corpus:
+    name: "${{ inputs.doc_type }} ${{ inputs.year }}-${{ matrix.month }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 360 # 6時間
+    strategy:
+      fail-fast: false
+      matrix:
+        # 未指定なら 1～12、指定時はカンマ区切り（例: "1,2,3" で1〜3月だけ）
+        month: ${{ fromJson(format('[{0}]', inputs.months || '1,2,3,4,5,6,7,8,9,10,11,12')) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run corpus (one month)
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          DOC_TYPE: ${{ inputs.doc_type || 'quarterly' }}
+          YEAR: ${{ inputs.year || '2019' }}
+          MONTH: ${{ matrix.month }}
+        run: bash scripts/edinet_corpus.sh
+
+      - name: Upload corpus artifact (optional)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edinet_corpus-${{ inputs.doc_type || 'quarterly' }}-${{ inputs.year || '2019' }}-${{ matrix.month }}
+          path: edinet_corpus/
+          retention-days: 7
