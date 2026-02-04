@@ -9,7 +9,7 @@ from edinet2dataset.parser import parse_tsv, FinancialData, Parser
 from edinet2dataset.downloader import (
     download_edinetinfo_csv,
     search_company,
-    download_document,
+    Downloader,
 )
 from edinet2dataset.schema import Response, Result
 
@@ -19,7 +19,7 @@ __all__ = [
     "Parser",
     "download_edinetinfo_csv",
     "search_company",
-    "download_document",
+    "Downloader",
     "Response",
     "Result",
 ]

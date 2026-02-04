@@ -4,11 +4,7 @@ version = "0.1.0"
 description = "Wrapper project for edinet2dataset module"
 requires-python = ">= 3.10"
 dependencies = [
-    # edinet2datasetは開発モードでインストールする必要があります
-    # pip install -e ../edinet2dataset
-    # または、ローカルパス指定を使用する場合:
-    # "edinet2dataset @ file:///${PROJECT_ROOT}/../edinet2dataset",
-    # 注: 実際の使用時は pip install -e ../edinet2dataset を実行してください
+    "edinet2dataset",
 ]
 
 [build-system]
@@ -17,3 +13,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/edinet_wrapper"]
+
+# 親ディレクトリの edinet2dataset（サブモジュール＝構築用リポジトリ）を参照
+[tool.uv.sources]
+edinet2dataset = { path = "../edinet2dataset", editable = true }
