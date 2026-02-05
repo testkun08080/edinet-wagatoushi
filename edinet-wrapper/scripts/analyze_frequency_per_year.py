@@ -1,7 +1,7 @@
 import os
 import polars as pl
 import glob
-from edinet2dataset.parser import Parser
+from edinet_wrapper import Parser
 from collections import Counter
 import matplotlib_fontja  # noqa
 from tqdm import tqdm
@@ -18,10 +18,7 @@ def get_current_fiscal_year_start_date(tsv_file, parser):
     df = pl.read_csv(tsv_file, separator="\t", encoding="utf-16", infer_schema_length=0)
 
     start_year = (
-        parser.filter_by_element_id(df, "CurrentFiscalYearStartDateDEI")
-        .select("値")
-        .to_dict()["値"][0]
-        .split("-")[0]
+        parser.filter_by_element_id(df, "CurrentFiscalYearStartDateDEI").select("値").to_dict()["値"][0].split("-")[0]
     )
     return int(start_year)
 

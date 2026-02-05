@@ -7,11 +7,11 @@ from argparse import ArgumentParser
 from tqdm import tqdm
 import json
 from pathlib import Path
-from edinet2dataset.parser import parse_tsv
+from edinet_wrapper import parse_tsv
 from loguru import logger
 import datasets
 from typing import Optional
-from edinet2dataset.downloader import Downloader
+from edinet_wrapper import Downloader
 
 # mapping from 33 industry label to 16 industry label
 industry_mapping = {
@@ -51,13 +51,9 @@ industry_mapping = {
 }
 
 
-def process_single_company(
-    current_tsv: str, edinet_code_info: pl.DataFrame
-) -> Optional[dict]:
+def process_single_company(current_tsv: str, edinet_code_info: pl.DataFrame) -> Optional[dict]:
     edinet_code = current_tsv.split("/")[2]
-    industry = edinet_code_info.filter(pl.col("ＥＤＩＮＥＴコード") == edinet_code)[
-        "提出者業種"
-    ].to_numpy()[0]
+    industry = edinet_code_info.filter(pl.col("ＥＤＩＮＥＴコード") == edinet_code)["提出者業種"].to_numpy()[0]
 
     industry = industry_mapping.get(industry, "invalid")  # 16 industry label
 
@@ -87,9 +83,7 @@ def process_single_company(
 def parse_args():
     parser = ArgumentParser(description="Prepare the dataset for training")
     parser.add_argument("--input_dir", type=str, default="edinet_corpus/annual")
-    parser.add_argument(
-        "--output_path", type=str, default="dataset/industry_prediction"
-    )
+    parser.add_argument("--output_path", type=str, default="dataset/industry_prediction")
     parser.add_argument("--num_workers", type=int, default=8)
     return parser.parse_args()
 
@@ -118,14 +112,11 @@ def main():
             continue
         json_files = glob.glob(os.path.join(dir, "*.json"))
         doc_id_to_json = {
-            json.load(open(json_file, encoding="utf-8"))["docID"]: json.load(
-                open(json_file, encoding="utf-8")
-            )
+            json.load(open(json_file, encoding="utf-8"))["docID"]: json.load(open(json_file, encoding="utf-8"))
             for json_file in json_files
         }
         doc_id_with_period = [
-            (doc_id, data["periodStart"], data["periodEnd"])
-            for doc_id, data in doc_id_to_json.items()
+            (doc_id, data["periodStart"], data["periodEnd"]) for doc_id, data in doc_id_to_json.items()
         ]
         doc_id_with_period.sort(key=lambda x: x[1])
         # get latest doc_id
@@ -133,9 +124,7 @@ def main():
         tsv_file = os.path.join(dir, latest_doc_id + ".tsv")
         edinet_code = tsv_file.split("/")[2]
         try:
-            company_info = edinet_code_info.filter(
-                pl.col("ＥＤＩＮＥＴコード") == edinet_code
-            )
+            company_info = edinet_code_info.filter(pl.col("ＥＤＩＮＥＴコード") == edinet_code)
             if company_info.height == 0:  # No matching company found
                 logger.warning(f"Company not found in EDINET info: {edinet_code}")
                 continue
@@ -154,9 +143,7 @@ def main():
 
             ticker_code = str(ticker_code)[:-1]
             if ticker_code in excluded_securities_codes:
-                logger.info(
-                    f"Skipping excluded company with ticker code: {ticker_code}"
-                )
+                logger.info(f"Skipping excluded company with ticker code: {ticker_code}")
                 continue
         except Exception as e:
             logger.warning(f"Error processing {edinet_code}: {e}")
@@ -173,10 +160,7 @@ def main():
     # Step 3: Process in parallel
     results = []
     with ThreadPoolExecutor(max_workers=args.num_workers) as executor:
-        futures = [
-            executor.submit(process_single_company, tsv_file, edinet_code_info)
-            for tsv_file in sampled_tsvs
-        ]
+        futures = [executor.submit(process_single_company, tsv_file, edinet_code_info) for tsv_file in sampled_tsvs]
         for future in tqdm(futures):
             result = future.result()
             if result:
@@ -184,9 +168,7 @@ def main():
 
     # Step 4: Save dataset
     if results:
-        ds = datasets.Dataset.from_dict(
-            {k: [d.get(k, None) for d in results] for k in next(iter(results), {})}
-        )
+        ds = datasets.Dataset.from_dict({k: [d.get(k, None) for d in results] for k in next(iter(results), {})})
         os.makedirs(args.output_path, exist_ok=True)
         ds.to_json(os.path.join(args.output_path, "train.json"), force_ascii=False)
     else:

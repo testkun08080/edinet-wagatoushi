@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 """
-edinet2datasetを使用するサンプルスクリプト
+edinet_wrapper を使用するサンプルスクリプト
 
 このスクリプトは edinet-wrapper 内で実行できます。
-edinet2dataset をモジュールとして使用しています。
 """
+
 import sys
 from pathlib import Path
 
-# edinet_wrapperをインポート（edinet2datasetの機能が使える）
 from edinet_wrapper import parse_tsv, FinancialData, download_edinetinfo_csv
-
-# または直接 edinet2dataset をインポートすることも可能
-# from edinet2dataset.parser import parse_tsv, FinancialData
 
 
 def main():
@@ -20,23 +16,24 @@ def main():
     print("=" * 80)
     print("edinet-wrapper サンプルスクリプト")
     print("=" * 80)
-    
+
     # 例1: EDINETコード情報をダウンロード
     print("\n【例1】EDINETコード情報のダウンロード")
     print("-" * 80)
-    data_dir = Path(__file__).parent.parent.parent / "edinet2dataset" / "data"
+    project_root = Path(__file__).resolve().parent.parent
+    data_dir = project_root / "data"
     print(f"データディレクトリ: {data_dir}")
     # download_edinetinfo_csv(str(data_dir))
-    
+
     # 例2: TSVファイルをパース
     print("\n【例2】TSVファイルのパース")
     print("-" * 80)
-    tsv_file = Path(__file__).parent.parent.parent / "edinet2dataset" / "data" / "E02144" / "S100TR7I.tsv"
-    
+    tsv_file = project_root / "data" / "E02144" / "S100TR7I.tsv"
+
     if tsv_file.exists():
         print(f"TSVファイルをパース中: {tsv_file}")
         financial_data = parse_tsv(str(tsv_file))
-        
+
         if financial_data:
             print(f"✓ パース成功")
             print(f"  - META項目数: {len(financial_data.meta)}")
@@ -49,7 +46,7 @@ def main():
     else:
         print(f"✗ TSVファイルが見つかりません: {tsv_file}")
         print("  サンプルデータを用意してください。")
-    
+
     print("\n" + "=" * 80)
     print("サンプルスクリプト完了")
     print("=" * 80)

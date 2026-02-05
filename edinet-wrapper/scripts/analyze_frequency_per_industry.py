@@ -1,4 +1,4 @@
-from edinet2dataset.downloader import Downloader
+from edinet_wrapper import Downloader
 from matplotlib import pyplot as plt
 import polars as pl
 import os
@@ -6,7 +6,7 @@ import matplotlib_fontja  # noqa
 
 pl.Config.set_tbl_rows(100)
 
-plt.rcParams["font.size"] = 30 
+plt.rcParams["font.size"] = 30
 
 industry_mapping = {
     "水産・農林業": "食品",
@@ -85,16 +85,12 @@ print(df["提出者種別"].value_counts())
 
 print(df["提出者業種"].value_counts())
 
-df = df.with_columns(
-    pl.col("提出者業種").replace(industry_mapping, default="その他").alias("業種分類")
-)
+df = df.with_columns(pl.col("提出者業種").replace(industry_mapping, default="その他").alias("業種分類"))
 df = df.filter(pl.col("業種分類") != "その他")
 
 print(df)
 
-df = df.with_columns(
-    pl.col("業種分類").replace(label_en_map, default="その他").alias("industry_en")
-)
+df = df.with_columns(pl.col("業種分類").replace(label_en_map, default="その他").alias("industry_en"))
 
 industry_counts = df["industry_en"].value_counts()
 industry_counts.columns = ["業種", "件数"]
@@ -103,7 +99,7 @@ industry_counts = industry_counts.sort("件数")
 
 print(f"Total industry's company: {df.filter(pl.col('業種分類') != 'その他').shape[0]}")
 
-plt.figure(figsize=(12, 10))  
+plt.figure(figsize=(12, 10))
 bars = plt.barh(industry_counts["業種"], industry_counts["件数"])
 plt.xlim(0, industry_counts["件数"].max() * 1.2)
 
@@ -117,8 +113,6 @@ for i, bar in enumerate(bars):
 
 plt.xlabel("Count")
 plt.ylabel("Industry")
-plt.tight_layout(pad=1.5) 
-plt.savefig(
-    "scripts/industry_distribution.png", bbox_inches="tight"
-)  
+plt.tight_layout(pad=1.5)
+plt.savefig("scripts/industry_distribution.png", bbox_inches="tight")
 plt.show()
