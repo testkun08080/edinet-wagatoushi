@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 import os
 import json
+import time
 from pathlib import Path
 
 # .env を読み込む（edinet-wrapper/.env または edinet2dataset/.env）
@@ -13,10 +14,42 @@ try:
 except ImportError:
     pass
 
+import requests
 from edinet_wrapper import Downloader
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 from loguru import logger
+
+
+class DownloaderWithRetry(Downloader):
+    """API が JSON 以外を返したときのリトライとログを追加（edinet2dataset は submodule のため wrapper 側で対応）"""
+
+    _MAX_RETRIES = 5
+    _RETRY_DELAY = 60  # 秒（レート制限対策）
+
+    def get_response(self, url: str, date, type: int, key: str) -> dict:
+        params = {"date": date, "type": type, "Subscription-Key": key}
+        for attempt in range(self._MAX_RETRIES):
+            res = requests.get(url, params=params)
+            try:
+                if res.status_code != 200:
+                    logger.warning(
+                        f"EDINET API status {res.status_code} (attempt {attempt + 1}/{self._MAX_RETRIES}), body: {res.text[:300]}"
+                    )
+                    if attempt < self._MAX_RETRIES - 1:
+                        time.sleep(self._RETRY_DELAY)
+                        continue
+                    res.raise_for_status()
+                return res.json()
+            except (json.JSONDecodeError, requests.exceptions.JSONDecodeError) as e:
+                logger.warning(
+                    f"EDINET API non-JSON response (attempt {attempt + 1}/{self._MAX_RETRIES}), status={res.status_code}, body: {res.text[:500]}"
+                )
+                if attempt < self._MAX_RETRIES - 1:
+                    time.sleep(self._RETRY_DELAY)
+                    continue
+                raise
+        raise RuntimeError("get_response: max retries exceeded")
 
 
 def parse_args():
@@ -80,7 +113,7 @@ if __name__ == "__main__":
     # Downloader は cwd の data/ に EdinetcodeDlInfo を置く（edinet2dataset は submodule のためここで用意）
     project_root = Path(__file__).resolve().parent.parent
     (project_root / "data").mkdir(parents=True, exist_ok=True)
-    downloader = Downloader()
+    downloader = DownloaderWithRetry()
     results = downloader.get_results(args.start_date, args.end_date)
 
     with ThreadPoolExecutor(max_workers=args.max_workers) as executor:
