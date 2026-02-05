@@ -52,8 +52,10 @@ class Downloader:
     def __init__(self):
         self.base_url = "https://disclosure.edinet-fsa.go.jp/api/v2/documents.json"
         self.edinet_code_info = self._load_edinet_code_info()
-        assert os.environ.get("EDINET_API_KEY") is not None, "EDINET_API_KEY is not set"
-        self.edinet_api_key = os.environ.get("EDINET_API_KEY")
+        raw_key = os.environ.get("EDINET_API_KEY")
+        assert raw_key is not None, "EDINET_API_KEY is not set"
+        # GitHub Secrets / .env で末尾改行が入ることがあるため strip（%0A で 403 になる）
+        self.edinet_api_key = raw_key.strip()
 
     @staticmethod
     def _load_edinet_code_info() -> pl.DataFrame:
