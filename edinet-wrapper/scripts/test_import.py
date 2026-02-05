@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-edinet2datasetのインポートテストスクリプト
+edinet_wrapper のインポートテストスクリプト
 
-このスクリプトで、edinet2datasetが正しくインポートできるか確認できます。
+このスクリプトで、edinet_wrapper が正しくインポートできるか確認できます。
 """
 
 import sys
@@ -11,13 +11,13 @@ import sys
 def test_imports():
     """インポートテスト"""
     print("=" * 80)
-    print("edinet2dataset インポートテスト")
+    print("edinet_wrapper インポートテスト")
     print("=" * 80)
 
     errors = []
 
-    # テスト1: edinet_wrapper経由でインポート
-    print("\n【テスト1】edinet_wrapper経由でインポート")
+    # テスト1: edinet_wrapper のインポート
+    print("\n【テスト1】edinet_wrapper のインポート")
     print("-" * 80)
     try:
         from edinet_wrapper import (
@@ -39,24 +39,8 @@ def test_imports():
         print(error_msg)
         errors.append(error_msg)
 
-    # テスト2: 直接edinet2datasetからインポート
-    print("\n【テスト2】直接edinet2datasetからインポート")
-    print("-" * 80)
-    try:
-        from edinet2dataset.parser import parse_tsv as parse_tsv_direct, FinancialData as FinancialDataDirect
-        from edinet2dataset.downloader import download_edinetinfo_csv as download_direct
-
-        print("✓ edinet2dataset からの直接インポート成功")
-        print(f"  - parse_tsv: {parse_tsv_direct}")
-        print(f"  - FinancialData: {FinancialDataDirect}")
-        print(f"  - download_edinetinfo_csv: {download_direct}")
-    except ImportError as e:
-        error_msg = f"✗ edinet2dataset からの直接インポート失敗: {e}"
-        print(error_msg)
-        errors.append(error_msg)
-
-    # テスト3: 依存関係の確認
-    print("\n【テスト3】依存関係の確認")
+    # テスト2: 依存関係の確認
+    print("\n【テスト2】依存関係の確認")
     print("-" * 80)
     dependencies = [
         "polars",
@@ -83,12 +67,11 @@ def test_imports():
             print(f"  {error}")
         print("\n対処方法:")
         print("  1. edinet-wrapper で uv sync: cd edinet-wrapper && uv sync")
-        print("  2. サブモジュールが構築用 edinet2dataset を指しているか SETUP.md を参照")
         return 1
     else:
         print("【結果】すべてのテストが成功しました！")
         print("=" * 80)
-        print("\nedinet2datasetを正常に使用できます。")
+        print("\nedinet_wrapper を正常に使用できます。")
         print("scripts/example_usage.py を実行して、実際の使用例を確認してください。")
         return 0
 

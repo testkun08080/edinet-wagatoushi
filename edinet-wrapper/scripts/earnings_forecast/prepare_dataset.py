@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from argparse import ArgumentParser
 from tqdm import tqdm
 import json
-from edinet2dataset.parser import Parser, parse_tsv
+from edinet_wrapper import Parser, parse_tsv
 from loguru import logger
 import datasets
 from typing import Optional
@@ -16,11 +16,7 @@ from datetime import datetime
 
 def is_one_year_shift(previous: datetime, current: datetime) -> bool:
     # Check if the difference is exactly one year apart
-    return (
-        previous.year + 1 == current.year
-        and previous.month == current.month
-        and previous.day == current.day
-    )
+    return previous.year + 1 == current.year and previous.month == current.month and previous.day == current.day
 
 
 def test_check_one_year_shift():
@@ -35,16 +31,11 @@ def test_check_one_year_shift():
 def get_consecutive_2_years(data_dir: str) -> list[dict]:
     json_files = glob.glob(os.path.join(data_dir, "*.json"))
     doc_id_to_json = {
-        json.load(open(json_file, encoding="utf-8"))["docID"]: json.load(
-            open(json_file, encoding="utf-8")
-        )
+        json.load(open(json_file, encoding="utf-8"))["docID"]: json.load(open(json_file, encoding="utf-8"))
         for json_file in json_files
     }
 
-    doc_id_with_period = [
-        (doc_id, data["periodStart"], data["periodEnd"])
-        for doc_id, data in doc_id_to_json.items()
-    ]
+    doc_id_with_period = [(doc_id, data["periodStart"], data["periodEnd"]) for doc_id, data in doc_id_to_json.items()]
     doc_id_with_period.sort(key=lambda x: x[1])
 
     pairs = []
@@ -61,20 +52,16 @@ def get_consecutive_2_years(data_dir: str) -> list[dict]:
         ):
             continue
 
-        pairs.append(
-            {
-                "PreviousYearPath": os.path.join(data_dir, f"{doc_id_previous}.tsv"),
-                "CurrentYearPath": os.path.join(data_dir, f"{doc_id_current}.tsv"),
-            }
-        )
+        pairs.append({
+            "PreviousYearPath": os.path.join(data_dir, f"{doc_id_previous}.tsv"),
+            "CurrentYearPath": os.path.join(data_dir, f"{doc_id_current}.tsv"),
+        })
     return pairs
 
 
 def extract_profit(file_path: str, year: str) -> Optional[int]:
     parser = Parser()
-    df = pl.read_csv(
-        file_path, separator="\t", encoding="utf-16", infer_schema_length=0
-    )
+    df = pl.read_csv(file_path, separator="\t", encoding="utf-16", infer_schema_length=0)
     df = parser.unique_element_list(df)
     for element_id in [
         "ProfitLossAttributableToOwnersOfParent",
@@ -119,9 +106,7 @@ def process_single_company(previous_tsv: str, current_tsv: str) -> Optional[dict
         "cf": json.dumps(previous_financial_data.cf, ensure_ascii=False),
         "text": json.dumps(previous_financial_data.text, ensure_ascii=False),
         "label": int(is_profit_increase(prior1year_profit, current_profit)),
-        "naive_prediction": int(
-            is_profit_increase(prior2year_profit, prior1year_profit)
-        ),
+        "naive_prediction": int(is_profit_increase(prior2year_profit, prior1year_profit)),
         "edinet_code": previous_financial_data.meta["EDINETコード"],
         "doc_id": os.path.basename(previous_tsv).split(".")[0],
         "previous_year_file_path": previous_tsv,
@@ -133,12 +118,10 @@ def balance_class(ds):
     positive = ds.filter(lambda x: x["label"] == 1)
     negative = ds.filter(lambda x: x["label"] == 0)
     min_len = min(len(positive), len(negative))
-    return datasets.concatenate_datasets(
-        [
-            positive.shuffle(seed=42).select(range(min_len)),
-            negative.shuffle(seed=42).select(range(min_len)),
-        ]
-    )
+    return datasets.concatenate_datasets([
+        positive.shuffle(seed=42).select(range(min_len)),
+        negative.shuffle(seed=42).select(range(min_len)),
+    ])
 
 
 def parse_args():
@@ -192,9 +175,7 @@ def main():
 
     progress_bar.close()
 
-    ds = datasets.Dataset.from_dict(
-        {k: [d.get(k, None) for d in results] for k in next(iter(results), {})}
-    )
+    ds = datasets.Dataset.from_dict({k: [d.get(k, None) for d in results] for k in next(iter(results), {})})
 
     def is_train(example):
         meta = json.loads(example["meta"])

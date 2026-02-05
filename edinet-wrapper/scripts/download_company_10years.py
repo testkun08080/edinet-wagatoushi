@@ -11,17 +11,16 @@ from pathlib import Path
 from argparse import ArgumentParser
 from loguru import logger
 
-# .env を読み込む（edinet-wrapper/.env または edinet2dataset/.env）
+# .env を読み込む（edinet-wrapper/.env）
 try:
     from dotenv import load_dotenv
 
     project_root = Path(__file__).parent.parent
     load_dotenv(project_root / ".env")
-    load_dotenv(project_root.parent / "edinet2dataset" / ".env")
 except ImportError:
     pass
 
-from edinet2dataset.downloader import Downloader
+from edinet_wrapper import Downloader
 
 
 def parse_args():

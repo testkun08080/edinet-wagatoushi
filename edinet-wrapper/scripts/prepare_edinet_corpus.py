@@ -3,13 +3,12 @@ import os
 import json
 from pathlib import Path
 
-# .env を読み込む（edinet-wrapper/.env または edinet2dataset/.env）
+# .env を読み込む（edinet-wrapper/.env）
 try:
     from dotenv import load_dotenv
 
     project_root = Path(__file__).resolve().parent.parent
     load_dotenv(project_root / ".env")
-    load_dotenv(project_root.parent / "edinet2dataset" / ".env")
 except ImportError:
     pass
 
@@ -77,7 +76,7 @@ def process_result(result, downloader, output_dir, doc_type) -> None:
 
 if __name__ == "__main__":
     args = parse_args()
-    # Downloader は cwd の data/ に EdinetcodeDlInfo を置く（edinet2dataset は submodule のためここで用意）
+    # Downloader は cwd の data/ に EdinetcodeDlInfo を置く
     project_root = Path(__file__).resolve().parent.parent
     (project_root / "data").mkdir(parents=True, exist_ok=True)
     downloader = Downloader()

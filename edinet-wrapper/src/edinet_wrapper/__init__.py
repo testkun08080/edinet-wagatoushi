@@ -1,17 +1,17 @@
 """
-edinet-wrapper: edinet2datasetモジュールのラッパー
+edinet-wrapper: EDINET データ取得・パース用パッケージ
 
-edinet2datasetをモジュールとして使用するためのラッパーパッケージです。
+サブモジュールに依存せず、downloader / parser / schema を自前で保持します。
+downloader.py を編集して維持してください。
 """
 
-# edinet2datasetの主要な機能を再エクスポート
-from edinet2dataset.parser import parse_tsv, FinancialData, Parser
-from edinet2dataset.downloader import (
+from edinet_wrapper.parser import parse_tsv, FinancialData, Parser
+from edinet_wrapper.downloader import (
     download_edinetinfo_csv,
     search_company,
     Downloader,
 )
-from edinet2dataset.schema import Response, Result
+from edinet_wrapper.schema import Response, Result
 
 __all__ = [
     "parse_tsv",
