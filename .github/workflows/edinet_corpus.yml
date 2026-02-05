@@ -58,6 +58,11 @@ jobs:
         working-directory: edinet-wrapper
         run: uv sync
 
+      # edinet2dataset の Downloader が data/ に EdinetcodeDlInfo を置くため
+      - name: Ensure data directory for EDINET code list
+        working-directory: edinet-wrapper
+        run: mkdir -p data
+
       - name: Run corpus (one month)
         working-directory: edinet-wrapper
         env:
