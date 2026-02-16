@@ -3,13 +3,16 @@ a {
   text-decoration: none;
 }
 #sidebar a.is-active {
-  background-color: oklch(var(--b3));
+  background-color: #eff6ff; /* blue-50 */
+  color: #1d4ed8; /* blue-700 */
 }
 
-/* Reset */
+/* Reset - Stitch デザイン */
 body {
   margin: 0;
-  font-family: sans-serif;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  background-color: #f8fafc; /* slate-50 */
+  color: #0f172a; /* slate-900 */
 }
 * {
   box-sizing: border-box;

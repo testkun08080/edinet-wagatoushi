@@ -6,6 +6,10 @@ export function Head() {
   return (
     <>
       <link rel="icon" href={logoUrl} />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap"
+        rel="stylesheet"
+      />
 
       <script
         async

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Detailed Company Financial Analysis - Kaneko Seeds</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        @layer base {
+            :root {
+                --primary-color: #1e40af;
+                --base-100: #ffffff;
+                --base-200: #f8fafc;
+                --base-300: #f1f5f9;
+                --base-content: #1e293b;
+            }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .financial-heatmap-green {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #15803d;
+        }
+        .financial-heatmap-red {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+        }
+        .chart-container {
+            height: 300px;
+            background: linear-gradient(to bottom, transparent 95%, #f1f5f9 95%),
+                        linear-gradient(to right, transparent 99%, #f1f5f9 99%);
+            background-size: 100% 40px, 12.5% 100%;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+<div class="flex h-screen overflow-hidden">
+<aside class="shrink-0 flex flex-col h-screen border-r border-slate-200 bg-white w-72">
+<div class="p-4 border-b border-slate-200 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img alt="logo" height="28" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnJuzRLe6rj7LpuwaVT4vELug6SX7C4QbRxu_aCZhFZauFhEk3kPsAEObJ_pCRjjctpGBNYR0mwgrc5EoOhilUdUJ6JvaXGjombzm7p25vPAZip9AoZ-jH2Vd0gzo_9puxhevYk3yHy-Nvt1vZyT_IrLzOsZT6VqBqq4lehnfe75A91v0oemoipmzWS0PIxJBviZrE0P6HpFaMSybI5Su7oRK5v_EtxnzpdZIymVbvUpnIde73qFH7OUylo6DDPGnqxGp4U4u-SkA" width="28"/>
+<span class="font-bold text-lg">EDINET Screener</span>
+</div>
+<button class="p-1 hover:bg-slate-100 rounded text-slate-400">
+<span class="material-symbols-outlined">menu_open</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-6">
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl">home</span> Dashboard
+                    </a>
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl">analytics</span> Company Analysis
+                    </a>
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl">star</span> Watchlist
+                    </a>
+</nav>
+<div class="pt-4 border-t border-slate-100">
+<h3 class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Recent Searches</h3>
+<div class="mt-2 space-y-1">
+<a class="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600" href="#">カネコ種苗 (13760)</a>
+<a class="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600" href="#">任天堂 (7974)</a>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-w-0 bg-white overflow-hidden">
+<header class="shrink-0 p-6 border-b border-slate-200">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h1 class="text-2xl font-bold m-0 tracking-tight">カネコ種苗 (13760)</h1>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-semibold rounded">Standard Market</span>
+</div>
+<p class="text-sm text-slate-500">Seed and nursery business, focusing on agriculture and green landscape.</p>
+</div>
+<div class="flex gap-2">
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+<span class="material-symbols-outlined text-lg">download</span> Download Report
+                        </button>
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm">
+<span class="material-symbols-outlined text-lg">star</span> Add to Watchlist
+                        </button>
+</div>
+</div>
+<div class="grid grid-cols-6 gap-4 mt-6">
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">PBR</p>
+<p class="text-xl font-bold tabular-nums">0.82<span class="text-xs font-normal text-slate-400 ml-1">x</span></p>
+</div>
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">PER (Est)</p>
+<p class="text-xl font-bold tabular-nums">14.2<span class="text-xs font-normal text-slate-400 ml-1">x</span></p>
+</div>
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Div Yield</p>
+<p class="text-xl font-bold tabular-nums text-green-600">2.8<span class="text-xs font-normal ml-1">%</span></p>
+</div>
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ROE</p>
+<p class="text-xl font-bold tabular-nums">6.4<span class="text-xs font-normal ml-1">%</span></p>
+</div>
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Market Cap</p>
+<p class="text-xl font-bold tabular-nums">12.5<span class="text-xs font-normal text-slate-400 ml-1">B</span></p>
+</div>
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Equity Ratio</p>
+<p class="text-xl font-bold tabular-nums">50.1<span class="text-xs font-normal ml-1">%</span></p>
+</div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto">
+<div class="px-6 border-b border-slate-200 sticky top-0 bg-white z-10">
+<nav class="flex gap-8">
+<button class="py-4 text-sm font-semibold text-blue-600 border-b-2 border-blue-600">Summary</button>
+<button class="py-4 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent">Financial Statements</button>
+<button class="py-4 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent">Cash Flow</button>
+<button class="py-4 text-sm font-medium text-slate-500 hover:text-slate-800 border-b-2 border-transparent">Ratios</button>
+</nav>
+</div>
+<div class="p-6 space-y-8">
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold">經營成績 (Revenue &amp; Operating Income Trends)</h2>
+<div class="flex gap-4">
+<label class="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+<span class="w-3 h-3 bg-blue-500 rounded-full"></span> Revenue
+                                </label>
+<label class="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+<span class="w-3 h-3 bg-emerald-400 rounded-full"></span> Op Income
+                                </label>
+</div>
+</div>
+<div class="relative chart-container p-4 border border-slate-100 rounded-2xl bg-slate-50/30">
+<svg class="w-full h-full" preserveAspectRatio="none">
+<path d="M0 240 L100 200 L200 220 L300 150 L400 180 L500 210 L600 160 L700 190 L800 140 L900 170 L1000 120 V300 H0 Z" fill="rgba(59, 130, 246, 0.1)"></path>
+<path d="M0 240 L100 200 L200 220 L300 150 L400 180 L500 210 L600 160 L700 190 L800 140 L900 170 L1000 120" fill="none" stroke="#3b82f6" stroke-width="3"></path>
+<path d="M0 280 L100 270 L200 275 L300 260 L400 265 L500 272 L600 260 L700 268 L800 255 L900 262 L1000 250" fill="none" stroke="#10b981" stroke-dasharray="0" stroke-width="3"></path>
+<circle cx="800" cy="140" fill="#3b82f6" r="5" stroke="white" stroke-width="2"></circle>
+<circle cx="800" cy="255" fill="#10b981" r="5" stroke="white" stroke-width="2"></circle>
+</svg>
+<div class="absolute bottom-1 left-4 right-4 flex justify-between text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+<span>2018-11</span>
+<span>2019-05</span>
+<span>2019-11</span>
+<span>2020-05</span>
+<span>2020-08</span>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold">Quarterly Performance Detail</h2>
+<p class="text-xs text-slate-400 italic">Values in Millions (JPY) except per-share data</p>
+</div>
+<div class="overflow-x-auto border border-slate-200 rounded-xl">
+<table class="w-full text-sm text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 border-b border-slate-200">
+<th class="p-3 font-semibold text-slate-600 sticky left-0 bg-slate-50 z-20">Metrics</th>
+<th class="p-3 font-semibold text-slate-600 text-right">2019-02-28</th>
+<th class="p-3 font-semibold text-slate-600 text-right">2019-08-31</th>
+<th class="p-3 font-semibold text-slate-600 text-right">2019-11-30</th>
+<th class="p-3 font-semibold text-slate-600 text-right">2020-02-29</th>
+<th class="p-3 font-semibold text-slate-600 text-right bg-blue-50/30">2020-08-31</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr>
+<td class="p-3 font-medium bg-white sticky left-0 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">売上高 (Revenue)</td>
+<td class="p-3 text-right tabular-nums">36,252</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-red">13,541</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-green">25,108</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-green">36,252</td>
+<td class="p-3 text-right tabular-nums bg-blue-50/10 financial-heatmap-red">14,639</td>
+</tr>
+<tr>
+<td class="p-3 font-medium bg-white sticky left-0 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">経常利益 (Ord. Profit)</td>
+<td class="p-3 text-right tabular-nums">602</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-red">319</td>
+<td class="p-3 text-right tabular-nums">215</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-green">483</td>
+<td class="p-3 text-right tabular-nums bg-blue-50/10 financial-heatmap-red">375</td>
+</tr>
+<tr>
+<td class="p-3 font-medium bg-white sticky left-0 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">純利益 (Net Income)</td>
+<td class="p-3 text-right tabular-nums">398</td>
+<td class="p-3 text-right tabular-nums">217</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-red">154</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-green">335</td>
+<td class="p-3 text-right tabular-nums bg-blue-50/10">260</td>
+</tr>
+<tr>
+<td class="p-3 font-medium bg-white sticky left-0 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">自己資本比率 (Equity Ratio)</td>
+<td class="p-3 text-right tabular-nums">51.2%</td>
+<td class="p-3 text-right tabular-nums">48.8%</td>
+<td class="p-3 text-right tabular-nums">53.4%</td>
+<td class="p-3 text-right tabular-nums">51.2%</td>
+<td class="p-3 text-right tabular-nums bg-blue-50/10">50.1%</td>
+</tr>
+<tr>
+<td class="p-3 font-medium bg-white sticky left-0 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">営業CF (Operating CF)</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-green">1,120</td>
+<td class="p-3 text-right tabular-nums">—</td>
+<td class="p-3 text-right tabular-nums financial-heatmap-red">-2,940</td>
+<td class="p-3 text-right tabular-nums">—</td>
+<td class="p-3 text-right tabular-nums bg-blue-50/10">—</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

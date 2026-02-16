@@ -268,13 +268,13 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
 
 function getThClass(colId: ColumnId): string {
   const base = "text-right tabular-nums";
-  if (colId === "filerName") return "sticky left-0 z-10 bg-base-200";
+  if (colId === "filerName") return "sticky left-0 z-10 bg-slate-50";
   return base;
 }
 
 function getTdClass(colId: ColumnId): string {
   const base = "text-right tabular-nums";
-  if (colId === "filerName") return "sticky left-0 z-10 bg-base-100 font-medium";
+  if (colId === "filerName") return "sticky left-0 z-10 bg-white font-medium";
   if (colId === "secCode" || colId === "edinetCode" || colId === "calcDate" || colId === "fiscalMonth") return "tabular-nums";
   return base;
 }
@@ -333,42 +333,38 @@ export function CompanyTable() {
         });
 
   if (loading) {
-    return (
-      <div className="p-8 text-center text-base-content/60">読み込み中…</div>
-    );
+    return <div className="p-8 text-center text-slate-500">読み込み中…</div>;
   }
 
   if (filtered.length === 0) {
     return (
-      <div className="p-8 text-center text-base-content/60">
-        該当する企業がありません。フィルターを緩めてください。
-      </div>
+      <div className="p-8 text-center text-slate-500">該当する企業がありません。フィルターを緩めてください。</div>
     );
   }
 
   if (!hasColumns) {
     return (
-      <div className="p-8 text-center text-base-content/60">
+      <div className="p-8 text-center text-slate-500">
         右上の「表示列」で表示する列を選択してください。
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table table-zebra table-pin-rows w-full">
+    <div className="overflow-x-auto border border-slate-200 rounded-xl">
+      <table className="w-full text-sm text-left border-collapse">
         <thead>
-          <tr className="bg-base-200">
+          <tr className="bg-slate-50 border-b border-slate-200">
             {visibleColumns.map((id) => (
               <th
                 key={id}
-                className={`${getThClass(id)} cursor-pointer select-none hover:bg-base-300 transition-colors`}
+                className={`${getThClass(id)} p-3 font-semibold text-slate-600 cursor-pointer select-none hover:bg-slate-100 transition-colors`}
                 onClick={() => handleSort(id)}
               >
                 <span className="inline-flex items-center gap-1">
                   {columnLabel(id)}
                   {sortColumn === id && (
-                    <span className="text-primary" aria-hidden>
+                    <span className="text-blue-600" aria-hidden>
                       {sortAsc ? "↑" : "↓"}
                     </span>
                   )}
@@ -377,11 +373,11 @@ export function CompanyTable() {
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-slate-100">
           {sorted.map((m) => (
-            <tr key={m.edinetCode} className="hover">
+            <tr key={m.edinetCode} className="hover:bg-slate-50/50">
               {visibleColumns.map((id) => (
-                <td key={id} className={getTdClass(id)}>
+                <td key={id} className={`${getTdClass(id)} p-3`}>
                   {getCellValue(m, id, { isFavorite, toggleFavorite })}
                 </td>
               ))}

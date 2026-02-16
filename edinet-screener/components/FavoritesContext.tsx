@@ -36,7 +36,11 @@ type FavoritesContextValue = {
 const FavoritesContext = createContext<FavoritesContextValue | null>(null);
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
-  const [favorites, setFavorites] = useState<Set<string>>(() => loadFavorites());
+  const [favorites, setFavorites] = useState<Set<string>>(() => new Set());
+
+  useEffect(() => {
+    setFavorites(loadFavorites());
+  }, []);
 
   useEffect(() => {
     saveFavorites(favorites);

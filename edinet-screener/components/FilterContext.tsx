@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 
 export type FilterState = {
   searchName: string;
@@ -44,10 +44,18 @@ const FilterContext = createContext<FilterContextValue | null>(null);
 
 export function FilterProvider({ children }: { children: ReactNode }) {
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const fav = params.get("favorites") === "1";
+    setFilters((prev) => (prev.showOnlyFavorites !== fav ? { ...prev, showOnlyFavorites: fav } : prev));
+  }, []);
+
   const setFilter = useCallback((key: keyof FilterState, value: string | boolean) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   }, []);
-  const clearFilters = useCallback(() => setFilters(defaultFilters), []);
+  const clearFilters = useCallback(() => setFilters({ ...defaultFilters }), []);
   return (
     <FilterContext.Provider value={{ filters, setFilter, clearFilters }}>
       {children}
