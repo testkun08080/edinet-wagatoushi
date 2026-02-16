@@ -70,10 +70,10 @@ class Parser:
                     # If contain_year is True, use year as the key
                     if value not in results:
                         results[value] = {}
-                    results[value][year] = filtered_df.select("値").to_numpy()[0][0]  # Access the first element
+                    results[value][year] = filtered_df["値"][0]
                 else:
                     # If contain_year is False, just store the value
-                    results[value] = filtered_df.select("値").to_numpy()[0][0]  # Access the first element
+                    results[value] = filtered_df["値"][0]
 
         # Remove the value entry from the results if no data was found
         if value in results and not results[value]:

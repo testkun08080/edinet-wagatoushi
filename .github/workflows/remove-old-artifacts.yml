@@ -1,0 +1,58 @@
+name: Remove old artifacts
+
+on:
+  # スケジュール実行（コメントアウト中）
+  # schedule:
+  # 毎日午前1時に実行
+  # - cron: '0 1 * * *'
+
+  # 手動トリガー
+  workflow_dispatch:
+    # 手動実行時に指定できるインプット変数
+    inputs:
+      artifact_age:
+        description: "アーティファクト削除の期限（例: 5 days, 1 month, 2 years）"
+        required: false
+        default: "1 month"
+        type: string
+
+      skip_tags:
+        description: "タグ付きリリースのアーティファクトをスキップするか"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+      skip_recent:
+        description: "最新N個のアーティファクトをスキップ（0で無効化）"
+        required: false
+        default: "5"
+        type: string
+
+jobs:
+  remove-old-artifacts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # GitHub Actions API へのアクセス権限を付与
+    # プライベートリポジトリでの実行に必要
+    permissions:
+      actions: write
+
+    steps:
+      # ステップ1: 古いアーティファクトを削除
+      - name: Remove old artifacts
+        uses: c-hive/gha-remove-artifacts@v1
+        with:
+          # アーティファクト削除期限
+          # 手動実行時はユーザー入力値、未指定時はデフォルト値を使用
+          age: ${{ github.event.inputs.artifact_age || '1 month' }}
+
+          # オプション: タグ付きリリースのアーティファクトをスキップするか
+          skip-tags: ${{ github.event.inputs.skip_tags || 'false' }}
+
+          # オプション: 最新N個のアーティファクトをスキップ
+          # skip_recent が '0' なら空文字列（インプット無効化）、そうでなければ値を使用
+          skip-recent: ${{ github.event.inputs.skip_recent != '0' && github.event.inputs.skip_recent || '' }}

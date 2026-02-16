@@ -1,0 +1,14 @@
+{
+  "companies": [
+    {"edinetCode":"E00004","secCode":"13760","filerName":"カネコ種苗株式会社"},
+    {"edinetCode":"E03606","secCode":"83060","filerName":"株式会社三菱ＵＦＪフィナンシャル・グループ"},
+    {"edinetCode":"E05070","secCode":"47500","filerName":"株式会社ダイサン"},
+    {"edinetCode":"E02843","secCode":"74880","filerName":"株式会社ヤガミ"},
+    {"edinetCode":"E03614","secCode":"83160","filerName":"株式会社三井住友フィナンシャルグループ"},
+    {"edinetCode":"E02367","secCode":"7974","filerName":"任天堂株式会社"},
+    {"edinetCode":"E04396","secCode":"9697","filerName":"株式会社カプコン"},
+    {"edinetCode":"E00464","secCode":"7012","filerName":"川崎重工業株式会社"},
+    {"edinetCode":"E02005","secCode":"8058","filerName":"三菱商事株式会社"},
+    {"edinetCode":"E02608","secCode":"4755","filerName":"楽天グループ株式会社"}
+  ]
+}
