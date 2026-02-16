@@ -1,1 +1,11 @@
-edinet2datatest_old
+data-set
+node_modules
+__pycache__
+.env
+.pytest_cache
+.DS_Store
+dist
+.wrangler
+.vscode
+.idea
+.coverage
