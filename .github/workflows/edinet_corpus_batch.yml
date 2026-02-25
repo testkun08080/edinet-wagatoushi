@@ -15,7 +15,7 @@ on:
         default: "2024"
         type: string
       doc_types:
-        description: "書類種別（カンマ区切り 例: quarterly,annual または large_holding）"
+        description: "書類種別（カンマ区切り 例: quarterly,semiannual, annual または large_holding）"
         required: true
         default: "quarterly"
         type: string
@@ -26,7 +26,7 @@ on:
 
 permissions:
   contents: read
-  actions: write  # 他ワークフローを workflow_dispatch で起動するため
+  actions: write # 他ワークフローを workflow_dispatch で起動するため
 
 jobs:
   dispatch:
