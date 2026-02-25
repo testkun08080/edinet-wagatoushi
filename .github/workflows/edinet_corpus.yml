@@ -18,6 +18,8 @@ on:
           - annual_amended
           - quarterly_amended
           - semiannual_amended
+          - large_holding
+          - large_holding_amended
       year:
         description: "年"
         required: true
