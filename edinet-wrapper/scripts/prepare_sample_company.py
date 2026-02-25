@@ -117,8 +117,9 @@ def main():
     for tsv_path, json_path in pairs:
         with open(json_path, encoding="utf-8") as f:
             meta = json.load(f)
-        filer_name = meta.get("filerName", "")
-        sec_code = meta.get("secCode", "").lstrip("0") or meta.get("secCode", "")
+        filer_name = meta.get("filerName") or ""
+        sec_code_raw = meta.get("secCode") or ""
+        sec_code = sec_code_raw.lstrip("0") or sec_code_raw
         period_end = meta.get("periodEnd", "")
         period_start = meta.get("periodStart", "")
         doc_id = meta.get("docID", "")
@@ -160,6 +161,7 @@ def main():
             }
         ]
     }
+
 
     # summaries/{sec_code}.json
     summary_data = {

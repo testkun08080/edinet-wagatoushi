@@ -1,8 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePageContext } from "vike-react/usePageContext";
 import { useFilters } from "./FilterContext.js";
+import { useFavorites } from "./FavoritesContext.js";
+import { useRecentCompanies } from "./RecentCompaniesContext.js";
 import logoUrl from "../assets/logo.svg";
+
+type CompanyItem = { secCode: string; filerName: string };
+
+function formatDisplayName(name: string): string {
+  return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
+}
 
 const STORAGE_KEY = "edinet-screener-sidebar-open";
 
@@ -26,8 +35,36 @@ function saveSidebarOpen(open: boolean) {
 }
 
 export function CompanySidebar() {
+  const pageContext = usePageContext();
+  const urlPathname = pageContext?.urlPathname ?? "/";
   const { filters, setFilter, clearFilters } = useFilters();
+  const { favorites } = useFavorites();
+  const { recent } = useRecentCompanies();
   const [isOpen, setIsOpen] = useState(() => loadSidebarOpen());
+  const [companyList, setCompanyList] = useState<CompanyItem[]>([]);
+  const [analyzeSearchQuery, setAnalyzeSearchQuery] = useState("");
+
+  const isDashboard = urlPathname === "/";
+  const isAnalyzePage = urlPathname.startsWith("/analyze/");
+
+  useEffect(() => {
+    if (!isAnalyzePage) return;
+    fetch("/data/company_metrics.json")
+      .then((res) => res.json())
+      .then((data: { metrics?: Array<{ secCode: string; filerName: string }> }) => {
+        const list = (data.metrics ?? []).map((m) => ({ secCode: m.secCode, filerName: m.filerName }));
+        setCompanyList(list);
+      })
+      .catch(() => setCompanyList([]));
+  }, [isAnalyzePage]);
+
+  const analyzeSearchResults = analyzeSearchQuery.trim()
+    ? companyList.filter(
+        (c) =>
+          c.filerName.toLowerCase().includes(analyzeSearchQuery.trim().toLowerCase()) ||
+          c.secCode.includes(analyzeSearchQuery.trim())
+      ).slice(0, 15)
+    : [];
 
   const toggle = () => {
     setIsOpen((prev) => {
@@ -40,197 +77,218 @@ export function CompanySidebar() {
   return (
     <aside
       id="sidebar"
-      className={`shrink-0 flex flex-col h-screen border-r border-base-300 bg-base-200/50 overflow-hidden transition-[width] duration-200 ease-in-out ${
-        isOpen ? "w-80 min-w-80" : "w-12 min-w-12"
+      className={`shrink-0 flex flex-col h-screen border-r border-slate-200 bg-white overflow-hidden transition-[width] duration-200 ease-in-out ${
+        isOpen ? "w-72 min-w-72" : "w-12 min-w-12"
       }`}
     >
-      {/* ヘッダー: Logo + 開閉ボタン */}
+      {/* ヘッダー: Logo + 開閉ボタン（Stitch 風） */}
       <div
-        className={`shrink-0 p-2 border-b border-base-300 flex gap-1 ${
+        className={`shrink-0 p-4 border-b border-slate-200 flex gap-2 ${
           isOpen ? "flex-row items-center justify-between" : "flex-col items-center pt-3"
         }`}
       >
         <a href="/" className={`flex items-center gap-2 min-w-0 ${!isOpen ? "justify-center" : ""}`}>
           <img src={logoUrl} height={28} width={28} alt="logo" className="shrink-0" />
-          {isOpen && <span className="font-bold text-base truncate">EDINET Screener</span>}
+          {isOpen && <span className="font-bold text-lg text-slate-900">エディー</span>}
         </a>
         <button
           type="button"
           onClick={toggle}
-          className="btn btn-ghost btn-sm btn-square shrink-0"
+          className="p-1 hover:bg-slate-100 rounded text-slate-400 shrink-0"
           aria-label={isOpen ? "サイドバーを閉じる" : "サイドバーを開く"}
           title={isOpen ? "サイドバーを閉じる" : "サイドバーを開く"}
         >
-          <span className="text-lg" aria-hidden>
-            {isOpen ? "◀" : "▶"}
+          <span className="material-symbols-outlined align-middle" style={{ fontSize: 24 }}>
+            {isOpen ? "menu_open" : "menu"}
           </span>
         </button>
       </div>
 
-      {/* 検索・フィルター（開いている時のみ表示） */}
       {isOpen && (
-        <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 border-b border-base-300">
-        <section>
-          <h3 className="text-sm font-semibold text-base-content/80 flex items-center gap-1 mb-2">
-            <span>🔍</span> 検索
-          </h3>
-          <div className="space-y-2">
-            <input
-              type="text"
-              placeholder="会社名"
-              className="input input-bordered input-sm w-full"
-              value={filters.searchName}
-              onChange={(e) => setFilter("searchName", e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="銘柄コード（例: 13760）"
-              className="input input-bordered input-sm w-full"
-              value={filters.searchCode}
-              onChange={(e) => setFilter("searchCode", e.target.value)}
-            />
-            <label className="flex items-center gap-2 cursor-pointer text-sm mt-2">
-              <input
-                type="checkbox"
-                className="checkbox checkbox-sm"
-                checked={filters.showOnlyFavorites}
-                onChange={(e) => setFilter("showOnlyFavorites", e.target.checked)}
-              />
-              <span>★ お気に入りのみ</span>
-            </label>
-          </div>
-        </section>
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
+          {/* タブ: 全て表示 / お気に入りだけ（企業一覧の時のみ） */}
+          {!isAnalyzePage && (
+            <nav className="flex rounded-lg border border-slate-200 p-0.5 bg-slate-50">
+              <a
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setFilter("showOnlyFavorites", false);
+                  if (!isDashboard) window.location.href = "/";
+                  else window.history.replaceState({}, "", "/");
+                }}
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition ${
+                  !filters.showOnlyFavorites
+                    ? "bg-white text-slate-900 shadow-sm border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <span className="material-symbols-outlined text-lg">list</span>
+                全て表示
+              </a>
+              <a
+                href="/?favorites=1"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setFilter("showOnlyFavorites", true);
+                  if (!isDashboard) window.location.href = "/?favorites=1";
+                  else window.history.replaceState({}, "", "/?favorites=1");
+                }}
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition ${
+                  filters.showOnlyFavorites
+                    ? "bg-white text-slate-900 shadow-sm border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <span className="material-symbols-outlined text-lg">star</span>
+                お気に入りだけ
+              </a>
+            </nav>
+          )}
 
-        <section>
-          <h3 className="text-sm font-semibold text-base-content/80 flex items-center gap-1 mb-2">
-            <span>📊</span> 基本フィルター
-          </h3>
-          <div className="space-y-2">
-            <div>
-              <label className="text-xs text-base-content/60">自己資本比率（最小・0.5=50%）</label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max="1"
-                placeholder="0.3"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.minEquityRatio}
-                onChange={(e) => setFilter("minEquityRatio", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">自己資本比率（最大）</label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max="1"
-                placeholder="1.0"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.maxEquityRatio}
-                onChange={(e) => setFilter("maxEquityRatio", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">EPS（最小）</label>
-              <input
-                type="number"
-                step="0.1"
-                placeholder="0"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.minEps}
-                onChange={(e) => setFilter("minEps", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">EPS（最大）</label>
-              <input
-                type="number"
-                step="0.1"
-                placeholder="空欄で制限なし"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.maxEps}
-                onChange={(e) => setFilter("maxEps", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">売上高（百万円・最小）</label>
-              <input
-                type="number"
-                step="1000"
-                placeholder="0"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.minSales}
-                onChange={(e) => setFilter("minSales", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">売上高（百万円・最大）</label>
-              <input
-                type="number"
-                step="1000"
-                placeholder="空欄で制限なし"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.maxSales}
-                onChange={(e) => setFilter("maxSales", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">ROE（最小・0.1=10%）</label>
-              <input
-                type="number"
-                step="0.01"
-                placeholder="0"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.minRoe}
-                onChange={(e) => setFilter("minRoe", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">ROE（最大）</label>
-              <input
-                type="number"
-                step="0.01"
-                placeholder="空欄で制限なし"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.maxRoe}
-                onChange={(e) => setFilter("maxRoe", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">総資産額（百万円・最小）</label>
-              <input
-                type="number"
-                step="10000"
-                placeholder="0"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.minTotalAssets}
-                onChange={(e) => setFilter("minTotalAssets", e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-base-content/60">総資産額（百万円・最大）</label>
-              <input
-                type="number"
-                step="10000"
-                placeholder="空欄で制限なし"
-                className="input input-bordered input-sm w-full mt-0.5"
-                value={filters.maxTotalAssets}
-                onChange={(e) => setFilter("maxTotalAssets", e.target.value)}
-              />
-            </div>
-          </div>
-        </section>
+          {/* 企業分析ページ: お気に入り・履歴・検索 */}
+          {isAnalyzePage && (
+            <>
+              <section>
+                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">検索</h3>
+                <input
+                  type="text"
+                  placeholder="会社名・銘柄コードで検索"
+                  className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={analyzeSearchQuery}
+                  onChange={(e) => setAnalyzeSearchQuery(e.target.value)}
+                />
+                {analyzeSearchResults.length > 0 && (
+                  <div className="mt-2 space-y-0.5 max-h-48 overflow-y-auto border border-slate-100 rounded-lg">
+                    {analyzeSearchResults.map((c) => (
+                      <a
+                        key={c.secCode}
+                        href={`/analyze/${c.secCode}`}
+                        className="block px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600"
+                      >
+                        {formatDisplayName(c.filerName)} ({c.secCode})
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </section>
 
-        <button
-          type="button"
-          onClick={clearFilters}
-          className="btn btn-sm btn-outline btn-secondary w-full"
-        >
-          🗑️ フィルターをクリア
-        </button>
-      </div>
+              <section>
+                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">お気に入り</h3>
+                <div className="space-y-1">
+                  {Array.from(favorites).length === 0 ? (
+                    <p className="px-3 py-2 text-sm text-slate-400">お気に入りがありません</p>
+                  ) : (
+                    <>
+                      {companyList
+                        .filter((c) => favorites.has(c.secCode))
+                        .map((c) => (
+                          <a
+                            key={c.secCode}
+                            href={`/analyze/${c.secCode}`}
+                            className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600"
+                          >
+                            {formatDisplayName(c.filerName)} ({c.secCode})
+                          </a>
+                        ))}
+                      {Array.from(favorites)
+                        .filter((s) => !companyList.find((c) => c.secCode === s))
+                        .map((secCode) => (
+                          <a key={secCode} href={`/analyze/${secCode}`} className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600">
+                            {secCode}
+                          </a>
+                        ))}
+                    </>
+                  )}
+                </div>
+              </section>
+
+              <section>
+                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">履歴</h3>
+                <div className="space-y-1">
+                  {recent.length === 0 ? (
+                    <p className="px-3 py-2 text-sm text-slate-400">履歴がありません</p>
+                  ) : (
+                    recent.map((c) => (
+                      <a
+                        key={c.secCode}
+                        href={`/analyze/${c.secCode}`}
+                        className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600"
+                      >
+                        {formatDisplayName(c.filerName)} ({c.secCode})
+                      </a>
+                    ))
+                  )}
+                </div>
+              </section>
+            </>
+          )}
+
+          {/* 検索・フィルター（企業一覧の時のみ表示） */}
+          {!isAnalyzePage && (
+            <>
+              <section>
+                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">検索</h3>
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    placeholder="会社名"
+                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={filters.searchName}
+                    onChange={(e) => setFilter("searchName", e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="銘柄コード（例: 13760）"
+                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={filters.searchCode}
+                    onChange={(e) => setFilter("searchCode", e.target.value)}
+                  />
+                </div>
+              </section>
+
+              <section>
+                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                  基本フィルター
+                </h3>
+                <div className="space-y-2">
+                  {[
+                    { key: "minEquityRatio" as const, label: "自己資本比率（最小・0.5=50%）", step: "0.01", placeholder: "0.3" },
+                    { key: "maxEquityRatio" as const, label: "自己資本比率（最大）", step: "0.01", placeholder: "1.0" },
+                    { key: "minEps" as const, label: "EPS（最小）", step: "0.1", placeholder: "0" },
+                    { key: "maxEps" as const, label: "EPS（最大）", step: "0.1", placeholder: "空欄で制限なし" },
+                    { key: "minSales" as const, label: "売上高（百万円・最小）", step: "1000", placeholder: "0" },
+                    { key: "maxSales" as const, label: "売上高（百万円・最大）", step: "1000", placeholder: "空欄で制限なし" },
+                    { key: "minRoe" as const, label: "ROE（最小・0.1=10%）", step: "0.01", placeholder: "0" },
+                    { key: "maxRoe" as const, label: "ROE（最大）", step: "0.01", placeholder: "空欄で制限なし" },
+                    { key: "minTotalAssets" as const, label: "総資産額（百万円・最小）", step: "10000", placeholder: "0" },
+                    { key: "maxTotalAssets" as const, label: "総資産額（百万円・最大）", step: "10000", placeholder: "空欄で制限なし" },
+                  ].map(({ key, label, step, placeholder }) => (
+                    <div key={key}>
+                      <label className="text-xs text-slate-500 block mt-0.5">{label}</label>
+                      <input
+                        type="number"
+                        step={step}
+                        placeholder={placeholder}
+                        className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-lg mt-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={(filters as Record<string, string>)[key]}
+                        onChange={(e) => setFilter(key, e.target.value)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="w-full px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition"
+              >
+                🗑️ フィルターをクリア
+              </button>
+            </>
+          )}
+        </div>
       )}
     </aside>
   );

@@ -87,17 +87,20 @@ const DEFAULT_VISIBLE: ColumnId[] = COLUMN_IDS;
 
 const STORAGE_KEY = "edinet-screener-column-visibility";
 
+const DEFAULT_VISIBILITY = COLUMN_IDS.reduce(
+  (acc, id) => ({ ...acc, [id]: true }),
+  {} as Record<ColumnId, boolean>
+);
+
 function loadVisibility(): Record<ColumnId, boolean> {
-  if (typeof window === "undefined") {
-    return COLUMN_IDS.reduce((acc, id) => ({ ...acc, [id]: true }), {} as Record<ColumnId, boolean>);
-  }
+  if (typeof window === "undefined") return DEFAULT_VISIBILITY;
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return COLUMN_IDS.reduce((acc, id) => ({ ...acc, [id]: true }), {} as Record<ColumnId, boolean>);
+    if (!stored) return DEFAULT_VISIBILITY;
     const parsed = JSON.parse(stored) as Record<string, boolean>;
     return COLUMN_IDS.reduce((acc, id) => ({ ...acc, [id]: parsed[id] ?? true }), {} as Record<ColumnId, boolean>);
   } catch {
-    return COLUMN_IDS.reduce((acc, id) => ({ ...acc, [id]: true }), {} as Record<ColumnId, boolean>);
+    return DEFAULT_VISIBILITY;
   }
 }
 
@@ -126,7 +129,11 @@ type ColumnVisibilityContextValue = {
 const ColumnVisibilityContext = createContext<ColumnVisibilityContextValue | null>(null);
 
 export function ColumnVisibilityProvider({ children }: { children: ReactNode }) {
-  const [visibility, setVisibility] = useState<Record<ColumnId, boolean>>(() => loadVisibility());
+  const [visibility, setVisibility] = useState<Record<ColumnId, boolean>>(() => DEFAULT_VISIBILITY);
+
+  useEffect(() => {
+    setVisibility(loadVisibility());
+  }, []);
 
   useEffect(() => {
     saveVisibility(visibility);

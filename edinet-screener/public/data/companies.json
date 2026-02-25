@@ -1,14 +1,129 @@
 {
   "companies": [
-    {"edinetCode":"E00004","secCode":"13760","filerName":"カネコ種苗株式会社"},
-    {"edinetCode":"E03606","secCode":"83060","filerName":"株式会社三菱ＵＦＪフィナンシャル・グループ"},
-    {"edinetCode":"E05070","secCode":"47500","filerName":"株式会社ダイサン"},
-    {"edinetCode":"E02843","secCode":"74880","filerName":"株式会社ヤガミ"},
-    {"edinetCode":"E03614","secCode":"83160","filerName":"株式会社三井住友フィナンシャルグループ"},
-    {"edinetCode":"E02367","secCode":"7974","filerName":"任天堂株式会社"},
-    {"edinetCode":"E04396","secCode":"9697","filerName":"株式会社カプコン"},
-    {"edinetCode":"E00464","secCode":"7012","filerName":"川崎重工業株式会社"},
-    {"edinetCode":"E02005","secCode":"8058","filerName":"三菱商事株式会社"},
-    {"edinetCode":"E02608","secCode":"4755","filerName":"楽天グループ株式会社"}
+    {
+      "edinetCode": "E00617",
+      "secCode": "36070",
+      "filerName": "株式会社クラウディアホールディングス"
+    },
+    {
+      "edinetCode": "E01503",
+      "secCode": "61420",
+      "filerName": "富士精工株式会社"
+    },
+    {
+      "edinetCode": "E01706",
+      "secCode": "63120",
+      "filerName": "フロイント産業株式会社"
+    },
+    {
+      "edinetCode": "E01730",
+      "secCode": "61610",
+      "filerName": "株式会社エスティック"
+    },
+    {
+      "edinetCode": "E01765",
+      "secCode": "67010",
+      "filerName": "日本電気株式会社"
+    },
+    {
+      "edinetCode": "E02328",
+      "secCode": "63230",
+      "filerName": "ローツェ株式会社"
+    },
+    {
+      "edinetCode": "E02989",
+      "secCode": "33840",
+      "filerName": "株式会社アークコア"
+    },
+    {
+      "edinetCode": "E03032",
+      "secCode": "82600",
+      "filerName": "株式会社井筒屋"
+    },
+    {
+      "edinetCode": "E03061",
+      "secCode": "82670",
+      "filerName": "イオン株式会社"
+    },
+    {
+      "edinetCode": "E03068",
+      "secCode": "82730",
+      "filerName": "株式会社イズミ"
+    },
+    {
+      "edinetCode": "E03094",
+      "secCode": "81670",
+      "filerName": "株式会社リテールパートナーズ"
+    },
+    {
+      "edinetCode": "E03200",
+      "secCode": "99450",
+      "filerName": "株式会社プレナス"
+    },
+    {
+      "edinetCode": "E03467",
+      "secCode": "33960",
+      "filerName": "株式会社フェリシモ"
+    },
+    {
+      "edinetCode": "E04015",
+      "secCode": "89180",
+      "filerName": "株式会社ランド"
+    },
+    {
+      "edinetCode": "E04873",
+      "secCode": "96510",
+      "filerName": "日本プロセス株式会社"
+    },
+    {
+      "edinetCode": "E04874",
+      "secCode": "97870",
+      "filerName": "イオンディライト株式会社"
+    },
+    {
+      "edinetCode": "E05169",
+      "secCode": "48290",
+      "filerName": "日本エンタープライズ株式会社"
+    },
+    {
+      "edinetCode": "E05338",
+      "secCode": "37110",
+      "filerName": "株式会社創通"
+    },
+    {
+      "edinetCode": "E05706",
+      "secCode": "21530",
+      "filerName": "Ｅ・Ｊホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E20616",
+      "secCode": "34790",
+      "filerName": "株式会社ティーケーピー"
+    },
+    {
+      "edinetCode": "E21391",
+      "secCode": "32640",
+      "filerName": "株式会社アスコット"
+    },
+    {
+      "edinetCode": "E31159",
+      "secCode": "32220",
+      "filerName": "ユナイテッド・スーパーマーケット・ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E31965",
+      "secCode": "39220",
+      "filerName": "株式会社ＰＲ　ＴＩＭＥＳ"
+    },
+    {
+      "edinetCode": "E33254",
+      "secCode": "65520",
+      "filerName": "株式会社ＧａｍｅＷｉｔｈ"
+    },
+    {
+      "edinetCode": "E34289",
+      "secCode": "34980",
+      "filerName": "霞ヶ関キャピタル株式会社"
+    }
   ]
 }

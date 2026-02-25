@@ -19,7 +19,7 @@ on:
       year:
         description: "年"
         required: true
-        default: "2019"
+        default: "2024"
         type: string
       months:
         description: "月（カンマ or 範囲 例: 1,3,5 または 9-12）。未指定で全12ヶ月"
@@ -94,7 +94,7 @@ jobs:
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           DOC_TYPE: ${{ inputs.doc_type || 'quarterly' }}
-          YEAR: ${{ inputs.year || '2019' }}
+          YEAR: ${{ inputs.year || '2024' }}
           MONTH: ${{ matrix.month }}
         run: bash scripts/edinet_corpus.sh
 
@@ -102,6 +102,6 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: edinet_corpus-${{ inputs.doc_type || 'quarterly' }}-${{ inputs.year || '2019' }}-${{ matrix.month }}
+          name: edinet_corpus-${{ inputs.doc_type || 'quarterly' }}-${{ inputs.year || '2024' }}-${{ matrix.month }}
           path: edinet-wrapper/edinet_corpus/
           retention-days: 7

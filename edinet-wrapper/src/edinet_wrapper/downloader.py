@@ -48,9 +48,25 @@ def search_company(edinet_code_info: pl.DataFrame, query: str) -> pl.DataFrame |
     ])
 
 
+# 仕様書の書類種別コード → ラッパー doc_type（機関・書類種別でダウンロード用）
+# 参考: https://disclosure2dl.edinet-fsa.go.jp/guide/static/disclosure/download/ESE140206.pdf
+DOC_TYPE_CODE_MAP = {
+    "120": "annual",           # 有価証券報告書（年次）
+    "130": "annual_amended",    # 訂正有価証券報告書
+    "140": "quarterly",        # 四半期報告書
+    "150": "quarterly_amended",
+    "160": "semiannual",       # 半期報告書
+    "170": "semiannual_amended",
+    "350": "large_holding",   # 大量保有報告書（府令060）
+    "360": "large_holding_amended",
+}
+
+
 class Downloader:
     def __init__(self):
-        self.base_url = "https://disclosure.edinet-fsa.go.jp/api/v2/documents.json"
+        # 仕様書では api.edinet-fsa.go.jp。disclosure. も同一応答の可能性あり。
+        self.base_url = "https://api.edinet-fsa.go.jp/api/v2/documents.json"
+        self._doc_base_url = "https://api.edinet-fsa.go.jp/api/v2/documents"
         self.edinet_code_info = self._load_edinet_code_info()
         raw_key = os.environ.get("EDINET_API_KEY")
         assert raw_key is not None, "EDINET_API_KEY is not set"
@@ -127,6 +143,7 @@ class Downloader:
 
     @staticmethod
     def get_doc_type(ordinanceCode: str, formCode: str) -> str:
+        """府令コード＋様式コードから doc_type を返す（様式ベース）。"""
         match (ordinanceCode, formCode):
             case ("010", "030000"):
                 return "annual"
@@ -140,10 +157,28 @@ class Downloader:
                 return "semiannual"
             case ("010", "043A01"):
                 return "semiannual_amended"
+            case ("060", _):
+                # 府令060: 株券等の大量保有の状況の開示
+                return "large_holding"
             case _:
                 return "unknown"
 
-    def get_results(self, start_date, end_date, edinet_code=None) -> list[Result]:
+    @staticmethod
+    def get_doc_type_from_result(result: Result) -> str:
+        """API の書類種別コード（docTypeCode）から doc_type を返す。大量保有なども docTypeCode で判定。"""
+        code = (result.docTypeCode or "").strip()
+        if code in DOC_TYPE_CODE_MAP:
+            return DOC_TYPE_CODE_MAP[code]
+        return Downloader.get_doc_type(result.ordinanceCode or "", result.formCode or "")
+
+    def get_results(
+        self,
+        start_date: str,
+        end_date: str,
+        edinet_code: str | None = None,
+        listed_only: bool = False,
+    ) -> list[Result]:
+        """書類一覧を取得。listed_only=True のときは上場区分が「上場」の提出者のみに絞る（EDINETコードリストと照合）。"""
         day_list = self.make_day_list(
             datetime.datetime.strptime(start_date, "%Y-%m-%d").date(),
             datetime.datetime.strptime(end_date, "%Y-%m-%d").date(),
@@ -160,9 +195,16 @@ class Downloader:
                 continue
             response = Response(json_data)
             result_list.extend(response.results)
-        # filter by edinet code
         if edinet_code is not None:
-            result_list = [result for result in result_list if result.edinetCode == edinet_code]
+            result_list = [r for r in result_list if r.edinetCode == edinet_code]
+        if listed_only and result_list:
+            listed_codes = set(
+                self.edinet_code_info.filter(pl.col("上場区分") == "上場")
+                .select("ＥＤＩＮＥＴコード")
+                .to_series()
+                .to_list()
+            )
+            result_list = [r for r in result_list if (r.edinetCode or "") in listed_codes]
         return result_list
 
     def download_document(self, doc_id, file_type="tsv", output_dir="data") -> None:
@@ -178,7 +220,7 @@ class Downloader:
 
     def _download_document_in_pdf(self, doc_id: str, output_dir: str = "data") -> None:
         """Retrieve a specific document from EDINET API. type: 2 for PDF"""
-        url = "https://disclosure.edinet-fsa.go.jp/api/v2/documents/" + doc_id
+        url = f"{self._doc_base_url}/{doc_id}"
         params = {"type": 2, "Subscription-Key": self.edinet_api_key}
         with requests.get(url, params=params) as res:
             with open(os.path.join(output_dir, f"{doc_id}.pdf"), "wb") as f:
@@ -187,7 +229,7 @@ class Downloader:
 
     def _download_document_in_xbrl(self, doc_id: str, output_dir: str = "data") -> None:
         """Retrieve a specific document from EDINET API. type: 1 for XBRL"""
-        url = "https://disclosure.edinet-fsa.go.jp/api/v2/documents/" + doc_id
+        url = f"{self._doc_base_url}/{doc_id}"
         params = {"type": 1, "Subscription-Key": self.edinet_api_key}
         # zip download
         try:
@@ -209,7 +251,7 @@ class Downloader:
 
     def _download_document_in_tsv(self, doc_id: str, output_dir: str = "data") -> None:
         """Retrieve a specific document from EDINET API. type: 5 for CSV"""
-        url = "https://disclosure.edinet-fsa.go.jp/api/v2/documents/" + doc_id
+        url = f"{self._doc_base_url}/{doc_id}"
         params = {"type": 5, "Subscription-Key": self.edinet_api_key}
         try:
             with requests.get(url, params=params) as res:
@@ -251,7 +293,22 @@ def parse_args():
         "--doc_type",
         type=str,
         default="annual",
-        help="Document type to download",
+        help="Document type to download (annual, quarterly, semiannual, large_holding, *_amended)",
+        choices=[
+            "annual",
+            "quarterly",
+            "semiannual",
+            "large_holding",
+            "annual_amended",
+            "quarterly_amended",
+            "semiannual_amended",
+            "large_holding_amended",
+        ],
+    )
+    parser.add_argument(
+        "--listed_only",
+        action="store_true",
+        help="Restrict to listed companies (上場 only), exclude funds etc.",
     )
     parser.add_argument(
         "--file_type",
@@ -286,11 +343,13 @@ if __name__ == "__main__":
     else:
         edinet_code = downloader.get_edinet_code(args.company_name)
 
-    results = downloader.get_results(args.start_date, args.end_date, edinet_code)
+    results = downloader.get_results(
+        args.start_date, args.end_date, edinet_code, listed_only=args.listed_only
+    )
     doc_ids = []
 
     for result in results:
-        if downloader.get_doc_type(result.ordinanceCode, result.formCode) == args.doc_type:
+        if downloader.get_doc_type_from_result(result) == args.doc_type:
             doc_ids.append(result.docID)
 
     output_dir = os.path.join(args.output_dir, edinet_code)

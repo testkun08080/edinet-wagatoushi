@@ -27,15 +27,22 @@ def parse_args():
         "--doc_type",
         type=str,
         default="annual",
-        help="Document type to download",
+        help="Document type to download (年次/四半期/半期/大量保有)",
         choices=[
             "annual",
             "quarterly",
             "semiannual",
+            "large_holding",
             "annual_amended",
             "quarterly_amended",
             "semiannual_amended",
+            "large_holding_amended",
         ],
+    )
+    parser.add_argument(
+        "--listed_only",
+        action="store_true",
+        help="上場企業のみ（ファンド等を除外）",
     )
     parser.add_argument(
         "--max_workers",
@@ -48,7 +55,7 @@ def parse_args():
 
 def process_result(result, downloader, output_dir, doc_type) -> None:
     try:
-        if downloader.get_doc_type(result.ordinanceCode, result.formCode) != doc_type:
+        if downloader.get_doc_type_from_result(result) != doc_type:
             return
 
         if result.withdrawalStatus == "1":
@@ -80,7 +87,9 @@ if __name__ == "__main__":
     project_root = Path(__file__).resolve().parent.parent
     (project_root / "data").mkdir(parents=True, exist_ok=True)
     downloader = Downloader()
-    results = downloader.get_results(args.start_date, args.end_date)
+    results = downloader.get_results(
+        args.start_date, args.end_date, listed_only=args.listed_only
+    )
 
     with ThreadPoolExecutor(max_workers=args.max_workers) as executor:
         futures = [
