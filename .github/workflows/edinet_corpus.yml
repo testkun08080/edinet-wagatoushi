@@ -1,6 +1,8 @@
 # EDINET コーパスを月単位で取得（1ジョブ ≒ 1ヶ月分で 6 時間以内に収める）
 name: EDINET Corpus
 
+run-name: ${{ format('{0} {1} — {2}', inputs.doc_type || 'scheduled', inputs.year || '', inputs.months || '1-12') }}
+
 on:
   workflow_dispatch:
     inputs:
