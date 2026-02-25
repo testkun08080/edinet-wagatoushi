@@ -82,7 +82,7 @@ export async function data(pageContext: PageContextServer) {
       throw new Error(`HTTP ${companyRes.status}`);
     }
     const company = (await companyRes.json()) as CompanySummary;
-    config({ title: `${company.filerName} - 企業分析 | EDINET Screener` });
+    config({ title: `${company.filerName} - 企業分析 | エディー` });
 
     let metrics: CompanyMetricsRow | null = null;
     if (metricsRes.ok) {

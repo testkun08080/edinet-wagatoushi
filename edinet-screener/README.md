@@ -4,6 +4,12 @@ Generated with [vike.dev/new](https://vike.dev/new) ([version 564](https://www.n
 npm create vike@latest --- --react --tailwindcss --daisyui --google-analytics --cloudflare --eslint --prettier --sentry
 ```
 
+## Build & データ
+
+- **`npm run build`**: プロジェクトルートに `data-set/` がある場合はそこから、**`DATA_SET_URL` が設定されている場合はその URL から未取得時のみ取得**してから、`public/data` を生成し Vike ビルドします。どちらも無い場合はデータ生成をスキップします。
+- **`npm run build:app`**: データ生成を行わず Vike ビルドのみ実行。
+- **リモートのデータセットでビルド**: `DATA_SET_URL=https://.../data-set.zip npm run build`（zip / tar.gz 対応）。データをどこかにホストしておき、ローカルに置かずにビルド可能。詳しくは [docs/DATA_SET_ALTERNATIVES.md](../docs/DATA_SET_ALTERNATIVES.md)。
+
 ## Contents
 
 - [Vike](#vike)

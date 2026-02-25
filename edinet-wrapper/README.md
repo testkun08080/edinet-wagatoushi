@@ -28,6 +28,14 @@ uv sync
 
 EDINET API を使う場合は、**edinet-wrapper** のルートに `.env` を置き `EDINET_API_KEY=...` を設定してください。スクリプトが自動で読み込みます。
 
+### データ（data-set）について
+
+大容量の **data-set**（EDINET コーパス）はリポジトリに含めていません。**ビルドごとに data-set からデータを引っ張ってビルドする**想定です。
+
+- **リモートに置いてビルド**: データセットを zip/tar.gz で S3・GitHub Release・Hugging Face 等にホストし、`edinet-screener` で `DATA_SET_URL=<URL> npm run build` とすると、未取得時のみダウンロードしてから抽出・ビルドします。ローカルに置きっぱなしにしなくてよいです。詳しくは [docs/DATA_SET_ALTERNATIVES.md](../docs/DATA_SET_ALTERNATIVES.md)。
+- **ローカルに data-set を置く**: プロジェクトルートの `data-set/` に置けば、従来どおり `npm run build` でそのまま利用されます。
+- **1社だけ試す**: data-set がなくても `prepare_sample_company.py` で EDINET API から 1 社分を取得し、`public/data` を更新できます。
+
 ```bash
 # .env を使う場合（スクリプトが自動読み込みするので --env-file は不要）
 uv run python scripts/download_company_10years.py --edinet_code E02144 --file_type tsv --years 1

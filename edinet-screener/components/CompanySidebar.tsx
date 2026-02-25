@@ -1,10 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePageContext } from "vike-react/usePageContext";
 import { useFilters } from "./FilterContext.js";
+import { useFavorites } from "./FavoritesContext.js";
 import { useRecentCompanies } from "./RecentCompaniesContext.js";
 import logoUrl from "../assets/logo.svg";
+
+type CompanyItem = { secCode: string; filerName: string };
+
+function formatDisplayName(name: string): string {
+  return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
+}
 
 const STORAGE_KEY = "edinet-screener-sidebar-open";
 
@@ -31,11 +38,33 @@ export function CompanySidebar() {
   const pageContext = usePageContext();
   const urlPathname = pageContext?.urlPathname ?? "/";
   const { filters, setFilter, clearFilters } = useFilters();
+  const { favorites } = useFavorites();
   const { recent } = useRecentCompanies();
   const [isOpen, setIsOpen] = useState(() => loadSidebarOpen());
+  const [companyList, setCompanyList] = useState<CompanyItem[]>([]);
+  const [analyzeSearchQuery, setAnalyzeSearchQuery] = useState("");
 
   const isDashboard = urlPathname === "/";
   const isAnalyzePage = urlPathname.startsWith("/analyze/");
+
+  useEffect(() => {
+    if (!isAnalyzePage) return;
+    fetch("/data/company_metrics.json")
+      .then((res) => res.json())
+      .then((data: { metrics?: Array<{ secCode: string; filerName: string }> }) => {
+        const list = (data.metrics ?? []).map((m) => ({ secCode: m.secCode, filerName: m.filerName }));
+        setCompanyList(list);
+      })
+      .catch(() => setCompanyList([]));
+  }, [isAnalyzePage]);
+
+  const analyzeSearchResults = analyzeSearchQuery.trim()
+    ? companyList.filter(
+        (c) =>
+          c.filerName.toLowerCase().includes(analyzeSearchQuery.trim().toLowerCase()) ||
+          c.secCode.includes(analyzeSearchQuery.trim())
+      ).slice(0, 15)
+    : [];
 
   const toggle = () => {
     setIsOpen((prev) => {
@@ -60,7 +89,7 @@ export function CompanySidebar() {
       >
         <a href="/" className={`flex items-center gap-2 min-w-0 ${!isOpen ? "justify-center" : ""}`}>
           <img src={logoUrl} height={28} width={28} alt="logo" className="shrink-0" />
-          {isOpen && <span className="font-bold text-lg text-slate-900">EDINET Screener</span>}
+          {isOpen && <span className="font-bold text-lg text-slate-900">エディー</span>}
         </a>
         <button
           type="button"
@@ -77,41 +106,123 @@ export function CompanySidebar() {
 
       {isOpen && (
         <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
-          {/* ナビ（Stitch 風） */}
-          <nav className="space-y-1">
-            <a
-              href="/"
-              className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg ${
-                isDashboard ? "text-blue-700 bg-blue-50" : "text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              <span className="material-symbols-outlined text-xl">home</span>
-              ダッシュボード
-            </a>
-            <a
-              href={filters.showOnlyFavorites ? "/" : "/?favorites=1"}
-              onClick={(e) => {
-                e.preventDefault();
-                if (filters.showOnlyFavorites) {
+          {/* タブ: 全て表示 / お気に入りだけ（企業一覧の時のみ） */}
+          {!isAnalyzePage && (
+            <nav className="flex rounded-lg border border-slate-200 p-0.5 bg-slate-50">
+              <a
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
                   setFilter("showOnlyFavorites", false);
-                  window.history.replaceState({}, "", "/");
-                } else {
+                  if (!isDashboard) window.location.href = "/";
+                  else window.history.replaceState({}, "", "/");
+                }}
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition ${
+                  !filters.showOnlyFavorites
+                    ? "bg-white text-slate-900 shadow-sm border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <span className="material-symbols-outlined text-lg">list</span>
+                全て表示
+              </a>
+              <a
+                href="/?favorites=1"
+                onClick={(e) => {
+                  e.preventDefault();
                   setFilter("showOnlyFavorites", true);
-                  if (isDashboard) {
-                    window.history.replaceState({}, "", "/?favorites=1");
-                  } else {
-                    window.location.href = "/?favorites=1";
-                  }
-                }
-              }}
-              className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg ${
-                filters.showOnlyFavorites ? "text-blue-700 bg-blue-50" : "text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              <span className="material-symbols-outlined text-xl">star</span>
-              お気に入り
-            </a>
-          </nav>
+                  if (!isDashboard) window.location.href = "/?favorites=1";
+                  else window.history.replaceState({}, "", "/?favorites=1");
+                }}
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition ${
+                  filters.showOnlyFavorites
+                    ? "bg-white text-slate-900 shadow-sm border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <span className="material-symbols-outlined text-lg">star</span>
+                お気に入りだけ
+              </a>
+            </nav>
+          )}
+
+          {/* 企業分析ページ: お気に入り・履歴・検索 */}
+          {isAnalyzePage && (
+            <>
+              <section>
+                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">検索</h3>
+                <input
+                  type="text"
+                  placeholder="会社名・銘柄コードで検索"
+                  className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={analyzeSearchQuery}
+                  onChange={(e) => setAnalyzeSearchQuery(e.target.value)}
+                />
+                {analyzeSearchResults.length > 0 && (
+                  <div className="mt-2 space-y-0.5 max-h-48 overflow-y-auto border border-slate-100 rounded-lg">
+                    {analyzeSearchResults.map((c) => (
+                      <a
+                        key={c.secCode}
+                        href={`/analyze/${c.secCode}`}
+                        className="block px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600"
+                      >
+                        {formatDisplayName(c.filerName)} ({c.secCode})
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              <section>
+                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">お気に入り</h3>
+                <div className="space-y-1">
+                  {Array.from(favorites).length === 0 ? (
+                    <p className="px-3 py-2 text-sm text-slate-400">お気に入りがありません</p>
+                  ) : (
+                    <>
+                      {companyList
+                        .filter((c) => favorites.has(c.secCode))
+                        .map((c) => (
+                          <a
+                            key={c.secCode}
+                            href={`/analyze/${c.secCode}`}
+                            className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600"
+                          >
+                            {formatDisplayName(c.filerName)} ({c.secCode})
+                          </a>
+                        ))}
+                      {Array.from(favorites)
+                        .filter((s) => !companyList.find((c) => c.secCode === s))
+                        .map((secCode) => (
+                          <a key={secCode} href={`/analyze/${secCode}`} className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600">
+                            {secCode}
+                          </a>
+                        ))}
+                    </>
+                  )}
+                </div>
+              </section>
+
+              <section>
+                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">履歴</h3>
+                <div className="space-y-1">
+                  {recent.length === 0 ? (
+                    <p className="px-3 py-2 text-sm text-slate-400">履歴がありません</p>
+                  ) : (
+                    recent.map((c) => (
+                      <a
+                        key={c.secCode}
+                        href={`/analyze/${c.secCode}`}
+                        className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600"
+                      >
+                        {formatDisplayName(c.filerName)} ({c.secCode})
+                      </a>
+                    ))
+                  )}
+                </div>
+              </section>
+            </>
+          )}
 
           {/* 検索・フィルター（企業一覧の時のみ表示） */}
           {!isAnalyzePage && (
@@ -176,26 +287,6 @@ export function CompanySidebar() {
                 🗑️ フィルターをクリア
               </button>
             </>
-          )}
-
-          {/* 最近閲覧した企業（企業分析の時のみ表示） */}
-          {isAnalyzePage && recent.length > 0 && (
-            <div className="pt-4 border-t border-slate-100">
-              <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                最近閲覧した企業
-              </h3>
-              <div className="mt-2 space-y-1">
-                {recent.map((c) => (
-                  <a
-                    key={c.secCode}
-                    href={`/analyze/${c.secCode}`}
-                    className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600"
-                  >
-                    {c.filerName.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || c.filerName} ({c.secCode})
-                  </a>
-                ))}
-              </div>
-            </div>
           )}
         </div>
       )}

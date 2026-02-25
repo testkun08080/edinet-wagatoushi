@@ -267,15 +267,15 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
 }
 
 function getThClass(colId: ColumnId): string {
-  const base = "text-right tabular-nums";
-  if (colId === "filerName") return "sticky left-0 z-10 bg-slate-50";
+  const base = "text-right tabular-nums whitespace-nowrap";
+  if (colId === "filerName") return "sticky left-0 z-10 bg-slate-50 whitespace-nowrap";
   return base;
 }
 
 function getTdClass(colId: ColumnId): string {
-  const base = "text-right tabular-nums";
-  if (colId === "filerName") return "sticky left-0 z-10 bg-white font-medium";
-  if (colId === "secCode" || colId === "edinetCode" || colId === "calcDate" || colId === "fiscalMonth") return "tabular-nums";
+  const base = "text-right tabular-nums whitespace-nowrap";
+  if (colId === "filerName") return "sticky left-0 z-10 bg-white font-medium whitespace-nowrap";
+  if (colId === "secCode" || colId === "edinetCode" || colId === "calcDate" || colId === "fiscalMonth") return "tabular-nums whitespace-nowrap";
   return base;
 }
 

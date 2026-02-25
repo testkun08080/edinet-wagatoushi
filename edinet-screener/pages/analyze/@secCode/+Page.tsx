@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useData } from "vike-react/useData";
-import type { Data } from "./+data.js";
-import type { CompanyMetricsRow } from "./+data.js";
+import type { Data, CompanyMetricsRow } from "./+data.js";
 import { useRecentCompanies } from "../../../components/RecentCompaniesContext.js";
 import { useFavorites } from "../../../components/FavoritesContext.js";
 
@@ -44,7 +43,7 @@ function DataTable({
         <table className="w-full text-sm text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="p-3 font-semibold text-slate-600 sticky left-0 bg-slate-50 z-20">項目</th>
+              <th className="p-3 font-semibold text-slate-600 sticky left-0 bg-slate-50 z-20 whitespace-nowrap">項目</th>
               {periods.map((p) => (
                 <th key={p.periodEnd} className="p-3 font-semibold text-slate-600 text-right whitespace-nowrap">
                   {p.periodEnd}
@@ -55,9 +54,9 @@ function DataTable({
           <tbody className="divide-y divide-slate-100">
             {keyList.map((key) => (
               <tr key={key}>
-                <td className="p-3 font-medium bg-white sticky left-0 text-slate-900">{key}</td>
+                <td className="p-3 font-medium bg-white sticky left-0 text-slate-900 whitespace-nowrap">{key}</td>
                 {periods.map((p, i) => (
-                  <td key={p.periodEnd} className="p-3 text-right tabular-nums text-slate-700">
+                  <td key={p.periodEnd} className="p-3 text-right tabular-nums text-slate-700 whitespace-nowrap">
                     {formatNum(data[i]?.[key] ?? "－")}
                   </td>
                 ))}
@@ -70,42 +69,93 @@ function DataTable({
   );
 }
 
-type TabId = "keiei" | "zaimu" | "cf" | "shihyo";
+const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
+  { key: "計算日", label: "計算日" },
+  { key: "決算月", label: "決算月" },
+  { key: "売上高", label: "売上高" },
+  { key: "営業利益", label: "営業利益" },
+  { key: "経常利益", label: "経常利益" },
+  { key: "当期純利益", label: "当期純利益" },
+  { key: "包括利益", label: "包括利益" },
+  { key: "EPS", label: "EPS" },
+  { key: "BPS", label: "BPS" },
+  { key: "ROE", label: "ROE" },
+  { key: "PER", label: "PER" },
+  { key: "PBR", label: "PBR" },
+  { key: "純資産額", label: "純資産額" },
+  { key: "総資産額", label: "総資産額" },
+  { key: "自己資本比率", label: "自己資本比率" },
+  { key: "流動資産", label: "流動資産" },
+  { key: "流動負債", label: "流動負債" },
+  { key: "負債", label: "負債" },
+  { key: "営業CF", label: "営業CF" },
+  { key: "投資CF", label: "投資CF" },
+  { key: "財務CF", label: "財務CF" },
+  { key: "現金残高", label: "現金残高" },
+  { key: "配当性向", label: "配当性向" },
+  { key: "dividendPerShare", label: "1株当たり配当金" },
+  { key: "配当利回り", label: "配当利回り" },
+  { key: "発行済株式総数", label: "発行済株式総数" },
+  { key: "投資有価証券", label: "投資有価証券" },
+];
 
-function IndicatorsTab({ metrics }: { metrics: CompanyMetricsRow | null }) {
-  if (!metrics) return <p className="text-slate-500 text-sm">指標データがありません。</p>;
-
-  const items: { label: string; value: string | number | null; suffix?: string }[] = [
-    { label: "PBR", value: metrics.PBR, suffix: "倍" },
-    { label: "PER", value: metrics.PER, suffix: "倍" },
-    { label: "配当利回り", value: metrics.配当利回り, suffix: "%" },
-    { label: "ROE", value: metrics.ROE != null ? (parseFloat(metrics.ROE) * 100).toFixed(2) : null, suffix: "%" },
-    { label: "自己資本比率", value: metrics.自己資本比率 != null ? (parseFloat(metrics.自己資本比率) * 100).toFixed(2) : null, suffix: "%" },
-    { label: "EPS", value: metrics.EPS },
-    { label: "BPS", value: metrics.BPS },
-    { label: "配当性向", value: metrics.配当性向 != null ? (parseFloat(metrics.配当性向) * 100).toFixed(2) : null, suffix: "%" },
-    { label: "1株当たり配当金", value: metrics.dividendPerShare, suffix: "円" },
-    { label: "発行済株式総数", value: metrics.発行済株式総数 },
-  ];
-
-  const valid = items.filter((i) => i.value != null && i.value !== "");
-
-  if (valid.length === 0) return <p className="text-slate-500 text-sm">表示できる指標がありません。</p>;
+function IndicatorsTable({
+  metrics,
+  formatNum,
+}: {
+  metrics: CompanyMetricsRow | null;
+  formatNum: (s: string) => string;
+}) {
+  if (!metrics) {
+    return (
+      <section className="mb-8">
+        <h2 className="text-lg font-bold mb-4 text-slate-900">指標</h2>
+        <p className="text-slate-500">この企業の指標データはありません。</p>
+      </section>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-      {valid.map(({ label, value, suffix }) => (
-        <div key={label} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{label}</p>
-          <p className="text-xl font-bold tabular-nums text-slate-900">
-            {typeof value === "number" ? value.toLocaleString() : value}
-            {suffix && <span className="text-xs font-normal text-slate-400 ml-1">{suffix}</span>}
-          </p>
-        </div>
-      ))}
-    </div>
+    <section className="mb-8">
+      <h2 className="text-lg font-bold mb-4 text-slate-900">指標</h2>
+      <div className="overflow-x-auto border border-slate-200 rounded-xl">
+        <table className="w-full text-sm text-left border-collapse">
+          <thead>
+            <tr className="bg-slate-50 border-b border-slate-200">
+              <th className="p-3 font-semibold text-slate-600 text-left">項目</th>
+              <th className="p-3 font-semibold text-slate-600 text-right">値</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {INDICATOR_KEYS.map(({ key, label }) => {
+              const val = metrics[key];
+              const display =
+                val === null || val === undefined
+                  ? "－"
+                  : typeof val === "number"
+                    ? val.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                    : (() => {
+                        const s = String(val);
+                        const n = parseFloat(s);
+                        if (isNaN(n)) return s;
+                        if (Number.isInteger(n) && Math.abs(n) >= 1000) return formatNum(s);
+                        return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
+                      })();
+              return (
+                <tr key={key}>
+                  <td className="p-3 font-medium text-slate-900 whitespace-nowrap">{label}</td>
+                  <td className="p-3 text-right tabular-nums text-slate-700 whitespace-nowrap">{display}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }
+
+type TabId = "keiei" | "zaimu" | "cf" | "shihyo";
 
 export default function Page() {
   const { company, metrics, error } = useData<Data>();
@@ -170,37 +220,6 @@ export default function Page() {
           </div>
         </div>
 
-        {/* KPI カード（時価総額は非表示） */}
-        {metrics && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 mt-6">
-            {[
-              { label: "PBR", value: metrics.PBR, suffix: "倍" },
-              { label: "PER", value: metrics.PER, suffix: "倍" },
-              { label: "配当利回り", value: metrics.配当利回り, suffix: "%" },
-              { label: "ROE", value: metrics.ROE, suffix: "%", scale: 100 },
-              { label: "自己資本比率", value: metrics.自己資本比率, suffix: "%", scale: 100 },
-            ].map(({ label, value, suffix, scale }) => {
-              const display =
-                value != null
-                  ? scale
-                    ? (parseFloat(String(value)) * scale).toFixed(2)
-                    : typeof value === "number"
-                      ? value.toFixed(value >= 100 ? 0 : 2)
-                      : value
-                  : null;
-              if (display == null) return null;
-              return (
-                <div key={label} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{label}</p>
-                  <p className="text-xl font-bold tabular-nums text-slate-900">
-                    {display}
-                    <span className="text-xs font-normal text-slate-400 ml-1">{suffix}</span>
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </header>
 
       {/* タブ */}
@@ -238,7 +257,7 @@ export default function Page() {
 
         {activeTab === "cf" && <DataTable title="キャッシュフロー" data={periods.map((p) => p.cf)} periods={periods} />}
 
-        {activeTab === "shihyo" && <IndicatorsTab metrics={metrics} />}
+        {activeTab === "shihyo" && <IndicatorsTable metrics={metrics} formatNum={formatNum} />}
       </div>
     </div>
   );

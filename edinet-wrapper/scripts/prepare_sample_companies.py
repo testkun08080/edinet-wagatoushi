@@ -98,8 +98,9 @@ def process_company(data_set_root: Path, edinet_code: str) -> tuple[dict, dict] 
     for tsv_path, json_path in pairs:
         with open(json_path, encoding="utf-8") as f:
             meta = json.load(f)
-        filer_name = meta.get("filerName", "")
-        sec_code = meta.get("secCode", "").lstrip("0") or meta.get("secCode", "")
+        filer_name = meta.get("filerName") or ""
+        sec_code_raw = meta.get("secCode") or ""
+        sec_code = sec_code_raw.lstrip("0") or sec_code_raw
         period_end = meta.get("periodEnd", "")
         period_start = meta.get("periodStart", "")
         doc_id = meta.get("docID", "")
@@ -130,7 +131,7 @@ def process_company(data_set_root: Path, edinet_code: str) -> tuple[dict, dict] 
     if not periods:
         return None
 
-    sec_code = sec_code.lstrip("0") or sec_code
+    sec_code = (sec_code or "").lstrip("0") or sec_code or ""
 
     company_entry = {
         "edinetCode": edinet_code,

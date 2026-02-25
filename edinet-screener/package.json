@@ -1,17 +1,21 @@
 {
   "scripts": {
     "dev": "vike dev",
-    "build": "vike build",
+    "generate-data": "bash scripts/generate-data.sh",
+    "build": "npm run generate-data && vike build",
+    "build:app": "vike build",
     "preview": "vike preview",
     "test": "vike build && vike preview",
     "lint": "eslint .",
-    "deploy": "vike build && wrangler deploy",
+    "deploy": "npm run build && wrangler deploy",
     "generate-types": "wrangler types"
   },
   "dependencies": {
     "@photonjs/cloudflare": "^0.1.13",
     "@sentry/react": "^10.32.1",
+    "chart.js": "^4.5.1",
     "react": "^19.2.3",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.3",
     "vike": "^0.4.251",
     "vike-photon": "^0.1.24",

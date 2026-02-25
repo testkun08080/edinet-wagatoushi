@@ -4,8 +4,25 @@ EDINET Screener 用のサンプルデータ（`companies.json` / `summaries/*.js
 
 ## 前提
 
-- `data-set/` に EDINET コーパス（TSV + JSON）が配置されていること
 - `edinet-wrapper` で `uv run` が利用できること
+- fetch_33_companies: `data-set/` に既存データが必要（ダウンロードは行わない）
+- 既存 data-set から生成する場合: `data-set/` に EDINET コーパス（TSV + JSON）が配置されていること
+
+**ビルド時の自動生成**: `edinet-screener` で `npm run build` を実行すると、プロジェクトルートに `data-set/` がある場合のみ `scripts/generate-data.sh` が走り、`fetch_33_companies.py` で `public/data` を生成してから Vike ビルドします。
+
+---
+
+## 0. 固定33社を一括生成（推奨）
+
+```bash
+cd edinet-wrapper
+uv run python scripts/fetch_33_companies.py
+```
+
+- **対象**: プロジェクトルートの `data-set/` 内、`quarterly/` 配下の四半期報告書（TSV+JSON）が揃っている企業を、データ数の多い順に33社ピックアップ
+- **処理内容**: `prepare_sample_companies` で `edinet-screener/public/data/` に出力
+- **ダウンロード**: なし（data-set に既にあるデータのみ使用）
+- **出力**: `scripts/company_list_33.json` に今回ピックアップした33社を保存
 
 ---
 
