@@ -29,8 +29,6 @@ on:
         description: "月（カンマ or 範囲 例: 1,3,5 または 9-12）。未指定で全12ヶ月"
         required: false
         type: string
-  schedule:
-    - cron: "0 0 1 1 *" # 未使用時は年1回で実質オフ
 
 env:
   UV_COMPILE_BYTECODE: 0
@@ -70,7 +68,7 @@ jobs:
     timeout-minutes: 360 # 6時間
     strategy:
       fail-fast: false
-      max-parallel: 1  # EDINET 負荷軽減: 月ジョブは1つずつ順次実行
+      max-parallel: 1 # EDINET 負荷軽減: 月ジョブは1つずつ順次実行
       matrix:
         month: ${{ fromJson(needs.prepare.outputs.months_json) }}
     steps:
