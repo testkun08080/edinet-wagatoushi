@@ -50,6 +50,13 @@ def parse_args():
         default=8,
         help="Number of threads for parallel download",
     )
+    parser.add_argument(
+        "--request_delay",
+        type=float,
+        default=None,
+        metavar="SEC",
+        help="EDINET API リクエスト間隔（秒）。未指定時は環境変数 EDINET_REQUEST_DELAY または 3.0",
+    )
     return parser.parse_args()
 
 
@@ -86,7 +93,7 @@ if __name__ == "__main__":
     # Downloader は cwd の data/ に EdinetcodeDlInfo を置く
     project_root = Path(__file__).resolve().parent.parent
     (project_root / "data").mkdir(parents=True, exist_ok=True)
-    downloader = Downloader()
+    downloader = Downloader(request_delay_sec=args.request_delay)
     results = downloader.get_results(
         args.start_date, args.end_date, listed_only=args.listed_only
     )

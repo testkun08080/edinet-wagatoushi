@@ -62,8 +62,21 @@ DOC_TYPE_CODE_MAP = {
 }
 
 
+def _parse_request_delay_sec(value: float | None, env_key: str = "EDINET_REQUEST_DELAY") -> float:
+    """リクエスト間隔（秒）。外部から指定がなければ環境変数、未設定なら 3.0。"""
+    if value is not None:
+        return max(0.0, float(value))
+    raw = os.environ.get(env_key)
+    if raw is None or raw.strip() == "":
+        return 3.0
+    try:
+        return max(0.0, float(raw.strip()))
+    except ValueError:
+        return 3.0
+
+
 class Downloader:
-    def __init__(self):
+    def __init__(self, request_delay_sec: float | None = None):
         # 仕様書では api.edinet-fsa.go.jp。disclosure. も同一応答の可能性あり。
         self.base_url = "https://api.edinet-fsa.go.jp/api/v2/documents.json"
         self._doc_base_url = "https://api.edinet-fsa.go.jp/api/v2/documents"
@@ -72,6 +85,8 @@ class Downloader:
         assert raw_key is not None, "EDINET_API_KEY is not set"
         # GitHub Secrets / .env で末尾改行が入ることがあるため strip（%0A で 403 になる）
         self.edinet_api_key = raw_key.strip()
+        # 成功時リクエスト間隔（秒）。EDINET 負荷軽減用。環境変数 EDINET_REQUEST_DELAY で上書き可。
+        self._request_delay_sec = _parse_request_delay_sec(request_delay_sec)
 
     @staticmethod
     def _load_edinet_code_info() -> pl.DataFrame:
@@ -106,10 +121,9 @@ class Downloader:
     _GET_RESPONSE_MAX_RETRIES = 5
     _GET_RESPONSE_RETRY_DELAY = 60  # 秒（レート制限・一時的な API 不調対策）
 
-    @staticmethod
-    def get_response(url: str, date: datetime.date, type: int, key: str) -> dict:
-        # type: 1:metadata only, 2:metadata and results
-        params = {"date": date, "type": type, "Subscription-Key": key}
+    def get_response(self, url: str, date: datetime.date, req_type: int, key: str) -> dict:
+        # req_type: 1=metadata only, 2=metadata and results
+        params = {"date": date, "type": req_type, "Subscription-Key": key}
         for attempt in range(Downloader._GET_RESPONSE_MAX_RETRIES):
             res = requests.get(url, params=params)
             try:
@@ -121,7 +135,9 @@ class Downloader:
                         time.sleep(Downloader._GET_RESPONSE_RETRY_DELAY)
                         continue
                     res.raise_for_status()
-                return res.json()
+                data = res.json()
+                time.sleep(self._request_delay_sec)
+                return data
             except (json.JSONDecodeError, requests.exceptions.JSONDecodeError):
                 logger.warning(
                     f"EDINET API non-JSON response (attempt {attempt + 1}/{Downloader._GET_RESPONSE_MAX_RETRIES}), status={res.status_code}, body: {res.text[:500]}"
@@ -225,6 +241,7 @@ class Downloader:
         with requests.get(url, params=params) as res:
             with open(os.path.join(output_dir, f"{doc_id}.pdf"), "wb") as f:
                 f.write(res.content)
+        time.sleep(self._request_delay_sec)
         logger.info(f"Downloaded {doc_id}.pdf to {output_dir}")
 
     def _download_document_in_xbrl(self, doc_id: str, output_dir: str = "data") -> None:
@@ -244,6 +261,7 @@ class Downloader:
                                 os.path.join(tmp_dir, file),
                                 output_file,
                             )
+            time.sleep(self._request_delay_sec)
         except Exception as e:
             logger.error(f"Error downloading document {doc_id}: {e}")
             return None
@@ -266,6 +284,7 @@ class Downloader:
                                         os.path.join(tmp_dir, file),
                                         output_file,
                                     )
+            time.sleep(self._request_delay_sec)
         except Exception as e:
             logger.error(f"Error downloading document {doc_id}: {e}")
             return None

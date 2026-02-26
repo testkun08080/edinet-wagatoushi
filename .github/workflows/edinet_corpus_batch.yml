@@ -1,5 +1,6 @@
 # 一括起動: 指定した年範囲 × 書類種別（複数）の組み合わせで EDINET Corpus を起動する
-name: EDINET Corpus (Batch)
+# 1 本の corpus が完了してから次を dispatch（順次実行）
+name: EDINET Corpus (バッチ/順次実行)
 
 on:
   workflow_dispatch:
@@ -23,6 +24,11 @@ on:
         description: "月（カンマ or 範囲 例: 9-12）。未指定で全12ヶ月"
         required: false
         type: string
+      wait_for_completion:
+        description: "各 corpus 完了を待ってから次を発行（推奨: true）"
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -30,23 +36,44 @@ permissions:
 
 jobs:
   dispatch:
-    name: Dispatch corpus workflows
+    name: Dispatch corpus workflows (sequential)
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger EDINET Corpus for each (year × doc_type)
+      - name: Trigger EDINET Corpus for each (year × doc_type), wait for completion between runs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          REF: ${{ github.ref_name }}
+          WAIT: ${{ inputs.wait_for_completion }}
         run: |
-          START=${{ inputs.start_year }}
-          END=${{ inputs.end_year }}
+          set -e
+          START="${{ inputs.start_year }}"
+          END="${{ inputs.end_year }}"
           DOC_TYPES="${{ inputs.doc_types }}"
           MONTHS="${{ inputs.months }}"
+          API="https://api.github.com/repos/$REPO"
+
+          wait_run() {
+            local run_id=$1
+            local poll_interval=60
+            local max_wait=21600  # 6時間
+            local waited=0
+            while [ "$waited" -lt "$max_wait" ]; do
+              st=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" "$API/actions/runs/$run_id" | jq -r '.status')
+              echo "  Run $run_id status: $st"
+              [ "$st" = "completed" ] && return 0
+              sleep "$poll_interval"
+              waited=$((waited + poll_interval))
+            done
+            echo "  Timeout waiting for run $run_id" >&2
+            return 1
+          }
 
           for year in $(seq "$START" "$END"); do
             for doc_type in $(echo "$DOC_TYPES" | tr ',' ' '); do
               doc_type=$(echo "$doc_type" | xargs)
               [ -z "$doc_type" ] && continue
-              echo "Dispatching: year=$year doc_type=$doc_type months=${MONTHS:-all}"
+              echo "=== Dispatching: year=$year doc_type=$doc_type months=${MONTHS:-all} ==="
               if [ -n "$MONTHS" ]; then
                 inputs=$(jq -n \
                   --arg doc_type "$doc_type" \
@@ -62,9 +89,25 @@ jobs:
               curl -sS -X POST \
                 -H "Accept: application/vnd.github+json" \
                 -H "Authorization: Bearer $GH_TOKEN" \
-                "https://api.github.com/repos/${{ github.repository }}/actions/workflows/edinet_corpus.yml/dispatches" \
-                -d "{\"ref\":\"${{ github.ref_name }}\",\"inputs\":$inputs}"
-              sleep 1
+                "$API/actions/workflows/edinet_corpus.yml/dispatches" \
+                -d "{\"ref\":\"$REF\",\"inputs\":$inputs}"
+
+              if [ "$WAIT" = "true" ]; then
+                echo "Waiting for workflow run to appear..."
+                sleep 10
+                run_id=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" \
+                  "$API/actions/workflows/edinet_corpus.yml/runs?per_page=1&branch=$REF" \
+                  | jq -r '.workflow_runs[0].id')
+                if [ -n "$run_id" ] && [ "$run_id" != "null" ]; then
+                  echo "Waiting for run $run_id to complete (poll every 60s, max 6h)..."
+                  wait_run "$run_id" || true
+                else
+                  echo "Could not get run id; waiting 5min before next dispatch."
+                  sleep 300
+                fi
+              else
+                sleep 5
+              fi
             done
           done
           echo "Done. Check Actions tab for triggered workflows."
