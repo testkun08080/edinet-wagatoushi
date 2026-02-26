@@ -47,7 +47,7 @@ def parse_args():
     parser.add_argument(
         "--max_workers",
         type=int,
-        default=8,
+        default=1,
         help="Number of threads for parallel download",
     )
     parser.add_argument(
