@@ -43,8 +43,6 @@ Thumbs.db
 .coverage
 htmlcov/
 
-
-data/
 dataset/
 edinet_corpus/
 fraud_detection/
