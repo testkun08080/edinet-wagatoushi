@@ -29,6 +29,11 @@ on:
         description: "月（カンマ or 範囲 例: 1,3,5 または 9-12）。未指定で全12ヶ月"
         required: false
         type: string
+      request_delay:
+        description: "EDINET API リクエスト間隔（秒）。未指定時は 3"
+        required: false
+        default: "3"
+        type: string
 
 env:
   UV_COMPILE_BYTECODE: 0
@@ -96,6 +101,7 @@ jobs:
         working-directory: edinet-wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          EDINET_REQUEST_DELAY: ${{ inputs.request_delay || '3' }}
           DOC_TYPE: ${{ inputs.doc_type || 'quarterly' }}
           YEAR: ${{ inputs.year || '2024' }}
           MONTH: ${{ matrix.month }}
