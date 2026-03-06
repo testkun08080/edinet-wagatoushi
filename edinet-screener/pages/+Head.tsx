@@ -5,6 +5,10 @@ import logoUrl from "../assets/logo.svg";
 export function Head() {
   return (
     <>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
+      />
       <link rel="icon" href={logoUrl} />
       <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap"

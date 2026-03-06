@@ -18,6 +18,11 @@ body {
   box-sizing: border-box;
 }
 
+/* 狭い画面: 固定ヘッダー分だけメインを下にずらし、コンテンツが被らないようにする */
+.narrow-viewport #page-container {
+  padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
+}
+
 /* Page Transition Animation */
 #page-content {
   opacity: 1;
