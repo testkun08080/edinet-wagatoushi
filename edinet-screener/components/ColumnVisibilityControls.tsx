@@ -8,19 +8,23 @@ export function ColumnVisibilityControls() {
     useColumnVisibility();
   const [open, setOpen] = useState(false);
 
+  const toolbarBtnBase =
+    "inline-flex items-center justify-center gap-1.5 min-h-[36px] min-w-[36px] px-3 py-2 rounded-md text-sm font-medium bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition";
+
   return (
     <div className="relative">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+        className={`${toolbarBtnBase} ${open ? "bg-slate-100 border-slate-300" : ""}`}
         aria-expanded={open}
         aria-haspopup="true"
+        title="表示列"
       >
-        <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
+        <span className="material-symbols-outlined text-[20px]" aria-hidden>
           view_column
         </span>
-        表示列
+        <span className="hidden md:inline">表示列</span>
       </button>
       {open && (
         <>

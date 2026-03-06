@@ -20,11 +20,9 @@ function formatNum(s: string): string {
 }
 
 function DataTable({
-  title,
   data,
   periods,
 }: {
-  title: string;
   data: Record<string, string>[];
   periods: { periodEnd: string }[];
 }) {
@@ -37,9 +35,7 @@ function DataTable({
   if (keyList.length === 0) return null;
 
   return (
-    <section className="mb-8">
-      <h2 className="text-lg font-bold mb-4 text-slate-900">{title}</h2>
-      <div className="overflow-x-auto border border-slate-200 rounded-xl">
+    <div className="overflow-x-auto border border-slate-200 rounded-xl">
         <table className="w-full text-sm text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
@@ -65,7 +61,6 @@ function DataTable({
           </tbody>
         </table>
       </div>
-    </section>
   );
 }
 
@@ -110,18 +105,11 @@ function IndicatorsTable({
   formatNum: (s: string) => string;
 }) {
   if (!metrics) {
-    return (
-      <section className="mb-8">
-        <h2 className="text-lg font-bold mb-4 text-slate-900">指標</h2>
-        <p className="text-slate-500">この企業の指標データはありません。</p>
-      </section>
-    );
+    return <p className="text-slate-500">この企業の指標データはありません。</p>;
   }
 
   return (
-    <section className="mb-8">
-      <h2 className="text-lg font-bold mb-4 text-slate-900">指標</h2>
-      <div className="overflow-x-auto border border-slate-200 rounded-xl">
+    <div className="overflow-x-auto border border-slate-200 rounded-xl">
         <table className="w-full text-sm text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
@@ -160,17 +148,16 @@ function IndicatorsTable({
           </tbody>
         </table>
       </div>
-    </section>
   );
 }
 
-type TabId = "keiei" | "zaimu" | "cf" | "shihyo";
+type TabId = "summary" | "shihyo" | "pl" | "bs" | "cf";
 
 export default function Page() {
   const { company, metrics, error } = useData<Data>();
   const { addRecent } = useRecentCompanies();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const [activeTab, setActiveTab] = useState<TabId>("keiei");
+  const [activeTab, setActiveTab] = useState<TabId>("summary");
 
   useEffect(() => {
     if (company) {
@@ -194,10 +181,11 @@ export default function Page() {
   const { filerName, secCode, periods } = company;
 
   const tabs: { id: TabId; label: string }[] = [
-    { id: "keiei", label: "経営成績" },
-    { id: "zaimu", label: "財務諸表" },
-    { id: "cf", label: "キャッシュフロー" },
+    { id: "summary", label: "サマリー" },
     { id: "shihyo", label: "指標" },
+    { id: "pl", label: "損益計算書" },
+    { id: "bs", label: "貸借対照表" },
+    { id: "cf", label: "キャッシュフロー計算書" },
   ];
 
   return (
@@ -253,20 +241,11 @@ export default function Page() {
 
       {/* タブコンテンツ */}
       <div className="flex-1 overflow-y-auto p-6">
-        {activeTab === "keiei" && (
-          <DataTable title="経営成績" data={periods.map((p) => p.summary)} periods={periods} />
-        )}
-
-        {activeTab === "zaimu" && (
-          <>
-            <DataTable title="損益計算書" data={periods.map((p) => p.pl)} periods={periods} />
-            <DataTable title="貸借対照表" data={periods.map((p) => p.bs)} periods={periods} />
-          </>
-        )}
-
-        {activeTab === "cf" && <DataTable title="キャッシュフロー" data={periods.map((p) => p.cf)} periods={periods} />}
-
+        {activeTab === "summary" && <DataTable data={periods.map((p) => p.summary)} periods={periods} />}
         {activeTab === "shihyo" && <IndicatorsTable metrics={metrics} formatNum={formatNum} />}
+        {activeTab === "pl" && <DataTable data={periods.map((p) => p.pl)} periods={periods} />}
+        {activeTab === "bs" && <DataTable data={periods.map((p) => p.bs)} periods={periods} />}
+        {activeTab === "cf" && <DataTable data={periods.map((p) => p.cf)} periods={periods} />}
       </div>
     </div>
   );

@@ -191,17 +191,21 @@ export function TableDownloadButton() {
     }
   }, [filters, favorites, visibility, columnIds, columnLabel]);
 
+  const toolbarBtnBase =
+    "inline-flex items-center justify-center gap-1.5 min-h-[36px] min-w-[36px] px-3 py-2 rounded-md text-sm font-medium bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition disabled:opacity-50";
+
   return (
     <button
       type="button"
       onClick={handleDownload}
       disabled={loading}
-      className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition disabled:opacity-50"
+      className={toolbarBtnBase}
+      title={loading ? "ダウンロード中" : "CSVダウンロード"}
     >
-      <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
+      <span className="material-symbols-outlined text-[20px]" aria-hidden>
         download
       </span>
-      {loading ? "ダウンロード中…" : "ダウンロード"}
+      <span className="hidden md:inline">{loading ? "ダウンロード中…" : "ダウンロード"}</span>
     </button>
   );
 }

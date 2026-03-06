@@ -60,7 +60,6 @@ export function CompanySidebar() {
   const [companyList, setCompanyList] = useState<CompanyItem[]>([]);
   const [analyzeSearchQuery, setAnalyzeSearchQuery] = useState("");
 
-  const isDashboard = urlPathname === "/";
   const isAnalyzePage = urlPathname.startsWith("/analyze/");
 
   useEffect(() => {
@@ -110,46 +109,6 @@ export function CompanySidebar() {
 
   const sidebarBody = (
     <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
-          {/* タブ: 全て表示 / お気に入りだけ（企業一覧の時のみ） */}
-          {!isAnalyzePage && (
-            <nav className="flex rounded-lg border border-slate-200 p-0.5 bg-slate-50">
-              <a
-                href="/"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setFilter("showOnlyFavorites", false);
-                  if (!isDashboard) window.location.href = "/";
-                  else window.history.replaceState({}, "", "/");
-                }}
-                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition ${
-                  !filters.showOnlyFavorites
-                    ? "bg-white text-slate-900 shadow-sm border border-slate-200"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                <span className="material-symbols-outlined text-lg">list</span>
-                全て表示
-              </a>
-              <a
-                href="/?favorites=1"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setFilter("showOnlyFavorites", true);
-                  if (!isDashboard) window.location.href = "/?favorites=1";
-                  else window.history.replaceState({}, "", "/?favorites=1");
-                }}
-                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition ${
-                  filters.showOnlyFavorites
-                    ? "bg-white text-slate-900 shadow-sm border border-slate-200"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                <span className="material-symbols-outlined text-lg">star</span>
-                お気に入りだけ
-              </a>
-            </nav>
-          )}
-
           {/* 企業分析ページ: お気に入り・履歴・検索 */}
           {isAnalyzePage && (
             <>
