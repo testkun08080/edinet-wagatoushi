@@ -18,6 +18,8 @@
 | PER | - | × 株価連携で将来的に算出 |
 | PBR | - | × 株価連携で将来的に算出 |
 | 配当利回り | - | × 株価連携で将来的に算出 |
+| **ネットキャッシュ** | summary / bs（流動資産・投資有価証券・負債） | ○ （流動資産＋投資有価証券×70％）－負債。EDINET のみで算出可 |
+| **ネットキャッシュ比率** | ネットキャッシュ ÷ 時価総額 | × 時価総額が必要。**J-Quants はオミット**のため未算出。割安判断用 |
 
 ---
 
@@ -129,7 +131,7 @@
 
 ## 7. データの取り方（prepare スクリプト）
 
-`prepare_sample_companies.py` の `metrics_entry` で、`latest.get("summary", {})` だけでなく  
+`build_screener_data.py` の `summary_to_metrics_row` で、`latest.get("summary", {})` だけでなく  
 `latest.get("pl", {})`, `latest.get("bs", {})`, `latest.get("cf", {})` からも項目を追加できます。
 
 例:

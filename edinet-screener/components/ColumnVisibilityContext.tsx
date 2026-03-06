@@ -12,6 +12,9 @@ export type ColumnId =
   | "PER"
   | "payoutRatio"
   | "dividendYield"
+  | "marketCap"
+  | "netCash"
+  | "netCashRatio"
   | "EPS"
   | "ROE"
   | "equityRatio"
@@ -48,6 +51,9 @@ const COLUMN_CONFIG: { id: ColumnId; label: string; category: ColumnCategory }[]
   { id: "PER", label: "PER", category: "valuation" },
   { id: "payoutRatio", label: "配当性向", category: "valuation" },
   { id: "dividendYield", label: "配当利回り", category: "valuation" },
+  { id: "marketCap", label: "時価総額", category: "valuation" },
+  { id: "netCash", label: "ネットキャッシュ", category: "valuation" },
+  { id: "netCashRatio", label: "ネットキャッシュ比率", category: "valuation" },
   { id: "EPS", label: "EPS", category: "valuation" },
   { id: "ROE", label: "ROE", category: "valuation" },
   { id: "equityRatio", label: "自己資本比率", category: "valuation" },

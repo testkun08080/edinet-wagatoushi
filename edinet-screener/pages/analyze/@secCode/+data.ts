@@ -51,6 +51,9 @@ export type CompanyMetricsRow = {
   PER: number | null;
   PBR: number | null;
   配当利回り: number | null;
+  時価総額?: number | null;
+  ネットキャッシュ?: number | null;
+  ネットキャッシュ比率?: number | null;
 };
 
 export type Data = Awaited<ReturnType<typeof data>>;

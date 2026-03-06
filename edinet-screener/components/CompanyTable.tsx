@@ -36,6 +36,9 @@ export type CompanyMetric = {
   PER: number | null;
   PBR: number | null;
   配当利回り: number | null;
+  時価総額?: number | null;
+  ネットキャッシュ?: number | null;
+  ネットキャッシュ比率?: number | null;
 };
 
 function formatSales(s: string | null): string {
@@ -126,6 +129,12 @@ function getCellValue(
       return m.PBR != null ? m.PBR.toFixed(2) : "－";
     case "dividendYield":
       return m.配当利回り != null ? m.配当利回り.toFixed(2) + "%" : "－";
+    case "marketCap":
+      return m.時価総額 != null ? formatSales(String(m.時価総額)) : "－";
+    case "netCash":
+      return m.ネットキャッシュ != null ? formatSales(String(m.ネットキャッシュ)) : "－";
+    case "netCashRatio":
+      return m.ネットキャッシュ比率 != null ? (m.ネットキャッシュ比率 * 100).toFixed(2) + "%" : "－";
     case "equityRatio":
       return formatRatio(m.自己資本比率);
     case "ROE":
@@ -205,6 +214,12 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
       return m.PBR ?? -Infinity;
     case "dividendYield":
       return m.配当利回り ?? -Infinity;
+    case "marketCap":
+      return m.時価総額 ?? -Infinity;
+    case "netCash":
+      return m.ネットキャッシュ ?? -Infinity;
+    case "netCashRatio":
+      return m.ネットキャッシュ比率 ?? -Infinity;
     case "equityRatio":
       return m.自己資本比率 != null ? parseFloat(m.自己資本比率) : -Infinity;
     case "ROE":

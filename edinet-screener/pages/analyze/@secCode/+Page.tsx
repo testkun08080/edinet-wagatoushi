@@ -95,6 +95,9 @@ const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
   { key: "配当性向", label: "配当性向" },
   { key: "dividendPerShare", label: "1株当たり配当金" },
   { key: "配当利回り", label: "配当利回り" },
+  { key: "時価総額", label: "時価総額" },
+  { key: "ネットキャッシュ", label: "ネットキャッシュ" },
+  { key: "ネットキャッシュ比率", label: "ネットキャッシュ比率" },
   { key: "発行済株式総数", label: "発行済株式総数" },
   { key: "投資有価証券", label: "投資有価証券" },
 ];
@@ -129,18 +132,24 @@ function IndicatorsTable({
           <tbody className="divide-y divide-slate-100">
             {INDICATOR_KEYS.map(({ key, label }) => {
               const val = metrics[key];
-              const display =
-                val === null || val === undefined
-                  ? "－"
-                  : typeof val === "number"
-                    ? val.toLocaleString(undefined, { maximumFractionDigits: 2 })
-                    : (() => {
-                        const s = String(val);
-                        const n = parseFloat(s);
-                        if (isNaN(n)) return s;
-                        if (Number.isInteger(n) && Math.abs(n) >= 1000) return formatNum(s);
-                        return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
-                      })();
+              let display: string;
+              if (val === null || val === undefined) {
+                display = "－";
+              } else if (key === "ネットキャッシュ比率" && typeof val === "number") {
+                display = (val * 100).toFixed(2) + "%";
+              } else if (typeof val === "number") {
+                if ((key === "時価総額" || key === "ネットキャッシュ") && Math.abs(val) >= 1000) {
+                  display = formatNum(String(val));
+                } else {
+                  display = val.toLocaleString(undefined, { maximumFractionDigits: 2 });
+                }
+              } else {
+                const s = String(val);
+                const n = parseFloat(s);
+                if (isNaN(n)) display = s;
+                else if (Number.isInteger(n) && Math.abs(n) >= 1000) display = formatNum(s);
+                else display = n.toLocaleString(undefined, { maximumFractionDigits: 4 });
+              }
               return (
                 <tr key={key}>
                   <td className="p-3 font-medium text-slate-900 whitespace-nowrap">{label}</td>

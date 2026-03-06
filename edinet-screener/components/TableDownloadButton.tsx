@@ -81,6 +81,12 @@ function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
       return m.PBR != null ? m.PBR.toFixed(2) : "－";
     case "dividendYield":
       return m.配当利回り != null ? m.配当利回り.toFixed(2) + "%" : "－";
+    case "marketCap":
+      return m.時価総額 != null ? formatSales(String(m.時価総額)) : "－";
+    case "netCash":
+      return m.ネットキャッシュ != null ? formatSales(String(m.ネットキャッシュ)) : "－";
+    case "netCashRatio":
+      return m.ネットキャッシュ比率 != null ? (m.ネットキャッシュ比率 * 100).toFixed(2) + "%" : "－";
     case "equityRatio":
       return formatRatio(m.自己資本比率);
     case "ROE":

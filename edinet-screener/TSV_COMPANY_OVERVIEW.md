@@ -59,13 +59,13 @@ EDINET の TSV（有価証券報告書など）から、会社の概要・ジャ
 | `summaries/*.json` | 会社名, 証券コード, 期間別 summary / pl / bs / cf | TEXT（事業の内容など）, META の一部 |
 | `company_metrics.json` | 財務指標（PER, PBR, ROE など） | 業種, 事業の内容 |
 
-**事業の内容** や **沿革** などのテキストを利用するには、`prepare_sample_company.py` 相当の処理で TSV をパースし、`financial_data.text` を summaries に含めるように拡張する必要があります。
+**事業の内容** や **沿革** などのテキストを利用するには、`build_screener_data.py` 相当の処理で TSV をパースし、`financial_data.text` を summaries に含めるように拡張する必要があります。
 
 ---
 
 ## 4. 実装の方向性（案）
 
-1. **事業の内容・沿革**: `prepare_sample_company.py` を拡張し、`parse_tsv()` の `text` のうち  
+1. **事業の内容・沿革**: `build_screener_data.py` を拡張し、`parse_tsv()` の `text` のうち  
    `事業の内容`, `沿革`, `業績等の概要` などを summaries JSON に追加する。
 2. **業種**: `EdinetcodeDlInfo.csv` をダウンロードし、EDINETコード ↔ 提出者業種 のマッピングを作成。  
    `company_metrics.json` や別ファイル（例: `companies_master.json`）に業種を格納する。

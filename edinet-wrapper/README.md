@@ -34,7 +34,7 @@ EDINET API を使う場合は、**edinet-wrapper** のルートに `.env` を置
 
 - **リモートに置いてビルド**: データセットを zip/tar.gz で S3・GitHub Release・Hugging Face 等にホストし、`edinet-screener` で `DATA_SET_URL=<URL> npm run build` とすると、未取得時のみダウンロードしてから抽出・ビルドします。ローカルに置きっぱなしにしなくてよいです。詳しくは [docs/DATA_SET_ALTERNATIVES.md](../docs/DATA_SET_ALTERNATIVES.md)。
 - **ローカルに data-set を置く**: プロジェクトルートの `data-set/` に置けば、従来どおり `npm run build` でそのまま利用されます。
-- **1社だけ試す**: data-set がなくても `prepare_sample_company.py` で EDINET API から 1 社分を取得し、`public/data` を更新できます。
+- **1社だけ試す**: `build_screener_data.py --mode sample E00004` で 1 社分を指定し、`public/data` を更新できます。
 
 ```bash
 # .env を使う場合（スクリプトが自動読み込みするので --env-file は不要）
