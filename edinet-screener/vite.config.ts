@@ -3,7 +3,7 @@ import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import vike from "vike/plugin";
 import { defineConfig } from "vite";
-import path from "path";
+import { fileURLToPath } from "url";
 
 export default defineConfig({
   plugins: [
@@ -19,7 +19,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "."),
+      "@": fileURLToPath(new URL(".", import.meta.url)),
     },
   },
 
