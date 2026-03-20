@@ -13,15 +13,20 @@ import { Separator } from "../components/ui/separator";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbPage } from "../components/ui/breadcrumb";
 import { usePageContext } from "vike-react/usePageContext";
 
-function formatDisplayName(name: string): string {
-  return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
-}
-
 function AppHeader() {
   const pageContext = usePageContext();
   const urlPathname = pageContext?.urlPathname ?? "/";
   const isAnalyzePage = urlPathname.startsWith("/analyze/");
   const secCode = isAnalyzePage ? urlPathname.split("/")[2] : null;
+
+  const crumb =
+    urlPathname === "/privacy"
+      ? "プライバシーポリシー"
+      : urlPathname === "/contact"
+        ? "お問い合わせ"
+        : isAnalyzePage
+          ? `企業分析 (${secCode})`
+          : "企業一覧";
 
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -31,9 +36,7 @@ function AppHeader() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-sm font-medium">
-                {isAnalyzePage ? `企業分析 (${secCode})` : "企業一覧"}
-              </BreadcrumbPage>
+              <BreadcrumbPage className="text-sm font-medium">{crumb}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -49,13 +52,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <RecentCompaniesProvider>
           <ColumnVisibilityProvider>
             <TooltipProvider>
-              <SidebarProvider>
+              <SidebarProvider className="min-h-svh">
                 <AppSidebar />
-                <SidebarInset>
+                <SidebarInset className="min-h-svh min-w-0 overflow-hidden">
                   <AppHeader />
-                  <div className="flex flex-1 flex-col overflow-hidden">
-                    {children}
-                  </div>
+                  <div className="flex min-h-0 flex-1 flex-col overflow-hidden">{children}</div>
                 </SidebarInset>
               </SidebarProvider>
             </TooltipProvider>

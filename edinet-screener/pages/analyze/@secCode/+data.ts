@@ -17,6 +17,8 @@ export type CompanySummary = {
     pl: Record<string, string>;
     bs: Record<string, string>;
     cf: Record<string, string>;
+    /** e.g. raw_tsv/67030/S100R4I6.json — used for 大株主 extraction */
+    rawTsvPath?: string;
   }>;
 };
 
@@ -58,6 +60,71 @@ export type CompanyMetricsRow = {
 
 export type Data = Awaited<ReturnType<typeof data>>;
 
+/** JSON の欠損で periods が無いと画面が例外落ちするため正規化する */
+function normalizeCompanySummary(raw: unknown, secCode: string): CompanySummary {
+  if (!raw || typeof raw !== "object") {
+    throw new Error("企業データの形式が不正です");
+  }
+  const o = raw as Record<string, unknown>;
+  const periodsRaw = o.periods;
+  const periods: CompanySummary["periods"] = [];
+  if (Array.isArray(periodsRaw)) {
+    for (const pr of periodsRaw) {
+      if (!pr || typeof pr !== "object") continue;
+      const p = pr as Record<string, unknown>;
+      periods.push({
+        periodStart: String(p.periodStart ?? ""),
+        periodEnd: String(p.periodEnd ?? ""),
+        docID: String(p.docID ?? ""),
+        docDescription: String(p.docDescription ?? ""),
+        submitDateTime: String(p.submitDateTime ?? ""),
+        summary: typeof p.summary === "object" && p.summary !== null ? (p.summary as Record<string, string>) : {},
+        pl: typeof p.pl === "object" && p.pl !== null ? (p.pl as Record<string, string>) : {},
+        bs: typeof p.bs === "object" && p.bs !== null ? (p.bs as Record<string, string>) : {},
+        cf: typeof p.cf === "object" && p.cf !== null ? (p.cf as Record<string, string>) : {},
+        rawTsvPath: typeof p.rawTsvPath === "string" ? p.rawTsvPath : undefined,
+      });
+    }
+  }
+  return {
+    edinetCode: String(o.edinetCode ?? ""),
+    secCode: String(o.secCode ?? secCode),
+    filerName: String(o.filerName ?? "（無題）"),
+    periods,
+  };
+}
+
+/**
+ * SSR / Workers では urlOriginal が相対パスのみのことがあり new URL() が例外になる。
+ * Vike の urlParsed.origin を最優先する。
+ */
+function resolveFetchOrigin(pageContext: PageContextServer): string {
+  const parsedOrigin = pageContext.urlParsed?.origin;
+  if (typeof parsedOrigin === "string" && parsedOrigin.length > 0) {
+    return parsedOrigin;
+  }
+  const raw = pageContext.urlOriginal;
+  if (typeof raw === "string" && /^https?:\/\//i.test(raw)) {
+    try {
+      return new URL(raw).origin;
+    } catch {
+      /* fall through */
+    }
+  }
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return window.location.origin;
+  }
+  const headers = pageContext.headers;
+  if (headers) {
+    const host = headers.host ?? headers["Host"];
+    if (typeof host === "string" && host.length > 0) {
+      const proto = headers["x-forwarded-proto"] === "https" ? "https" : "http";
+      return `${proto}://${host}`;
+    }
+  }
+  return "http://localhost:5173";
+}
+
 export async function data(pageContext: PageContextServer) {
   const secCode = pageContext.routeParams?.secCode;
   if (!secCode) {
@@ -66,8 +133,7 @@ export async function data(pageContext: PageContextServer) {
 
   try {
     const config = useConfig();
-    const base =
-      typeof pageContext.urlOriginal === "string" ? new URL(pageContext.urlOriginal).origin : "http://localhost:3000";
+    const base = resolveFetchOrigin(pageContext);
 
     const [companyRes, metricsRes] = await Promise.all([
       fetch(`${base}/data/summaries/${secCode}.json`),
@@ -84,7 +150,7 @@ export async function data(pageContext: PageContextServer) {
       }
       throw new Error(`HTTP ${companyRes.status}`);
     }
-    const company = (await companyRes.json()) as CompanySummary;
+    const company = normalizeCompanySummary(await companyRes.json(), secCode);
     config({ title: `${company.filerName} - 企業分析 | エディー` });
 
     let metrics: CompanyMetricsRow | null = null;
