@@ -42,6 +42,8 @@ export function AppSidebar() {
   const [analyzeSearchQuery, setAnalyzeSearchQuery] = useState("");
 
   const isAnalyzePage = urlPathname.startsWith("/analyze/");
+  /** スクリーニング用フィルターは企業一覧トップでのみ表示 */
+  const isCompanyListPage = urlPathname === "/";
 
   useEffect(() => {
     if (!isAnalyzePage) return;
@@ -108,7 +110,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator />
+        {(isAnalyzePage || isCompanyListPage) && <SidebarSeparator />}
 
         {isAnalyzePage && (
           <>
@@ -234,7 +236,7 @@ export function AppSidebar() {
           </>
         )}
 
-        {!isAnalyzePage && (
+        {isCompanyListPage && (
           <>
             {/* Search filters for company list page */}
             <SidebarGroup>
@@ -322,7 +324,12 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild size="sm" tooltip="プライバシーポリシー">
+                <SidebarMenuButton
+                  asChild
+                  isActive={urlPathname === "/privacy"}
+                  size="sm"
+                  tooltip="プライバシーポリシー"
+                >
                   <a href="/privacy">
                     <Shield className="size-3.5" />
                     <span>プライバシーポリシー</span>
@@ -330,7 +337,7 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild size="sm" tooltip="お問い合わせ">
+                <SidebarMenuButton asChild isActive={urlPathname === "/contact"} size="sm" tooltip="お問い合わせ">
                   <a href="/contact">
                     <Mail className="size-3.5" />
                     <span>お問い合わせ</span>
@@ -342,7 +349,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {!isAnalyzePage && (
+      {isCompanyListPage && (
         <SidebarFooter>
           <Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
             <Trash2 className="size-3.5 mr-1.5" />
