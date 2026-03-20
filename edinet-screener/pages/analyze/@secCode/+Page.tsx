@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useData } from "vike-react/useData";
 import type { Data, CompanyMetricsRow } from "./+data.js";
 import { useRecentCompanies } from "../../../components/RecentCompaniesContext.js";
@@ -16,6 +16,12 @@ import { Star, AlertCircle, FileText, BarChart3, TrendingUp, Wallet, Banknote, U
 import { MajorShareholdersTimeSeries } from "../../../components/MajorShareholdersTimeSeries.js";
 import { SummaryCharts } from "../../../components/SummaryCharts.js";
 import { DataAttributionBlock } from "../../../components/DataAttributionBlock.js";
+import { ToggleGroup, ToggleGroupItem } from "../../../components/ui/toggle-group";
+import {
+  filterPeriodsByVisibleYears,
+  SUMMARY_VISIBLE_YEAR_OPTIONS,
+  type SummaryVisibleYears,
+} from "../../../lib/summaryPeriodRange.js";
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -166,6 +172,7 @@ export default function Page() {
   const { addRecent } = useRecentCompanies();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [mainTab, setMainTab] = useState("summary");
+  const [summaryVisibleYears, setSummaryVisibleYears] = useState<SummaryVisibleYears>(3);
 
   useEffect(() => {
     if (company) {
@@ -176,6 +183,16 @@ export default function Page() {
   useEffect(() => {
     setMainTab("summary");
   }, [company?.secCode]);
+
+  useEffect(() => {
+    setSummaryVisibleYears(3);
+  }, [company?.secCode]);
+
+  const periods = company?.periods ?? [];
+  const summaryPeriods = useMemo(
+    () => filterPeriodsByVisibleYears(periods, summaryVisibleYears),
+    [periods, summaryVisibleYears],
+  );
 
   if (error) {
     return (
@@ -202,8 +219,7 @@ export default function Page() {
     );
   }
 
-  const { filerName, secCode, periods: periodsRaw } = company;
-  const periods = periodsRaw ?? [];
+  const { filerName, secCode } = company;
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
@@ -264,8 +280,34 @@ export default function Page() {
 
           <div className="flex-1 min-h-0 overflow-auto mt-4">
             <TabsContent value="summary" className="min-h-0 space-y-6">
-              <SummaryCharts periods={periods} metrics={metrics} />
-              <DataTable data={periods.map((p) => p.summary)} periods={periods} />
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                <p className="text-muted-foreground text-sm">表示期間（最新の決算期末から遡る）</p>
+                <ToggleGroup
+                  type="single"
+                  value={String(summaryVisibleYears)}
+                  onValueChange={(v: string) => {
+                    if (!v) return;
+                    const n = Number(v) as SummaryVisibleYears;
+                    if (SUMMARY_VISIBLE_YEAR_OPTIONS.includes(n)) setSummaryVisibleYears(n);
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="w-fit gap-0"
+                >
+                  {SUMMARY_VISIBLE_YEAR_OPTIONS.map((y) => (
+                    <ToggleGroupItem
+                      key={y}
+                      value={String(y)}
+                      aria-label={`${y}年分表示`}
+                      className="min-w-[3.25rem] px-3 data-[state=on]:bg-accent"
+                    >
+                      {y}年
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+              <SummaryCharts periods={summaryPeriods} metrics={metrics} />
+              <DataTable data={summaryPeriods.map((p) => p.summary)} periods={summaryPeriods} />
               <DataAttributionBlock compact />
             </TabsContent>
             <TabsContent value="shihyo" className="min-h-0">
