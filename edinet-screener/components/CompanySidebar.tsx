@@ -18,20 +18,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  SidebarRail,
 } from "./ui/sidebar";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
-import {
-  Search,
-  Star,
-  Clock,
-  Home,
-  BarChart3,
-  SlidersHorizontal,
-  Trash2,
-} from "lucide-react";
+import { Search, Star, Clock, Home, BarChart3, SlidersHorizontal, Trash2 } from "lucide-react";
 
 type CompanyItem = { secCode: string; filerName: string };
 
@@ -76,7 +69,7 @@ export function AppSidebar() {
     : [];
 
   return (
-    <Sidebar collapsible="icon" className="border-r">
+    <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -87,9 +80,7 @@ export function AppSidebar() {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-bold">エディー</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    EDINET スクリーナー
-                  </span>
+                  <span className="truncate text-xs text-muted-foreground">EDINET スクリーナー</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -106,11 +97,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={urlPathname === "/"}
-                  tooltip="企業一覧"
-                >
+                <SidebarMenuButton asChild isActive={urlPathname === "/"} tooltip="企業一覧">
                   <a href="/">
                     <Home className="size-4" />
                     <span>企業一覧</span>
@@ -148,9 +135,7 @@ export function AppSidebar() {
                           <SidebarMenuButton asChild size="sm">
                             <a href={`/analyze/${c.secCode}`}>
                               <BarChart3 className="size-3.5" />
-                              <span className="truncate">
-                                {formatDisplayName(c.filerName)}
-                              </span>
+                              <span className="truncate">{formatDisplayName(c.filerName)}</span>
                               <Badge variant="outline" className="ml-auto text-[10px]">
                                 {c.secCode}
                               </Badge>
@@ -177,9 +162,7 @@ export function AppSidebar() {
                   {Array.from(favorites).length === 0 ? (
                     <SidebarMenuItem>
                       <SidebarMenuButton disabled>
-                        <span className="text-muted-foreground text-xs">
-                          お気に入りがありません
-                        </span>
+                        <span className="text-muted-foreground text-xs">お気に入りがありません</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ) : (
@@ -191,9 +174,7 @@ export function AppSidebar() {
                             <SidebarMenuButton asChild size="sm">
                               <a href={`/analyze/${c.secCode}`}>
                                 <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
-                                <span className="truncate">
-                                  {formatDisplayName(c.filerName)}
-                                </span>
+                                <span className="truncate">{formatDisplayName(c.filerName)}</span>
                               </a>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
@@ -229,9 +210,7 @@ export function AppSidebar() {
                   {recent.length === 0 ? (
                     <SidebarMenuItem>
                       <SidebarMenuButton disabled>
-                        <span className="text-muted-foreground text-xs">
-                          履歴がありません
-                        </span>
+                        <span className="text-muted-foreground text-xs">履歴がありません</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ) : (
@@ -240,9 +219,7 @@ export function AppSidebar() {
                         <SidebarMenuButton asChild size="sm">
                           <a href={`/analyze/${c.secCode}`}>
                             <Clock className="size-3.5" />
-                            <span className="truncate">
-                              {formatDisplayName(c.filerName)}
-                            </span>
+                            <span className="truncate">{formatDisplayName(c.filerName)}</span>
                             <Badge variant="outline" className="ml-auto text-[10px]">
                               {c.secCode}
                             </Badge>
@@ -299,16 +276,29 @@ export function AppSidebar() {
                     { key: "minEps" as const, label: "EPS（最小）", step: "0.1", placeholder: "0" },
                     { key: "maxEps" as const, label: "EPS（最大）", step: "0.1", placeholder: "制限なし" },
                     { key: "minSales" as const, label: "売上高（百万円・最小）", step: "1000", placeholder: "0" },
-                    { key: "maxSales" as const, label: "売上高（百万円・最大）", step: "1000", placeholder: "制限なし" },
+                    {
+                      key: "maxSales" as const,
+                      label: "売上高（百万円・最大）",
+                      step: "1000",
+                      placeholder: "制限なし",
+                    },
                     { key: "minRoe" as const, label: "ROE（最小・0.1=10%）", step: "0.01", placeholder: "0" },
                     { key: "maxRoe" as const, label: "ROE（最大）", step: "0.01", placeholder: "制限なし" },
-                    { key: "minTotalAssets" as const, label: "総資産額（百万円・最小）", step: "10000", placeholder: "0" },
-                    { key: "maxTotalAssets" as const, label: "総資産額（百万円・最大）", step: "10000", placeholder: "制限なし" },
+                    {
+                      key: "minTotalAssets" as const,
+                      label: "総資産額（百万円・最小）",
+                      step: "10000",
+                      placeholder: "0",
+                    },
+                    {
+                      key: "maxTotalAssets" as const,
+                      label: "総資産額（百万円・最大）",
+                      step: "10000",
+                      placeholder: "制限なし",
+                    },
                   ].map(({ key, label, step, placeholder }) => (
                     <div key={key}>
-                      <label className="text-[11px] font-medium text-muted-foreground mb-1 block">
-                        {label}
-                      </label>
+                      <label className="text-[11px] font-medium text-muted-foreground mb-1 block">{label}</label>
                       <Input
                         type="number"
                         step={step}
@@ -328,17 +318,13 @@ export function AppSidebar() {
 
       {!isAnalyzePage && (
         <SidebarFooter>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={clearFilters}
-            className="w-full"
-          >
+          <Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
             <Trash2 className="size-3.5 mr-1.5" />
             フィルターをクリア
           </Button>
         </SidebarFooter>
       )}
+      <SidebarRail />
     </Sidebar>
   );
 }

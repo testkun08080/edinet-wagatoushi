@@ -1,25 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useData } from "vike-react/useData";
 import type { Data, CompanyMetricsRow } from "./+data.js";
 import { useRecentCompanies } from "../../../components/RecentCompaniesContext.js";
 import { useFavorites } from "../../../components/FavoritesContext.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../../components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 import { Alert, AlertDescription } from "../../../components/ui/alert";
 import { Skeleton } from "../../../components/ui/skeleton";
-import { Star, AlertCircle, FileText, BarChart3, TrendingUp, Wallet, Banknote } from "lucide-react";
+import { Star, AlertCircle, FileText, BarChart3, TrendingUp, Wallet, Banknote, Users } from "lucide-react";
+import { MajorShareholdersTimeSeries } from "../../../components/MajorShareholdersTimeSeries.js";
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -34,13 +28,7 @@ function formatNum(s: string): string {
   return n.toLocaleString();
 }
 
-function DataTable({
-  data,
-  periods,
-}: {
-  data: Record<string, string>[];
-  periods: { periodEnd: string }[];
-}) {
+function DataTable({ data, periods }: { data: Record<string, string>[]; periods: { periodEnd: string }[] }) {
   const keys = new Set<string>();
   for (const row of data) {
     Object.keys(row).forEach((k) => keys.add(k));
@@ -56,9 +44,7 @@ function DataTable({
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="sticky left-0 z-20 bg-background font-semibold">
-                  項目
-                </TableHead>
+                <TableHead className="sticky left-0 z-20 bg-background font-semibold">項目</TableHead>
                 {periods.map((p) => (
                   <TableHead key={p.periodEnd} className="text-right font-semibold">
                     {p.periodEnd}
@@ -69,9 +55,7 @@ function DataTable({
             <TableBody>
               {keyList.map((key) => (
                 <TableRow key={key}>
-                  <TableCell className="font-medium sticky left-0 bg-background">
-                    {key}
-                  </TableCell>
+                  <TableCell className="font-medium sticky left-0 bg-background">{key}</TableCell>
                   {periods.map((p, i) => (
                     <TableCell key={p.periodEnd} className="text-right tabular-nums">
                       {formatNum(data[i]?.[key] ?? "－")}
@@ -120,11 +104,7 @@ const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
   { key: "投資有価証券", label: "投資有価証券" },
 ];
 
-function IndicatorsTable({
-  metrics,
-}: {
-  metrics: CompanyMetricsRow | null;
-}) {
+function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
   if (!metrics) {
     return (
       <Alert>
@@ -183,12 +163,17 @@ export default function Page() {
   const { company, metrics, error } = useData<Data>();
   const { addRecent } = useRecentCompanies();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const [mainTab, setMainTab] = useState("summary");
 
   useEffect(() => {
     if (company) {
       addRecent(company.secCode, company.filerName);
     }
   }, [company?.secCode, company?.filerName, addRecent]);
+
+  useEffect(() => {
+    setMainTab("summary");
+  }, [company?.secCode]);
 
   if (error) {
     return (
@@ -224,9 +209,7 @@ export default function Page() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle className="text-xl font-bold tracking-tight">
-                {formatDisplayName(filerName)}
-              </CardTitle>
+              <CardTitle className="text-xl font-bold tracking-tight">{formatDisplayName(filerName)}</CardTitle>
               <CardDescription className="flex items-center gap-2 mt-1">
                 <Badge variant="outline">{secCode}</Badge>
                 <span>EDINET 四半期報告書データ</span>
@@ -238,11 +221,7 @@ export default function Page() {
                 size="sm"
                 onClick={() => toggleFavorite(secCode)}
               >
-                <Star
-                  className={`size-4 ${
-                    isFavorite(secCode) ? "fill-current" : ""
-                  }`}
-                />
+                <Star className={`size-4 ${isFavorite(secCode) ? "fill-current" : ""}`} />
                 {isFavorite(secCode) ? "お気に入り登録済" : "お気に入りに追加"}
               </Button>
             </CardAction>
@@ -251,8 +230,8 @@ export default function Page() {
       </div>
 
       {/* Tabs */}
-      <div className="flex-1 overflow-hidden px-4 py-4 lg:px-6">
-        <Tabs defaultValue="summary" className="h-full flex flex-col">
+      <div className="flex-1 min-h-0 overflow-hidden px-4 py-4 lg:px-6">
+        <Tabs value={mainTab} onValueChange={setMainTab} className="h-full flex flex-col min-h-0">
           <TabsList variant="line" className="w-full justify-start shrink-0 overflow-x-auto">
             <TabsTrigger value="summary" className="gap-1.5">
               <FileText className="size-3.5" />
@@ -261,6 +240,10 @@ export default function Page() {
             <TabsTrigger value="shihyo" className="gap-1.5">
               <BarChart3 className="size-3.5" />
               指標
+            </TabsTrigger>
+            <TabsTrigger value="shareholders" className="gap-1.5">
+              <Users className="size-3.5" />
+              大株主
             </TabsTrigger>
             <TabsTrigger value="pl" className="gap-1.5">
               <TrendingUp className="size-3.5" />
@@ -276,33 +259,24 @@ export default function Page() {
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex-1 overflow-auto mt-4">
-            <TabsContent value="summary">
-              <DataTable
-                data={periods.map((p) => p.summary)}
-                periods={periods}
-              />
+          <div className="flex-1 min-h-0 overflow-auto mt-4">
+            <TabsContent value="summary" className="min-h-0">
+              <DataTable data={periods.map((p) => p.summary)} periods={periods} />
             </TabsContent>
-            <TabsContent value="shihyo">
+            <TabsContent value="shihyo" className="min-h-0">
               <IndicatorsTable metrics={metrics} />
             </TabsContent>
-            <TabsContent value="pl">
-              <DataTable
-                data={periods.map((p) => p.pl)}
-                periods={periods}
-              />
+            <TabsContent value="shareholders" className="min-h-0">
+              <MajorShareholdersTimeSeries periods={periods} active={mainTab === "shareholders"} />
             </TabsContent>
-            <TabsContent value="bs">
-              <DataTable
-                data={periods.map((p) => p.bs)}
-                periods={periods}
-              />
+            <TabsContent value="pl" className="min-h-0">
+              <DataTable data={periods.map((p) => p.pl)} periods={periods} />
             </TabsContent>
-            <TabsContent value="cf">
-              <DataTable
-                data={periods.map((p) => p.cf)}
-                periods={periods}
-              />
+            <TabsContent value="bs" className="min-h-0">
+              <DataTable data={periods.map((p) => p.bs)} periods={periods} />
+            </TabsContent>
+            <TabsContent value="cf" className="min-h-0">
+              <DataTable data={periods.map((p) => p.cf)} periods={periods} />
             </TabsContent>
           </div>
         </Tabs>

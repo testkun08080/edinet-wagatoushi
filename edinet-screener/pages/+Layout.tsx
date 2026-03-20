@@ -13,10 +13,6 @@ import { Separator } from "../components/ui/separator";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbPage } from "../components/ui/breadcrumb";
 import { usePageContext } from "vike-react/usePageContext";
 
-function formatDisplayName(name: string): string {
-  return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
-}
-
 function AppHeader() {
   const pageContext = usePageContext();
   const urlPathname = pageContext?.urlPathname ?? "/";
@@ -49,13 +45,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <RecentCompaniesProvider>
           <ColumnVisibilityProvider>
             <TooltipProvider>
-              <SidebarProvider>
+              <SidebarProvider className="min-h-svh">
                 <AppSidebar />
-                <SidebarInset>
+                <SidebarInset className="min-h-svh min-w-0 overflow-hidden">
                   <AppHeader />
-                  <div className="flex flex-1 flex-col overflow-hidden">
-                    {children}
-                  </div>
+                  <div className="flex min-h-0 flex-1 flex-col overflow-hidden">{children}</div>
                 </SidebarInset>
               </SidebarProvider>
             </TooltipProvider>

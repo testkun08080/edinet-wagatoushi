@@ -17,6 +17,8 @@ export type CompanySummary = {
     pl: Record<string, string>;
     bs: Record<string, string>;
     cf: Record<string, string>;
+    /** e.g. raw_tsv/67030/S100R4I6.json — used for 大株主 extraction */
+    rawTsvPath?: string;
   }>;
 };
 

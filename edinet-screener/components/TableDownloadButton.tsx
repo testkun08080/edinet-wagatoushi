@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useFilters } from "./FilterContext.js";
 import { useColumnVisibility, type ColumnId } from "./ColumnVisibilityContext.js";
 import { useFavorites } from "./FavoritesContext.js";
-import type { CompanyMetric } from "./CompanyTable.js";
+import { passesFilter, type CompanyMetric } from "./CompanyTable.js";
 import { Button } from "./ui/button";
 import { Download, Loader2 } from "lucide-react";
 
@@ -24,45 +24,6 @@ function formatRatio(s: string | null): string {
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
-}
-
-function passesFilter(
-  m: CompanyMetric,
-  f: ReturnType<typeof useFilters>["filters"],
-  favorites: Set<string>,
-): boolean {
-  if (f.showOnlyFavorites && !favorites.has(m.secCode)) return false;
-  if (f.searchName.trim() && !m.filerName.toLowerCase().includes(f.searchName.trim().toLowerCase()))
-    return false;
-  if (f.searchCode.trim() && !m.secCode.includes(f.searchCode.trim())) return false;
-  const eq = m.自己資本比率 != null ? parseFloat(m.自己資本比率) : NaN;
-  if (f.minEquityRatio && !isNaN(eq) && eq < parseFloat(f.minEquityRatio)) return false;
-  if (f.maxEquityRatio && !isNaN(eq) && eq > parseFloat(f.maxEquityRatio)) return false;
-  const eps = m.EPS != null ? parseFloat(m.EPS) : NaN;
-  if (f.minEps && !isNaN(eps) && eps < parseFloat(f.minEps)) return false;
-  if (f.maxEps && !isNaN(eps) && eps > parseFloat(f.maxEps)) return false;
-  const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
-  if (f.minSales && !isNaN(sales) && sales < parseFloat(f.minSales)) return false;
-  if (f.maxSales && !isNaN(sales) && sales > parseFloat(f.maxSales)) return false;
-  const roe = m.ROE != null ? parseFloat(m.ROE) : NaN;
-  if (f.minRoe != null && f.minRoe !== "" && !isNaN(roe) && roe < parseFloat(f.minRoe)) return false;
-  if (f.maxRoe != null && f.maxRoe !== "" && !isNaN(roe) && roe > parseFloat(f.maxRoe)) return false;
-  const totalAssets = m.総資産額 != null ? parseFloat(m.総資産額) : NaN;
-  if (
-    f.minTotalAssets != null &&
-    f.minTotalAssets !== "" &&
-    !isNaN(totalAssets) &&
-    totalAssets < parseFloat(f.minTotalAssets) * 1_000_000
-  )
-    return false;
-  if (
-    f.maxTotalAssets != null &&
-    f.maxTotalAssets !== "" &&
-    !isNaN(totalAssets) &&
-    totalAssets > parseFloat(f.maxTotalAssets) * 1_000_000
-  )
-    return false;
-  return true;
 }
 
 function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
@@ -199,16 +160,10 @@ export function TableDownloadButton() {
       size="sm"
       onClick={handleDownload}
       disabled={loading}
-      title={loading ? "ダウンロード中" : "CSVダウンロード"}
+      title={loading ? "ダウンロード中" : "現在のフィルター・表示列でCSVをダウンロード"}
     >
-      {loading ? (
-        <Loader2 className="size-4 animate-spin" />
-      ) : (
-        <Download className="size-4" />
-      )}
-      <span className="hidden sm:inline">
-        {loading ? "ダウンロード中…" : "ダウンロード"}
-      </span>
+      {loading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+      <span className="text-xs sm:text-sm">{loading ? "処理中…" : "CSVでダウンロード"}</span>
     </Button>
   );
 }

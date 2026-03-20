@@ -4,14 +4,7 @@ import { useState, useEffect, type ReactNode } from "react";
 import { useFilters } from "./FilterContext.js";
 import { useColumnVisibility, type ColumnId } from "./ColumnVisibilityContext.js";
 import { useFavorites } from "./FavoritesContext.js";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Skeleton } from "./ui/skeleton";
@@ -71,14 +64,13 @@ function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
 }
 
-function passesFilter(
+export function passesFilter(
   m: CompanyMetric,
   f: ReturnType<typeof useFilters>["filters"],
   favorites: Set<string>,
 ): boolean {
   if (f.showOnlyFavorites && !favorites.has(m.secCode)) return false;
-  if (f.searchName.trim() && !m.filerName.toLowerCase().includes(f.searchName.trim().toLowerCase()))
-    return false;
+  if (f.searchName.trim() && !m.filerName.toLowerCase().includes(f.searchName.trim().toLowerCase())) return false;
   if (f.searchCode.trim() && !m.secCode.includes(f.searchCode.trim())) return false;
   const eq = m.自己資本比率 != null ? parseFloat(m.自己資本比率) : NaN;
   if (f.minEquityRatio && !isNaN(eq) && eq < parseFloat(f.minEquityRatio)) return false;
@@ -134,9 +126,7 @@ function getCellValue(
             >
               <Star
                 className={`size-3.5 ${
-                  favHelpers.isFavorite(m.secCode)
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-muted-foreground"
+                  favHelpers.isFavorite(m.secCode) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
                 }`}
               />
             </Button>
@@ -394,9 +384,7 @@ export function CompanyTable() {
   if (filtered.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
-        <p className="text-muted-foreground text-sm">
-          該当する企業がありません。フィルターを緩めてください。
-        </p>
+        <p className="text-muted-foreground text-sm">該当する企業がありません。フィルターを緩めてください。</p>
       </div>
     );
   }
@@ -404,9 +392,7 @@ export function CompanyTable() {
   if (!hasColumns) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
-        <p className="text-muted-foreground text-sm">
-          右上の「表示列」で表示する列を選択してください。
-        </p>
+        <p className="text-muted-foreground text-sm">右上の「表示列」で表示する列を選択してください。</p>
       </div>
     );
   }
