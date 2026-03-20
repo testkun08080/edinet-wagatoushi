@@ -237,8 +237,8 @@ export function AppSidebar() {
         )}
 
         {isCompanyListPage && (
-          <>
-            {/* Search filters for company list page */}
+          <div className="group-data-[collapsible=icon]:hidden">
+            {/* Search filters for company list page — アイコン幅時は全体を非表示 */}
             <SidebarGroup>
               <SidebarGroupLabel>
                 <Search className="mr-1.5 size-3.5" />
@@ -314,7 +314,7 @@ export function AppSidebar() {
                 </div>
               </SidebarGroupContent>
             </SidebarGroup>
-          </>
+          </div>
         )}
 
         <SidebarSeparator />
@@ -350,7 +350,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       {isCompanyListPage && (
-        <SidebarFooter>
+        <SidebarFooter className="group-data-[collapsible=icon]:hidden">
           <Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
             <Trash2 className="size-3.5 mr-1.5" />
             フィルターをクリア

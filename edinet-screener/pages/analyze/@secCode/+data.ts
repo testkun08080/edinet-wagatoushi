@@ -60,6 +60,27 @@ export type CompanyMetricsRow = {
 
 export type Data = Awaited<ReturnType<typeof data>>;
 
+/** urlOriginal が相対パスだけのとき new URL() が落ちるため、フェッチ用オリジンを安全に決める */
+function resolveFetchOrigin(pageContext: PageContextServer): string {
+  const raw = pageContext.urlOriginal;
+  if (typeof raw === "string" && /^https?:\/\//i.test(raw)) {
+    try {
+      return new URL(raw).origin;
+    } catch {
+      /* fall through */
+    }
+  }
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return window.location.origin;
+  }
+  const headers = pageContext.headers;
+  if (headers && typeof headers.host === "string" && headers.host.length > 0) {
+    const proto = headers["x-forwarded-proto"] === "https" ? "https" : "http";
+    return `${proto}://${headers.host}`;
+  }
+  return "http://localhost:5173";
+}
+
 export async function data(pageContext: PageContextServer) {
   const secCode = pageContext.routeParams?.secCode;
   if (!secCode) {
@@ -68,8 +89,7 @@ export async function data(pageContext: PageContextServer) {
 
   try {
     const config = useConfig();
-    const base =
-      typeof pageContext.urlOriginal === "string" ? new URL(pageContext.urlOriginal).origin : "http://localhost:3000";
+    const base = resolveFetchOrigin(pageContext);
 
     const [companyRes, metricsRes] = await Promise.all([
       fetch(`${base}/data/summaries/${secCode}.json`),
