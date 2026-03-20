@@ -1,6 +1,6 @@
-/** サマリー（グラフ・表）の表示期間プリセット */
-export const SUMMARY_VISIBLE_YEAR_OPTIONS = [3, 5, 10] as const;
-export type SummaryVisibleYears = (typeof SUMMARY_VISIBLE_YEAR_OPTIONS)[number];
+/** 分析ページ全体（グラフ・各種テーブル）で共有する表示期間プリセット */
+export const ANALYZE_VISIBLE_YEAR_OPTIONS = [3, 5, 7, 10] as const;
+export type AnalyzeVisibleYears = (typeof ANALYZE_VISIBLE_YEAR_OPTIONS)[number];
 
 function parsePeriodEndLocal(iso: string): Date | null {
   const [y, m, d] = iso.split("-").map((x) => parseInt(x, 10));
@@ -31,7 +31,7 @@ function subtractYearsFromIso(iso: string, years: number): string | null {
  */
 export function filterPeriodsByVisibleYears<T extends { periodEnd: string }>(
   periods: readonly T[],
-  years: SummaryVisibleYears,
+  years: AnalyzeVisibleYears,
 ): T[] {
   if (periods.length === 0) return [];
   const sorted = [...periods].sort((a, b) => a.periodEnd.localeCompare(b.periodEnd));

@@ -12,16 +12,26 @@ import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 import { Alert, AlertDescription } from "../../../components/ui/alert";
 import { Skeleton } from "../../../components/ui/skeleton";
-import { Star, AlertCircle, FileText, BarChart3, TrendingUp, Wallet, Banknote, Users } from "lucide-react";
+import {
+  Star,
+  AlertCircle,
+  FileText,
+  BarChart3,
+  TrendingUp,
+  Wallet,
+  Banknote,
+  Users,
+  CalendarRange,
+} from "lucide-react";
 import { MajorShareholdersTimeSeries } from "../../../components/MajorShareholdersTimeSeries.js";
 import { SummaryCharts } from "../../../components/SummaryCharts.js";
 import { DataAttributionBlock } from "../../../components/DataAttributionBlock.js";
 import { ToggleGroup, ToggleGroupItem } from "../../../components/ui/toggle-group";
 import {
+  ANALYZE_VISIBLE_YEAR_OPTIONS,
   filterPeriodsByVisibleYears,
-  SUMMARY_VISIBLE_YEAR_OPTIONS,
-  type SummaryVisibleYears,
-} from "../../../lib/summaryPeriodRange.js";
+  type AnalyzeVisibleYears,
+} from "../../../lib/analyzePeriodRange.js";
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -172,7 +182,7 @@ export default function Page() {
   const { addRecent } = useRecentCompanies();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [mainTab, setMainTab] = useState("summary");
-  const [summaryVisibleYears, setSummaryVisibleYears] = useState<SummaryVisibleYears>(3);
+  const [analyzeVisibleYears, setAnalyzeVisibleYears] = useState<AnalyzeVisibleYears>(3);
 
   useEffect(() => {
     if (company) {
@@ -185,13 +195,13 @@ export default function Page() {
   }, [company?.secCode]);
 
   useEffect(() => {
-    setSummaryVisibleYears(3);
+    setAnalyzeVisibleYears(3);
   }, [company?.secCode]);
 
   const periods = company?.periods ?? [];
-  const summaryPeriods = useMemo(
-    () => filterPeriodsByVisibleYears(periods, summaryVisibleYears),
-    [periods, summaryVisibleYears],
+  const filteredPeriods = useMemo(
+    () => filterPeriodsByVisibleYears(periods, analyzeVisibleYears),
+    [periods, analyzeVisibleYears],
   );
 
   if (error) {
@@ -251,6 +261,40 @@ export default function Page() {
       {/* Tabs */}
       <div className="flex-1 min-h-0 overflow-hidden px-4 py-4 lg:px-6">
         <Tabs value={mainTab} onValueChange={setMainTab} className="h-full flex flex-col min-h-0">
+          <div className="bg-background/90 supports-backdrop-filter:bg-background/75 sticky top-0 z-30 -mx-4 mb-2 border-b border-border/70 px-4 py-2.5 backdrop-blur-md lg:-mx-6 lg:px-6">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                <CalendarRange className="text-muted-foreground size-4 shrink-0" aria-hidden />
+                <span className="text-sm font-medium">表示期間</span>
+                <span className="text-muted-foreground text-xs">最新の決算期末から遡る・全タブで共通</span>
+              </div>
+              <ToggleGroup
+                type="single"
+                value={String(analyzeVisibleYears)}
+                onValueChange={(v: string) => {
+                  if (!v) return;
+                  const n = Number(v);
+                  if ((ANALYZE_VISIBLE_YEAR_OPTIONS as readonly number[]).includes(n)) {
+                    setAnalyzeVisibleYears(n as AnalyzeVisibleYears);
+                  }
+                }}
+                variant="outline"
+                size="sm"
+                className="w-full shrink-0 gap-0 sm:w-fit"
+              >
+                {ANALYZE_VISIBLE_YEAR_OPTIONS.map((y) => (
+                  <ToggleGroupItem
+                    key={y}
+                    value={String(y)}
+                    aria-label={`${y}年分表示`}
+                    className="min-w-0 flex-1 px-2.5 sm:flex-none sm:min-w-[2.75rem] sm:px-3 data-[state=on]:bg-accent"
+                  >
+                    {y}年
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </div>
+          </div>
           <TabsList variant="line" className="w-full justify-start shrink-0 overflow-x-auto">
             <TabsTrigger value="summary" className="gap-1.5">
               <FileText className="size-3.5" />
@@ -280,50 +324,24 @@ export default function Page() {
 
           <div className="flex-1 min-h-0 overflow-auto mt-4">
             <TabsContent value="summary" className="min-h-0 space-y-6">
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-                <p className="text-muted-foreground text-sm">表示期間（最新の決算期末から遡る）</p>
-                <ToggleGroup
-                  type="single"
-                  value={String(summaryVisibleYears)}
-                  onValueChange={(v: string) => {
-                    if (!v) return;
-                    const n = Number(v) as SummaryVisibleYears;
-                    if (SUMMARY_VISIBLE_YEAR_OPTIONS.includes(n)) setSummaryVisibleYears(n);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="w-fit gap-0"
-                >
-                  {SUMMARY_VISIBLE_YEAR_OPTIONS.map((y) => (
-                    <ToggleGroupItem
-                      key={y}
-                      value={String(y)}
-                      aria-label={`${y}年分表示`}
-                      className="min-w-[3.25rem] px-3 data-[state=on]:bg-accent"
-                    >
-                      {y}年
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
-              </div>
-              <SummaryCharts periods={summaryPeriods} metrics={metrics} />
-              <DataTable data={summaryPeriods.map((p) => p.summary)} periods={summaryPeriods} />
+              <SummaryCharts periods={filteredPeriods} metrics={metrics} />
+              <DataTable data={filteredPeriods.map((p) => p.summary)} periods={filteredPeriods} />
               <DataAttributionBlock compact />
             </TabsContent>
             <TabsContent value="shihyo" className="min-h-0">
               <IndicatorsTable metrics={metrics} />
             </TabsContent>
             <TabsContent value="shareholders" className="min-h-0">
-              <MajorShareholdersTimeSeries periods={periods} active={mainTab === "shareholders"} />
+              <MajorShareholdersTimeSeries periods={filteredPeriods} active={mainTab === "shareholders"} />
             </TabsContent>
             <TabsContent value="pl" className="min-h-0">
-              <DataTable data={periods.map((p) => p.pl)} periods={periods} />
+              <DataTable data={filteredPeriods.map((p) => p.pl)} periods={filteredPeriods} />
             </TabsContent>
             <TabsContent value="bs" className="min-h-0">
-              <DataTable data={periods.map((p) => p.bs)} periods={periods} />
+              <DataTable data={filteredPeriods.map((p) => p.bs)} periods={filteredPeriods} />
             </TabsContent>
             <TabsContent value="cf" className="min-h-0">
-              <DataTable data={periods.map((p) => p.cf)} periods={periods} />
+              <DataTable data={filteredPeriods.map((p) => p.cf)} periods={filteredPeriods} />
             </TabsContent>
           </div>
         </Tabs>
