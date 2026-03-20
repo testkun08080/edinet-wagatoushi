@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import type { NameType, Payload, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import {
   ChartContainer,
   ChartTooltip,
@@ -38,6 +39,26 @@ function toBillionsYen(yen: number): number {
   return yen / 1_000_000_000;
 }
 
+/** 横軸・カテゴリ用（Yahoo Finance / kabutan 系の「日付を区切りで並べる」表記に近い） */
+function formatPeriodAxis(iso: string): string {
+  if (!iso || typeof iso !== "string") return String(iso);
+  const [y, m, d] = iso.split("-");
+  if (!y || !m || !d) return iso;
+  return `${y}/${m}/${d}`;
+}
+
+/** ツールチップ用の読みやすい和暦風（実データは西暦のまま） */
+function formatPeriodTooltip(iso: string): string {
+  if (!iso || typeof iso !== "string") return String(iso);
+  const t = Date.parse(`${iso}T12:00:00`);
+  if (Number.isNaN(t)) return iso;
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(t));
+}
+
 function pickPlNetIncome(pl: Record<string, string>): number | null {
   return (
     parseIntYen(pl["親会社株主に帰属する当期純利益"]) ??
@@ -46,12 +67,30 @@ function pickPlNetIncome(pl: Record<string, string>): number | null {
   );
 }
 
-const bnTooltipFormatter = (value: unknown) => {
+const bnTooltipFormatter = (
+  value: ValueType,
+  name: NameType,
+  _item: Payload<ValueType, NameType>,
+  _index: number,
+  _payload: ReadonlyArray<Payload<ValueType, NameType>>,
+): ReactNode => {
   if (typeof value !== "number" || Number.isNaN(value)) return null;
   return (
-    <span className="font-mono tabular-nums">{value.toLocaleString("ja-JP", { maximumFractionDigits: 1 })} 十億円</span>
+    <div className="flex w-full flex-wrap items-center justify-between gap-2">
+      <span className="text-muted-foreground">{String(name)}</span>
+      <span className="font-mono font-medium tabular-nums text-foreground">
+        {value.toLocaleString("ja-JP", { maximumFractionDigits: 1 })} 十億円
+      </span>
+    </div>
   );
 };
+
+const periodTooltipLabelFormatter = (label: unknown, _payload: unknown): ReactNode => (
+  <div className="border-border/60 mb-1 border-b pb-1.5 text-[11px] leading-tight">
+    <span className="text-muted-foreground">決算期末日</span>
+    <div className="mt-0.5 font-medium tabular-nums text-foreground">{formatPeriodTooltip(String(label ?? ""))}</div>
+  </div>
+);
 
 const salesChartConfig = {
   sales: {
@@ -167,12 +206,28 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
   const hasPl = plRows.some((r) => r.revenue != null || r.operating != null || r.netIncome != null);
   const hasBs = bsRows.some((r) => r.totalAssets != null || r.liabilities != null || r.netAssets != null);
 
-  const axisProps = {
+  const yAxisProps = {
     tickLine: false,
     axisLine: false,
     tickMargin: 8,
-    minTickGap: 24,
+    width: 44,
   };
+
+  /** 各決算期末を欠かさず表示（株サイトの財務グラフと同様にラベルを斜めに） */
+  const xAxisProps = {
+    dataKey: "period" as const,
+    tickLine: false,
+    axisLine: false,
+    tickMargin: 6,
+    minTickGap: 0,
+    interval: 0,
+    angle: -38,
+    textAnchor: "end" as const,
+    height: 56,
+    tickFormatter: (v: string) => formatPeriodAxis(v),
+  };
+
+  const chartMargins = { left: 4, right: 8, top: 8, bottom: 4 } as const;
 
   if (!mounted) {
     return (
@@ -195,24 +250,22 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
           <CardContent className="pt-0">
             {hasSales ? (
               <ChartContainer config={salesChartConfig} className="aspect-auto h-64 w-full md:h-72">
-                <AreaChart accessibilityLayer data={salesRows} margin={{ left: 4, right: 8, top: 8, bottom: 0 }}>
+                <BarChart accessibilityLayer data={salesRows} margin={chartMargins}>
                   <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border/50" />
-                  <XAxis dataKey="period" {...axisProps} tickFormatter={(v) => String(v).slice(0, 7)} />
-                  <YAxis {...axisProps} width={40} tickFormatter={(v) => String(v)} />
+                  <XAxis {...xAxisProps} />
+                  <YAxis {...yAxisProps} tickFormatter={(v: number) => String(v)} />
                   <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent formatter={bnTooltipFormatter} indicator="line" />}
+                    cursor={{ fill: "var(--muted)", opacity: 0.2 }}
+                    content={
+                      <ChartTooltipContent
+                        formatter={bnTooltipFormatter}
+                        labelFormatter={periodTooltipLabelFormatter}
+                        indicator="dot"
+                      />
+                    }
                   />
-                  <Area
-                    dataKey="sales"
-                    type="natural"
-                    fill="var(--color-sales)"
-                    fillOpacity={0.35}
-                    stroke="var(--color-sales)"
-                    strokeWidth={1.5}
-                    connectNulls
-                  />
-                </AreaChart>
+                  <Bar name="売上高" dataKey="sales" fill="var(--color-sales)" radius={[5, 5, 0, 0]} maxBarSize={52} />
+                </BarChart>
               </ChartContainer>
             ) : (
               <p className="text-muted-foreground py-10 text-center text-sm">表示できる売上データがありません。</p>
@@ -228,24 +281,28 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
           <CardContent className="pt-0">
             {hasDividend ? (
               <ChartContainer config={dividendChartConfig} className="aspect-auto h-64 w-full md:h-72">
-                <AreaChart accessibilityLayer data={dividendRows} margin={{ left: 4, right: 8, top: 8, bottom: 0 }}>
+                <BarChart accessibilityLayer data={dividendRows} margin={chartMargins}>
                   <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border/50" />
-                  <XAxis dataKey="period" {...axisProps} tickFormatter={(v) => String(v).slice(0, 7)} />
-                  <YAxis {...axisProps} width={40} tickFormatter={(v) => String(v)} />
+                  <XAxis {...xAxisProps} />
+                  <YAxis {...yAxisProps} tickFormatter={(v: number) => String(v)} />
                   <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent formatter={bnTooltipFormatter} indicator="line" />}
+                    cursor={{ fill: "var(--muted)", opacity: 0.2 }}
+                    content={
+                      <ChartTooltipContent
+                        formatter={bnTooltipFormatter}
+                        labelFormatter={periodTooltipLabelFormatter}
+                        indicator="dot"
+                      />
+                    }
                   />
-                  <Area
+                  <Bar
+                    name="配当金の支払額"
                     dataKey="dividend"
-                    type="natural"
                     fill="var(--color-dividend)"
-                    fillOpacity={0.35}
-                    stroke="var(--color-dividend)"
-                    strokeWidth={1.5}
-                    connectNulls
+                    radius={[5, 5, 0, 0]}
+                    maxBarSize={52}
                   />
-                </AreaChart>
+                </BarChart>
               </ChartContainer>
             ) : (
               <p className="text-muted-foreground py-10 text-center text-sm">
@@ -265,43 +322,43 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
           <CardContent className="pt-0">
             {hasPl ? (
               <ChartContainer config={plChartConfig} className="aspect-auto h-64 w-full md:h-80">
-                <AreaChart accessibilityLayer data={plRows} margin={{ left: 4, right: 8, top: 8, bottom: 0 }}>
+                <BarChart accessibilityLayer data={plRows} margin={chartMargins}>
                   <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border/50" />
-                  <XAxis dataKey="period" {...axisProps} tickFormatter={(v) => String(v).slice(0, 7)} />
-                  <YAxis {...axisProps} width={40} tickFormatter={(v) => String(v)} />
+                  <XAxis {...xAxisProps} />
+                  <YAxis {...yAxisProps} tickFormatter={(v: number) => String(v)} />
                   <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent formatter={bnTooltipFormatter} indicator="line" />}
+                    cursor={{ fill: "var(--muted)", opacity: 0.2 }}
+                    content={
+                      <ChartTooltipContent
+                        formatter={bnTooltipFormatter}
+                        labelFormatter={periodTooltipLabelFormatter}
+                        indicator="dot"
+                      />
+                    }
                   />
                   <ChartLegend content={<ChartLegendContent />} />
-                  <Area
+                  <Bar
+                    name="売上高"
                     dataKey="revenue"
-                    type="natural"
                     fill="var(--color-revenue)"
-                    fillOpacity={0.25}
-                    stroke="var(--color-revenue)"
-                    strokeWidth={1.25}
-                    connectNulls
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={22}
                   />
-                  <Area
+                  <Bar
+                    name="営業利益"
                     dataKey="operating"
-                    type="natural"
                     fill="var(--color-operating)"
-                    fillOpacity={0.25}
-                    stroke="var(--color-operating)"
-                    strokeWidth={1.25}
-                    connectNulls
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={22}
                   />
-                  <Area
+                  <Bar
+                    name="親会社純利益"
                     dataKey="netIncome"
-                    type="natural"
                     fill="var(--color-netIncome)"
-                    fillOpacity={0.25}
-                    stroke="var(--color-netIncome)"
-                    strokeWidth={1.25}
-                    connectNulls
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={22}
                   />
-                </AreaChart>
+                </BarChart>
               </ChartContainer>
             ) : (
               <p className="text-muted-foreground py-10 text-center text-sm">PL の数値が取得できません。</p>
@@ -317,43 +374,43 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
           <CardContent className="pt-0">
             {hasBs ? (
               <ChartContainer config={bsChartConfig} className="aspect-auto h-64 w-full md:h-80">
-                <AreaChart accessibilityLayer data={bsRows} margin={{ left: 4, right: 8, top: 8, bottom: 0 }}>
+                <BarChart accessibilityLayer data={bsRows} margin={chartMargins}>
                   <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border/50" />
-                  <XAxis dataKey="period" {...axisProps} tickFormatter={(v) => String(v).slice(0, 7)} />
-                  <YAxis {...axisProps} width={40} tickFormatter={(v) => String(v)} />
+                  <XAxis {...xAxisProps} />
+                  <YAxis {...yAxisProps} tickFormatter={(v: number) => String(v)} />
                   <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent formatter={bnTooltipFormatter} indicator="line" />}
+                    cursor={{ fill: "var(--muted)", opacity: 0.2 }}
+                    content={
+                      <ChartTooltipContent
+                        formatter={bnTooltipFormatter}
+                        labelFormatter={periodTooltipLabelFormatter}
+                        indicator="dot"
+                      />
+                    }
                   />
                   <ChartLegend content={<ChartLegendContent />} />
-                  <Area
+                  <Bar
+                    name="総資産"
                     dataKey="totalAssets"
-                    type="natural"
                     fill="var(--color-totalAssets)"
-                    fillOpacity={0.22}
-                    stroke="var(--color-totalAssets)"
-                    strokeWidth={1.25}
-                    connectNulls
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={22}
                   />
-                  <Area
+                  <Bar
+                    name="負債"
                     dataKey="liabilities"
-                    type="natural"
                     fill="var(--color-liabilities)"
-                    fillOpacity={0.22}
-                    stroke="var(--color-liabilities)"
-                    strokeWidth={1.25}
-                    connectNulls
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={22}
                   />
-                  <Area
+                  <Bar
+                    name="純資産"
                     dataKey="netAssets"
-                    type="natural"
                     fill="var(--color-netAssets)"
-                    fillOpacity={0.22}
-                    stroke="var(--color-netAssets)"
-                    strokeWidth={1.25}
-                    connectNulls
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={22}
                   />
-                </AreaChart>
+                </BarChart>
               </ChartContainer>
             ) : (
               <p className="text-muted-foreground py-10 text-center text-sm">BS の数値が取得できません。</p>
