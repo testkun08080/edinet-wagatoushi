@@ -19,6 +19,15 @@ function AppHeader() {
   const isAnalyzePage = urlPathname.startsWith("/analyze/");
   const secCode = isAnalyzePage ? urlPathname.split("/")[2] : null;
 
+  const crumb =
+    urlPathname === "/privacy"
+      ? "プライバシーポリシー"
+      : urlPathname === "/contact"
+        ? "お問い合わせ"
+        : isAnalyzePage
+          ? `企業分析 (${secCode})`
+          : "企業一覧";
+
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2">
@@ -27,9 +36,7 @@ function AppHeader() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-sm font-medium">
-                {isAnalyzePage ? `企業分析 (${secCode})` : "企業一覧"}
-              </BreadcrumbPage>
+              <BreadcrumbPage className="text-sm font-medium">{crumb}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

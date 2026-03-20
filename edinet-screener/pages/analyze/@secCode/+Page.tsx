@@ -14,6 +14,8 @@ import { Alert, AlertDescription } from "../../../components/ui/alert";
 import { Skeleton } from "../../../components/ui/skeleton";
 import { Star, AlertCircle, FileText, BarChart3, TrendingUp, Wallet, Banknote, Users } from "lucide-react";
 import { MajorShareholdersTimeSeries } from "../../../components/MajorShareholdersTimeSeries.js";
+import { SummaryCharts } from "../../../components/SummaryCharts.js";
+import { DataAttributionBlock } from "../../../components/DataAttributionBlock.js";
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -260,8 +262,10 @@ export default function Page() {
           </TabsList>
 
           <div className="flex-1 min-h-0 overflow-auto mt-4">
-            <TabsContent value="summary" className="min-h-0">
+            <TabsContent value="summary" className="min-h-0 space-y-6">
+              <SummaryCharts periods={periods} metrics={metrics} />
               <DataTable data={periods.map((p) => p.summary)} periods={periods} />
+              <DataAttributionBlock compact />
             </TabsContent>
             <TabsContent value="shihyo" className="min-h-0">
               <IndicatorsTable metrics={metrics} />

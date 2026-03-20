@@ -24,7 +24,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
-import { Search, Star, Clock, Home, BarChart3, SlidersHorizontal, Trash2 } from "lucide-react";
+import { Search, Star, Clock, Home, BarChart3, SlidersHorizontal, Trash2, Shield, Mail } from "lucide-react";
 
 type CompanyItem = { secCode: string; filerName: string };
 
@@ -314,6 +314,32 @@ export function AppSidebar() {
             </SidebarGroup>
           </>
         )}
+
+        <SidebarSeparator />
+
+        <SidebarGroup>
+          <SidebarGroupLabel>情報</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild size="sm" tooltip="プライバシーポリシー">
+                  <a href="/privacy">
+                    <Shield className="size-3.5" />
+                    <span>プライバシーポリシー</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild size="sm" tooltip="お問い合わせ">
+                  <a href="/contact">
+                    <Mail className="size-3.5" />
+                    <span>お問い合わせ</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       {!isAnalyzePage && (
