@@ -98,6 +98,7 @@ const bsChartConfig = {
 } satisfies ChartConfig;
 
 export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics: DividendMetricsSnapshot }) {
+  const list = periods ?? [];
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -106,31 +107,31 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
 
   const salesRows = useMemo(
     () =>
-      periods.map((p) => {
+      list.map((p) => {
         const y = parseIntYen(p.summary?.["売上高"]);
         return {
           period: p.periodEnd,
           sales: y != null ? toBillionsYen(y) : null,
         };
       }),
-    [periods],
+    [list],
   );
 
   const dividendRows = useMemo(
     () =>
-      periods.map((p) => {
+      list.map((p) => {
         const d = parseIntYen(p.cf?.["配当金の支払額"]);
         return {
           period: p.periodEnd,
           dividend: d != null ? toBillionsYen(Math.abs(d)) : null,
         };
       }),
-    [periods],
+    [list],
   );
 
   const plRows = useMemo(
     () =>
-      periods.map((p) => {
+      list.map((p) => {
         const rev = parseIntYen(p.pl?.["売上高"]);
         const op = parseIntYen(p.pl?.["営業利益"]);
         const net = pickPlNetIncome(p.pl ?? {});
@@ -141,12 +142,12 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
           netIncome: net != null ? toBillionsYen(net) : null,
         };
       }),
-    [periods],
+    [list],
   );
 
   const bsRows = useMemo(
     () =>
-      periods.map((p) => {
+      list.map((p) => {
         const bs = p.bs ?? {};
         const ta = parseIntYen(bs["総資産"]);
         const liab = parseIntYen(bs["負債"]);
@@ -158,7 +159,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
           netAssets: eq != null ? toBillionsYen(eq) : null,
         };
       }),
-    [periods],
+    [list],
   );
 
   const hasSales = salesRows.some((r) => r.sales != null);

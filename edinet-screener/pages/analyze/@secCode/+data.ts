@@ -60,8 +60,49 @@ export type CompanyMetricsRow = {
 
 export type Data = Awaited<ReturnType<typeof data>>;
 
-/** urlOriginal が相対パスだけのとき new URL() が落ちるため、フェッチ用オリジンを安全に決める */
+/** JSON の欠損で periods が無いと画面が例外落ちするため正規化する */
+function normalizeCompanySummary(raw: unknown, secCode: string): CompanySummary {
+  if (!raw || typeof raw !== "object") {
+    throw new Error("企業データの形式が不正です");
+  }
+  const o = raw as Record<string, unknown>;
+  const periodsRaw = o.periods;
+  const periods: CompanySummary["periods"] = [];
+  if (Array.isArray(periodsRaw)) {
+    for (const pr of periodsRaw) {
+      if (!pr || typeof pr !== "object") continue;
+      const p = pr as Record<string, unknown>;
+      periods.push({
+        periodStart: String(p.periodStart ?? ""),
+        periodEnd: String(p.periodEnd ?? ""),
+        docID: String(p.docID ?? ""),
+        docDescription: String(p.docDescription ?? ""),
+        submitDateTime: String(p.submitDateTime ?? ""),
+        summary: typeof p.summary === "object" && p.summary !== null ? (p.summary as Record<string, string>) : {},
+        pl: typeof p.pl === "object" && p.pl !== null ? (p.pl as Record<string, string>) : {},
+        bs: typeof p.bs === "object" && p.bs !== null ? (p.bs as Record<string, string>) : {},
+        cf: typeof p.cf === "object" && p.cf !== null ? (p.cf as Record<string, string>) : {},
+        rawTsvPath: typeof p.rawTsvPath === "string" ? p.rawTsvPath : undefined,
+      });
+    }
+  }
+  return {
+    edinetCode: String(o.edinetCode ?? ""),
+    secCode: String(o.secCode ?? secCode),
+    filerName: String(o.filerName ?? "（無題）"),
+    periods,
+  };
+}
+
+/**
+ * SSR / Workers では urlOriginal が相対パスのみのことがあり new URL() が例外になる。
+ * Vike の urlParsed.origin を最優先する。
+ */
 function resolveFetchOrigin(pageContext: PageContextServer): string {
+  const parsedOrigin = pageContext.urlParsed?.origin;
+  if (typeof parsedOrigin === "string" && parsedOrigin.length > 0) {
+    return parsedOrigin;
+  }
   const raw = pageContext.urlOriginal;
   if (typeof raw === "string" && /^https?:\/\//i.test(raw)) {
     try {
@@ -74,9 +115,12 @@ function resolveFetchOrigin(pageContext: PageContextServer): string {
     return window.location.origin;
   }
   const headers = pageContext.headers;
-  if (headers && typeof headers.host === "string" && headers.host.length > 0) {
-    const proto = headers["x-forwarded-proto"] === "https" ? "https" : "http";
-    return `${proto}://${headers.host}`;
+  if (headers) {
+    const host = headers.host ?? headers["Host"];
+    if (typeof host === "string" && host.length > 0) {
+      const proto = headers["x-forwarded-proto"] === "https" ? "https" : "http";
+      return `${proto}://${host}`;
+    }
   }
   return "http://localhost:5173";
 }
@@ -106,7 +150,7 @@ export async function data(pageContext: PageContextServer) {
       }
       throw new Error(`HTTP ${companyRes.status}`);
     }
-    const company = (await companyRes.json()) as CompanySummary;
+    const company = normalizeCompanySummary(await companyRes.json(), secCode);
     config({ title: `${company.filerName} - 企業分析 | エディー` });
 
     let metrics: CompanyMetricsRow | null = null;

@@ -202,7 +202,8 @@ export default function Page() {
     );
   }
 
-  const { filerName, secCode, periods } = company;
+  const { filerName, secCode, periods: periodsRaw } = company;
+  const periods = periodsRaw ?? [];
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">

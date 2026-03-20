@@ -18,11 +18,12 @@ type PeriodParsed = {
 };
 
 export function MajorShareholdersTimeSeries({ periods, active }: { periods: PeriodWithRaw[]; active: boolean }) {
+  const safePeriods = periods ?? [];
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [parsed, setParsed] = useState<PeriodParsed[]>([]);
 
-  const periodsWithPath = useMemo(() => periods.filter((p) => p.rawTsvPath?.trim()), [periods]);
+  const periodsWithPath = useMemo(() => safePeriods.filter((p) => p.rawTsvPath?.trim()), [safePeriods]);
 
   useEffect(() => {
     if (periodsWithPath.length === 0) {
