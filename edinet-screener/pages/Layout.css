@@ -2,25 +2,14 @@
 a {
   text-decoration: none;
 }
-#sidebar a.is-active {
-  background-color: #eff6ff; /* blue-50 */
-  color: #1d4ed8; /* blue-700 */
-}
 
-/* Reset - Stitch デザイン */
+/* Reset */
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  background-color: #f8fafc; /* slate-50 */
-  color: #0f172a; /* slate-900 */
 }
 * {
   box-sizing: border-box;
-}
-
-/* 狭い画面: 固定ヘッダー分だけメインを下にずらし、コンテンツが被らないようにする */
-.narrow-viewport #page-container {
-  padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
 }
 
 /* Page Transition Animation */
@@ -30,4 +19,13 @@ body {
 }
 body.page-transition #page-content {
   opacity: 0;
+}
+
+/* Sidebar scrollbar fix */
+[data-sidebar="content"]::-webkit-scrollbar {
+  width: 4px;
+}
+[data-sidebar="content"]::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: hsl(var(--muted-foreground) / 0.2);
 }

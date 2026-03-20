@@ -5,6 +5,8 @@ import { useFilters } from "./FilterContext.js";
 import { useColumnVisibility, type ColumnId } from "./ColumnVisibilityContext.js";
 import { useFavorites } from "./FavoritesContext.js";
 import type { CompanyMetric } from "./CompanyTable.js";
+import { Button } from "./ui/button";
+import { Download, Loader2 } from "lucide-react";
 
 function formatSales(s: string | null): string {
   if (s == null || s === "") return "－";
@@ -27,7 +29,7 @@ function formatDisplayName(name: string): string {
 function passesFilter(
   m: CompanyMetric,
   f: ReturnType<typeof useFilters>["filters"],
-  favorites: Set<string>
+  favorites: Set<string>,
 ): boolean {
   if (f.showOnlyFavorites && !favorites.has(m.secCode)) return false;
   if (f.searchName.trim() && !m.filerName.toLowerCase().includes(f.searchName.trim().toLowerCase()))
@@ -173,7 +175,7 @@ export function TableDownloadButton() {
 
       const headers = visibleColumns.map((id) => columnLabel(id));
       const rows = filtered.map((m) =>
-        visibleColumns.map((id) => escapeCsvCell(getCellValueForExport(m, id))).join(",")
+        visibleColumns.map((id) => escapeCsvCell(getCellValueForExport(m, id))).join(","),
       );
 
       const bom = "\uFEFF";
@@ -191,21 +193,22 @@ export function TableDownloadButton() {
     }
   }, [filters, favorites, visibility, columnIds, columnLabel]);
 
-  const toolbarBtnBase =
-    "inline-flex items-center justify-center gap-1.5 min-h-[36px] min-w-[36px] px-3 py-2 rounded-md text-sm font-medium bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition disabled:opacity-50";
-
   return (
-    <button
-      type="button"
+    <Button
+      variant="outline"
+      size="sm"
       onClick={handleDownload}
       disabled={loading}
-      className={toolbarBtnBase}
       title={loading ? "ダウンロード中" : "CSVダウンロード"}
     >
-      <span className="material-symbols-outlined text-[20px]" aria-hidden>
-        download
+      {loading ? (
+        <Loader2 className="size-4 animate-spin" />
+      ) : (
+        <Download className="size-4" />
+      )}
+      <span className="hidden sm:inline">
+        {loading ? "ダウンロード中…" : "ダウンロード"}
       </span>
-      <span className="hidden md:inline">{loading ? "ダウンロード中…" : "ダウンロード"}</span>
-    </button>
+    </Button>
   );
 }

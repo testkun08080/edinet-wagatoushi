@@ -4,6 +4,18 @@ import { useState, useEffect, type ReactNode } from "react";
 import { useFilters } from "./FilterContext.js";
 import { useColumnVisibility, type ColumnId } from "./ColumnVisibilityContext.js";
 import { useFavorites } from "./FavoritesContext.js";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Skeleton } from "./ui/skeleton";
+import { ArrowUp, ArrowDown, Star } from "lucide-react";
 
 export type CompanyMetric = {
   edinetCode: string;
@@ -62,7 +74,7 @@ function formatDisplayName(name: string): string {
 function passesFilter(
   m: CompanyMetric,
   f: ReturnType<typeof useFilters>["filters"],
-  favorites: Set<string>
+  favorites: Set<string>,
 ): boolean {
   if (f.showOnlyFavorites && !favorites.has(m.secCode)) return false;
   if (f.searchName.trim() && !m.filerName.toLowerCase().includes(f.searchName.trim().toLowerCase()))
@@ -81,42 +93,64 @@ function passesFilter(
   if (f.minRoe != null && f.minRoe !== "" && !isNaN(roe) && roe < parseFloat(f.minRoe)) return false;
   if (f.maxRoe != null && f.maxRoe !== "" && !isNaN(roe) && roe > parseFloat(f.maxRoe)) return false;
   const totalAssets = m.総資産額 != null ? parseFloat(m.総資産額) : NaN;
-  if (f.minTotalAssets != null && f.minTotalAssets !== "" && !isNaN(totalAssets) && totalAssets < parseFloat(f.minTotalAssets) * 1_000_000) return false;
-  if (f.maxTotalAssets != null && f.maxTotalAssets !== "" && !isNaN(totalAssets) && totalAssets > parseFloat(f.maxTotalAssets) * 1_000_000) return false;
+  if (
+    f.minTotalAssets != null &&
+    f.minTotalAssets !== "" &&
+    !isNaN(totalAssets) &&
+    totalAssets < parseFloat(f.minTotalAssets) * 1_000_000
+  )
+    return false;
+  if (
+    f.maxTotalAssets != null &&
+    f.maxTotalAssets !== "" &&
+    !isNaN(totalAssets) &&
+    totalAssets > parseFloat(f.maxTotalAssets) * 1_000_000
+  )
+    return false;
   return true;
 }
 
 function getCellValue(
   m: CompanyMetric,
   colId: ColumnId,
-  favHelpers?: { isFavorite: (sec: string) => boolean; toggleFavorite: (sec: string) => void }
+  favHelpers?: { isFavorite: (sec: string) => boolean; toggleFavorite: (sec: string) => void },
 ): ReactNode {
   switch (colId) {
     case "filerName":
       return (
         <span className="inline-flex items-center gap-1.5">
           {favHelpers && (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon-xs"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 favHelpers.toggleFavorite(m.secCode);
               }}
-              className="btn btn-ghost btn-xs p-0 min-h-0 h-5 w-5 text-base-content/50 hover:text-warning"
               aria-label={favHelpers.isFavorite(m.secCode) ? "お気に入りから外す" : "お気に入りに追加"}
               title={favHelpers.isFavorite(m.secCode) ? "お気に入りから外す" : "お気に入りに追加"}
+              className="h-5 w-5"
             >
-              {favHelpers.isFavorite(m.secCode) ? "★" : "☆"}
-            </button>
+              <Star
+                className={`size-3.5 ${
+                  favHelpers.isFavorite(m.secCode)
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "text-muted-foreground"
+                }`}
+              />
+            </Button>
           )}
-          <a href={`/analyze/${m.secCode}`} className="link link-hover font-medium">
+          <a
+            href={`/analyze/${m.secCode}`}
+            className="font-medium text-foreground hover:text-primary hover:underline underline-offset-4"
+          >
             {formatDisplayName(m.filerName)}
           </a>
         </span>
       );
     case "secCode":
-      return m.secCode;
+      return <Badge variant="outline">{m.secCode}</Badge>;
     case "edinetCode":
       return m.edinetCode;
     case "calcDate":
@@ -153,7 +187,7 @@ function getCellValue(
       const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
       const op = m.営業利益 != null ? parseFloat(m.営業利益) : NaN;
       if (isNaN(sales) || isNaN(op) || sales === 0) return "－";
-      return (op / sales * 100).toFixed(2) + "%";
+      return ((op / sales) * 100).toFixed(2) + "%";
     }
     case "netIncome":
       return formatSales(m.当期純利益);
@@ -161,7 +195,7 @@ function getCellValue(
       const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
       const ni = m.当期純利益 != null ? parseFloat(m.当期純利益) : NaN;
       if (isNaN(sales) || isNaN(ni) || sales === 0) return "－";
-      return (ni / sales * 100).toFixed(2) + "%";
+      return ((ni / sales) * 100).toFixed(2) + "%";
     }
     case "liabilities":
       return formatSales(m.負債);
@@ -281,17 +315,16 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
   }
 }
 
-function getThClass(colId: ColumnId): string {
-  const base = "text-right tabular-nums whitespace-nowrap";
-  if (colId === "filerName") return "sticky left-0 z-10 bg-slate-50 whitespace-nowrap";
-  return base;
+function getHeadAlign(colId: ColumnId): string {
+  if (colId === "filerName") return "text-left";
+  return "text-right";
 }
 
-function getTdClass(colId: ColumnId): string {
-  const base = "text-right tabular-nums whitespace-nowrap";
-  if (colId === "filerName") return "sticky left-0 z-10 bg-white font-medium whitespace-nowrap";
-  if (colId === "secCode" || colId === "edinetCode" || colId === "calcDate" || colId === "fiscalMonth") return "tabular-nums whitespace-nowrap";
-  return base;
+function getCellAlign(colId: ColumnId): string {
+  if (colId === "filerName") return "";
+  if (colId === "secCode" || colId === "edinetCode" || colId === "calcDate" || colId === "fiscalMonth")
+    return "tabular-nums";
+  return "text-right tabular-nums";
 }
 
 export function CompanyTable() {
@@ -306,8 +339,9 @@ export function CompanyTable() {
   useEffect(() => {
     fetch("/data/company_metrics.json")
       .then((res) => res.json())
-      .then((data: { metrics?: CompanyMetric[] }) => {
-        setMetrics(data.metrics ?? []);
+      .then((data) => {
+        const { metrics: metricsList } = data as { metrics?: CompanyMetric[] };
+        setMetrics(metricsList ?? []);
         setLoading(false);
       })
       .catch(() => {
@@ -348,58 +382,78 @@ export function CompanyTable() {
         });
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-500">読み込み中…</div>;
+    return (
+      <div className="space-y-3 p-6">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton key={i} className="h-10 w-full" />
+        ))}
+      </div>
+    );
   }
 
   if (filtered.length === 0) {
     return (
-      <div className="p-8 text-center text-slate-500">該当する企業がありません。フィルターを緩めてください。</div>
+      <div className="flex flex-col items-center justify-center p-12 text-center">
+        <p className="text-muted-foreground text-sm">
+          該当する企業がありません。フィルターを緩めてください。
+        </p>
+      </div>
     );
   }
 
   if (!hasColumns) {
     return (
-      <div className="p-8 text-center text-slate-500">
-        右上の「表示列」で表示する列を選択してください。
+      <div className="flex flex-col items-center justify-center p-12 text-center">
+        <p className="text-muted-foreground text-sm">
+          右上の「表示列」で表示する列を選択してください。
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto border border-slate-200 rounded-xl">
-      <table className="w-full text-sm text-left border-collapse">
-        <thead>
-          <tr className="bg-slate-50 border-b border-slate-200">
+    <div className="rounded-lg border">
+      <Table>
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
             {visibleColumns.map((id) => (
-              <th
+              <TableHead
                 key={id}
-                className={`${getThClass(id)} p-3 font-semibold text-slate-600 cursor-pointer select-none hover:bg-slate-100 transition-colors`}
+                className={`${getHeadAlign(id)} cursor-pointer select-none hover:bg-muted/50 transition-colors ${
+                  id === "filerName" ? "sticky left-0 z-10 bg-background" : ""
+                }`}
                 onClick={() => handleSort(id)}
               >
                 <span className="inline-flex items-center gap-1">
                   {columnLabel(id)}
-                  {sortColumn === id && (
-                    <span className="text-blue-600" aria-hidden>
-                      {sortAsc ? "↑" : "↓"}
-                    </span>
-                  )}
+                  {sortColumn === id &&
+                    (sortAsc ? (
+                      <ArrowUp className="size-3.5 text-primary" />
+                    ) : (
+                      <ArrowDown className="size-3.5 text-primary" />
+                    ))}
                 </span>
-              </th>
+              </TableHead>
             ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100">
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {sorted.map((m) => (
-            <tr key={m.edinetCode} className="hover:bg-slate-50/50">
+            <TableRow key={m.edinetCode}>
               {visibleColumns.map((id) => (
-                <td key={id} className={`${getTdClass(id)} p-3`}>
+                <TableCell
+                  key={id}
+                  className={`${getCellAlign(id)} ${
+                    id === "filerName" ? "sticky left-0 z-10 bg-background font-medium" : ""
+                  }`}
+                >
                   {getCellValue(m, id, { isFavorite, toggleFavorite })}
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

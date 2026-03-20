@@ -1,10 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useData } from "vike-react/useData";
 import type { Data, CompanyMetricsRow } from "./+data.js";
 import { useRecentCompanies } from "../../../components/RecentCompaniesContext.js";
 import { useFavorites } from "../../../components/FavoritesContext.js";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../../components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Badge } from "../../../components/ui/badge";
+import { Alert, AlertDescription } from "../../../components/ui/alert";
+import { Skeleton } from "../../../components/ui/skeleton";
+import { Star, AlertCircle, FileText, BarChart3, TrendingUp, Wallet, Banknote } from "lucide-react";
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -35,32 +50,40 @@ function DataTable({
   if (keyList.length === 0) return null;
 
   return (
-    <div className="overflow-x-auto border border-slate-200 rounded-xl">
-        <table className="w-full text-sm text-left border-collapse">
-          <thead>
-            <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="p-3 font-semibold text-slate-600 sticky left-0 bg-slate-50 z-20 whitespace-nowrap">項目</th>
-              {periods.map((p) => (
-                <th key={p.periodEnd} className="p-3 font-semibold text-slate-600 text-right whitespace-nowrap">
-                  {p.periodEnd}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {keyList.map((key) => (
-              <tr key={key}>
-                <td className="p-3 font-medium bg-white sticky left-0 text-slate-900 whitespace-nowrap">{key}</td>
-                {periods.map((p, i) => (
-                  <td key={p.periodEnd} className="p-3 text-right tabular-nums text-slate-700 whitespace-nowrap">
-                    {formatNum(data[i]?.[key] ?? "－")}
-                  </td>
+    <Card>
+      <CardContent className="p-0">
+        <div className="rounded-lg border-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="sticky left-0 z-20 bg-background font-semibold">
+                  項目
+                </TableHead>
+                {periods.map((p) => (
+                  <TableHead key={p.periodEnd} className="text-right font-semibold">
+                    {p.periodEnd}
+                  </TableHead>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {keyList.map((key) => (
+                <TableRow key={key}>
+                  <TableCell className="font-medium sticky left-0 bg-background">
+                    {key}
+                  </TableCell>
+                  {periods.map((p, i) => (
+                    <TableCell key={p.periodEnd} className="text-right tabular-nums">
+                      {formatNum(data[i]?.[key] ?? "－")}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -99,25 +122,29 @@ const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
 
 function IndicatorsTable({
   metrics,
-  formatNum,
 }: {
   metrics: CompanyMetricsRow | null;
-  formatNum: (s: string) => string;
 }) {
   if (!metrics) {
-    return <p className="text-slate-500">この企業の指標データはありません。</p>;
+    return (
+      <Alert>
+        <AlertCircle className="size-4" />
+        <AlertDescription>この企業の指標データはありません。</AlertDescription>
+      </Alert>
+    );
   }
 
   return (
-    <div className="overflow-x-auto border border-slate-200 rounded-xl">
-        <table className="w-full text-sm text-left border-collapse">
-          <thead>
-            <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="p-3 font-semibold text-slate-600 text-left">項目</th>
-              <th className="p-3 font-semibold text-slate-600 text-right">値</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
+    <Card>
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="font-semibold">項目</TableHead>
+              <TableHead className="text-right font-semibold">値</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {INDICATOR_KEYS.map(({ key, label }) => {
               const val = metrics[key];
               let display: string;
@@ -139,25 +166,23 @@ function IndicatorsTable({
                 else display = n.toLocaleString(undefined, { maximumFractionDigits: 4 });
               }
               return (
-                <tr key={key}>
-                  <td className="p-3 font-medium text-slate-900 whitespace-nowrap">{label}</td>
-                  <td className="p-3 text-right tabular-nums text-slate-700 whitespace-nowrap">{display}</td>
-                </tr>
+                <TableRow key={key}>
+                  <TableCell className="font-medium">{label}</TableCell>
+                  <TableCell className="text-right tabular-nums">{display}</TableCell>
+                </TableRow>
               );
             })}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 }
-
-type TabId = "summary" | "shihyo" | "pl" | "bs" | "cf";
 
 export default function Page() {
   const { company, metrics, error } = useData<Data>();
   const { addRecent } = useRecentCompanies();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const [activeTab, setActiveTab] = useState<TabId>("summary");
 
   useEffect(() => {
     if (company) {
@@ -168,84 +193,119 @@ export default function Page() {
   if (error) {
     return (
       <div className="p-6">
-        <p className="text-red-600">{error}</p>
-        <p className="text-slate-500 text-sm mt-2">左の企業一覧から別の企業を選択してください。</p>
+        <Alert variant="destructive">
+          <AlertCircle className="size-4" />
+          <AlertDescription>
+            {error}
+            <br />
+            <span className="text-xs mt-1 block">左の企業一覧から別の企業を選択してください。</span>
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
 
   if (!company) {
-    return <p className="p-6 text-slate-500">データを読み込んでいます…</p>;
+    return (
+      <div className="p-6 space-y-4">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-[400px] w-full" />
+      </div>
+    );
   }
 
   const { filerName, secCode, periods } = company;
 
-  const tabs: { id: TabId; label: string }[] = [
-    { id: "summary", label: "サマリー" },
-    { id: "shihyo", label: "指標" },
-    { id: "pl", label: "損益計算書" },
-    { id: "bs", label: "貸借対照表" },
-    { id: "cf", label: "キャッシュフロー計算書" },
-  ];
-
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-      {/* ヘッダー（Stitch 風） */}
-      <header className="shrink-0 p-6 border-b border-slate-200">
-        <div className="flex items-start justify-between">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-2xl font-bold m-0 tracking-tight text-slate-900">
-                {formatDisplayName(filerName)}（{secCode}）
-              </h1>
+      {/* Header */}
+      <div className="shrink-0 px-4 pt-4 lg:px-6 lg:pt-6">
+        <Card>
+          <CardHeader>
+            <div>
+              <CardTitle className="text-xl font-bold tracking-tight">
+                {formatDisplayName(filerName)}
+              </CardTitle>
+              <CardDescription className="flex items-center gap-2 mt-1">
+                <Badge variant="outline">{secCode}</Badge>
+                <span>EDINET 四半期報告書データ</span>
+              </CardDescription>
             </div>
-            <p className="text-slate-500 text-sm">EDINET 四半期報告書データ</p>
-          </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => toggleFavorite(secCode)}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition ${
-                isFavorite(secCode)
-                  ? "bg-blue-600 text-white border border-transparent hover:bg-blue-700 shadow-sm"
-                  : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
-              }`}
-            >
-              <span className="material-symbols-outlined text-lg">{isFavorite(secCode) ? "star" : "star_border"}</span>
-              {isFavorite(secCode) ? "お気に入り登録済" : "お気に入りに追加"}
-            </button>
-          </div>
-        </div>
-
-      </header>
-
-      {/* タブ */}
-      <div className="shrink-0 px-6 border-b border-slate-200 sticky top-0 bg-white z-10">
-        <nav className="flex gap-8">
-          {tabs.map(({ id, label }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setActiveTab(id)}
-              className={`py-4 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === id
-                  ? "text-blue-600 border-blue-600 font-semibold"
-                  : "text-slate-500 hover:text-slate-800 border-transparent"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
+            <CardAction>
+              <Button
+                variant={isFavorite(secCode) ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleFavorite(secCode)}
+              >
+                <Star
+                  className={`size-4 ${
+                    isFavorite(secCode) ? "fill-current" : ""
+                  }`}
+                />
+                {isFavorite(secCode) ? "お気に入り登録済" : "お気に入りに追加"}
+              </Button>
+            </CardAction>
+          </CardHeader>
+        </Card>
       </div>
 
-      {/* タブコンテンツ */}
-      <div className="flex-1 overflow-y-auto p-6">
-        {activeTab === "summary" && <DataTable data={periods.map((p) => p.summary)} periods={periods} />}
-        {activeTab === "shihyo" && <IndicatorsTable metrics={metrics} formatNum={formatNum} />}
-        {activeTab === "pl" && <DataTable data={periods.map((p) => p.pl)} periods={periods} />}
-        {activeTab === "bs" && <DataTable data={periods.map((p) => p.bs)} periods={periods} />}
-        {activeTab === "cf" && <DataTable data={periods.map((p) => p.cf)} periods={periods} />}
+      {/* Tabs */}
+      <div className="flex-1 overflow-hidden px-4 py-4 lg:px-6">
+        <Tabs defaultValue="summary" className="h-full flex flex-col">
+          <TabsList variant="line" className="w-full justify-start shrink-0 overflow-x-auto">
+            <TabsTrigger value="summary" className="gap-1.5">
+              <FileText className="size-3.5" />
+              サマリー
+            </TabsTrigger>
+            <TabsTrigger value="shihyo" className="gap-1.5">
+              <BarChart3 className="size-3.5" />
+              指標
+            </TabsTrigger>
+            <TabsTrigger value="pl" className="gap-1.5">
+              <TrendingUp className="size-3.5" />
+              損益計算書
+            </TabsTrigger>
+            <TabsTrigger value="bs" className="gap-1.5">
+              <Wallet className="size-3.5" />
+              貸借対照表
+            </TabsTrigger>
+            <TabsTrigger value="cf" className="gap-1.5">
+              <Banknote className="size-3.5" />
+              キャッシュフロー計算書
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="flex-1 overflow-auto mt-4">
+            <TabsContent value="summary">
+              <DataTable
+                data={periods.map((p) => p.summary)}
+                periods={periods}
+              />
+            </TabsContent>
+            <TabsContent value="shihyo">
+              <IndicatorsTable metrics={metrics} />
+            </TabsContent>
+            <TabsContent value="pl">
+              <DataTable
+                data={periods.map((p) => p.pl)}
+                periods={periods}
+              />
+            </TabsContent>
+            <TabsContent value="bs">
+              <DataTable
+                data={periods.map((p) => p.bs)}
+                periods={periods}
+              />
+            </TabsContent>
+            <TabsContent value="cf">
+              <DataTable
+                data={periods.map((p) => p.cf)}
+                periods={periods}
+              />
+            </TabsContent>
+          </div>
+        </Tabs>
       </div>
     </div>
   );

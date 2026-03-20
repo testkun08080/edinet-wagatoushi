@@ -1,45 +1,42 @@
 "use client";
 
 import { useFilters } from "./FilterContext.js";
-
-const toolbarBtnBase =
-  "inline-flex items-center justify-center gap-1.5 min-h-[36px] min-w-[36px] px-3 py-2 rounded-md text-sm font-medium bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition";
+import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { List, Star } from "lucide-react";
 
 export function FavoritesViewToggle() {
   const { filters, setFilter } = useFilters();
 
   return (
-    <nav className="flex gap-0.5" aria-label="表示切り替え">
-      <a
-        href="/"
-        onClick={(e) => {
-          e.preventDefault();
-          setFilter("showOnlyFavorites", false);
-          window.history.replaceState({}, "", "/");
-        }}
-        className={`${toolbarBtnBase} ${!filters.showOnlyFavorites ? "bg-slate-100 border-slate-300 text-slate-900" : ""}`}
-        title="全て表示"
+    <ToggleGroup
+      type="single"
+      value={filters.showOnlyFavorites ? "favorites" : "all"}
+      onValueChange={(value: string) => {
+        if (!value) return;
+        const showFav = value === "favorites";
+        setFilter("showOnlyFavorites", showFav);
+        window.history.replaceState({}, "", showFav ? "/?favorites=1" : "/");
+      }}
+      className="gap-0"
+    >
+      <ToggleGroupItem
+        value="all"
+        aria-label="全て表示"
+        size="sm"
+        className="gap-1.5 data-[state=on]:bg-accent"
       >
-        <span className="material-symbols-outlined text-[20px]" aria-hidden>
-          list
-        </span>
-        <span className="hidden md:inline">全て表示</span>
-      </a>
-      <a
-        href="/?favorites=1"
-        onClick={(e) => {
-          e.preventDefault();
-          setFilter("showOnlyFavorites", true);
-          window.history.replaceState({}, "", "/?favorites=1");
-        }}
-        className={`${toolbarBtnBase} ${filters.showOnlyFavorites ? "bg-slate-100 border-slate-300 text-slate-900" : ""}`}
-        title="お気に入りだけ"
+        <List className="size-4" />
+        <span className="hidden sm:inline text-xs">全て</span>
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="favorites"
+        aria-label="お気に入りだけ"
+        size="sm"
+        className="gap-1.5 data-[state=on]:bg-accent"
       >
-        <span className="material-symbols-outlined text-[20px]" aria-hidden>
-          star
-        </span>
-        <span className="hidden md:inline">お気に入りだけ</span>
-      </a>
-    </nav>
+        <Star className="size-4" />
+        <span className="hidden sm:inline text-xs">お気に入り</span>
+      </ToggleGroupItem>
+    </ToggleGroup>
   );
 }
