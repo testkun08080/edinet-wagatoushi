@@ -35,8 +35,8 @@ function parseIntYen(raw: string | undefined): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-function toBillionsYen(yen: number): number {
-  return yen / 1_000_000_000;
+function toMillionsYen(yen: number): number {
+  return yen / 1_000_000;
 }
 
 /** 横軸・カテゴリ用（Yahoo Finance / kabutan 系の「日付を区切りで並べる」表記に近い） */
@@ -79,7 +79,7 @@ const bnTooltipFormatter = (
     <div className="flex w-full flex-wrap items-center justify-between gap-2">
       <span className="text-muted-foreground">{String(name)}</span>
       <span className="font-mono font-medium tabular-nums text-foreground">
-        {value.toLocaleString("ja-JP", { maximumFractionDigits: 1 })} 十億円
+        {value.toLocaleString("ja-JP", { maximumFractionDigits: 1 })} 百万円
       </span>
     </div>
   );
@@ -150,7 +150,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         const y = parseIntYen(p.summary?.["売上高"]);
         return {
           period: p.periodEnd,
-          sales: y != null ? toBillionsYen(y) : null,
+          sales: y != null ? toMillionsYen(y) : null,
         };
       }),
     [list],
@@ -162,7 +162,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         const d = parseIntYen(p.cf?.["配当金の支払額"]);
         return {
           period: p.periodEnd,
-          dividend: d != null ? toBillionsYen(Math.abs(d)) : null,
+          dividend: d != null ? toMillionsYen(Math.abs(d)) : null,
         };
       }),
     [list],
@@ -176,9 +176,9 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         const net = pickPlNetIncome(p.pl ?? {});
         return {
           period: p.periodEnd,
-          revenue: rev != null ? toBillionsYen(rev) : null,
-          operating: op != null ? toBillionsYen(op) : null,
-          netIncome: net != null ? toBillionsYen(net) : null,
+          revenue: rev != null ? toMillionsYen(rev) : null,
+          operating: op != null ? toMillionsYen(op) : null,
+          netIncome: net != null ? toMillionsYen(net) : null,
         };
       }),
     [list],
@@ -193,9 +193,9 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         const eq = parseIntYen(bs["純資産"]);
         return {
           period: p.periodEnd,
-          totalAssets: ta != null ? toBillionsYen(ta) : null,
-          liabilities: liab != null ? toBillionsYen(liab) : null,
-          netAssets: eq != null ? toBillionsYen(eq) : null,
+          totalAssets: ta != null ? toMillionsYen(ta) : null,
+          liabilities: liab != null ? toMillionsYen(liab) : null,
+          netAssets: eq != null ? toMillionsYen(eq) : null,
         };
       }),
     [list],
@@ -245,7 +245,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">売上高の推移</CardTitle>
-            <CardDescription>四半期サマリー（summary）の「売上高」</CardDescription>
+            <CardDescription>四半期サマリー（summary）の「売上高」（百万円）</CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             {hasSales ? (
@@ -276,7 +276,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">配当に関するキャッシュアウト</CardTitle>
-            <CardDescription>CF の「配当金の支払額」（絶対値・十億円）</CardDescription>
+            <CardDescription>CF の「配当金の支払額」（絶対値・百万円）</CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             {hasDividend ? (
@@ -317,7 +317,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">損益計算書（PL）の推移</CardTitle>
-            <CardDescription>売上高・営業利益・親会社帰属純利益（十億円）</CardDescription>
+            <CardDescription>売上高・営業利益・親会社帰属純利益（百万円）</CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             {hasPl ? (
@@ -369,7 +369,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">貸借対照表（BS）の推移</CardTitle>
-            <CardDescription>総資産・負債・純資産（十億円）</CardDescription>
+            <CardDescription>総資産・負債・純資産（百万円）</CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             {hasBs ? (

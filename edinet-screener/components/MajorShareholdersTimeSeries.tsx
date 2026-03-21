@@ -9,11 +9,13 @@ import { AlertCircle } from "lucide-react";
 
 export type PeriodWithRaw = {
   periodEnd: string;
+  docID?: string;
   rawTsvPath?: string;
 };
 
 type PeriodParsed = {
   periodEnd: string;
+  docID: string;
   byName: Map<string, { shares: string | null; ratio: string | null }>;
 };
 
@@ -51,6 +53,7 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
               if (!res.ok) {
                 return {
                   periodEnd: p.periodEnd,
+                  docID: p.docID ?? "",
                   byName: new Map<string, { shares: string | null; ratio: string | null }>(),
                   failed: true as const,
                 };
@@ -61,10 +64,11 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
               for (const e of list) {
                 byName.set(e.name, { shares: e.shares, ratio: e.ratio });
               }
-              return { periodEnd: p.periodEnd, byName, failed: false as const };
+              return { periodEnd: p.periodEnd, docID: p.docID ?? "", byName, failed: false as const };
             } catch {
               return {
                 periodEnd: p.periodEnd,
+                docID: p.docID ?? "",
                 byName: new Map<string, { shares: string | null; ratio: string | null }>(),
                 failed: true as const,
               };
@@ -74,7 +78,7 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
 
         if (cancelled) return;
 
-        setParsed(results.map(({ periodEnd, byName }) => ({ periodEnd, byName })));
+        setParsed(results.map(({ periodEnd, docID, byName }) => ({ periodEnd, docID, byName })));
 
         const anyData = results.some((r) => r.byName.size > 0);
         if (!anyData) {
@@ -156,7 +160,10 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
             <TableRow className="hover:bg-transparent">
               <TableHead className="sticky left-0 z-20 min-w-[200px] bg-background font-semibold">株主名</TableHead>
               {parsed.map((col) => (
-                <TableHead key={col.periodEnd} className="text-right font-semibold whitespace-nowrap min-w-[120px]">
+                <TableHead
+                  key={`${col.periodEnd}-${col.docID}`}
+                  className="text-right font-semibold whitespace-nowrap min-w-[120px]"
+                >
                   {col.periodEnd}
                 </TableHead>
               ))}
@@ -173,7 +180,10 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
                 {parsed.map((col) => {
                   const cell = col.byName.get(name);
                   return (
-                    <TableCell key={col.periodEnd} className="text-right tabular-nums align-top text-xs sm:text-sm">
+                    <TableCell
+                      key={`${col.periodEnd}-${col.docID}`}
+                      className="text-right tabular-nums align-top text-xs sm:text-sm"
+                    >
                       {cell ? formatMajorShareholderCell(cell.shares, cell.ratio) : "―"}
                     </TableCell>
                   );
