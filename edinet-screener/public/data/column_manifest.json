@@ -53,6 +53,13 @@
       "metricsKey": "配当性向"
     },
     {
+      "id": "payoutRatioComputed",
+      "label": "配当性向（算出）",
+      "category": "valuation",
+      "metricsKey": "payoutRatioComputed",
+      "computed": true
+    },
+    {
       "id": "dividendYield",
       "label": "配当利回り",
       "category": "valuation",
@@ -87,16 +94,43 @@
       "metricsKey": "EPS"
     },
     {
+      "id": "dilutedEPS",
+      "label": "希薄化EPS",
+      "category": "valuation",
+      "metricsKey": "dilutedEPS"
+    },
+    {
       "id": "ROE",
       "label": "ROE",
       "category": "valuation",
       "metricsKey": "ROE"
     },
     {
+      "id": "roeCalculated",
+      "label": "ROE（算出）",
+      "category": "valuation",
+      "metricsKey": "roeCalculated",
+      "computed": true
+    },
+    {
+      "id": "roa",
+      "label": "ROA",
+      "category": "valuation",
+      "metricsKey": "roa",
+      "computed": true
+    },
+    {
       "id": "equityRatio",
       "label": "自己資本比率",
       "category": "valuation",
       "metricsKey": "自己資本比率"
+    },
+    {
+      "id": "equityRatioCalculated",
+      "label": "自己資本比率（算出）",
+      "category": "valuation",
+      "metricsKey": "equityRatioCalculated",
+      "computed": true
     },
     {
       "id": "BPS",
@@ -217,6 +251,13 @@
       "label": "投資CF",
       "category": "cash",
       "metricsKey": "投資CF"
+    },
+    {
+      "id": "fcf",
+      "label": "FCF",
+      "category": "cash",
+      "metricsKey": "fcf",
+      "computed": true
     },
     {
       "id": "financingCF",

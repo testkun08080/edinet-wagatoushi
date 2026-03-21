@@ -127,8 +127,12 @@ const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
   { key: "当期純利益", label: "当期純利益" },
   { key: "包括利益", label: "包括利益" },
   { key: "EPS", label: "EPS" },
+  { key: "dilutedEPS", label: "希薄化EPS" },
   { key: "BPS", label: "BPS" },
   { key: "ROE", label: "ROE" },
+  { key: "roeCalculated", label: "ROE（算出）" },
+  { key: "roa", label: "ROA" },
+  { key: "equityRatioCalculated", label: "自己資本比率（算出）" },
   { key: "PER", label: "PER" },
   { key: "PBR", label: "PBR" },
   { key: "純資産額", label: "純資産額" },
@@ -139,9 +143,11 @@ const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
   { key: "負債", label: "負債" },
   { key: "営業CF", label: "営業CF" },
   { key: "投資CF", label: "投資CF" },
+  { key: "fcf", label: "FCF" },
   { key: "財務CF", label: "財務CF" },
   { key: "現金残高", label: "現金残高" },
   { key: "配当性向", label: "配当性向" },
+  { key: "payoutRatioComputed", label: "配当性向（算出）" },
   { key: "dividendPerShare", label: "1株当たり配当金" },
   { key: "配当利回り", label: "配当利回り" },
   { key: "時価総額", label: "時価総額" },
@@ -177,6 +183,18 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
               let display: string;
               if (val === null || val === undefined) {
                 display = "－";
+              } else if (
+                (key === "ROE" ||
+                  key === "自己資本比率" ||
+                  key === "配当性向" ||
+                  key === "roeCalculated" ||
+                  key === "roa" ||
+                  key === "equityRatioCalculated" ||
+                  key === "payoutRatioComputed") &&
+                typeof val === "string"
+              ) {
+                const n = parseFloat(val);
+                display = Number.isFinite(n) ? `${(n * 100).toFixed(2)}%` : val;
               } else if (key === "ネットキャッシュ比率" && typeof val === "number") {
                 display = (val * 100).toFixed(2) + "%";
               } else if (typeof val === "number") {

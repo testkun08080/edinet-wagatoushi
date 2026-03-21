@@ -56,10 +56,20 @@ function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
       return formatRatio(m.ROE);
     case "EPS":
       return m.EPS ?? "－";
+    case "dilutedEPS":
+      return m.dilutedEPS ?? "－";
+    case "roeCalculated":
+      return formatRatio(m.roeCalculated ?? null);
+    case "roa":
+      return formatRatio(m.roa ?? null);
+    case "equityRatioCalculated":
+      return formatRatio(m.equityRatioCalculated ?? null);
     case "BPS":
       return m.BPS ?? "－";
     case "payoutRatio":
       return formatRatio(m.配当性向);
+    case "payoutRatioComputed":
+      return formatRatio(m.payoutRatioComputed ?? null);
     case "sales":
       return formatSales(m.売上高);
     case "operatingProfit":
@@ -104,6 +114,8 @@ function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
       return formatSales(m.営業CF);
     case "investingCF":
       return formatSales(m.投資CF);
+    case "fcf":
+      return formatSales(m.fcf ?? null);
     case "financingCF":
       return formatSales(m.財務CF);
     default:

@@ -26,6 +26,17 @@ export type CompanyMetric = {
   包括利益: string | null;
   BPS: string | null;
   ROE: string | null;
+  /** 親会社純利益÷純資産額（開示ROEと別） */
+  roeCalculated?: string | null;
+  /** 親会社純利益÷総資産額 */
+  roa?: string | null;
+  /** 純資産額÷総資産額（開示の自己資本比率と別） */
+  equityRatioCalculated?: string | null;
+  dilutedEPS?: string | null;
+  /** DPS÷EPS（200%超は欠損扱い） */
+  payoutRatioComputed?: string | null;
+  /** 営業CF＋投資CF */
+  fcf?: string | null;
   営業利益: string | null;
   営業CF: string | null;
   投資CF: string | null;
@@ -165,10 +176,20 @@ function getCellValue(
       return formatRatio(m.ROE);
     case "EPS":
       return m.EPS ?? "－";
+    case "dilutedEPS":
+      return m.dilutedEPS ?? "－";
+    case "roeCalculated":
+      return formatRatio(m.roeCalculated ?? null);
+    case "roa":
+      return formatRatio(m.roa ?? null);
+    case "equityRatioCalculated":
+      return formatRatio(m.equityRatioCalculated ?? null);
     case "BPS":
       return m.BPS ?? "－";
     case "payoutRatio":
       return formatRatio(m.配当性向);
+    case "payoutRatioComputed":
+      return formatRatio(m.payoutRatioComputed ?? null);
     case "sales":
       return formatSales(m.売上高);
     case "operatingProfit":
@@ -213,6 +234,8 @@ function getCellValue(
       return formatSales(m.営業CF);
     case "investingCF":
       return formatSales(m.投資CF);
+    case "fcf":
+      return formatSales(m.fcf ?? null);
     case "financingCF":
       return formatSales(m.財務CF);
     default:
@@ -250,10 +273,20 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
       return m.ROE != null ? parseFloat(m.ROE) : -Infinity;
     case "EPS":
       return m.EPS != null ? parseFloat(m.EPS) : -Infinity;
+    case "dilutedEPS":
+      return m.dilutedEPS != null ? parseFloat(m.dilutedEPS) : -Infinity;
+    case "roeCalculated":
+      return m.roeCalculated != null ? parseFloat(m.roeCalculated) : -Infinity;
+    case "roa":
+      return m.roa != null ? parseFloat(m.roa) : -Infinity;
+    case "equityRatioCalculated":
+      return m.equityRatioCalculated != null ? parseFloat(m.equityRatioCalculated) : -Infinity;
     case "BPS":
       return m.BPS != null ? parseFloat(m.BPS) : -Infinity;
     case "payoutRatio":
       return m.配当性向 != null ? parseFloat(m.配当性向) : -Infinity;
+    case "payoutRatioComputed":
+      return m.payoutRatioComputed != null ? parseFloat(m.payoutRatioComputed) : -Infinity;
     case "sales":
       return m.売上高 != null ? parseFloat(m.売上高) : -Infinity;
     case "operatingProfit":
@@ -298,6 +331,8 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
       return m.営業CF != null ? parseFloat(m.営業CF) : -Infinity;
     case "investingCF":
       return m.投資CF != null ? parseFloat(m.投資CF) : -Infinity;
+    case "fcf":
+      return m.fcf != null ? parseFloat(m.fcf) : -Infinity;
     case "financingCF":
       return m.財務CF != null ? parseFloat(m.財務CF) : -Infinity;
     default:

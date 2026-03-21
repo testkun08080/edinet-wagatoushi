@@ -11,13 +11,18 @@ export type ColumnId =
   | "PBR"
   | "PER"
   | "payoutRatio"
+  | "payoutRatioComputed"
   | "dividendYield"
   | "marketCap"
   | "netCash"
   | "netCashRatio"
   | "EPS"
+  | "dilutedEPS"
   | "ROE"
+  | "roeCalculated"
+  | "roa"
   | "equityRatio"
+  | "equityRatioCalculated"
   | "BPS"
   | "dividendPerShare"
   | "sharesOutstanding"
@@ -37,6 +42,7 @@ export type ColumnId =
   | "cashBalance"
   | "operatingCF"
   | "investingCF"
+  | "fcf"
   | "financingCF";
 
 export type ColumnCategory = "basic" | "valuation" | "performance" | "balancesheet" | "cash";
@@ -50,13 +56,18 @@ const COLUMN_CONFIG: { id: ColumnId; label: string; category: ColumnCategory }[]
   { id: "PBR", label: "PBR", category: "valuation" },
   { id: "PER", label: "PER", category: "valuation" },
   { id: "payoutRatio", label: "配当性向", category: "valuation" },
+  { id: "payoutRatioComputed", label: "配当性向（算出）", category: "valuation" },
   { id: "dividendYield", label: "配当利回り", category: "valuation" },
   { id: "marketCap", label: "時価総額", category: "valuation" },
   { id: "netCash", label: "ネットキャッシュ", category: "valuation" },
   { id: "netCashRatio", label: "ネットキャッシュ比率", category: "valuation" },
   { id: "EPS", label: "EPS", category: "valuation" },
+  { id: "dilutedEPS", label: "希薄化EPS", category: "valuation" },
   { id: "ROE", label: "ROE", category: "valuation" },
+  { id: "roeCalculated", label: "ROE（算出）", category: "valuation" },
+  { id: "roa", label: "ROA", category: "valuation" },
   { id: "equityRatio", label: "自己資本比率", category: "valuation" },
+  { id: "equityRatioCalculated", label: "自己資本比率（算出）", category: "valuation" },
   { id: "BPS", label: "BPS", category: "valuation" },
   { id: "dividendPerShare", label: "1株当たり配当金", category: "valuation" },
   { id: "sharesOutstanding", label: "発行済株式総数", category: "valuation" },
@@ -76,6 +87,7 @@ const COLUMN_CONFIG: { id: ColumnId; label: string; category: ColumnCategory }[]
   { id: "cashBalance", label: "現金及び現金同等物", category: "cash" },
   { id: "operatingCF", label: "営業CF", category: "cash" },
   { id: "investingCF", label: "投資CF", category: "cash" },
+  { id: "fcf", label: "FCF", category: "cash" },
   { id: "financingCF", label: "財務CF", category: "cash" },
 ];
 

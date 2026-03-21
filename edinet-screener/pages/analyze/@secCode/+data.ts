@@ -38,6 +38,12 @@ export type CompanyMetricsRow = {
   包括利益: string | null;
   BPS: string | null;
   ROE: string | null;
+  dilutedEPS?: string | null;
+  roeCalculated?: string | null;
+  roa?: string | null;
+  equityRatioCalculated?: string | null;
+  payoutRatioComputed?: string | null;
+  fcf?: string | null;
   営業利益: string | null;
   営業CF: string | null;
   投資CF: string | null;
