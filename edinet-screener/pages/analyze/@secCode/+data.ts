@@ -60,6 +60,30 @@ export type CompanyMetricsRow = {
 
 export type Data = Awaited<ReturnType<typeof data>>;
 
+function compareSubmitDateTime(a: string, b: string): number {
+  return a.localeCompare(b, "en");
+}
+
+/**
+ * 同一提出（periodEnd + docID）の重複行を除去。提出日時が新しい方を残す。
+ * EDINET 再提出などで JSON 内に同一 doc が複製されているケースへの対処。
+ */
+function dedupePeriodsByPeriodEndAndDoc(periods: CompanySummary["periods"]): CompanySummary["periods"] {
+  const map = new Map<string, CompanySummary["periods"][0]>();
+  for (const p of periods) {
+    const key = `${p.periodEnd}\0${p.docID}`;
+    const prev = map.get(key);
+    if (!prev || compareSubmitDateTime(p.submitDateTime, prev.submitDateTime) > 0) {
+      map.set(key, p);
+    }
+  }
+  return Array.from(map.values()).sort((a, b) => {
+    const c = a.periodEnd.localeCompare(b.periodEnd);
+    if (c !== 0) return c;
+    return compareSubmitDateTime(a.submitDateTime, b.submitDateTime);
+  });
+}
+
 /** JSON の欠損で periods が無いと画面が例外落ちするため正規化する */
 function normalizeCompanySummary(raw: unknown, secCode: string): CompanySummary {
   if (!raw || typeof raw !== "object") {
@@ -90,7 +114,7 @@ function normalizeCompanySummary(raw: unknown, secCode: string): CompanySummary 
     edinetCode: String(o.edinetCode ?? ""),
     secCode: String(o.secCode ?? secCode),
     filerName: String(o.filerName ?? "（無題）"),
-    periods,
+    periods: dedupePeriodsByPeriodEndAndDoc(periods),
   };
 }
 

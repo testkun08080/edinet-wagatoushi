@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useData } from "vike-react/useData";
 import type { Data, CompanyMetricsRow } from "./+data.js";
 import { useRecentCompanies } from "../../../components/RecentCompaniesContext.js";
@@ -12,10 +12,32 @@ import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 import { Alert, AlertDescription } from "../../../components/ui/alert";
 import { Skeleton } from "../../../components/ui/skeleton";
-import { Star, AlertCircle, FileText, BarChart3, TrendingUp, Wallet, Banknote, Users } from "lucide-react";
+import {
+  Star,
+  AlertCircle,
+  FileText,
+  BarChart3,
+  TrendingUp,
+  Wallet,
+  Banknote,
+  Users,
+  CalendarRange,
+} from "lucide-react";
 import { MajorShareholdersTimeSeries } from "../../../components/MajorShareholdersTimeSeries.js";
 import { SummaryCharts } from "../../../components/SummaryCharts.js";
 import { DataAttributionBlock } from "../../../components/DataAttributionBlock.js";
+import { ToggleGroup, ToggleGroupItem } from "../../../components/ui/toggle-group";
+import {
+  ANALYZE_VISIBLE_YEAR_OPTIONS,
+  filterPeriodsByVisibleYears,
+  type AnalyzeVisibleYears,
+} from "../../../lib/analyzePeriodRange.js";
+import {
+  ANALYZE_REPORT_KIND_OPTIONS,
+  analyzeReportKindLabel,
+  reportMatchesKind,
+  type AnalyzeReportKind,
+} from "../../../lib/analyzeReportKind.js";
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -30,7 +52,29 @@ function formatNum(s: string): string {
   return n.toLocaleString();
 }
 
-function DataTable({ data, periods }: { data: Record<string, string>[]; periods: { periodEnd: string }[] }) {
+/** 円ベースの整数を百万円に換算。小数を含み絶対値が小さいものは比率・EPS 等としてそのまま近い形で表示 */
+function formatMillionYenCell(s: string): string {
+  if (s == null || s === "" || s === "－") return "－";
+  const cleaned = String(s).replace(/,/g, "").trim();
+  if (cleaned === "－") return "－";
+  const n = parseFloat(cleaned);
+  if (Number.isNaN(n)) return s;
+  if (/[.]/.test(cleaned) && Math.abs(n) < 1_000_000) {
+    return n.toLocaleString("ja-JP", { maximumFractionDigits: 4 });
+  }
+  const millions = n / 1_000_000;
+  return millions.toLocaleString("ja-JP", { maximumFractionDigits: 2 });
+}
+
+function DataTable({
+  data,
+  periods,
+  unitCaption,
+}: {
+  data: Record<string, string>[];
+  periods: { periodEnd: string }[];
+  unitCaption?: string;
+}) {
   const keys = new Set<string>();
   for (const row of data) {
     Object.keys(row).forEach((k) => keys.add(k));
@@ -41,6 +85,7 @@ function DataTable({ data, periods }: { data: Record<string, string>[]; periods:
 
   return (
     <Card>
+      {unitCaption ? <div className="text-muted-foreground border-b px-4 py-2 text-xs">{unitCaption}</div> : null}
       <CardContent className="p-0">
         <div className="rounded-lg border-0">
           <Table>
@@ -60,7 +105,7 @@ function DataTable({ data, periods }: { data: Record<string, string>[]; periods:
                   <TableCell className="font-medium sticky left-0 bg-background">{key}</TableCell>
                   {periods.map((p, i) => (
                     <TableCell key={p.periodEnd} className="text-right tabular-nums">
-                      {formatNum(data[i]?.[key] ?? "－")}
+                      {formatMillionYenCell(data[i]?.[key] ?? "－")}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -166,6 +211,8 @@ export default function Page() {
   const { addRecent } = useRecentCompanies();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [mainTab, setMainTab] = useState("summary");
+  const [analyzeVisibleYears, setAnalyzeVisibleYears] = useState<AnalyzeVisibleYears>(3);
+  const [analyzeReportKind, setAnalyzeReportKind] = useState<AnalyzeReportKind>("quarter");
 
   useEffect(() => {
     if (company) {
@@ -176,6 +223,24 @@ export default function Page() {
   useEffect(() => {
     setMainTab("summary");
   }, [company?.secCode]);
+
+  useEffect(() => {
+    setAnalyzeVisibleYears(3);
+    setAnalyzeReportKind("quarter");
+  }, [company?.secCode]);
+
+  const periods = company?.periods ?? [];
+  const reportFilteredPeriods = useMemo(
+    () => periods.filter((p) => reportMatchesKind(p.docDescription, analyzeReportKind)),
+    [periods, analyzeReportKind],
+  );
+  const filteredPeriods = useMemo(
+    () => filterPeriodsByVisibleYears(reportFilteredPeriods, analyzeVisibleYears),
+    [reportFilteredPeriods, analyzeVisibleYears],
+  );
+
+  const tableMillionCaption =
+    "金額のセルは百万円単位（元データの円を 1,000,000 で割った値）です。比率・単価など非金額はそのまま表示します。";
 
   if (error) {
     return (
@@ -202,8 +267,7 @@ export default function Page() {
     );
   }
 
-  const { filerName, secCode, periods: periodsRaw } = company;
-  const periods = periodsRaw ?? [];
+  const { filerName, secCode } = company;
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
@@ -235,6 +299,68 @@ export default function Page() {
       {/* Tabs */}
       <div className="flex-1 min-h-0 overflow-hidden px-4 py-4 lg:px-6">
         <Tabs value={mainTab} onValueChange={setMainTab} className="h-full flex flex-col min-h-0">
+          <div className="bg-background/90 supports-backdrop-filter:bg-background/75 sticky top-0 z-30 -mx-4 mb-2 border-b border-border/70 px-4 py-2.5 backdrop-blur-md lg:-mx-6 lg:px-6">
+            <div className="flex flex-col gap-3">
+              <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                <CalendarRange className="text-muted-foreground size-4 shrink-0" aria-hidden />
+                <span className="text-sm font-medium">開示・期間</span>
+                <span className="text-muted-foreground text-xs">
+                  書類の種類と年数は全タブ共通（同一決算期末の重複提出はサーバ側で除去済み）
+                </span>
+              </div>
+              <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
+                <ToggleGroup
+                  type="single"
+                  value={analyzeReportKind}
+                  onValueChange={(v: string) => {
+                    if (!v) return;
+                    if ((ANALYZE_REPORT_KIND_OPTIONS as readonly string[]).includes(v)) {
+                      setAnalyzeReportKind(v as AnalyzeReportKind);
+                    }
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="w-full shrink-0 gap-0 lg:w-fit"
+                >
+                  {ANALYZE_REPORT_KIND_OPTIONS.map((k) => (
+                    <ToggleGroupItem
+                      key={k}
+                      value={k}
+                      aria-label={`${analyzeReportKindLabel[k]}報告書のみ表示`}
+                      className="min-w-0 flex-1 px-2.5 lg:flex-none lg:px-3 data-[state=on]:bg-accent"
+                    >
+                      {analyzeReportKindLabel[k]}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+                <ToggleGroup
+                  type="single"
+                  value={String(analyzeVisibleYears)}
+                  onValueChange={(v: string) => {
+                    if (!v) return;
+                    const n = Number(v);
+                    if ((ANALYZE_VISIBLE_YEAR_OPTIONS as readonly number[]).includes(n)) {
+                      setAnalyzeVisibleYears(n as AnalyzeVisibleYears);
+                    }
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="w-full shrink-0 gap-0 lg:w-fit"
+                >
+                  {ANALYZE_VISIBLE_YEAR_OPTIONS.map((y) => (
+                    <ToggleGroupItem
+                      key={y}
+                      value={String(y)}
+                      aria-label={`${y}年分表示`}
+                      className="min-w-0 flex-1 px-2.5 lg:flex-none lg:min-w-[2.75rem] lg:px-3 data-[state=on]:bg-accent"
+                    >
+                      {y}年
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+            </div>
+          </div>
           <TabsList variant="line" className="w-full justify-start shrink-0 overflow-x-auto">
             <TabsTrigger value="summary" className="gap-1.5">
               <FileText className="size-3.5" />
@@ -264,24 +390,40 @@ export default function Page() {
 
           <div className="flex-1 min-h-0 overflow-auto mt-4">
             <TabsContent value="summary" className="min-h-0 space-y-6">
-              <SummaryCharts periods={periods} metrics={metrics} />
-              <DataTable data={periods.map((p) => p.summary)} periods={periods} />
+              <SummaryCharts periods={filteredPeriods} metrics={metrics} />
+              <DataTable
+                data={filteredPeriods.map((p) => p.summary)}
+                periods={filteredPeriods}
+                unitCaption={tableMillionCaption}
+              />
               <DataAttributionBlock compact />
             </TabsContent>
             <TabsContent value="shihyo" className="min-h-0">
               <IndicatorsTable metrics={metrics} />
             </TabsContent>
             <TabsContent value="shareholders" className="min-h-0">
-              <MajorShareholdersTimeSeries periods={periods} active={mainTab === "shareholders"} />
+              <MajorShareholdersTimeSeries periods={filteredPeriods} active={mainTab === "shareholders"} />
             </TabsContent>
             <TabsContent value="pl" className="min-h-0">
-              <DataTable data={periods.map((p) => p.pl)} periods={periods} />
+              <DataTable
+                data={filteredPeriods.map((p) => p.pl)}
+                periods={filteredPeriods}
+                unitCaption={tableMillionCaption}
+              />
             </TabsContent>
             <TabsContent value="bs" className="min-h-0">
-              <DataTable data={periods.map((p) => p.bs)} periods={periods} />
+              <DataTable
+                data={filteredPeriods.map((p) => p.bs)}
+                periods={filteredPeriods}
+                unitCaption={tableMillionCaption}
+              />
             </TabsContent>
             <TabsContent value="cf" className="min-h-0">
-              <DataTable data={periods.map((p) => p.cf)} periods={periods} />
+              <DataTable
+                data={filteredPeriods.map((p) => p.cf)}
+                periods={filteredPeriods}
+                unitCaption={tableMillionCaption}
+              />
             </TabsContent>
           </div>
         </Tabs>
