@@ -72,6 +72,10 @@ uv run python scripts/analyze_data_structure.py ...
 
 Downloader / Parser は `from edinet_wrapper import ...` で利用できます。ダウンロード手順の詳細は `scripts/README_DOWNLOAD.md` を参照してください。本体の `downloader.py` は `src/edinet_wrapper/downloader.py` で、ここを編集して維持します。
 
+### スクリーナー用データのビルド（詳細）
+
+- **サンプル／全件ビルド、`create_corpus_sample.py`、フロント列と開示だけでは埋まらない項目**の整理は、リポジトリ直下の **[docs/edinet-wrapper-使い方.md](../docs/edinet-wrapper-使い方.md)** を参照してください。
+
 ---
 
 ## EDINET-Bench の再現（uv 前提）

@@ -2,6 +2,8 @@
 
 EDINET Screener 用のサンプルデータ（`companies.json` / `summaries/*.json`）を生成するコマンド集です。
 
+**より詳しい手順**（サンプル収集の複数パターン・列と EDINET の対応・株価が要る指標）: [docs/edinet-wrapper-使い方.md](../docs/edinet-wrapper-使い方.md)
+
 ## 前提
 
 - `edinet-wrapper` で `uv run` が利用できること

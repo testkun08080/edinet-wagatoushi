@@ -71,6 +71,8 @@ DATA_SET_URL=https://.../data-set.zip npm run build
 
 詳細は [edinet-screener/SAMPLE_DATA_COMMANDS.md](edinet-screener/SAMPLE_DATA_COMMANDS.md) を参照。
 
+**wrapper の詳細**（サンプル収集の複数パターン・フロント列と EDINET で足りない指標）: [docs/edinet-wrapper-使い方.md](docs/edinet-wrapper-使い方.md)
+
 ---
 
 **J-Quants 関連はオミット**（本プロジェクトでは使用しない）。
