@@ -152,7 +152,18 @@ function resolveFetchOrigin(pageContext: PageContextServer): string {
       return `${proto}://${host}`;
     }
   }
-  return "http://localhost:5173";
+  // Last resort: match the Vike dev server port used by this project.
+  return "http://localhost:3000";
+}
+
+async function fetchWithTimeout(url: string, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 export async function data(pageContext: PageContextServer) {
@@ -165,9 +176,12 @@ export async function data(pageContext: PageContextServer) {
     const config = useConfig();
     const base = resolveFetchOrigin(pageContext);
 
+    // Ensure we don't keep Vike's globalContext pending indefinitely.
+    // (Vike warns when a Promise hasn't resolved after ~3s in dev.)
+    const timeoutMs = 2500;
     const [companyRes, metricsRes] = await Promise.all([
-      fetch(`${base}/data/summaries/${secCode}.json`),
-      fetch(`${base}/data/company_metrics.json`),
+      fetchWithTimeout(`${base}/data/summaries/${secCode}.json`, timeoutMs),
+      fetchWithTimeout(`${base}/data/company_metrics.json`, timeoutMs),
     ]);
 
     if (!companyRes.ok) {
