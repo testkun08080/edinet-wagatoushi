@@ -4,10 +4,10 @@
 
 ## 作成されたファイル
 
-1. **`scripts/download_company_10years.py`**: 10年間分のデータをダウンロードするスクリプト
+1. **`scripts/download/download_company_10years.py`**: 10年間分のデータをダウンロードするスクリプト
 2. **`.github/workflows/download_company_data.yml`**: GitHub Actionsワークフローファイル
 3. **`.github/workflows/README.md`**: ワークフローの使用方法
-4. **`scripts/README_DOWNLOAD.md`**: スクリプトの使用方法
+4. **`scripts/download/README_DOWNLOAD.md`**: スクリプトの使用方法
 
 ## セットアップ手順
 
@@ -97,9 +97,9 @@ data/
 GitHub Actionsを使わずにローカルで実行する場合：
 
 ```bash
-cd edinet2dataset
+cd edinet-wrapper
 export EDINET_API_KEY="your-api-key"
-uv run python scripts/download_company_10years.py \
+uv run python scripts/download/download_company_10years.py \
   --edinet_code E02144 \
   --file_type tsv \
   --years 10

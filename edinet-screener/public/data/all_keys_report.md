@@ -1,161 +1,5 @@
 # All keys report
 
-## 株式会社　極洋 (13010)
-
-### periodEnd=2023-12-31 docID=S100SPSV
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 25, bsKeys: 34, cfKeys: 2
-
-
-## 株式会社ニッスイ (13320)
-
-### periodEnd=2023-12-31 docID=S100SU1M
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 25, bsKeys: 41, cfKeys: 2
-
-
-## マルハニチロ株式会社 (13330)
-
-### periodEnd=2023-12-31 docID=S100SQG4
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 22, bsKeys: 32, cfKeys: 2
-
-
-## 株式会社雪国まいたけ (13750)
-
-### periodEnd=2023-12-31 docID=S100SSV0
-
-- rawTsvPath: `None`
-- summaryKeys: 3, plKeys: 8, bsKeys: 10, cfKeys: 10
-
-
-## カネコ種苗株式会社 (13760)
-
-### periodEnd=2018-11-30 docID=S100EUY8
-
-- rawTsvPath: `None`
-- summaryKeys: 13, plKeys: 18, bsKeys: 34, cfKeys: 17
-
-### periodEnd=2019-02-28 docID=S100FKN0
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 19, bsKeys: 34, cfKeys: 2
-
-### periodEnd=2019-08-31 docID=S100H2GX
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 19, bsKeys: 34, cfKeys: 2
-
-### periodEnd=2019-11-30 docID=S100HPSI
-
-- rawTsvPath: `None`
-- summaryKeys: 13, plKeys: 20, bsKeys: 35, cfKeys: 19
-
-### periodEnd=2020-02-29 docID=S100IE78
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 20, bsKeys: 34, cfKeys: 2
-
-### periodEnd=2020-08-31 docID=S100JUG1
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 19, bsKeys: 33, cfKeys: 2
-
-### periodEnd=2020-11-30 docID=S100KH4Y
-
-- rawTsvPath: `None`
-- summaryKeys: 13, plKeys: 20, bsKeys: 34, cfKeys: 18
-
-### periodEnd=2021-02-28 docID=S100L4CZ
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 22, bsKeys: 33, cfKeys: 2
-
-### periodEnd=2021-08-31 docID=S100MIJQ
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 18, bsKeys: 33, cfKeys: 2
-
-### periodEnd=2021-11-30 docID=S100N6TH
-
-- rawTsvPath: `None`
-- summaryKeys: 13, plKeys: 21, bsKeys: 34, cfKeys: 19
-
-### periodEnd=2022-02-28 docID=S100NTRM
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 22, bsKeys: 33, cfKeys: 2
-
-### periodEnd=2022-08-31 docID=S100P9KN
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 19, bsKeys: 34, cfKeys: 2
-
-### periodEnd=2022-11-30 docID=S100PWZU
-
-- rawTsvPath: `None`
-- summaryKeys: 13, plKeys: 20, bsKeys: 35, cfKeys: 19
-
-### periodEnd=2023-02-28 docID=S100QK9S
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 21, bsKeys: 34, cfKeys: 2
-
-### periodEnd=2023-05-31 docID=S100RR2U
-
-- rawTsvPath: `None`
-- summaryKeys: 18, plKeys: 25, bsKeys: 39, cfKeys: 24
-
-### periodEnd=2023-08-31 docID=S100RZYP
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 18, bsKeys: 35, cfKeys: 2
-
-### periodEnd=2023-11-30 docID=S100SKS0
-
-- rawTsvPath: `None`
-- summaryKeys: 13, plKeys: 19, bsKeys: 36, cfKeys: 18
-
-### periodEnd=2024-02-29 docID=S100T7UM
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 21, bsKeys: 35, cfKeys: 2
-
-### periodEnd=2025-05-31 docID=S100WL4U
-
-- rawTsvPath: `None`
-- summaryKeys: 18, plKeys: 25, bsKeys: 40, cfKeys: 24
-
-### periodEnd=2025-05-31 docID=S100V29J
-
-- rawTsvPath: `None`
-- summaryKeys: 13, plKeys: 21, bsKeys: 36, cfKeys: 19
-
-### periodEnd=2026-05-31 docID=S100XEGI
-
-- rawTsvPath: `None`
-- summaryKeys: 13, plKeys: 0, bsKeys: 36, cfKeys: 2
-
-
-## ホクト株式会社 (13790)
-
-### periodEnd=2023-12-31 docID=S100SSBM
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 21, bsKeys: 46, cfKeys: 2
-
-
-## 住友林業株式会社 (19110)
-
-### periodEnd=2024-03-31 docID=S100TEGJ
-
-- rawTsvPath: `None`
-- summaryKeys: 9, plKeys: 20, bsKeys: 56, cfKeys: 2
-
-
 ## 栗田工業株式会社 (63700)
 
 ### periodEnd=2018-12-31 docID=S100F3VO
@@ -243,16 +87,6 @@
 - rawTsvPath: `raw_tsv/63700/S100STX5.json`
 - summaryKeys: 3, plKeys: 9, bsKeys: 11, cfKeys: 8
 
-### periodEnd=2023-12-31 docID=S100STX5
-
-- rawTsvPath: `raw_tsv/63700/S100STX5.json`
-- summaryKeys: 3, plKeys: 9, bsKeys: 11, cfKeys: 8
-
-### periodEnd=2025-03-31 docID=S100W5YW
-
-- rawTsvPath: `raw_tsv/63700/S100W5YW.json`
-- summaryKeys: 5, plKeys: 9, bsKeys: 14, cfKeys: 7
-
 ### periodEnd=2025-03-31 docID=S100W5YW
 
 - rawTsvPath: `raw_tsv/63700/S100W5YW.json`
@@ -262,11 +96,6 @@
 
 - rawTsvPath: `raw_tsv/63700/S100UNSF.json`
 - summaryKeys: 3, plKeys: 9, bsKeys: 11, cfKeys: 7
-
-### periodEnd=2025-09-30 docID=S100X0QY
-
-- rawTsvPath: `raw_tsv/63700/S100X0QY.json`
-- summaryKeys: 3, plKeys: 0, bsKeys: 11, cfKeys: 1
 
 ### periodEnd=2025-09-30 docID=S100X0QY
 
@@ -361,16 +190,6 @@
 - rawTsvPath: `raw_tsv/65010/S100SSG7.json`
 - summaryKeys: 3, plKeys: 7, bsKeys: 10, cfKeys: 7
 
-### periodEnd=2023-12-31 docID=S100SSG7
-
-- rawTsvPath: `raw_tsv/65010/S100SSG7.json`
-- summaryKeys: 3, plKeys: 7, bsKeys: 10, cfKeys: 7
-
-### periodEnd=2025-03-31 docID=S100W56G
-
-- rawTsvPath: `raw_tsv/65010/S100W56G.json`
-- summaryKeys: 4, plKeys: 7, bsKeys: 14, cfKeys: 7
-
 ### periodEnd=2025-03-31 docID=S100W56G
 
 - rawTsvPath: `raw_tsv/65010/S100W56G.json`
@@ -380,11 +199,6 @@
 
 - rawTsvPath: `raw_tsv/65010/S100UP4J.json`
 - summaryKeys: 3, plKeys: 7, bsKeys: 10, cfKeys: 7
-
-### periodEnd=2026-03-31 docID=S100X0LM
-
-- rawTsvPath: `raw_tsv/65010/S100X0LM.json`
-- summaryKeys: 3, plKeys: 0, bsKeys: 10, cfKeys: 1
 
 ### periodEnd=2026-03-31 docID=S100X0LM
 
@@ -489,16 +303,6 @@
 - rawTsvPath: `raw_tsv/67010/S100SOW0.json`
 - summaryKeys: 3, plKeys: 8, bsKeys: 11, cfKeys: 10
 
-### periodEnd=2023-12-31 docID=S100SOW0
-
-- rawTsvPath: `raw_tsv/67010/S100SOW0.json`
-- summaryKeys: 3, plKeys: 8, bsKeys: 11, cfKeys: 10
-
-### periodEnd=2025-03-31 docID=S100VZ85
-
-- rawTsvPath: `raw_tsv/67010/S100VZ85.json`
-- summaryKeys: 4, plKeys: 8, bsKeys: 16, cfKeys: 10
-
 ### periodEnd=2025-03-31 docID=S100VZ85
 
 - rawTsvPath: `raw_tsv/67010/S100VZ85.json`
@@ -508,11 +312,6 @@
 
 - rawTsvPath: `raw_tsv/67010/S100UKGW.json`
 - summaryKeys: 3, plKeys: 8, bsKeys: 11, cfKeys: 10
-
-### periodEnd=2026-03-31 docID=S100WXD8
-
-- rawTsvPath: `raw_tsv/67010/S100WXD8.json`
-- summaryKeys: 3, plKeys: 0, bsKeys: 11, cfKeys: 1
 
 ### periodEnd=2026-03-31 docID=S100WXD8
 
@@ -622,16 +421,6 @@
 - rawTsvPath: `raw_tsv/67020/S100SQFB.json`
 - summaryKeys: 3, plKeys: 8, bsKeys: 11, cfKeys: 8
 
-### periodEnd=2023-12-31 docID=S100SQFB
-
-- rawTsvPath: `raw_tsv/67020/S100SQFB.json`
-- summaryKeys: 3, plKeys: 8, bsKeys: 11, cfKeys: 8
-
-### periodEnd=2025-03-31 docID=S100W1DS
-
-- rawTsvPath: `raw_tsv/67020/S100W1DS.json`
-- summaryKeys: 4, plKeys: 8, bsKeys: 14, cfKeys: 8
-
 ### periodEnd=2025-03-31 docID=S100W1DS
 
 - rawTsvPath: `raw_tsv/67020/S100W1DS.json`
@@ -641,11 +430,6 @@
 
 - rawTsvPath: `raw_tsv/67020/S100UMP3.json`
 - summaryKeys: 3, plKeys: 8, bsKeys: 11, cfKeys: 7
-
-### periodEnd=2026-03-31 docID=S100WXVS
-
-- rawTsvPath: `raw_tsv/67020/S100WXVS.json`
-- summaryKeys: 3, plKeys: 0, bsKeys: 11, cfKeys: 1
 
 ### periodEnd=2026-03-31 docID=S100WXVS
 
@@ -740,16 +524,6 @@
 - rawTsvPath: `raw_tsv/67030/S100SURY.json`
 - summaryKeys: 13, plKeys: 19, bsKeys: 35, cfKeys: 22
 
-### periodEnd=2023-12-31 docID=S100SURY
-
-- rawTsvPath: `raw_tsv/67030/S100SURY.json`
-- summaryKeys: 13, plKeys: 19, bsKeys: 35, cfKeys: 22
-
-### periodEnd=2025-03-31 docID=S100W0R4
-
-- rawTsvPath: `raw_tsv/67030/S100W0R4.json`
-- summaryKeys: 18, plKeys: 23, bsKeys: 41, cfKeys: 24
-
 ### periodEnd=2025-03-31 docID=S100W0R4
 
 - rawTsvPath: `raw_tsv/67030/S100W0R4.json`
@@ -759,11 +533,6 @@
 
 - rawTsvPath: `raw_tsv/67030/S100UREM.json`
 - summaryKeys: 13, plKeys: 19, bsKeys: 32, cfKeys: 21
-
-### periodEnd=2026-03-31 docID=S100X3IE
-
-- rawTsvPath: `raw_tsv/67030/S100X3IE.json`
-- summaryKeys: 13, plKeys: 0, bsKeys: 34, cfKeys: 2
 
 ### periodEnd=2026-03-31 docID=S100X3IE
 
@@ -858,16 +627,6 @@
 - rawTsvPath: `raw_tsv/67620/S100ST54.json`
 - summaryKeys: 3, plKeys: 9, bsKeys: 11, cfKeys: 9
 
-### periodEnd=2023-12-31 docID=S100ST54
-
-- rawTsvPath: `raw_tsv/67620/S100ST54.json`
-- summaryKeys: 3, plKeys: 9, bsKeys: 11, cfKeys: 9
-
-### periodEnd=2025-03-31 docID=S100VZFD
-
-- rawTsvPath: `raw_tsv/67620/S100VZFD.json`
-- summaryKeys: 5, plKeys: 9, bsKeys: 16, cfKeys: 9
-
 ### periodEnd=2025-03-31 docID=S100VZFD
 
 - rawTsvPath: `raw_tsv/67620/S100VZFD.json`
@@ -877,11 +636,6 @@
 
 - rawTsvPath: `raw_tsv/67620/S100UQD4.json`
 - summaryKeys: 3, plKeys: 9, bsKeys: 11, cfKeys: 9
-
-### periodEnd=2026-03-31 docID=S100X20G
-
-- rawTsvPath: `raw_tsv/67620/S100X20G.json`
-- summaryKeys: 3, plKeys: 0, bsKeys: 11, cfKeys: 1
 
 ### periodEnd=2026-03-31 docID=S100X20G
 
@@ -976,16 +730,6 @@
 - rawTsvPath: `raw_tsv/67970/S100SQW5.json`
 - summaryKeys: 9, plKeys: 21, bsKeys: 35, cfKeys: 2
 
-### periodEnd=2023-12-31 docID=S100SQW5
-
-- rawTsvPath: `raw_tsv/67970/S100SQW5.json`
-- summaryKeys: 9, plKeys: 21, bsKeys: 35, cfKeys: 2
-
-### periodEnd=2025-03-31 docID=S100W0Z2
-
-- rawTsvPath: `raw_tsv/67970/S100W0Z2.json`
-- summaryKeys: 18, plKeys: 21, bsKeys: 45, cfKeys: 22
-
 ### periodEnd=2025-03-31 docID=S100W0Z2
 
 - rawTsvPath: `raw_tsv/67970/S100W0Z2.json`
@@ -995,11 +739,6 @@
 
 - rawTsvPath: `raw_tsv/67970/S100UNBY.json`
 - summaryKeys: 13, plKeys: 17, bsKeys: 36, cfKeys: 20
-
-### periodEnd=2025-09-30 docID=S100WZEG
-
-- rawTsvPath: `raw_tsv/67970/S100WZEG.json`
-- summaryKeys: 13, plKeys: 0, bsKeys: 36, cfKeys: 2
 
 ### periodEnd=2025-09-30 docID=S100WZEG
 
@@ -1099,25 +838,10 @@
 - rawTsvPath: `raw_tsv/69650/S100TDWC.json`
 - summaryKeys: 13, plKeys: 21, bsKeys: 44, cfKeys: 22
 
-### periodEnd=2024-03-31 docID=S100TDWC
-
-- rawTsvPath: `raw_tsv/69650/S100TDWC.json`
-- summaryKeys: 13, plKeys: 21, bsKeys: 44, cfKeys: 22
-
 ### periodEnd=2025-09-30 docID=S100XAWU
 
 - rawTsvPath: `raw_tsv/69650/S100XAWU.json`
 - summaryKeys: 17, plKeys: 27, bsKeys: 50, cfKeys: 26
-
-### periodEnd=2025-09-30 docID=S100XAWU
-
-- rawTsvPath: `raw_tsv/69650/S100XAWU.json`
-- summaryKeys: 17, plKeys: 27, bsKeys: 50, cfKeys: 26
-
-### periodEnd=2025-09-30 docID=S100VQ7B
-
-- rawTsvPath: `raw_tsv/69650/S100VQ7B.json`
-- summaryKeys: 13, plKeys: 23, bsKeys: 44, cfKeys: 25
 
 ### periodEnd=2025-09-30 docID=S100VQ7B
 
@@ -1212,16 +936,6 @@
 - rawTsvPath: `raw_tsv/79740/S100SPJ8.json`
 - summaryKeys: 9, plKeys: 20, bsKeys: 29, cfKeys: 2
 
-### periodEnd=2023-12-31 docID=S100SPJ8
-
-- rawTsvPath: `raw_tsv/79740/S100SPJ8.json`
-- summaryKeys: 9, plKeys: 20, bsKeys: 29, cfKeys: 2
-
-### periodEnd=2025-03-31 docID=S100W73A
-
-- rawTsvPath: `raw_tsv/79740/S100W73A.json`
-- summaryKeys: 17, plKeys: 22, bsKeys: 42, cfKeys: 19
-
 ### periodEnd=2025-03-31 docID=S100W73A
 
 - rawTsvPath: `raw_tsv/79740/S100W73A.json`
@@ -1236,19 +950,6 @@
 
 - rawTsvPath: `raw_tsv/79740/S100WY6A.json`
 - summaryKeys: 13, plKeys: 0, bsKeys: 34, cfKeys: 2
-
-### periodEnd=2026-03-31 docID=S100WY6A
-
-- rawTsvPath: `raw_tsv/79740/S100WY6A.json`
-- summaryKeys: 13, plKeys: 0, bsKeys: 34, cfKeys: 2
-
-
-## 三菱商事株式会社 (8058)
-
-### periodEnd=2024-03-31 docID=SAMPLE
-
-- rawTsvPath: `None`
-- summaryKeys: 12, plKeys: 5, bsKeys: 5, cfKeys: 5
 
 
 ## 日本通信株式会社 (94240)
@@ -1338,16 +1039,6 @@
 - rawTsvPath: `raw_tsv/94240/S100SSBS.json`
 - summaryKeys: 13, plKeys: 18, bsKeys: 36, cfKeys: 19
 
-### periodEnd=2023-12-31 docID=S100SSBS
-
-- rawTsvPath: `raw_tsv/94240/S100SSBS.json`
-- summaryKeys: 13, plKeys: 18, bsKeys: 36, cfKeys: 19
-
-### periodEnd=2025-03-31 docID=S100W51C
-
-- rawTsvPath: `raw_tsv/94240/S100W51C.json`
-- summaryKeys: 18, plKeys: 20, bsKeys: 41, cfKeys: 19
-
 ### periodEnd=2025-03-31 docID=S100W51C
 
 - rawTsvPath: `raw_tsv/94240/S100W51C.json`
@@ -1357,11 +1048,6 @@
 
 - rawTsvPath: `raw_tsv/94240/S100UN0G.json`
 - summaryKeys: 13, plKeys: 20, bsKeys: 37, cfKeys: 19
-
-### periodEnd=2026-03-31 docID=S100WYKU
-
-- rawTsvPath: `raw_tsv/94240/S100WYKU.json`
-- summaryKeys: 13, plKeys: 0, bsKeys: 40, cfKeys: 2
 
 ### periodEnd=2026-03-31 docID=S100WYKU
 
@@ -1456,16 +1142,6 @@
 - rawTsvPath: `raw_tsv/96160/S100SV0O.json`
 - summaryKeys: 9, plKeys: 19, bsKeys: 40, cfKeys: 2
 
-### periodEnd=2023-12-31 docID=S100SV0O
-
-- rawTsvPath: `raw_tsv/96160/S100SV0O.json`
-- summaryKeys: 9, plKeys: 19, bsKeys: 40, cfKeys: 2
-
-### periodEnd=2025-03-31 docID=S100W29G
-
-- rawTsvPath: `raw_tsv/96160/S100W29G.json`
-- summaryKeys: 18, plKeys: 20, bsKeys: 47, cfKeys: 28
-
 ### periodEnd=2025-03-31 docID=S100W29G
 
 - rawTsvPath: `raw_tsv/96160/S100W29G.json`
@@ -1475,11 +1151,6 @@
 
 - rawTsvPath: `raw_tsv/96160/S100UO7K.json`
 - summaryKeys: 13, plKeys: 18, bsKeys: 41, cfKeys: 27
-
-### periodEnd=2026-03-31 docID=S100X1O0
-
-- rawTsvPath: `raw_tsv/96160/S100X1O0.json`
-- summaryKeys: 13, plKeys: 0, bsKeys: 41, cfKeys: 2
 
 ### periodEnd=2026-03-31 docID=S100X1O0
 

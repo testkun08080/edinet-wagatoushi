@@ -7,7 +7,7 @@
 ### 1. 環境変数を設定
 
 ```bash
-cd edinet2dataset
+cd edinet-wrapper
 echo "EDINET_API_KEY=your-api-key-here" > .env
 ```
 
@@ -21,10 +21,10 @@ uv sync
 
 ```bash
 # 方法1: テストスクリプトを使用（推奨）
-./scripts/test_download.sh E02144 tsv 1
+./scripts/download/test_download.sh E02144 tsv 1
 
 # 方法2: 直接実行
-uv run python scripts/download_company_10years.py \
+uv run python scripts/download/download_company_10years.py \
   --edinet_code E02144 \
   --file_type tsv \
   --years 1
@@ -34,10 +34,10 @@ uv run python scripts/download_company_10years.py \
 
 ```bash
 # 基本的な使い方（デフォルト: トヨタ自動車、1年分）
-./scripts/test_download.sh
+./scripts/download/test_download.sh
 
 # カスタムパラメータ
-./scripts/test_download.sh E02144 tsv 1
+./scripts/download/test_download.sh E02144 tsv 1
 # 引数1: EDINETコード
 # 引数2: ファイル形式 (tsv/pdf/xbrl)
 # 引数3: 年数
@@ -48,19 +48,19 @@ uv run python scripts/download_company_10years.py \
 ### 例1: トヨタ自動車の1年分をテスト
 
 ```bash
-./scripts/test_download.sh E02144 tsv 1
+./scripts/download/test_download.sh E02144 tsv 1
 ```
 
 ### 例2: ソニーグループの1年分をテスト
 
 ```bash
-./scripts/test_download.sh E00324 tsv 1
+./scripts/download/test_download.sh E00324 tsv 1
 ```
 
 ### 例3: 10年分をダウンロード（本番用）
 
 ```bash
-uv run python scripts/download_company_10years.py \
+uv run python scripts/download/download_company_10years.py \
   --edinet_code E02144 \
   --file_type tsv \
   --years 10
