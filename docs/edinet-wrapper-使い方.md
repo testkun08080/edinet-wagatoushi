@@ -73,15 +73,15 @@ uv run python scripts/frontend/build_screener_data.py --mode sample \
 ### 3.2 EDINET コードを直接指定
 
 ```bash
-uv run python scripts/build_screener_data.py --mode sample E02367 E04473
+uv run python scripts/frontend/build_screener_data.py --mode sample E02367 E04473
 # または
-uv run python scripts/build_screener_data.py --mode sample --edinet_codes E02367,E04473
+uv run python scripts/frontend/build_screener_data.py --mode sample --edinet_codes E02367,E04473
 ```
 
 ### 3.3 data-set 内の全企業（フルスキャン）
 
 ```bash
-uv run python scripts/build_screener_data.py --mode full \
+uv run python scripts/frontend/build_screener_data.py --mode full \
   --data_set ../data-set \
   --output ../edinet-screener/public/data
 ```
@@ -96,13 +96,13 @@ uv run python scripts/build_screener_data.py --mode full \
 cd edinet-wrapper
 
 # 例: 証券コードと年度を指定（デフォルトは scripts 内のデフォルト銘柄・年度）
-uv run python scripts/create_corpus_sample.py --year 2025
+uv run python scripts/download/create_corpus_sample.py --year 2025
 
 # 例: EDINET コードとドキュメント種別
-uv run python scripts/create_corpus_sample.py --edinet_codes E02367 E04473 --types annual,quarterly --year 2025
+uv run python scripts/download/create_corpus_sample.py --edinet_codes E02367 E04473 --types annual,quarterly --year 2025
 
 # 例: data-set から条件で自動ピック（6 社など）
-uv run python scripts/create_corpus_sample.py --auto_pick --year 2024 --auto_pick_size 6
+uv run python scripts/download/create_corpus_sample.py --auto_pick --year 2024 --auto_pick_size 6
 ```
 
 出力先や `data-set` のルートはスクリプトのオプションに従います（`create_corpus_sample.py` の先頭ドキュメント参照）。  
@@ -114,7 +114,7 @@ uv run python scripts/create_corpus_sample.py --auto_pick --year 2024 --auto_pic
 
 ```bash
 cd edinet-wrapper
-uv run python scripts/build_screener_data.py --metrics_only \
+uv run python scripts/frontend/build_screener_data.py --metrics_only \
   --output ../edinet-screener/public/data
 ```
 
@@ -151,5 +151,5 @@ TSV を読み直さないため高速です。列定義や `summary_to_metrics_r
 | [EDINET指標の分類.md](./EDINET指標の分類.md)                     | 開示そのまま／算出／株価が要る指標 |
 | [不足データまとめ.md](./不足データまとめ.md)                     | 欠損しやすい項目と原因の整理       |
 | [ビルドとデータ品質のプラン.md](./ビルドとデータ品質のプラン.md) | 品質レポート・列定義の設計メモ     |
-| `edinet-screener/SAMPLE_DATA_COMMANDS.md`                        | スクリーナー向けコマンド集         |
-| `edinet-wrapper/scripts/README_DOWNLOAD.md`                      | ダウンロード手順                   |
+| `../edinet-screener/docs/SAMPLE_DATA_COMMANDS.md`                | スクリーナー向けコマンド集         |
+| `../edinet-wrapper/scripts/download/docs/README_DOWNLOAD.md`     | ダウンロード手順                   |

@@ -1,6 +1,6 @@
 # EDINET 由来データの分類（このリポジトリ）
 
-`edinet-wrapper/scripts/build_screener_data.py` の `summary_to_metrics_row` とフロント（`company_metrics.json` / `screener_columns.json`）の前提で整理しています。**リアルタイムの株価 API は使いません。**
+`edinet-wrapper/scripts/frontend/build_screener_data.py` の `summary_to_metrics_row` とフロント（`company_metrics.json` / `screener_columns.json`）の前提で整理しています。**リアルタイムの株価 API は使いません。**
 
 ---
 
@@ -57,7 +57,7 @@
 ```bash
 cd edinet-wrapper
 # summaries から指標だけ更新
-uv run python scripts/build_screener_data.py --metrics_only
+uv run python scripts/frontend/build_screener_data.py --metrics_only
 ```
 
 TSV から `summaries` ごと作り直す場合は `--mode sample` または `--mode full`。詳細は [edinet-wrapper-使い方.md](./edinet-wrapper-使い方.md) を参照。

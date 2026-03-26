@@ -70,7 +70,7 @@ uv run python scripts/download/download_company_10years.py --edinet_code E02144 
 uv run python scripts/analyze_data_structure.py ...
 ```
 
-Downloader / Parser は `from edinet_wrapper import ...` で利用できます。ダウンロード手順の詳細は `scripts/download/README_DOWNLOAD.md` を参照してください。本体の `downloader.py` は `src/edinet_wrapper/downloader.py` で、ここを編集して維持します。
+Downloader / Parser は `from edinet_wrapper import ...` で利用できます。ダウンロード手順の詳細は `scripts/download/docs/README_DOWNLOAD.md` を参照してください。本体の `downloader.py` は `src/edinet_wrapper/downloader.py` で、ここを編集して維持します。
 
 ### スクリーナー用データのビルド（詳細）
 

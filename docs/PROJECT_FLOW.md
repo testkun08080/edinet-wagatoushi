@@ -77,18 +77,17 @@
 
 | 方法 | 前提 | コマンド例 | 出力先 |
 |------|------|------------|--------|
-| 固定 33 社を一括 | data-set に四半期 TSV+JSON がある | `cd edinet-wrapper && uv run python scripts/fetch_33_companies.py` | `edinet-screener/public/data/` |
-| 複数社を指定 | data-set | `uv run python scripts/build_screener_data.py --mode sample E00004 E03606 ...` | 同上 |
-| 1 社だけ | data-set | `uv run python scripts/build_screener_data.py --mode sample E00004` | 同上 |
-| 全件一括 | data-set | `uv run python scripts/build_screener_data.py --mode full` | 同上 |
-| company_metrics のみ再生成 | 既に summaries がある | `uv run python scripts/build_screener_data.py --metrics_only` | `company_metrics.json` のみ更新 |
+| 複数社を指定 | data-set | `uv run python scripts/frontend/build_screener_data.py --mode sample E00004 E03606 ...` | `edinet-screener/public/data/` |
+| 1 社だけ | data-set | `uv run python scripts/frontend/build_screener_data.py --mode sample E00004` | 同上 |
+| 全件一括 | data-set | `uv run python scripts/frontend/build_screener_data.py --mode full` | 同上 |
+| company_metrics のみ再生成 | 既に summaries がある | `uv run python scripts/frontend/build_screener_data.py --metrics_only` | `company_metrics.json` のみ更新 |
 
 - **中身**:
   - **companies.json**: 企業一覧（EDINET コード・証券コード・名称など）。
   - **summaries/<証券コード>.json**: 企業ごとの期間別サマリ・PL/BS/CF 等（TSV パース結果）。
   - **company_metrics.json**: テーブル表示用の 1 銘柄 1 行の指標（EDINET 由来: EPS, BPS, 売上高, 経常利益, 純資産, ネットキャッシュ など）。J-Quants はオミットのため PER/PBR 等は含まない。
 
-詳細は [edinet-screener/SAMPLE_DATA_COMMANDS.md](edinet-screener/SAMPLE_DATA_COMMANDS.md) を参照。
+詳細は [edinet-screener/docs/SAMPLE_DATA_COMMANDS.md](../edinet-screener/docs/SAMPLE_DATA_COMMANDS.md) を参照。
 
 ---
 
@@ -110,15 +109,15 @@
 ```
 edinet-wagatoushi/
 ├── README.md                 # 全体の使い方・コマンド要約
-├── PROJECT_FLOW.md           # 本ドキュメント（構成とフロー）
+├── docs/PROJECT_FLOW.md      # 本ドキュメント（構成とフロー）
 ├── data-set/                 # （任意）EDINET コーパス。quarterly/ semiannual/ 等の下に Exxxxx/
 │
 ├── edinet-wrapper/           # EDINET 取得・パース・サンプル生成
 │   ├── scripts/
 │   │   ├── edinet_corpus.sh           # 月単位でコーパス取得
 │   │   ├── prepare_edinet_corpus.py   # 期間・書類種別で取得
-│   │   ├── fetch_33_companies.py      # data-set → 33社サンプル生成
-│   │   └── build_screener_data.py    # サンプル/全件で companies, summaries, company_metrics を生成
+│   │   ├── download/create_corpus_sample.py # 条件指定でコーパスのサブセット作成
+│   │   └── frontend/build_screener_data.py # サンプル/全件で companies, summaries, company_metrics を生成
 │   └── ...
 │
 ├── edinet-screener/          # スクリーナー UI
@@ -132,7 +131,8 @@ edinet-wagatoushi/
 │   └── ...
 │
 └── docs/
-    └── DATA_SET_ALTERNATIVES.md  # data-set をリモートに置く運用
+    ├── DATA_SET_ALTERNATIVES.md  # data-set をリモートに置く運用
+    └── PROJECT_STRUCTURE.md      # 構成要約（重複を整理）
 ```
 
 ---
@@ -143,7 +143,7 @@ edinet-wagatoushi/
    GitHub Actions で `edinet_corpus.sh` を実行し、成果物（`edinet_corpus/` の中身）を**手動で**プロジェクトルートの **data-set/** に配置する。
 
 2. **サンプルデータを作る**  
-   data-set を入力に、`cd edinet-wrapper && uv run python scripts/build_screener_data.py --mode sample` や `--mode full` を**手動実行**し、**edinet-screener/public/data** に companies.json / summaries / company_metrics を出力する。
+   data-set を入力に、`cd edinet-wrapper && uv run python scripts/frontend/build_screener_data.py --mode sample` や `--mode full` を**手動実行**し、**edinet-screener/public/data** に companies.json / summaries / company_metrics を出力する。
 
 3. **Vike でビルドしてスクリーナーで見る**  
    `cd edinet-screener && npm run build` または `npm run build:app` でビルド。`npm run dev` で開発時は、既存の `public/data` をそのまま表示する。
@@ -158,10 +158,10 @@ edinet-wagatoushi/
 
 | ドキュメント | 内容 |
 |--------------|------|
-| [README.md](README.md) | コマンド一覧・EDINET コーパス・スクリーナーの概要 |
-| [edinet-wrapper/README.md](edinet-wrapper/README.md) | Downloader / Parser、data-set の前提、EDINET-Bench 再現 |
-| [edinet-screener/SAMPLE_DATA_COMMANDS.md](edinet-screener/SAMPLE_DATA_COMMANDS.md) | サンプルデータ作成コマンドの詳細 |
-| [docs/DATA_SET_ALTERNATIVES.md](docs/DATA_SET_ALTERNATIVES.md) | data-set をリモート（S3/Release 等）に置く運用 |
+| [README.md](../README.md) | コマンド一覧・EDINET コーパス・スクリーナーの概要 |
+| [edinet-wrapper/README.md](../edinet-wrapper/README.md) | wrapper の概要とセットアップ |
+| [edinet-screener/docs/SAMPLE_DATA_COMMANDS.md](../edinet-screener/docs/SAMPLE_DATA_COMMANDS.md) | サンプルデータ作成コマンドの詳細 |
+| [DATA_SET_ALTERNATIVES.md](./DATA_SET_ALTERNATIVES.md) | data-set をリモート（S3/Release 等）に置く運用 |
 
 ---
 

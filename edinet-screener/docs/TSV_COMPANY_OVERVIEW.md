@@ -75,6 +75,6 @@ EDINET の TSV（有価証券報告書など）から、会社の概要・ジャ
 ## 5. 参考ファイル
 
 - `edinet-wrapper/src/edinet_wrapper/element_id_table.py` … META, TEXT, SUMMARY のマッピング
-- `edinet-wrapper/DATA_STRUCTURE_ANALYSIS.md` … パース後構造の詳細
+- `../../edinet-wrapper/docs/DATA_STRUCTURE_ANALYSIS.md` … パース後構造の詳細
 - `edinet-wrapper/scripts/industry_prediction/prepare_dataset.py` … 業種の取得・マッピング
 - `CRAWLER_DATA_TYPES.md` … Edinetcode（企業マスタ）の説明
