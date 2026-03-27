@@ -24,12 +24,27 @@ from edinet_wrapper import Downloader
 
 
 def parse_args():
-    parser = ArgumentParser("Download 10 years of annual reports for a specified company")
+    parser = ArgumentParser(
+        "Download documents for one or multiple EDINET codes for the last N years"
+    )
     parser.add_argument(
         "--edinet_code",
         type=str,
-        required=True,
-        help="EDINET code of the company (e.g., E02144)",
+        default=None,
+        help="Single EDINET code (e.g., E02144)",
+    )
+    parser.add_argument(
+        "--edinet_codes",
+        type=str,
+        nargs="+",
+        default=None,
+        help="Multiple EDINET codes (space separated)",
+    )
+    parser.add_argument(
+        "--companies_json",
+        type=str,
+        default=None,
+        help="Path to company list JSON that contains edinetCode fields",
     )
     parser.add_argument(
         "--output_dir",
@@ -50,7 +65,48 @@ def parse_args():
         default=10,
         help="Number of years to download (default: 10)",
     )
+    parser.add_argument(
+        "--doc_types",
+        type=str,
+        nargs="+",
+        default=["annual"],
+        choices=[
+            "annual",
+            "quarterly",
+            "semiannual",
+            "large_holding",
+            "annual_amended",
+            "quarterly_amended",
+            "semiannual_amended",
+            "large_holding_amended",
+        ],
+        help="Document types to download (multiple allowed)",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-download even when the output file already exists",
+    )
     return parser.parse_args()
+
+
+def _artifact_exists(target_dir: Path, doc_id: str, file_type: str) -> bool:
+    """TSV/PDF は非空ファイル、XBRL は doc_id 配下にファイルがあれば取得済みとみなす。"""
+    if file_type == "tsv":
+        p = target_dir / f"{doc_id}.tsv"
+        return p.is_file() and p.stat().st_size > 0
+    if file_type == "pdf":
+        p = target_dir / f"{doc_id}.pdf"
+        return p.is_file() and p.stat().st_size > 0
+    if file_type == "xbrl":
+        d = target_dir / doc_id
+        if not d.is_dir():
+            return False
+        try:
+            return any(d.iterdir())
+        except OSError:
+            return False
+    return False
 
 
 def get_date_range(years: int = 10):
@@ -62,16 +118,62 @@ def get_date_range(years: int = 10):
     return start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d")
 
 
+def _normalize_codes(codes: list[str]) -> list[str]:
+    normalized = []
+    seen = set()
+    for code in codes:
+        c = code.strip()
+        if not c:
+            continue
+        if c not in seen:
+            seen.add(c)
+            normalized.append(c)
+    return normalized
+
+
+def _load_codes_from_json(path: str) -> list[str]:
+    with open(path, "r", encoding="utf-8") as f:
+        companies = json.load(f)
+    if not isinstance(companies, list):
+        raise ValueError("companies_json must be a JSON array")
+    codes = []
+    for item in companies:
+        if not isinstance(item, dict):
+            continue
+        code = item.get("edinetCode")
+        if isinstance(code, str):
+            codes.append(code)
+    return _normalize_codes(codes)
+
+
+def resolve_target_codes(args) -> list[str]:
+    codes: list[str] = []
+    if args.edinet_code:
+        codes.append(args.edinet_code)
+    if args.edinet_codes:
+        codes.extend(args.edinet_codes)
+    if args.companies_json:
+        codes.extend(_load_codes_from_json(args.companies_json))
+    return _normalize_codes(codes)
+
+
 def download_company_data(
     edinet_code: str,
     output_dir: str = "data",
     file_type: str = "tsv",
     years: int = 10,
-):
-    """指定された企業の10年間分のデータをダウンロード"""
+    doc_types: list[str] | None = None,
+    skip_existing: bool = True,
+) -> tuple[list[str], list[str]]:
+    """指定された企業の過去N年分のデータをダウンロード。
+    戻り値: (新規ダウンロードした docID のリスト, スキップした docID のリスト)
+    """
 
+    if not doc_types:
+        doc_types = ["annual"]
     logger.info(f"Starting download for company: {edinet_code}")
-    logger.info(f"Downloading {years} years of annual reports")
+    logger.info(f"Downloading {years} years of reports")
+    logger.info(f"Document types: {', '.join(doc_types)}")
 
     # 日付範囲を取得
     start_date, end_date = get_date_range(years)
@@ -86,22 +188,22 @@ def download_company_data(
 
     if not results:
         logger.warning(f"No documents found for {edinet_code} in the specified period")
-        return []
+        return [], []
 
     logger.info(f"Found {len(results)} documents")
 
-    # 有価証券報告書（annual）のみをフィルタリング
-    annual_results = []
+    # 指定書類種別のみをフィルタリング
+    filtered_results = []
     for result in results:
-        doc_type = downloader.get_doc_type(result.ordinanceCode, result.formCode)
-        if doc_type == "annual":
-            annual_results.append(result)
+        doc_type = downloader.get_doc_type_from_result(result)
+        if doc_type in doc_types:
+            filtered_results.append(result)
 
-    logger.info(f"Found {len(annual_results)} annual reports")
+    logger.info(f"Found {len(filtered_results)} matching reports")
 
-    if not annual_results:
-        logger.warning("No annual reports found")
-        return []
+    if not filtered_results:
+        logger.warning("No matching reports found")
+        return [], []
 
     # 出力ディレクトリを作成
     company_dir = Path(output_dir) / edinet_code
@@ -112,30 +214,74 @@ def download_company_data(
         "edinet_code": edinet_code,
         "download_date": datetime.datetime.now().isoformat(),
         "date_range": {"start": start_date, "end": end_date},
-        "total_documents": len(annual_results),
+        "doc_types": doc_types,
+        "file_type": file_type,
+        "skip_existing": skip_existing,
+        "total_documents": len(filtered_results),
+        "downloaded_count": 0,
+        "skipped_count": 0,
         "documents": [],
     }
 
     # 各書類をダウンロード
-    downloaded_files = []
-    for i, result in enumerate(annual_results, 1):
-        logger.info(f"Downloading [{i}/{len(annual_results)}]: {result.docID} - {result.docDescription}")
+    downloaded_files: list[str] = []
+    skipped_files: list[str] = []
+    for i, result in enumerate(filtered_results, 1):
+        detected_doc_type = downloader.get_doc_type_from_result(result)
+        target_dir = company_dir / detected_doc_type
+        target_dir.mkdir(parents=True, exist_ok=True)
+
+        if (
+            skip_existing
+            and _artifact_exists(target_dir, result.docID, file_type)
+        ):
+            logger.info(
+                f"[{i}/{len(filtered_results)}] Skip (already exists): "
+                f"{result.docID} ({detected_doc_type}) - {result.docDescription}"
+            )
+            metadata["documents"].append(
+                {
+                    "docID": result.docID,
+                    "doc_type": detected_doc_type,
+                    "docDescription": result.docDescription,
+                    "periodStart": result.periodStart,
+                    "periodEnd": result.periodEnd,
+                    "submitDateTime": result.submitDateTime,
+                    "file_type": file_type,
+                    "output_dir": str(target_dir),
+                    "skipped": True,
+                }
+            )
+            skipped_files.append(result.docID)
+            metadata["skipped_count"] += 1
+            continue
+
+        logger.info(
+            f"Downloading [{i}/{len(filtered_results)}]: "
+            f"{result.docID} ({detected_doc_type}) - {result.docDescription}"
+        )
 
         try:
             # 書類をダウンロード
-            downloader.download_document(result.docID, file_type=file_type, output_dir=str(company_dir))
+            downloader.download_document(
+                result.docID, file_type=file_type, output_dir=str(target_dir)
+            )
 
             # メタデータに追加
             doc_metadata = {
                 "docID": result.docID,
+                "doc_type": detected_doc_type,
                 "docDescription": result.docDescription,
                 "periodStart": result.periodStart,
                 "periodEnd": result.periodEnd,
                 "submitDateTime": result.submitDateTime,
                 "file_type": file_type,
+                "output_dir": str(target_dir),
+                "skipped": False,
             }
             metadata["documents"].append(doc_metadata)
             downloaded_files.append(result.docID)
+            metadata["downloaded_count"] += 1
 
             logger.info(f"Successfully downloaded: {result.docID}")
 
@@ -149,9 +295,12 @@ def download_company_data(
         json.dump(metadata, f, ensure_ascii=False, indent=2)
 
     logger.info(f"Metadata saved to {metadata_file}")
-    logger.info(f"Downloaded {len(downloaded_files)} files to {company_dir}")
+    logger.info(
+        f"New: {len(downloaded_files)}, skipped: {len(skipped_files)} "
+        f"under {company_dir}"
+    )
 
-    return downloaded_files
+    return downloaded_files, skipped_files
 
 
 def main():
@@ -162,20 +311,36 @@ def main():
         logger.error("EDINET_API_KEY environment variable is not set")
         sys.exit(1)
 
-    # データをダウンロード
-    downloaded_files = download_company_data(
-        edinet_code=args.edinet_code,
-        output_dir=args.output_dir,
-        file_type=args.file_type,
-        years=args.years,
-    )
-
-    if downloaded_files:
-        logger.info(f"Successfully downloaded {len(downloaded_files)} files")
-        sys.exit(0)
-    else:
-        logger.warning("No files were downloaded")
+    target_codes = resolve_target_codes(args)
+    if not target_codes:
+        logger.error(
+            "No EDINET codes specified. Use --edinet_code, --edinet_codes, or --companies_json."
+        )
         sys.exit(1)
+
+    total_downloaded = 0
+    total_skipped = 0
+    for code in target_codes:
+        downloaded_files, skipped_files = download_company_data(
+            edinet_code=code,
+            output_dir=args.output_dir,
+            file_type=args.file_type,
+            years=args.years,
+            doc_types=args.doc_types,
+            skip_existing=not args.force,
+        )
+        total_downloaded += len(downloaded_files)
+        total_skipped += len(skipped_files)
+
+    if total_downloaded > 0 or total_skipped > 0:
+        logger.info(
+            f"Done: {total_downloaded} new file(s), {total_skipped} skipped "
+            f"across {len(target_codes)} company/companies"
+        )
+        sys.exit(0)
+
+    logger.warning("No files were downloaded or skipped (no matching documents?)")
+    sys.exit(1)
 
 
 if __name__ == "__main__":
