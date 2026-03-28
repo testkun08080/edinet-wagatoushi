@@ -6,359 +6,358 @@ import { useFilters } from "./FilterContext.js";
 import { useFavorites } from "./FavoritesContext.js";
 import { useRecentCompanies } from "./RecentCompaniesContext.js";
 import logoUrl from "../assets/logo.svg";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarSeparator,
+  SidebarRail,
+} from "./ui/sidebar";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { ScrollArea } from "./ui/scroll-area";
+import { Search, Star, Clock, Home, BarChart3, SlidersHorizontal, Trash2, Shield, Mail } from "lucide-react";
 
 type CompanyItem = { secCode: string; filerName: string };
-
-export const SIDEBAR_BREAKPOINT_PX = 1024;
-
-export function useNarrowViewport(): boolean {
-  const [narrow, setNarrow] = useState(false);
-  useEffect(() => {
-    const m = window.matchMedia(`(max-width: ${SIDEBAR_BREAKPOINT_PX}px)`);
-    setNarrow(m.matches);
-    const on = () => setNarrow(m.matches);
-    m.addEventListener("change", on);
-    return () => m.removeEventListener("change", on);
-  }, []);
-  return narrow;
-}
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
 }
 
-const STORAGE_KEY = "edinet-screener-sidebar-open";
-
-function loadSidebarOpen(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === "true";
-  } catch {
-    return false;
-  }
-}
-
-function saveSidebarOpen(open: boolean) {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(STORAGE_KEY, open ? "true" : "false");
-  } catch {
-    /* ignore */
-  }
-}
-
-export function CompanySidebar() {
+export function AppSidebar() {
   const pageContext = usePageContext();
   const urlPathname = pageContext?.urlPathname ?? "/";
   const { filters, setFilter, clearFilters } = useFilters();
   const { favorites } = useFavorites();
   const { recent } = useRecentCompanies();
-  const isNarrow = useNarrowViewport();
-  const [isOpen, setIsOpen] = useState(() => loadSidebarOpen());
-  const [modalOpen, setModalOpen] = useState(false);
   const [companyList, setCompanyList] = useState<CompanyItem[]>([]);
   const [analyzeSearchQuery, setAnalyzeSearchQuery] = useState("");
 
   const isAnalyzePage = urlPathname.startsWith("/analyze/");
+  /** スクリーニング用フィルターは企業一覧トップでのみ表示 */
+  const isCompanyListPage = urlPathname === "/";
 
   useEffect(() => {
     if (!isAnalyzePage) return;
     fetch("/data/company_metrics.json")
       .then((res) => res.json())
-      .then((data: { metrics?: Array<{ secCode: string; filerName: string }> }) => {
-        const list = (data.metrics ?? []).map((m) => ({ secCode: m.secCode, filerName: m.filerName }));
+      .then((data) => {
+        const d = data as { metrics?: Array<{ secCode: string; filerName: string }> };
+        const list = (d.metrics ?? []).map((m) => ({
+          secCode: m.secCode,
+          filerName: m.filerName,
+        }));
         setCompanyList(list);
       })
       .catch(() => setCompanyList([]));
   }, [isAnalyzePage]);
 
   const analyzeSearchResults = analyzeSearchQuery.trim()
-    ? companyList.filter(
-        (c) =>
-          c.filerName.toLowerCase().includes(analyzeSearchQuery.trim().toLowerCase()) ||
-          c.secCode.includes(analyzeSearchQuery.trim())
-      ).slice(0, 15)
+    ? companyList
+        .filter(
+          (c) =>
+            c.filerName.toLowerCase().includes(analyzeSearchQuery.trim().toLowerCase()) ||
+            c.secCode.includes(analyzeSearchQuery.trim()),
+        )
+        .slice(0, 15)
     : [];
 
-  const toggle = () => {
-    setIsOpen((prev) => {
-      const next = !prev;
-      saveSidebarOpen(next);
-      return next;
-    });
-  };
+  return (
+    <Sidebar collapsible="icon" variant="inset">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <a href="/">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                  <img src={logoUrl} height={20} width={20} alt="" className="shrink-0" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-bold">エディー</span>
+                  <span className="truncate text-xs text-muted-foreground">EDINET スクリーナー</span>
+                </div>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
 
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+      <SidebarSeparator />
 
-  // モーダル表示中は Escape で閉じる・body スクロール無効
-  useEffect(() => {
-    if (!modalOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeModal();
-    };
-    document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [modalOpen]);
+      <SidebarContent>
+        {/* Navigation */}
+        <SidebarGroup>
+          <SidebarGroupLabel>ナビゲーション</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={urlPathname === "/"} tooltip="企業一覧">
+                  <a href="/">
+                    <Home className="size-4" />
+                    <span>企業一覧</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-  const sidebarBody = (
-    <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
-          {/* 企業分析ページ: お気に入り・履歴・検索 */}
-          {isAnalyzePage && (
-            <>
-              <section>
-                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">検索</h3>
-                <input
-                  type="text"
-                  placeholder="会社名・銘柄コードで検索"
-                  className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={analyzeSearchQuery}
-                  onChange={(e) => setAnalyzeSearchQuery(e.target.value)}
-                />
+        {(isAnalyzePage || isCompanyListPage) && <SidebarSeparator />}
+
+        {isAnalyzePage && (
+          <>
+            {/* Analyze page: Search */}
+            <SidebarGroup>
+              <SidebarGroupLabel>
+                <Search className="mr-1.5 size-3.5" />
+                企業検索
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <div className="px-2">
+                  <Input
+                    placeholder="会社名・銘柄コードで検索"
+                    value={analyzeSearchQuery}
+                    onChange={(e) => setAnalyzeSearchQuery(e.target.value)}
+                    className="h-8"
+                  />
+                </div>
                 {analyzeSearchResults.length > 0 && (
-                  <div className="mt-2 space-y-0.5 max-h-48 overflow-y-auto border border-slate-100 rounded-lg">
-                    {analyzeSearchResults.map((c) => (
-                      <a
-                        key={c.secCode}
-                        href={`/analyze/${c.secCode}`}
-                        className="block px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600"
-                      >
-                        {formatDisplayName(c.filerName)} ({c.secCode})
-                      </a>
-                    ))}
-                  </div>
+                  <ScrollArea className="max-h-48 mt-1">
+                    <SidebarMenu>
+                      {analyzeSearchResults.map((c) => (
+                        <SidebarMenuItem key={c.secCode}>
+                          <SidebarMenuButton asChild size="sm">
+                            <a href={`/analyze/${c.secCode}`}>
+                              <BarChart3 className="size-3.5" />
+                              <span className="truncate">{formatDisplayName(c.filerName)}</span>
+                              <Badge variant="outline" className="ml-auto text-[10px]">
+                                {c.secCode}
+                              </Badge>
+                            </a>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </ScrollArea>
                 )}
-              </section>
+              </SidebarGroupContent>
+            </SidebarGroup>
 
-              <section>
-                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">お気に入り</h3>
-                <div className="space-y-1">
+            <SidebarSeparator />
+
+            {/* Favorites */}
+            <SidebarGroup>
+              <SidebarGroupLabel>
+                <Star className="mr-1.5 size-3.5" />
+                お気に入り
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
                   {Array.from(favorites).length === 0 ? (
-                    <p className="px-3 py-2 text-sm text-slate-400">お気に入りがありません</p>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton disabled>
+                        <span className="text-muted-foreground text-xs">お気に入りがありません</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                   ) : (
                     <>
                       {companyList
                         .filter((c) => favorites.has(c.secCode))
                         .map((c) => (
-                          <a
-                            key={c.secCode}
-                            href={`/analyze/${c.secCode}`}
-                            className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600"
-                          >
-                            {formatDisplayName(c.filerName)} ({c.secCode})
-                          </a>
+                          <SidebarMenuItem key={c.secCode}>
+                            <SidebarMenuButton asChild size="sm">
+                              <a href={`/analyze/${c.secCode}`}>
+                                <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
+                                <span className="truncate">{formatDisplayName(c.filerName)}</span>
+                              </a>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
                         ))}
                       {Array.from(favorites)
                         .filter((s) => !companyList.find((c) => c.secCode === s))
                         .map((secCode) => (
-                          <a key={secCode} href={`/analyze/${secCode}`} className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600">
-                            {secCode}
-                          </a>
+                          <SidebarMenuItem key={secCode}>
+                            <SidebarMenuButton asChild size="sm">
+                              <a href={`/analyze/${secCode}`}>
+                                <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
+                                <span>{secCode}</span>
+                              </a>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
                         ))}
                     </>
                   )}
-                </div>
-              </section>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
 
-              <section>
-                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">履歴</h3>
-                <div className="space-y-1">
+            <SidebarSeparator />
+
+            {/* Recent */}
+            <SidebarGroup>
+              <SidebarGroupLabel>
+                <Clock className="mr-1.5 size-3.5" />
+                履歴
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
                   {recent.length === 0 ? (
-                    <p className="px-3 py-2 text-sm text-slate-400">履歴がありません</p>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton disabled>
+                        <span className="text-muted-foreground text-xs">履歴がありません</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                   ) : (
                     recent.map((c) => (
-                      <a
-                        key={c.secCode}
-                        href={`/analyze/${c.secCode}`}
-                        className="block px-3 py-1.5 text-sm text-slate-600 hover:text-blue-600"
-                      >
-                        {formatDisplayName(c.filerName)} ({c.secCode})
-                      </a>
+                      <SidebarMenuItem key={c.secCode}>
+                        <SidebarMenuButton asChild size="sm">
+                          <a href={`/analyze/${c.secCode}`}>
+                            <Clock className="size-3.5" />
+                            <span className="truncate">{formatDisplayName(c.filerName)}</span>
+                            <Badge variant="outline" className="ml-auto text-[10px]">
+                              {c.secCode}
+                            </Badge>
+                          </a>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
                     ))
                   )}
-                </div>
-              </section>
-            </>
-          )}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
 
-          {/* 検索・フィルター（企業一覧の時のみ表示） */}
-          {!isAnalyzePage && (
-            <>
-              <section>
-                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">検索</h3>
-                <div className="space-y-2">
-                  <input
-                    type="text"
+        {isCompanyListPage && (
+          <div className="group-data-[collapsible=icon]:hidden">
+            {/* Search filters for company list page — アイコン幅時は全体を非表示 */}
+            <SidebarGroup>
+              <SidebarGroupLabel>
+                <Search className="mr-1.5 size-3.5" />
+                検索
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <div className="space-y-2 px-2">
+                  <Input
                     placeholder="会社名"
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     value={filters.searchName}
                     onChange={(e) => setFilter("searchName", e.target.value)}
+                    className="h-8"
                   />
-                  <input
-                    type="text"
+                  <Input
                     placeholder="銘柄コード（例: 13760）"
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     value={filters.searchCode}
                     onChange={(e) => setFilter("searchCode", e.target.value)}
+                    className="h-8"
                   />
                 </div>
-              </section>
+              </SidebarGroupContent>
+            </SidebarGroup>
 
-              <section>
-                <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  基本フィルター
-                </h3>
-                <div className="space-y-2">
+            <SidebarSeparator />
+
+            {/* Filters */}
+            <SidebarGroup>
+              <SidebarGroupLabel>
+                <SlidersHorizontal className="mr-1.5 size-3.5" />
+                基本フィルター
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <div className="space-y-3 px-2">
                   {[
-                    { key: "minEquityRatio" as const, label: "自己資本比率（最小・0.5=50%）", step: "0.01", placeholder: "0.3" },
+                    { key: "minEquityRatio" as const, label: "自己資本比率（最小）", step: "0.01", placeholder: "0.3" },
                     { key: "maxEquityRatio" as const, label: "自己資本比率（最大）", step: "0.01", placeholder: "1.0" },
                     { key: "minEps" as const, label: "EPS（最小）", step: "0.1", placeholder: "0" },
-                    { key: "maxEps" as const, label: "EPS（最大）", step: "0.1", placeholder: "空欄で制限なし" },
+                    { key: "maxEps" as const, label: "EPS（最大）", step: "0.1", placeholder: "制限なし" },
                     { key: "minSales" as const, label: "売上高（百万円・最小）", step: "1000", placeholder: "0" },
-                    { key: "maxSales" as const, label: "売上高（百万円・最大）", step: "1000", placeholder: "空欄で制限なし" },
+                    {
+                      key: "maxSales" as const,
+                      label: "売上高（百万円・最大）",
+                      step: "1000",
+                      placeholder: "制限なし",
+                    },
                     { key: "minRoe" as const, label: "ROE（最小・0.1=10%）", step: "0.01", placeholder: "0" },
-                    { key: "maxRoe" as const, label: "ROE（最大）", step: "0.01", placeholder: "空欄で制限なし" },
-                    { key: "minTotalAssets" as const, label: "総資産額（百万円・最小）", step: "10000", placeholder: "0" },
-                    { key: "maxTotalAssets" as const, label: "総資産額（百万円・最大）", step: "10000", placeholder: "空欄で制限なし" },
+                    { key: "maxRoe" as const, label: "ROE（最大）", step: "0.01", placeholder: "制限なし" },
+                    {
+                      key: "minTotalAssets" as const,
+                      label: "総資産額（百万円・最小）",
+                      step: "10000",
+                      placeholder: "0",
+                    },
+                    {
+                      key: "maxTotalAssets" as const,
+                      label: "総資産額（百万円・最大）",
+                      step: "10000",
+                      placeholder: "制限なし",
+                    },
                   ].map(({ key, label, step, placeholder }) => (
                     <div key={key}>
-                      <label className="text-xs text-slate-500 block mt-0.5">{label}</label>
-                      <input
+                      <label className="text-[11px] font-medium text-muted-foreground mb-1 block">{label}</label>
+                      <Input
                         type="number"
                         step={step}
                         placeholder={placeholder}
-                        className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-lg mt-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={(filters as Record<string, string>)[key]}
+                        className="h-7 text-xs"
+                        value={(filters as unknown as Record<string, string>)[key]}
                         onChange={(e) => setFilter(key, e.target.value)}
                       />
                     </div>
                   ))}
                 </div>
-              </section>
-
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="w-full px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition"
-              >
-                🗑️ フィルターをクリア
-              </button>
-            </>
-          )}
-    </div>
-  );
-
-  // iPad以下: 固定ヘッダー（コンテンツを被らない）+ モーダルで開閉
-  if (isNarrow) {
-    return (
-      <>
-        {/* 固定アプリバー: 常に同じ高さでコンテンツと被らない（Layout側で padding-top を確保） */}
-        <header
-          className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center gap-3 border-b border-slate-200 bg-white px-4 shadow-sm lg:hidden"
-          style={{
-            paddingTop: "max(0.875rem, env(safe-area-inset-top))",
-            minHeight: "calc(3.5rem + env(safe-area-inset-top))",
-          }}
-        >
-          <button
-            type="button"
-            onClick={openModal}
-            className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 active:bg-slate-200"
-            aria-label="メニューを開く"
-            title="メニューを開く"
-          >
-            <span className="material-symbols-outlined text-[28px]" aria-hidden>
-              menu
-            </span>
-          </button>
-          <a href="/" className="flex min-h-[44px] items-center gap-2 overflow-hidden">
-            <img src={logoUrl} height={28} width={28} alt="" className="shrink-0" />
-            <span className="truncate font-bold text-lg text-slate-900">エディー</span>
-          </a>
-        </header>
-
-        {modalOpen && (
-          <div
-            id="sidebar-modal"
-            className="fixed inset-0 z-40 lg:hidden"
-            aria-modal="true"
-            role="dialog"
-            aria-label="メニュー"
-          >
-            <div
-              className="absolute inset-0 bg-black/50"
-              onClick={closeModal}
-              aria-hidden
-            />
-            <div
-              id="sidebar"
-              className="absolute left-0 top-0 bottom-0 flex w-72 flex-col bg-white shadow-xl max-[480px]:w-full max-[480px]:max-w-[100vw]"
-              style={{
-                paddingTop: "env(safe-area-inset-top)",
-                paddingBottom: "env(safe-area-inset-bottom)",
-              }}
-              onClick={(e) => {
-                if ((e.target as HTMLElement).closest("a")) closeModal();
-              }}
-            >
-              <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-3">
-                <a href="/" className="flex min-h-[44px] items-center gap-2">
-                  <img src={logoUrl} height={28} width={28} alt="" className="shrink-0" />
-                  <span className="font-bold text-lg text-slate-900">エディー</span>
-                </a>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 active:bg-slate-200"
-                  aria-label="メニューを閉じる"
-                >
-                  <span className="material-symbols-outlined text-[28px]">close</span>
-                </button>
-              </div>
-              {sidebarBody}
-            </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
           </div>
         )}
-      </>
-    );
-  }
 
-  // デスクトップ: 従来のサイドバー
-  return (
-    <aside
-      id="sidebar"
-      className={`shrink-0 flex flex-col h-screen border-r border-slate-200 bg-white overflow-hidden transition-[width] duration-200 ease-in-out ${
-        isOpen ? "w-72 min-w-72" : "w-12 min-w-12"
-      }`}
-    >
-      <div
-        className={`shrink-0 p-4 border-b border-slate-200 flex gap-2 ${
-          isOpen ? "flex-row items-center justify-between" : "flex-col items-center pt-3"
-        }`}
-      >
-        <a href="/" className={`flex items-center gap-2 min-w-0 ${!isOpen ? "justify-center" : ""}`}>
-          <img src={logoUrl} height={28} width={28} alt="logo" className="shrink-0" />
-          {isOpen && <span className="font-bold text-lg text-slate-900">エディー</span>}
-        </a>
-        <button
-          type="button"
-          onClick={toggle}
-          className="p-1 hover:bg-slate-100 rounded text-slate-400 shrink-0"
-          aria-label={isOpen ? "サイドバーを閉じる" : "サイドバーを開く"}
-          title={isOpen ? "サイドバーを閉じる" : "サイドバーを開く"}
-        >
-          <span className="material-symbols-outlined align-middle" style={{ fontSize: 24 }}>
-            {isOpen ? "menu_open" : "menu"}
-          </span>
-        </button>
-      </div>
-      {isOpen && sidebarBody}
-    </aside>
+        <SidebarSeparator />
+
+        <SidebarGroup>
+          <SidebarGroupLabel>情報</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={urlPathname === "/privacy"}
+                  size="sm"
+                  tooltip="プライバシーポリシー"
+                >
+                  <a href="/privacy">
+                    <Shield className="size-3.5" />
+                    <span>プライバシーポリシー</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={urlPathname === "/contact"} size="sm" tooltip="お問い合わせ">
+                  <a href="/contact">
+                    <Mail className="size-3.5" />
+                    <span>お問い合わせ</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      {isCompanyListPage && (
+        <SidebarFooter className="group-data-[collapsible=icon]:hidden">
+          <Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
+            <Trash2 className="size-3.5 mr-1.5" />
+            フィルターをクリア
+          </Button>
+        </SidebarFooter>
+      )}
+      <SidebarRail />
+    </Sidebar>
   );
 }

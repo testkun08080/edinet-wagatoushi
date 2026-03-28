@@ -1,76 +1,69 @@
-# EDINET Corpus ワークフロー
+# EDINET Wagatoushi
 
-**プロジェクト全体の構成とデータフロー**は [PROJECT_FLOW.md](PROJECT_FLOW.md) にまとめています（EDINET → サンプルデータ → スクリーナー）。**J-Quants 関連はオミット**（使用しない）。
+EDINET の開示データを収集・整形し、`edinet-screener` で可視化するためのリポジトリです。  
+現在は **EDINET データ中心**の運用で、株価連動データ（PER/PBR の市場値ベースなど）は対象外です。
 
-## 概要
+## リポジトリ構成
 
-`edinet-wrapper/scripts/edinet_corpus.sh` と同じ処理を GitHub Actions 上で**月単位**で実行します。  
-1 ジョブ = 1 ヶ月分なので、6 時間制限内に収まります。
+- `edinet-wrapper`: EDINET データ取得・TSV パース・スクリーナー用 JSON 生成
+- `edinet-screener`: フロントエンド（Vike + React）
+- `data-set`: 元データ置き場（Git 管理外）
+- `docs`: 全体ドキュメント
 
----
+## 最短セットアップ
 
-## 使い方・コマンド
-
-### EDINET コーパス（手動・ローカル）
-
-**手動実行（GitHub Actions）**
-
-1. Actions → **EDINET Corpus** → Run workflow
-2. 書類種別・年を選び、必要なら **months** にカンマ区切りで月を指定（例: `1,2,3` = 1〜3 月のみ。未指定で 1〜12 月を並列ジョブで実行）
-3. リポジトリに `EDINET_API_KEY` の Secret を設定しておく
-
-**ジョブの分け方**
-
-- **月ごと**: `months` 未指定 → 12 ジョブ（1 月〜12 月を並列）
-- **一部だけ**: `months`: `1,6,12` → 1 月・6 月・12 月の 3 ジョブのみ
-
-**ローカルで同じことをする**
+1. Python 側準備
 
 ```bash
 cd edinet-wrapper
-./scripts/edinet_corpus.sh
+uv sync
 ```
 
-1 チャンクだけ（GHA と同じ動き）:
+1. Node 側準備
+
+```bash
+cd ../edinet-screener
+npm install
+```
+
+## 基本ワークフロー
+
+1. **データ収集**
+  `edinet-wrapper` のダウンロードスクリプトまたは GitHub Actions で EDINET コーパスを取得し、`data-set/` に配置
+2. **スクリーナー用データ生成**
+  `edinet-wrapper` から `companies.json` / `summaries/*.json` / `company_metrics.json` を生成
+3. **フロント起動・ビルド**
+  `edinet-screener` で `npm run dev` または `npm run build`
+
+## よく使うコマンド
+
+### データ生成（`edinet-wrapper`）
 
 ```bash
 cd edinet-wrapper
-DOC_TYPE=quarterly YEAR=2019 MONTH=3 ./scripts/edinet_corpus.sh
+uv run python scripts/frontend/build_screener_data.py --mode sample E00004 E03606
+uv run python scripts/frontend/build_screener_data.py --mode full
+uv run python scripts/frontend/build_screener_data.py --metrics_only
 ```
 
----
-
-### スクリーナー（edinet-screener）
-
-| コマンド | 説明 |
-|----------|------|
-| `cd edinet-screener && npm run dev` | 開発サーバー起動 |
-| `cd edinet-screener && npm run build` | データ生成（`data-set/` または `DATA_SET_URL` から）＋ Vike ビルド |
-| `cd edinet-screener && npm run build:app` | データ生成なしで Vike ビルドのみ |
-| `cd edinet-screener && npm run preview` | ビルド後のプレビュー |
-
-リモートデータセットでビルドする場合:
+### フロント（`edinet-screener`）
 
 ```bash
 cd edinet-screener
-DATA_SET_URL=https://.../data-set.zip npm run build
+npm run dev
+npm run build
+npm run build:app
 ```
 
----
+`DATA_SET_URL` を指定すると、リモートに置いたアーカイブから `data-set` を取得してビルドできます。
 
-### サンプルデータ作成（edinet-wrapper）
+## ドキュメント案内
 
-スクリーナー用の `public/data`（companies.json, summaries, company_metrics）を生成するコマンド。
+- 全体フロー: `docs/PROJECT_FLOW.md`
+- 構成ガイド（重複を整理した要約）: `docs/PROJECT_STRUCTURE.md`
+- data-set の運用: `docs/DATA_SET_ALTERNATIVES.md`
+- EDINET API 手動検証: `docs/EDINET_API_POSTMAN.md`
+- wrapper 実運用ガイド: `docs/edinet-wrapper-使い方.md`
+- wrapper 詳細資料: `edinet-wrapper/docs/`
+- screener 詳細資料: `edinet-screener/docs/`
 
-| コマンド | 説明 |
-|----------|------|
-| `cd edinet-wrapper && uv run python scripts/fetch_33_companies.py` | 固定 33 社を一括生成（`data-set/` 必須） |
-| `cd edinet-wrapper && uv run python scripts/build_screener_data.py --mode sample E00004 E03606 ...` | 指定 EDINET コードで複数社を生成 |
-| `cd edinet-wrapper && uv run python scripts/build_screener_data.py --mode sample E00004` | 1 社だけ追加・上書き |
-| `cd edinet-wrapper && uv run python scripts/build_screener_data.py --metrics_only` | company_metrics.json を再生成 |
-
-詳細は [edinet-screener/SAMPLE_DATA_COMMANDS.md](edinet-screener/SAMPLE_DATA_COMMANDS.md) を参照。
-
----
-
-**J-Quants 関連はオミット**（本プロジェクトでは使用しない）。

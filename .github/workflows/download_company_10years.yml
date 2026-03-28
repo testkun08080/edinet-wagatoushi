@@ -1,0 +1,155 @@
+# download_company_10years.py を手動実行（企業別・過去 N 年）
+name: EDINET Download Company (10y)
+
+run-name: EDINET company 10y · ${{ inputs.file_type }} · ${{ inputs.years }}y (run ${{ github.run_number }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      edinet_code:
+        description: "単一 EDINET コード（例: E02367）。edinet_codes / companies_json と併用可"
+        required: false
+        default: ""
+        type: string
+      edinet_codes:
+        description: "複数コード（スペース区切り、例: E00004 E03606）"
+        required: false
+        default: ""
+        type: string
+      companies_json:
+        description: "edinetCode を含む JSON のパス（edinet-wrapper からの相対、例: scripts/frontend/sample_companies.json）"
+        required: false
+        default: ""
+        type: string
+      output_dir:
+        description: "出力ディレクトリ（--output_dir、edinet-wrapper からの相対）"
+        required: false
+        default: "data"
+        type: string
+      file_type:
+        description: "ファイル種別（--file_type）"
+        required: true
+        default: "tsv"
+        type: choice
+        options:
+          - tsv
+          - pdf
+          - xbrl
+      years:
+        description: "取得する年数（--years）"
+        required: true
+        default: 10
+        type: number
+      doc_types:
+        description: "書類種別（カンマまたはスペース区切り。例: annual または annual,quarterly,semiannual）"
+        required: false
+        default: "annual"
+        type: string
+      force:
+        description: "既存ファイルがあっても再ダウンロード（--force）"
+        required: false
+        default: false
+        type: boolean
+      request_delay:
+        description: "EDINET API リクエスト間隔（秒）。未指定時は 3"
+        required: false
+        default: "3"
+        type: string
+
+env:
+  UV_COMPILE_BYTECODE: 0
+
+jobs:
+  download:
+    name: download_company_10years
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate inputs
+        env:
+          EDINET_CODE: ${{ inputs.edinet_code }}
+          EDINET_CODES: ${{ inputs.edinet_codes }}
+          COMPANIES_JSON: ${{ inputs.companies_json }}
+        run: |
+          c1=$(echo -n "$EDINET_CODE" | tr -d '[:space:]')
+          c2=$(echo -n "$EDINET_CODES" | tr -d '[:space:]')
+          c3=$(echo -n "$COMPANIES_JSON" | tr -d '[:space:]')
+          if [ -z "$c1" ] && [ -z "$c2" ] && [ -z "$c3" ]; then
+            echo "::error::edinet_code / edinet_codes / companies_json のいずれかを指定してください（スクリプトと同じ要件です）"
+            exit 1
+          fi
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        working-directory: edinet-wrapper
+        run: uv sync
+
+      - name: Run download_company_10years.py
+        working-directory: edinet-wrapper
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          EDINET_REQUEST_DELAY: ${{ inputs.request_delay || '3' }}
+          EDINET_CODE: ${{ inputs.edinet_code }}
+          EDINET_CODES: ${{ inputs.edinet_codes }}
+          COMPANIES_JSON: ${{ inputs.companies_json }}
+          OUTPUT_DIR: ${{ inputs.output_dir }}
+          FILE_TYPE: ${{ inputs.file_type }}
+          YEARS: ${{ inputs.years }}
+          DOC_TYPES_INPUT: ${{ inputs.doc_types }}
+          FORCE_FLAG: ${{ inputs.force }}
+        run: |
+          set -euo pipefail
+          cmd=(uv run python scripts/download/download_company_10years.py)
+          cmd+=(--output_dir "$OUTPUT_DIR")
+          cmd+=(--file_type "$FILE_TYPE")
+          cmd+=(--years "$YEARS")
+
+          # --doc_types（カンマ→スペース、シェル単語分割）
+          dt="${DOC_TYPES_INPUT//,/ }"
+          read -r -a doc_type_arr <<< "$dt"
+          if [ "${#doc_type_arr[@]}" -eq 0 ]; then
+            echo "::error::doc_types が空です"
+            exit 1
+          fi
+          cmd+=(--doc_types "${doc_type_arr[@]}")
+
+          ec_trim=$(echo -n "$EDINET_CODE" | tr -d '[:space:]')
+          if [ -n "$ec_trim" ]; then
+            cmd+=(--edinet_code "$ec_trim")
+          fi
+
+          ecs_trim=$(echo -n "$EDINET_CODES" | tr -d '[:space:]')
+          if [ -n "$ecs_trim" ]; then
+            read -r -a codes_arr <<< "$EDINET_CODES"
+            cmd+=(--edinet_codes "${codes_arr[@]}")
+          fi
+
+          cj_trim=$(echo -n "$COMPANIES_JSON" | tr -d '[:space:]')
+          if [ -n "$cj_trim" ]; then
+            cmd+=(--companies_json "$COMPANIES_JSON")
+          fi
+
+          if [ "$FORCE_FLAG" = "true" ]; then
+            cmd+=(--force)
+          fi
+
+          echo "Running: ${cmd[*]}"
+          "${cmd[@]}"
+
+      - name: Upload download artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edinet-company-${{ github.run_id }}-${{ github.run_attempt }}
+          path: edinet-wrapper/${{ inputs.output_dir || 'data' }}
+          retention-days: 7

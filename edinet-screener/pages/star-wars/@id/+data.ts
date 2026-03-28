@@ -6,11 +6,25 @@ import type { MovieDetails } from "../types.js";
 
 export type Data = Awaited<ReturnType<typeof data>>;
 
+async function fetchWithTimeout(url: string, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 export async function data(pageContext: PageContextServer) {
   // https://vike.dev/useConfig
   const config = useConfig();
 
-  const response = await fetch(`https://brillout.github.io/star-wars/api/films/${pageContext.routeParams.id}.json`);
+  const timeoutMs = 2500;
+  const response = await fetchWithTimeout(
+    `https://brillout.github.io/star-wars/api/films/${pageContext.routeParams.id}.json`,
+    timeoutMs,
+  );
   let movie = (await response.json()) as MovieDetails;
 
   config({

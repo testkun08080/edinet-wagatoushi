@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "my-app",
+  "name": "edinet-screener",
   "compatibility_date": "2025-09-06",
   "main": "virtual:photon:cloudflare:server-entry"
 }

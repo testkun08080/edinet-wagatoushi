@@ -35,8 +35,8 @@ npm run build
 ### 利用しているスクリプト
 
 - **edinet-screener/scripts/fetch-dataset.sh** … `DATA_SET_URL` から zip/tar.gz を取得して `data-set/`（または `DATA_SET_PATH`）に展開。
-- **edinet-screener/scripts/generate-data.sh** … `DATA_SET_URL` が設定されていて data-set が無ければ `fetch-dataset.sh` を実行し、その後 `fetch_33_companies.py` で `public/data` を生成。
-- **edinet-wrapper** の `fetch_33_companies.py` は、環境変数 **DATA_SET_PATH** が設定されていればそのパスを data-set として参照します（未設定なら従来どおり `data-set/`）。
+- **edinet-screener/scripts/generate-data.sh** … `DATA_SET_URL` が設定されていて data-set が無ければ `fetch-dataset.sh` を実行し、その後 `scripts/frontend/build_screener_data.py` で `public/data` を生成。
+- **edinet-wrapper/scripts/frontend/build_screener_data.py** は、`--data_set` または環境変数 **DATA_SET_PATH** で入力 data-set を切り替えられます（未指定時は既定の `data-set/` を参照）。
 
 ---
 

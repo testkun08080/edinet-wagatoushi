@@ -1,0 +1,269 @@
+{
+  "version": 1,
+  "generatedFrom": "/Users/dangpee/Git/edinet-wagatoushi/edinet-wrapper/config/screener_columns.json",
+  "columns": [
+    {
+      "id": "filerName",
+      "label": "会社名*",
+      "category": "basic",
+      "metricsKey": "filerName"
+    },
+    {
+      "id": "secCode",
+      "label": "銘柄コード*",
+      "category": "basic",
+      "metricsKey": "secCode"
+    },
+    {
+      "id": "edinetCode",
+      "label": "EDINETコード",
+      "category": "basic",
+      "metricsKey": "edinetCode"
+    },
+    {
+      "id": "calcDate",
+      "label": "計算日",
+      "category": "basic",
+      "metricsKey": "計算日"
+    },
+    {
+      "id": "fiscalMonth",
+      "label": "決算月",
+      "category": "basic",
+      "metricsKey": "決算月"
+    },
+    {
+      "id": "PBR",
+      "label": "PBR",
+      "category": "valuation",
+      "metricsKey": "PBR",
+      "computed": true
+    },
+    {
+      "id": "PER",
+      "label": "PER",
+      "category": "valuation",
+      "metricsKey": "PER",
+      "computed": true
+    },
+    {
+      "id": "payoutRatio",
+      "label": "配当性向",
+      "category": "valuation",
+      "metricsKey": "配当性向"
+    },
+    {
+      "id": "payoutRatioComputed",
+      "label": "配当性向（算出）",
+      "category": "valuation",
+      "metricsKey": "payoutRatioComputed",
+      "computed": true
+    },
+    {
+      "id": "dividendYield",
+      "label": "配当利回り",
+      "category": "valuation",
+      "metricsKey": "配当利回り",
+      "computed": true
+    },
+    {
+      "id": "marketCap",
+      "label": "時価総額",
+      "category": "valuation",
+      "metricsKey": "時価総額",
+      "computed": true
+    },
+    {
+      "id": "netCash",
+      "label": "ネットキャッシュ",
+      "category": "valuation",
+      "metricsKey": "ネットキャッシュ",
+      "computed": true
+    },
+    {
+      "id": "netCashRatio",
+      "label": "ネットキャッシュ比率",
+      "category": "valuation",
+      "metricsKey": "ネットキャッシュ比率",
+      "computed": true
+    },
+    {
+      "id": "EPS",
+      "label": "EPS",
+      "category": "valuation",
+      "metricsKey": "EPS"
+    },
+    {
+      "id": "dilutedEPS",
+      "label": "希薄化EPS",
+      "category": "valuation",
+      "metricsKey": "dilutedEPS"
+    },
+    {
+      "id": "ROE",
+      "label": "ROE",
+      "category": "valuation",
+      "metricsKey": "ROE"
+    },
+    {
+      "id": "roeCalculated",
+      "label": "ROE（算出）",
+      "category": "valuation",
+      "metricsKey": "roeCalculated",
+      "computed": true
+    },
+    {
+      "id": "roa",
+      "label": "ROA",
+      "category": "valuation",
+      "metricsKey": "roa",
+      "computed": true
+    },
+    {
+      "id": "equityRatio",
+      "label": "自己資本比率",
+      "category": "valuation",
+      "metricsKey": "自己資本比率"
+    },
+    {
+      "id": "equityRatioCalculated",
+      "label": "自己資本比率（算出）",
+      "category": "valuation",
+      "metricsKey": "equityRatioCalculated",
+      "computed": true
+    },
+    {
+      "id": "BPS",
+      "label": "BPS",
+      "category": "valuation",
+      "metricsKey": "BPS"
+    },
+    {
+      "id": "dividendPerShare",
+      "label": "1株当たり配当金",
+      "category": "valuation",
+      "metricsKey": "dividendPerShare"
+    },
+    {
+      "id": "sharesOutstanding",
+      "label": "発行済株式総数",
+      "category": "valuation",
+      "metricsKey": "発行済株式総数"
+    },
+    {
+      "id": "sales",
+      "label": "売上高",
+      "category": "performance",
+      "metricsKey": "売上高"
+    },
+    {
+      "id": "operatingProfit",
+      "label": "営業利益",
+      "category": "performance",
+      "metricsKey": "営業利益"
+    },
+    {
+      "id": "recurringProfit",
+      "label": "経常利益",
+      "category": "performance",
+      "metricsKey": "経常利益"
+    },
+    {
+      "id": "operatingProfitRatio",
+      "label": "営業利益率",
+      "category": "performance",
+      "computedFrom": [
+        "売上高",
+        "営業利益"
+      ]
+    },
+    {
+      "id": "netIncome",
+      "label": "当期純利益",
+      "category": "performance",
+      "metricsKey": "当期純利益"
+    },
+    {
+      "id": "netProfitRatio",
+      "label": "純利益率",
+      "category": "performance",
+      "computedFrom": [
+        "売上高",
+        "当期純利益"
+      ]
+    },
+    {
+      "id": "comprehensiveIncome",
+      "label": "包括利益",
+      "category": "performance",
+      "metricsKey": "包括利益"
+    },
+    {
+      "id": "liabilities",
+      "label": "負債",
+      "category": "balancesheet",
+      "metricsKey": "負債"
+    },
+    {
+      "id": "currentLiabilities",
+      "label": "流動負債",
+      "category": "balancesheet",
+      "metricsKey": "流動負債"
+    },
+    {
+      "id": "currentAssets",
+      "label": "流動資産",
+      "category": "balancesheet",
+      "metricsKey": "流動資産"
+    },
+    {
+      "id": "netAssets",
+      "label": "純資産額",
+      "category": "balancesheet",
+      "metricsKey": "純資産額"
+    },
+    {
+      "id": "totalAssets",
+      "label": "総資産額",
+      "category": "balancesheet",
+      "metricsKey": "総資産額"
+    },
+    {
+      "id": "investmentSecurities",
+      "label": "投資有価証券",
+      "category": "balancesheet",
+      "metricsKey": "投資有価証券"
+    },
+    {
+      "id": "cashBalance",
+      "label": "現金及び現金同等物",
+      "category": "cash",
+      "metricsKey": "現金残高"
+    },
+    {
+      "id": "operatingCF",
+      "label": "営業CF",
+      "category": "cash",
+      "metricsKey": "営業CF"
+    },
+    {
+      "id": "investingCF",
+      "label": "投資CF",
+      "category": "cash",
+      "metricsKey": "投資CF"
+    },
+    {
+      "id": "fcf",
+      "label": "FCF",
+      "category": "cash",
+      "metricsKey": "fcf",
+      "computed": true
+    },
+    {
+      "id": "financingCF",
+      "label": "財務CF",
+      "category": "cash",
+      "metricsKey": "財務CF"
+    }
+  ]
+}
