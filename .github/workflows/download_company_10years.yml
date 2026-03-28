@@ -7,17 +7,17 @@ on:
   workflow_dispatch:
     inputs:
       edinet_code:
-        description: "単一 EDINET コード（例: E02367）。edinet_codes / companies_json と併用可"
+        description: "【上3つはどれか1つ以上必須】単一 EDINET コード（例: E02367）。他フィールドと併用するとスクリプトはコードをマージします"
         required: false
         default: ""
         type: string
       edinet_codes:
-        description: "複数コード（スペース区切り、例: E00004 E03606）"
+        description: "【必須は上3つのいずれか】複数コード（スペース区切り、例: E00004 E03606）"
         required: false
         default: ""
         type: string
       companies_json:
-        description: "edinetCode を含む JSON のパス（edinet-wrapper からの相対、例: scripts/frontend/sample_companies.json）"
+        description: "【必須は上3つのいずれか】edinetCode を含む JSON のパス（edinet-wrapper からの相対）。手早い試行: scripts/frontend/sample_companies.json"
         required: false
         default: ""
         type: string
@@ -58,6 +58,8 @@ on:
 
 env:
   UV_COMPILE_BYTECODE: 0
+  # Node 20 廃止に先立ち、JS 製アクションを Node 24 で実行（https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/）
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   download:
@@ -66,7 +68,7 @@ jobs:
     timeout-minutes: 360
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Validate inputs
         env:
@@ -79,11 +81,12 @@ jobs:
           c3=$(echo -n "$COMPANIES_JSON" | tr -d '[:space:]')
           if [ -z "$c1" ] && [ -z "$c2" ] && [ -z "$c3" ]; then
             echo "::error::edinet_code / edinet_codes / companies_json のいずれかを指定してください（スクリプトと同じ要件です）"
+            echo "::notice::Workflow の「Run workflow」フォームで、例: edinet_code=E02144、または companies_json=scripts/frontend/sample_companies.json を入力して再実行してください。"
             exit 1
           fi
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v7
         with:
           version: "latest"
 
