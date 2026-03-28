@@ -22,6 +22,18 @@ except ImportError:
 
 from edinet_wrapper import Downloader
 
+# --doc_types 未指定時は EDINET で取得対象になり得る書類種別をすべて含める
+DEFAULT_DOC_TYPES: list[str] = [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding",
+    "annual_amended",
+    "quarterly_amended",
+    "semiannual_amended",
+    "large_holding_amended",
+]
+
 
 def parse_args():
     parser = ArgumentParser(
@@ -69,7 +81,7 @@ def parse_args():
         "--doc_types",
         type=str,
         nargs="+",
-        default=["annual"],
+        default=None,
         choices=[
             "annual",
             "quarterly",
@@ -80,14 +92,17 @@ def parse_args():
             "semiannual_amended",
             "large_holding_amended",
         ],
-        help="Document types to download (multiple allowed)",
+        help="Document types to download (multiple allowed; default: all types)",
     )
     parser.add_argument(
         "--force",
         action="store_true",
         help="Re-download even when the output file already exists",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.doc_types is None:
+        args.doc_types = list(DEFAULT_DOC_TYPES)
+    return args
 
 
 def _artifact_exists(target_dir: Path, doc_id: str, file_type: str) -> bool:
@@ -170,7 +185,7 @@ def download_company_data(
     """
 
     if not doc_types:
-        doc_types = ["annual"]
+        doc_types = list(DEFAULT_DOC_TYPES)
     logger.info(f"Starting download for company: {edinet_code}")
     logger.info(f"Downloading {years} years of reports")
     logger.info(f"Document types: {', '.join(doc_types)}")
