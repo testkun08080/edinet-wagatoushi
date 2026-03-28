@@ -41,9 +41,9 @@ on:
         default: 10
         type: number
       doc_types:
-        description: "書類種別（カンマまたはスペース区切り。例: annual または annual,quarterly,semiannual）"
+        description: "書類種別（カンマまたはスペース区切り。未指定時はスクリプト既定＝全8種）"
         required: false
-        default: "annual"
+        default: "annual,quarterly,semiannual,large_holding,annual_amended,quarterly_amended,semiannual_amended,large_holding_amended"
         type: string
       force:
         description: "既存ファイルがあっても再ダウンロード（--force）"
@@ -114,14 +114,17 @@ jobs:
           cmd+=(--file_type "$FILE_TYPE")
           cmd+=(--years "$YEARS")
 
-          # --doc_types（カンマ→スペース、シェル単語分割）
-          dt="${DOC_TYPES_INPUT//,/ }"
-          read -r -a doc_type_arr <<< "$dt"
-          if [ "${#doc_type_arr[@]}" -eq 0 ]; then
-            echo "::error::doc_types が空です"
-            exit 1
+          # --doc_types（カンマ→スペース。空なら引数省略＝スクリプト既定で全8種）
+          dt_trim=$(echo -n "$DOC_TYPES_INPUT" | tr -d '[:space:],')
+          if [ -n "$dt_trim" ]; then
+            dt="${DOC_TYPES_INPUT//,/ }"
+            read -r -a doc_type_arr <<< "$dt"
+            if [ "${#doc_type_arr[@]}" -eq 0 ]; then
+              echo "::error::doc_types を解釈できませんでした"
+              exit 1
+            fi
+            cmd+=(--doc_types "${doc_type_arr[@]}")
           fi
-          cmd+=(--doc_types "${doc_type_arr[@]}")
 
           ec_trim=$(echo -n "$EDINET_CODE" | tr -d '[:space:]')
           if [ -n "$ec_trim" ]; then
