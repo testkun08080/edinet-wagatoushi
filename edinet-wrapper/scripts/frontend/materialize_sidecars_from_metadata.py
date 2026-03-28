@@ -15,7 +15,7 @@ from pathlib import Path
 
 # build_screener_data.process_company が読むフィールドに合わせる（API Result の一部で足りる）
 DEFAULT_COMPANY_META = {
-    "E02367": {"secCode": "7974", "filerName": "任天堂株式会社"},
+    "E02367": {"secCode": "79740", "filerName": "任天堂株式会社"},
 }
 
 
