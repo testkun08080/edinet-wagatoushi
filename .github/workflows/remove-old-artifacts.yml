@@ -31,6 +31,11 @@ on:
         default: "5"
         type: string
 
+# c-hive/gha-remove-artifacts は action 定義が node20 のため、公式の Node 24 先行適用
+# https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   remove-old-artifacts:
     runs-on: ubuntu-latest
