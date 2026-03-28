@@ -231,10 +231,19 @@ def download_company_data(
         target_dir = company_dir / detected_doc_type
         target_dir.mkdir(parents=True, exist_ok=True)
 
+        # build_screener_data.py は各 TSV と同名の {docID}.json（API Result 形式）を参照する
+        sidecar_json = target_dir / f"{result.docID}.json"
+
         if (
             skip_existing
             and _artifact_exists(target_dir, result.docID, file_type)
         ):
+            if not sidecar_json.is_file():
+                sidecar_json.write_text(
+                    json.dumps(result.to_dict(), ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+                logger.info(f"Wrote missing sidecar: {sidecar_json.name}")
             logger.info(
                 f"[{i}/{len(filtered_results)}] Skip (already exists): "
                 f"{result.docID} ({detected_doc_type}) - {result.docDescription}"
@@ -265,6 +274,11 @@ def download_company_data(
             # 書類をダウンロード
             downloader.download_document(
                 result.docID, file_type=file_type, output_dir=str(target_dir)
+            )
+
+            sidecar_json.write_text(
+                json.dumps(result.to_dict(), ensure_ascii=False, indent=2),
+                encoding="utf-8",
             )
 
             # メタデータに追加

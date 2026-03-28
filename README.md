@@ -28,12 +28,12 @@ npm install
 
 ## 基本ワークフロー
 
-1. **データ収集**  
-   `edinet-wrapper` のダウンロードスクリプトまたは GitHub Actions で EDINET コーパスを取得し、`data-set/` に配置
-2. **スクリーナー用データ生成**  
-   `edinet-wrapper` から `companies.json` / `summaries/*.json` / `company_metrics.json` を生成
-3. **フロント起動・ビルド**  
-   `edinet-screener` で `npm run dev` または `npm run build`
+1. **データ収集**
+  `edinet-wrapper` のダウンロードスクリプトまたは GitHub Actions で EDINET コーパスを取得し、`data-set/` に配置
+2. **スクリーナー用データ生成**
+  `edinet-wrapper` から `companies.json` / `summaries/*.json` / `company_metrics.json` を生成
+3. **フロント起動・ビルド**
+  `edinet-screener` で `npm run dev` または `npm run build`
 
 ## よく使うコマンド
 
@@ -66,3 +66,4 @@ npm run build:app
 - wrapper 実運用ガイド: `docs/edinet-wrapper-使い方.md`
 - wrapper 詳細資料: `edinet-wrapper/docs/`
 - screener 詳細資料: `edinet-screener/docs/`
+
