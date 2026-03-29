@@ -65,7 +65,6 @@ jobs:
   download:
     name: download_company_10years
     runs-on: ubuntu-latest
-    timeout-minutes: 360
     steps:
       - name: Checkout
         uses: actions/checkout@v5
