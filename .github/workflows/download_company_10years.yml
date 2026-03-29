@@ -17,7 +17,7 @@ on:
         default: ""
         type: string
       companies_json:
-        description: "【必須は上3つのいずれか】edinetCode を含む JSON のパス（edinet-wrapper からの相対）。手早い試行: scripts/frontend/sample_companies.json"
+        description: "【必須は上3つのいずれか】edinetCode を含む JSON のパス（edinet-wrapper からの相対）。配列形式: scripts/frontend/sample_companies.json。{ companies: [...] } 形式の screener companies.json も可"
         required: false
         default: ""
         type: string

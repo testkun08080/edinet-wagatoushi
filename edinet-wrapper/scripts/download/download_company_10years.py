@@ -56,7 +56,10 @@ def parse_args():
         "--companies_json",
         type=str,
         default=None,
-        help="Path to company list JSON that contains edinetCode fields",
+        help=(
+            "Path to company list JSON: array of {edinetCode,...}, or "
+            '{ "companies": [...] } (screener companies.json)'
+        ),
     )
     parser.add_argument(
         "--output_dir",
@@ -148,9 +151,17 @@ def _normalize_codes(codes: list[str]) -> list[str]:
 
 def _load_codes_from_json(path: str) -> list[str]:
     with open(path, "r", encoding="utf-8") as f:
-        companies = json.load(f)
+        payload = json.load(f)
+    # スクリーナー出力の companies.json は { "companies": [...] } 形式
+    if isinstance(payload, dict) and "companies" in payload:
+        companies = payload["companies"]
+    else:
+        companies = payload
     if not isinstance(companies, list):
-        raise ValueError("companies_json must be a JSON array")
+        raise ValueError(
+            "companies_json must be a JSON array of objects, or an object with a "
+            '"companies" array (e.g. edinet-screener public/data/companies.json)'
+        )
     codes = []
     for item in companies:
         if not isinstance(item, dict):
