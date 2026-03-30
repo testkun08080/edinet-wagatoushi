@@ -1,4 +1,5 @@
 # download_company_10years.py を手動実行（企業別・過去 N 年）
+# EDINET Corpus と同様、暦年マトリックス + max-parallel: 1 で順次実行しジョブ単位の 6h 制限内に収める
 name: EDINET Download Company (10y)
 
 run-name: EDINET company 10y · ${{ inputs.file_type }} · ${{ inputs.years }}y (run ${{ github.run_number }})
@@ -36,7 +37,7 @@ on:
           - pdf
           - xbrl
       years:
-        description: "取得する年数（--years）"
+        description: "取得する年数（暦年の本数。今年を含む直近 N 年をマトリックス分割）"
         required: true
         default: 10
         type: number
@@ -62,13 +63,15 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  download:
-    name: download_company_10years
+  prepare:
+    name: prepare years
     runs-on: ubuntu-latest
+<<<<<<< Updated upstream
+=======
+    outputs:
+      years_json: ${{ steps.years.outputs.json }}
+>>>>>>> Stashed changes
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
       - name: Validate inputs
         env:
           EDINET_CODE: ${{ inputs.edinet_code }}
@@ -84,6 +87,35 @@ jobs:
             exit 1
           fi
 
+      - name: Build calendar year list (today.year − N + 1 … today.year)
+        id: years
+        run: |
+          json=$(python3 -c "
+          import json
+          from datetime import date
+          n = int('${{ inputs.years }}')
+          if n < 1:
+              raise SystemExit('years must be >= 1')
+          end = date.today().year
+          start = end - n + 1
+          print(json.dumps(list(range(start, end + 1))))
+          ")
+          echo "json=$json" >> "$GITHUB_OUTPUT"
+
+  download:
+    name: "download ${{ matrix.year }}"
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        year: ${{ fromJson(needs.prepare.outputs.years_json) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
@@ -96,7 +128,7 @@ jobs:
         working-directory: edinet-wrapper
         run: uv sync
 
-      - name: Run download_company_10years.py
+      - name: Run download_company_10years.py (one calendar year)
         working-directory: edinet-wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
@@ -106,7 +138,7 @@ jobs:
           COMPANIES_JSON: ${{ inputs.companies_json }}
           OUTPUT_DIR: ${{ inputs.output_dir }}
           FILE_TYPE: ${{ inputs.file_type }}
-          YEARS: ${{ inputs.years }}
+          MATRIX_YEAR: ${{ matrix.year }}
           DOC_TYPES_INPUT: ${{ inputs.doc_types }}
           FORCE_FLAG: ${{ inputs.force }}
         run: |
@@ -114,7 +146,7 @@ jobs:
           cmd=(uv run python scripts/download/download_company_10years.py)
           cmd+=(--output_dir "$OUTPUT_DIR")
           cmd+=(--file_type "$FILE_TYPE")
-          cmd+=(--years "$YEARS")
+          cmd+=(--year "$MATRIX_YEAR")
 
           # --doc_types（カンマ→スペース。空なら引数省略＝スクリプト既定で全8種）
           dt_trim=$(echo -n "$DOC_TYPES_INPUT" | tr -d '[:space:],')
@@ -151,10 +183,46 @@ jobs:
           echo "Running: ${cmd[*]}"
           "${cmd[@]}"
 
-      - name: Upload download artifact
+      - name: Upload partial artifact (per year)
         if: success()
         uses: actions/upload-artifact@v7
         with:
-          name: edinet-company-${{ github.run_id }}-${{ github.run_attempt }}
+          # run_attempt の edinet-company-{run}-{attempt} とパターン衝突しないよう yr を付与
+          name: edinet-company-yr-${{ github.run_id }}-${{ matrix.year }}
           path: edinet-wrapper/${{ inputs.output_dir || 'data' }}
+          retention-days: 7
+
+  merge:
+    name: merge artifacts + metadata
+    needs: download
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Download all year artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: edinet-company-yr-${{ github.run_id }}-*
+          merge-multiple: true
+          path: merged
+
+      - name: Merge metadata_YYYY.json → metadata.json
+        env:
+          OUT_SUB: ${{ inputs.output_dir || 'data' }}
+        run: |
+          set -euo pipefail
+          root="merged/edinet-wrapper/$OUT_SUB"
+          if [ ! -d "$root" ]; then
+            echo "::error::Expected directory not found: $root"
+            exit 1
+          fi
+          python3 edinet-wrapper/scripts/download/merge_company_metadata.py "$root"
+
+      - name: Upload combined download artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: edinet-company-${{ github.run_id }}-${{ github.run_attempt }}
+          path: merged/edinet-wrapper/${{ inputs.output_dir || 'data' }}
           retention-days: 7

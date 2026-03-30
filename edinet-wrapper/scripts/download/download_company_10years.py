@@ -75,7 +75,15 @@ def parse_args():
         "--years",
         type=int,
         default=10,
-        help="Number of years to download (default: 10)",
+        help="Number of years to download (default: 10). Ignored when --year is set.",
+    )
+    parser.add_argument(
+        "--year",
+        type=int,
+        default=None,
+        metavar="YYYY",
+        help="Single calendar year (e.g. 2024). Downloads Jan 1–Dec 31 (clipped to today). "
+        "Use for CI matrix splits; overrides --years for the date window.",
     )
     parser.add_argument(
         "--doc_types",
@@ -133,6 +141,19 @@ def get_date_range(years: int = 10):
     return start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d")
 
 
+def get_date_range_for_calendar_year(year: int) -> tuple[str, str]:
+    """単一暦年の日付範囲（終端は今日でクリップ）。"""
+    today = datetime.date.today()
+    start = datetime.date(year, 1, 1)
+    end = datetime.date(year, 12, 31)
+    if end > today:
+        end = today
+    if start > end:
+        ts = today.strftime("%Y-%m-%d")
+        return ts, ts
+    return start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")
+
+
 def _normalize_codes(codes: list[str]) -> list[str]:
     normalized = []
     seen = set()
@@ -179,19 +200,27 @@ def download_company_data(
     years: int = 10,
     doc_types: list[str] | None = None,
     skip_existing: bool = True,
+    calendar_year: int | None = None,
 ) -> tuple[list[str], list[str]]:
     """指定された企業の過去N年分のデータをダウンロード。
+    calendar_year を指定した場合はその暦年のみ（CI マトリックス用）。
     戻り値: (新規ダウンロードした docID のリスト, スキップした docID のリスト)
     """
 
     if not doc_types:
         doc_types = list(DEFAULT_DOC_TYPES)
     logger.info(f"Starting download for company: {edinet_code}")
-    logger.info(f"Downloading {years} years of reports")
+    if calendar_year is not None:
+        logger.info(f"Calendar year: {calendar_year}")
+    else:
+        logger.info(f"Downloading {years} years of reports")
     logger.info(f"Document types: {', '.join(doc_types)}")
 
     # 日付範囲を取得
-    start_date, end_date = get_date_range(years)
+    if calendar_year is not None:
+        start_date, end_date = get_date_range_for_calendar_year(calendar_year)
+    else:
+        start_date, end_date = get_date_range(years)
     logger.info(f"Date range: {start_date} to {end_date}")
 
     # Downloaderを初期化
@@ -224,11 +253,16 @@ def download_company_data(
     company_dir = Path(output_dir) / edinet_code
     company_dir.mkdir(parents=True, exist_ok=True)
 
+    metadata_basename = (
+        f"metadata_{calendar_year}.json" if calendar_year is not None else "metadata.json"
+    )
+
     # メタデータを保存
     metadata = {
         "edinet_code": edinet_code,
         "download_date": datetime.datetime.now().isoformat(),
         "date_range": {"start": start_date, "end": end_date},
+        "calendar_year": calendar_year,
         "doc_types": doc_types,
         "file_type": file_type,
         "skip_existing": skip_existing,
@@ -319,7 +353,7 @@ def download_company_data(
             continue
 
     # メタデータを保存
-    metadata_file = company_dir / "metadata.json"
+    metadata_file = company_dir / metadata_basename
     with open(metadata_file, "w", encoding="utf-8") as f:
         json.dump(metadata, f, ensure_ascii=False, indent=2)
 
@@ -357,6 +391,7 @@ def main():
             years=args.years,
             doc_types=args.doc_types,
             skip_existing=not args.force,
+            calendar_year=args.year,
         )
         total_downloaded += len(downloaded_files)
         total_skipped += len(skipped_files)
