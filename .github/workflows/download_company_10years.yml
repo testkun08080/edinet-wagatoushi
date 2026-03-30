@@ -44,7 +44,7 @@ on:
       doc_types:
         description: "書類種別（カンマまたはスペース区切り。未指定時はスクリプト既定＝全8種）"
         required: false
-        default: "annual,quarterly,semiannual,large_holding,annual_amended,quarterly_amended,semiannual_amended,large_holding_amended"
+        default: "annual,quarterly,semiannual,large_holding"
         type: string
       force:
         description: "既存ファイルがあっても再ダウンロード（--force）"
@@ -66,11 +66,6 @@ jobs:
   prepare:
     name: prepare years
     runs-on: ubuntu-latest
-<<<<<<< Updated upstream
-=======
-    outputs:
-      years_json: ${{ steps.years.outputs.json }}
->>>>>>> Stashed changes
     steps:
       - name: Validate inputs
         env:
