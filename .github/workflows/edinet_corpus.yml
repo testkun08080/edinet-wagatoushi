@@ -107,7 +107,7 @@ jobs:
           DOC_TYPE: ${{ inputs.doc_type || 'quarterly' }}
           YEAR: ${{ inputs.year || '2024' }}
           MONTH: ${{ matrix.month }}
-        run: bash scripts/downloader/edinet_corpus.sh
+        run: bash scripts/download/edinet_corpus.sh
 
       - name: Upload corpus artifact (optional)
         if: success()
