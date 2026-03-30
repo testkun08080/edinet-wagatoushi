@@ -2,6 +2,7 @@
 
 import "./Layout.css";
 import "./tailwind.css";
+import { useEffect } from "react";
 import { AppSidebar } from "../components/CompanySidebar";
 import { FilterProvider } from "../components/FilterContext";
 import { ColumnVisibilityProvider } from "../components/ColumnVisibilityContext";
@@ -12,10 +13,16 @@ import { TooltipProvider } from "../components/ui/tooltip";
 import { Separator } from "../components/ui/separator";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbPage } from "../components/ui/breadcrumb";
 import { usePageContext } from "vike-react/usePageContext";
+import { initializeGA, trackPageView } from "../lib/analytics";
 
 function AppHeader() {
   const pageContext = usePageContext();
   const urlPathname = pageContext?.urlPathname ?? "/";
+
+  useEffect(() => {
+    trackPageView(urlPathname);
+  }, [urlPathname]);
+
   const isAnalyzePage = urlPathname.startsWith("/analyze/");
   const secCode = isAnalyzePage ? urlPathname.split("/")[2] : null;
 
@@ -46,6 +53,10 @@ function AppHeader() {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    initializeGA();
+  }, []);
+
   return (
     <FilterProvider>
       <FavoritesProvider>

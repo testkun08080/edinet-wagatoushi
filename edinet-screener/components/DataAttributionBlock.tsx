@@ -6,8 +6,13 @@ import {
 } from "@/lib/data-attribution";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
+import { Alert, AlertDescription } from "./ui/alert";
+import { Calendar, AlertCircle } from "lucide-react";
 
 export function DataAttributionBlock({ compact = false }: { compact?: boolean }) {
+  // TODO: Backend から取得するか環境変数で設定
+  const lastUpdated = new Date().toISOString().split('T')[0];
+
   return (
     <Card className={compact ? "border-dashed" : ""}>
       <CardHeader className="pb-2">
@@ -19,6 +24,14 @@ export function DataAttributionBlock({ compact = false }: { compact?: boolean })
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 text-sm">
+        <Alert className="border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950">
+          <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <AlertDescription className="text-blue-900 dark:text-blue-100">
+            <strong>データ最終更新日:</strong> {lastUpdated}
+            <br />
+            <span className="text-xs">企業の最新財務情報は EDINET から随時更新されます。</span>
+          </AlertDescription>
+        </Alert>
         <div>
           <p className="font-medium text-foreground mb-2">ライセンス・ガイドライン</p>
           <ul className="list-disc pl-5 space-y-1 text-muted-foreground">

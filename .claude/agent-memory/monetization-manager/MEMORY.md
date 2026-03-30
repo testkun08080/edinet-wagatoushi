@@ -1,0 +1,3 @@
+- [Monetization Strategy v1](project_monetization_strategy_v1.md) — Initial 4-domain strategy with phased roadmap and revenue estimates
+- [Technical Assets Inventory](project_tech_assets.md) — 47 columns, 30 UI components, static JSON architecture on CF Workers
+- [Competitor Analysis](project_competitor_analysis.md) — Yahoo Finance JP, Buffett Code, IR BANK positioning and gaps
