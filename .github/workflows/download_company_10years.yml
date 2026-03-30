@@ -66,6 +66,8 @@ jobs:
   prepare:
     name: prepare years
     runs-on: ubuntu-latest
+    outputs:
+      years_json: ${{ steps.years.outputs.json }}
     steps:
       - name: Validate inputs
         env:
