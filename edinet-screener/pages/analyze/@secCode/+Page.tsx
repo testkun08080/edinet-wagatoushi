@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useData } from "vike-react/useData";
+import { useConfig } from "vike-react/useConfig";
 import type { Data, CompanyMetricsRow } from "./+data.js";
 import { useRecentCompanies } from "../../../components/RecentCompaniesContext.js";
 import { useFavorites } from "../../../components/FavoritesContext.js";
@@ -226,6 +227,11 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
 
 export default function Page() {
   const { company, metrics, error } = useData<Data>();
+  const config = useConfig();
+  // data() 内では useConfig が使えない（getPageContext が無いと React フックに落ちる）。ページコンポーネントで設定する。
+  config({
+    title: company?.filerName ? `${company.filerName} - 企業分析 | エディー` : "企業分析 - エディー",
+  });
   const { addRecent } = useRecentCompanies();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [mainTab, setMainTab] = useState("summary");

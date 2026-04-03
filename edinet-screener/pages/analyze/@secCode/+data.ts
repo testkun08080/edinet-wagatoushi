@@ -1,7 +1,6 @@
 // https://vike.dev/data
 
 import type { PageContextServer } from "vike/types";
-import { useConfig } from "vike-react/useConfig";
 
 export type CompanySummary = {
   edinetCode: string;
@@ -146,9 +145,10 @@ function resolveFetchOrigin(pageContext: PageContextServer): string {
   }
   const headers = pageContext.headers;
   if (headers) {
-    const host = headers.host ?? headers["Host"];
+    const h = headers as Record<string, string | undefined>;
+    const host = h.host ?? h.Host ?? h["host"] ?? h["HOST"];
     if (typeof host === "string" && host.length > 0) {
-      const proto = headers["x-forwarded-proto"] === "https" ? "https" : "http";
+      const proto = h["x-forwarded-proto"] === "https" ? "https" : "http";
       return `${proto}://${host}`;
     }
   }
@@ -166,6 +166,33 @@ async function fetchWithTimeout(url: string, timeoutMs: number): Promise<Respons
   }
 }
 
+/** 同一オリジンで JSON を取得。Photon/Workers では node:fs が使えないため fetch のみ。 */
+async function fetchPublicJson(path: string, base: string, timeoutMs: number): Promise<Response> {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const primary = await fetchWithTimeout(`${base}${normalized}`, timeoutMs);
+  if (primary.ok || primary.status !== 404) {
+    return primary;
+  }
+  // localhost と 127.0.0.1 で静的配信の扱いが分かれる環境向け
+  try {
+    const u = new URL(base);
+    if (u.hostname === "localhost") {
+      u.hostname = "127.0.0.1";
+    } else if (u.hostname === "127.0.0.1") {
+      u.hostname = "localhost";
+    } else {
+      return primary;
+    }
+    const second = await fetchWithTimeout(`${u.origin}${normalized}`, timeoutMs);
+    if (second.ok || second.status !== 404) {
+      return second;
+    }
+  } catch {
+    /* ignore */
+  }
+  return primary;
+}
+
 export async function data(pageContext: PageContextServer) {
   const secCode = pageContext.routeParams?.secCode;
   if (!secCode) {
@@ -173,15 +200,14 @@ export async function data(pageContext: PageContextServer) {
   }
 
   try {
-    const config = useConfig();
     const base = resolveFetchOrigin(pageContext);
 
     // Ensure we don't keep Vike's globalContext pending indefinitely.
     // (Vike warns when a Promise hasn't resolved after ~3s in dev.)
     const timeoutMs = 2500;
     const [companyRes, metricsRes] = await Promise.all([
-      fetchWithTimeout(`${base}/data/summaries/${secCode}.json`, timeoutMs),
-      fetchWithTimeout(`${base}/data/company_metrics.json`, timeoutMs),
+      fetchPublicJson(`/data/summaries/${secCode}.json`, base, timeoutMs),
+      fetchPublicJson("/data/company_metrics.json", base, timeoutMs),
     ]);
 
     if (!companyRes.ok) {
@@ -195,7 +221,6 @@ export async function data(pageContext: PageContextServer) {
       throw new Error(`HTTP ${companyRes.status}`);
     }
     const company = normalizeCompanySummary(await companyRes.json(), secCode);
-    config({ title: `${company.filerName} - 企業分析 | エディー` });
 
     let metrics: CompanyMetricsRow | null = null;
     if (metricsRes.ok) {

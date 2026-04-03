@@ -15,6 +15,8 @@ META = {
 
 SUMMARY = {
     "NetSalesSummaryOfBusinessResults": "売上高",
+    # IFRS 開示の経営指標（NetSales が無い企業向け）
+    "RevenueIFRSSummaryOfBusinessResults": "売上収益（IFRS）",
     "OrdinaryIncomeLossSummaryOfBusinessResults": "経常利益",
     "ProfitLossBeforeTaxIFRSSummaryOfBusinessResults": "税引前利益(IFRS)",
     "ComprehensiveIncomeAttributableToOwnersOfParentIFRSSummaryOfBusinessResults": "当期包括利益: 親会社の所有者に帰属（IFRS）",
@@ -254,6 +256,8 @@ COMPREHENSIVE_INCOME = {
 PL = {
     "売上高": {
         "NetSales": "売上高",
+        # 連結損益計算書（IFRS）の売上収益
+        "RevenueIFRS": "売上収益（IFRS）",
     },
     "売上原価": {
         "CostOfSales": "売上原価",
@@ -372,6 +376,8 @@ CF = {
         "PurchaseOfTreasuryStockFinCF": "自己株式の取得による支出",
         "RepaymentsOfFinanceLeaseObligationsFinCF": "ファイナンス・リース債務の返済による支出",
         "CashDividendsPaidFinCF": "配当金の支払額",
+        # IFRS 連結キャッシュ・フロー計算書の配当支払（日本基準の CashDividendsPaidFinCF が無い場合）
+        "DividendsPaidFinCFIFRS": "配当金の支払額（IFRS）",
         "OtherNetFinCF": "その他",
         "NetCashProvidedByUsedInFinancingActivities": "財務キャッシュフロー",
     },

@@ -13,6 +13,7 @@ import {
 } from "./ui/chart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
+import { pickCfDividendPaid, pickPlRevenueForChart, pickSummaryRevenueForChart } from "../lib/financialPickers.js";
 
 type Period = {
   periodEnd: string;
@@ -63,6 +64,7 @@ function pickPlNetIncome(pl: Record<string, string>): number | null {
   return (
     parseIntYen(pl["親会社株主に帰属する当期純利益"]) ??
     parseIntYen(pl["親会社株主に帰属する四半期純利益"]) ??
+    parseIntYen(pl["親会社株主に帰属する当期純利益 (IFRS)"]) ??
     parseIntYen(pl["当期純利益"])
   );
 }
@@ -147,7 +149,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
   const salesRows = useMemo(
     () =>
       list.map((p) => {
-        const y = parseIntYen(p.summary?.["売上高"]);
+        const y = parseIntYen(pickSummaryRevenueForChart(p.summary));
         return {
           period: p.periodEnd,
           sales: y != null ? toMillionsYen(y) : null,
@@ -159,7 +161,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
   const dividendRows = useMemo(
     () =>
       list.map((p) => {
-        const d = parseIntYen(p.cf?.["配当金の支払額"]);
+        const d = parseIntYen(pickCfDividendPaid(p.cf));
         return {
           period: p.periodEnd,
           dividend: d != null ? toMillionsYen(Math.abs(d)) : null,
@@ -171,7 +173,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
   const plRows = useMemo(
     () =>
       list.map((p) => {
-        const rev = parseIntYen(p.pl?.["売上高"]);
+        const rev = parseIntYen(pickPlRevenueForChart(p.pl));
         const op = parseIntYen(p.pl?.["営業利益"]);
         const net = pickPlNetIncome(p.pl ?? {});
         return {
@@ -245,7 +247,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">売上高の推移</CardTitle>
-            <CardDescription>四半期サマリー（summary）の「売上高」（百万円）</CardDescription>
+            <CardDescription>summary の「売上高」または IFRS「売上収益（IFRS）」（百万円）</CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             {hasSales ? (
@@ -276,7 +278,9 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">配当に関するキャッシュアウト</CardTitle>
-            <CardDescription>CF の「配当金の支払額」（絶対値・百万円）</CardDescription>
+            <CardDescription>
+              CF「配当金の支払額」または IFRS「配当金の支払額（IFRS）」（絶対値・百万円）
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             {hasDividend ? (

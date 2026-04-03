@@ -36,7 +36,34 @@ from pathlib import Path
 
 from edinet_wrapper import parse_tsv
 
-CURRENT_KEYS = ["CurrentQuarter", "CurrentYTD", "CurrentYear", "Prior1Quarter", "Prior1YTD"]
+CURRENT_KEYS = [
+    "CurrentQuarter",
+    "CurrentYTD",
+    "CurrentYear",
+    "Prior1Quarter",
+    "Prior1YTD",
+    # 中間期（パーサの YEAR_LIST の Interim / Prior1Interim）
+    "Interim",
+    "Prior1Interim",
+]
+
+# _flatten_for_period: これらのいずれかを含む dict は「年度バケット」として _get_current_value に渡す
+_YEAR_BUCKET_KEYS = frozenset(
+    {
+        "CurrentYear",
+        "Prior1Year",
+        "Prior2Year",
+        "Prior3Year",
+        "Prior4Year",
+        "CurrentQuarter",
+        "Prior1Quarter",
+        "CurrentYTD",
+        "Prior1YTD",
+        "Interim",
+        "Prior1Interim",
+        "FilingDate",
+    }
+)
 
 # サンプルモードでコード未指定時に使うデフォルトリスト（EDINET コード）
 DEFAULT_SAMPLE_EDINET_CODES = [
@@ -148,6 +175,15 @@ def _has_value(v) -> bool:
     return True
 
 
+def _pick_sales_line(s: dict, pl: dict) -> str | None:
+    """一覧用の売上: JP GAAP の売上高 → IFRS の売上収益 → PL 側の同順。"""
+    for src in (s, pl):
+        for k in ("売上高", "売上収益（IFRS）"):
+            if _has_value(src.get(k)):
+                return str(src[k]).strip()
+    return None
+
+
 # 最新期が四半・半期だと summary に無いことがあるため、有報等から補完するキー
 _EDINET_VALUATION_FALLBACK_KEYS = (
     "株価収益率",
@@ -193,9 +229,7 @@ def _flatten_for_period(obj: dict, prefix: str = "") -> dict:
     out = {}
     for k, v in obj.items():
         key = f"{prefix}{k}" if prefix else k
-        if isinstance(v, dict) and not any(
-            kk in v for kk in ["CurrentYear", "Prior1Year", "CurrentQuarter", "Prior1Quarter", "CurrentYTD", "Prior1YTD"]
-        ):
+        if isinstance(v, dict) and not any(kk in v for kk in _YEAR_BUCKET_KEYS):
             out.update(_flatten_for_period(v, f"{key} / "))
         else:
             val = _get_current_value(v)
@@ -349,7 +383,11 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
     per = _parse_number(per_raw) if per_raw and per_raw != "－" else None
     period_end = latest.get("periodEnd", "")
     fiscal_month = period_end.split("-")[1] if period_end and len(period_end) >= 7 else None
-    net_income = pl.get("親会社株主に帰属する当期純利益") or s.get("親会社株主に帰属する当期純利益")
+    net_income = (
+        pl.get("親会社株主に帰属する当期純利益")
+        or s.get("親会社株主に帰属する当期純利益")
+        or s.get("親会社株主に帰属する当期純利益 (IFRS)")
+    )
     eps_raw = s.get("１株当たり当期純利益又は当期純損失")
     dps_raw = s.get("１株当たり配当額") or s.get("１株当たり中間配当額")
     diluted_raw = s.get("潜在株式調整後１株当たり当期純利益")
@@ -367,7 +405,7 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
         "自己資本比率": s.get("自己資本比率"),
         "EPS": eps_raw,
         "dilutedEPS": diluted_eps,
-        "売上高": s.get("売上高"),
+        "売上高": _pick_sales_line(s, pl),
         "経常利益": s.get("経常利益"),
         "当期純利益": net_income,
         "純資産額": s.get("純資産額"),

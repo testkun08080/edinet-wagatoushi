@@ -25,6 +25,9 @@ YEAR_LIST = [
     "CurrentYTD",
     "Prior1Quarter",
     "CurrentQuarter",
+    # 中間期（IFRS 半期報告書の InterimDuration / Prior1InterimDuration 用）
+    "Prior1Interim",
+    "Interim",
     "FilingDate",
 ]
 
