@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # 指定日（提出日ベース）の有価証券報告書・大量保有報告を edinet_corpus と同じ出力形式で取得する。
-# 自動実行は想定しない。手動、または任意の手動トリガー CI から呼び出す。
+# 手動実行、ローカル cron、または GitHub Actions（edinet_fetch_one_day.yml 等）から呼び出す。
 #
 # 使い方:
 #   cd edinet-wrapper

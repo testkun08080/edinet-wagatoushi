@@ -1,15 +1,11 @@
-# 1日分: 有報・大量保有。workflow_dispatch + 日次 schedule（マトリクスなし）
-name: EDINET one-day fetch
+# 週1: 訂正開示のみ（有報訂正・大量保有訂正）。日次ワークフローとは別スケジュール。
+name: EDINET amended weekly (one day)
 
 on:
   workflow_dispatch:
     inputs:
       target_date:
-        description: "対象日 YYYY-MM-DD（提出日ベース）。空欄＝実行時点の昨日（Asia/Tokyo）"
-        required: false
-        type: string
-      doc_types:
-        description: "カンマ区切り（例: annual,large_holding）。空欄＝ annual,large_holding"
+        description: "対象日 YYYY-MM-DD（空欄＝実行時点の昨日 Asia/Tokyo）"
         required: false
         type: string
       request_delay:
@@ -23,8 +19,8 @@ on:
         default: true
         type: boolean
   schedule:
-    # 毎日 02:00 JST 付近（UTC 前日 17:00）
-    - cron: "0 17 * * *"
+    # 月曜 02:00 JST 付近（UTC 日曜 17:00）
+    - cron: "0 17 * * 0"
 
 env:
   UV_COMPILE_BYTECODE: 0
@@ -52,13 +48,14 @@ jobs:
         working-directory: edinet-wrapper
         run: mkdir -p data
 
-      - name: Run one-day fetch
+      - name: Run one-day fetch (amended types only)
         working-directory: edinet-wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: |
           set -e
+          export EDINET_ONE_DAY_DOC_TYPES=annual_amended,large_holding_amended
           if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
             DELAY="${{ inputs.request_delay }}"
             [ -z "$DELAY" ] && DELAY=3
@@ -66,15 +63,10 @@ jobs:
             if [ "${{ inputs.skip_existing_companies }}" = "true" ]; then
               export SKIP_EXISTING_COMPANIES=1
             fi
-            DOC_TYPES_INPUT="${{ inputs.doc_types }}"
-            if [ -n "${DOC_TYPES_INPUT}" ]; then
-              export EDINET_ONE_DAY_DOC_TYPES="${DOC_TYPES_INPUT}"
-            fi
             ARG="${{ inputs.target_date }}"
           else
             export EDINET_REQUEST_DELAY=3
             export SKIP_EXISTING_COMPANIES=1
-            unset EDINET_ONE_DAY_DOC_TYPES
             ARG=""
           fi
           if [ -n "$ARG" ]; then
@@ -87,6 +79,6 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v7
         with:
-          name: edinet-one-day-${{ github.event_name == 'workflow_dispatch' && (inputs.target_date || 'yesterday-jst') || format('scheduled-{0}', github.run_id) }}
+          name: edinet-amended-weekly-${{ github.run_id }}
           path: edinet-wrapper/edinet_corpus/
           retention-days: 7
