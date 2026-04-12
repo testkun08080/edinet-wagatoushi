@@ -1,0 +1,79 @@
+# 手動のみ: 1日分の有報・大量保有を取得（schedule なし）
+name: EDINET one-day fetch
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "対象日 YYYY-MM-DD（提出日ベース）。空欄＝実行時点の昨日（Asia/Tokyo）"
+        required: false
+        type: string
+      doc_types:
+        description: "カンマ区切り（例: annual,large_holding）。空欄＝ annual,large_holding"
+        required: false
+        type: string
+      request_delay:
+        description: "EDINET API リクエスト間隔（秒）"
+        required: false
+        default: "3"
+        type: string
+      skip_existing_companies:
+        description: "既に出力にファイルがある企業はスキップ"
+        required: false
+        default: true
+        type: boolean
+
+env:
+  UV_COMPILE_BYTECODE: 0
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        working-directory: edinet-wrapper
+        run: uv sync
+
+      - name: Ensure data directory for EDINET code list
+        working-directory: edinet-wrapper
+        run: mkdir -p data
+
+      - name: Run one-day fetch
+        working-directory: edinet-wrapper
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          EDINET_REQUEST_DELAY: ${{ inputs.request_delay }}
+        run: |
+          set -e
+          if [ "${{ inputs.skip_existing_companies }}" = "true" ]; then
+            export SKIP_EXISTING_COMPANIES=1
+          fi
+          DOC_TYPES_INPUT="${{ inputs.doc_types }}"
+          if [ -n "${DOC_TYPES_INPUT}" ]; then
+            export EDINET_ONE_DAY_DOC_TYPES="${DOC_TYPES_INPUT}"
+          fi
+          ARG="${{ inputs.target_date }}"
+          if [ -n "$ARG" ]; then
+            bash scripts/download/edinet_fetch_one_day.sh "$ARG"
+          else
+            bash scripts/download/edinet_fetch_one_day.sh
+          fi
+
+      - name: Upload corpus artifact
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: edinet-one-day-${{ inputs.target_date || 'yesterday-jst' }}
+          path: edinet-wrapper/edinet_corpus/
+          retention-days: 7
