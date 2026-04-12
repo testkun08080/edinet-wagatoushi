@@ -6,11 +6,13 @@
 
 ## 1. API エンドポイントの差異
 
-| 項目 | 仕様書 | 現状ラッパー | 備考 |
-|------|--------|--------------|------|
-| 書類一覧 API ベース URL | `https://api.edinet-fsa.go.jp` | `https://disclosure.edinet-fsa.go.jp` | 仕様書は `api.` を記載。両方 401 で応答するためリダイレクトの可能性あり。仕様に合わせるなら `api.edinet-fsa.go.jp` に統一推奨。 |
-| 書類取得 API | `GET /api/v2/documents/{docID}?type=...&Subscription-Key=...` | 同上 | パラメータ仕様は一致。 |
-| 書類一覧 | `GET /api/v2/documents.json?date=YYYY-MM-DD&type=1 or 2&Subscription-Key=...` | 同上 | `type=1` メタデータのみ、`type=2` 提出書類一覧＋メタデータ。 |
+
+| 項目               | 仕様書                                                                           | 現状ラッパー                                | 備考                                                                                 |
+| ---------------- | ----------------------------------------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------- |
+| 書類一覧 API ベース URL | `https://api.edinet-fsa.go.jp`                                                | `https://disclosure.edinet-fsa.go.jp` | 仕様書は `api.` を記載。両方 401 で応答するためリダイレクトの可能性あり。仕様に合わせるなら `api.edinet-fsa.go.jp` に統一推奨。 |
+| 書類取得 API         | `GET /api/v2/documents/{docID}?type=...&Subscription-Key=...`                 | 同上                                    | パラメータ仕様は一致。                                                                        |
+| 書類一覧             | `GET /api/v2/documents.json?date=YYYY-MM-DD&type=1 or 2&Subscription-Key=...` | 同上                                    | `type=1` メタデータのみ、`type=2` 提出書類一覧＋メタデータ。                                            |
+
 
 ---
 
@@ -18,30 +20,34 @@
 
 ### 2.1 仕様書の書類種別コード（docTypeCode）
 
-| コード | 名称 |
-|--------|------|
+
+| コード | 名称          |
+| --- | ----------- |
 | 120 | 有価証券報告書（年次） |
-| 130 | 訂正有価証券報告書 |
-| 140 | 四半期報告書 |
-| 150 | 訂正四半期報告書 |
-| 160 | 半期報告書 |
-| 170 | 訂正半期報告書 |
-| 350 | 大量保有報告書 |
-| 360 | 訂正大量保有報告書 |
+| 130 | 訂正有価証券報告書   |
+| 140 | 四半期報告書      |
+| 150 | 訂正四半期報告書    |
+| 160 | 半期報告書       |
+| 170 | 訂正半期報告書     |
+| 350 | 大量保有報告書     |
+| 360 | 訂正大量保有報告書   |
+
 
 ### 2.2 ラッパーでの判定（現状）
 
 `get_doc_type(ordinanceCode, formCode)` は **府令コード＋様式コード** で判定している。
 
-| 府令 (ordinanceCode) | 様式 (formCode) | ラッパー doc_type |
-|----------------------|-----------------|-------------------|
-| 010（企業内容等の開示） | 030000 | annual |
-| 010 | 030001 | annual_amended |
-| 010 | 043000 | quarterly |
-| 010 | 043001 | quarterly_amended |
-| 010 | 043A00 | semiannual |
-| 010 | 043A01 | semiannual_amended |
-| **060（大量保有）** | **未対応** | **－** |
+
+| 府令 (ordinanceCode) | 様式 (formCode) | ラッパー doc_type      |
+| ------------------ | ------------- | ------------------ |
+| 010（企業内容等の開示）      | 030000        | annual             |
+| 010                | 030001        | annual_amended     |
+| 010                | 043000        | quarterly          |
+| 010                | 043001        | quarterly_amended  |
+| 010                | 043A00        | semiannual         |
+| 010                | 043A01        | semiannual_amended |
+| **060（大量保有）**      | **未対応**       | **－**              |
+
 
 - **年次報告書** ＝ 有価証券報告書（docTypeCode 120 / 様式 030000）
 - **四半期報告書** ＝ docTypeCode 140 / 様式 043000
@@ -86,13 +92,13 @@
 
 このためには以下が必要。
 
-1. **書類種別**  
-   - 上記 4 種＋訂正書を、**docTypeCode**（および必要なら府令・様式）で一意に識別できるようにする。  
-   - 特に **大量保有報告書（350/360）** の対応を追加する。  
-   - **対応済み**: `DOC_TYPE_CODE_MAP` と `get_doc_type_from_result()` で docTypeCode ベースの判定を追加。`get_doc_type(ordinanceCode, formCode)` に府令 060（大量保有）を追加。
-2. **機関フィルタ**  
-   - 書類一覧取得後に、`EdinetcodeDlInfo.csv` の「上場区分」「提出者種別」と突き合わせて、対象機関だけに絞るオプションを用意する。  
-   - **対応済み**: `get_results(..., listed_only=True)` で上場区分が「上場」の提出者のみに絞る。CLI は `--listed_only`。
+1. **書類種別**
+  - 上記 4 種＋訂正書を、**docTypeCode**（および必要なら府令・様式）で一意に識別できるようにする。  
+  - 特に **大量保有報告書（350/360）** の対応を追加する。  
+  - **対応済み**: `DOC_TYPE_CODE_MAP` と `get_doc_type_from_result()` で docTypeCode ベースの判定を追加。`get_doc_type(ordinanceCode, formCode)` に府令 060（大量保有）を追加。
+2. **機関フィルタ**
+  - 書類一覧取得後に、`EdinetcodeDlInfo.csv` の「上場区分」「提出者種別」と突き合わせて、対象機関だけに絞るオプションを用意する。  
+  - **対応済み**: `get_results(..., listed_only=True)` で上場区分が「上場」の提出者のみに絞る。CLI は `--listed_only`。
 
 ---
 
@@ -101,3 +107,4 @@
 - [EDINET API 仕様書（PDF）](https://disclosure2dl.edinet-fsa.go.jp/guide/static/disclosure/download/ESE140206.pdf)（Version 2）
 - 府令コード：010 企業内容等、030 特定有価証券、040/050 公開買付、060 大量保有 など（仕様書 4-1）
 - 様式コード：別紙1 様式コードリスト（仕様書 4-1）
+

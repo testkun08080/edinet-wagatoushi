@@ -57,10 +57,24 @@ def parse_args():
         metavar="SEC",
         help="EDINET API リクエスト間隔（秒）。未指定時は環境変数 EDINET_REQUEST_DELAY または 3.0",
     )
+    parser.add_argument(
+        "--skip_existing_companies",
+        action="store_true",
+        help=(
+            "output_dir/<doc_type>/<edinet_code>/ に既にファイルがある企業は、その期間内の書類をすべてスキップする"
+        ),
+    )
     return parser.parse_args()
 
 
-def process_result(result, downloader, output_dir, doc_type) -> None:
+def _company_dir_has_content(dir_path: str) -> bool:
+    p = Path(dir_path)
+    if not p.is_dir():
+        return False
+    return any(p.iterdir())
+
+
+def process_result(result, downloader, output_dir, doc_type, skip_existing_companies: bool) -> None:
     try:
         if downloader.get_doc_type_from_result(result) != doc_type:
             return
@@ -69,6 +83,10 @@ def process_result(result, downloader, output_dir, doc_type) -> None:
             return
         edinet_code = result.edinetCode
         path = os.path.join(output_dir, doc_type, edinet_code)
+
+        if skip_existing_companies and _company_dir_has_content(path):
+            logger.info(f"Skip {edinet_code}: company dir already has files (--skip_existing_companies)")
+            return
 
         if os.path.exists(os.path.join(path, f"{result.docID}.json")):
             logger.info(f"Skip {edinet_code}: already exists")
@@ -90,6 +108,9 @@ def process_result(result, downloader, output_dir, doc_type) -> None:
 
 if __name__ == "__main__":
     args = parse_args()
+    skip_companies = args.skip_existing_companies or os.environ.get(
+        "SKIP_EXISTING_COMPANIES", ""
+    ).strip().lower() in ("1", "true", "yes")
     # Downloader は cwd の data/ に EdinetcodeDlInfo を置く
     project_root = Path(__file__).resolve().parent.parent.parent
     (project_root / "data").mkdir(parents=True, exist_ok=True)
@@ -100,7 +121,15 @@ if __name__ == "__main__":
 
     with ThreadPoolExecutor(max_workers=args.max_workers) as executor:
         futures = [
-            executor.submit(process_result, result, downloader, args.output_dir, args.doc_type) for result in results
+            executor.submit(
+                process_result,
+                result,
+                downloader,
+                args.output_dir,
+                args.doc_type,
+                skip_companies,
+            )
+            for result in results
         ]
 
         with tqdm(total=len(futures), desc="Downloading") as pbar:

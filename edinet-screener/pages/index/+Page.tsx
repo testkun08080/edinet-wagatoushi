@@ -5,7 +5,7 @@ import { CompanyTable } from "../../components/CompanyTable";
 import { ColumnVisibilityControls } from "../../components/ColumnVisibilityControls";
 import { FavoritesViewToggle } from "../../components/FavoritesViewToggle";
 import { TableDownloadButton } from "../../components/TableDownloadButton";
-import { Card, CardContent, CardHeader, CardTitle, CardAction } from "../../components/ui/card";
+import { Card, CardHeader, CardAction } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Separator } from "../../components/ui/separator";
 import { Button } from "../../components/ui/button";
@@ -33,10 +33,7 @@ export default function Page() {
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
       <div className="shrink-0 px-4 pt-4 pb-0 lg:px-6 lg:pt-6">
         <Card>
-          <CardHeader>
-            <CardTitle className="text-xl font-bold tracking-tight">
-              企業一覧
-            </CardTitle>
+          <CardHeader className="flex justify-end">
             <CardAction>
               <div className="flex flex-wrap items-center gap-1.5">
                 <FavoritesViewToggle />

@@ -1,7 +1,7 @@
-# EDINET コーパスを月単位で取得（1ジョブ ≒ 1ヶ月分で 6 時間以内に収める）
+# EDINET コーパスを取得。月1ジョブ、または月内を chunk_days で分割（有報集中月の 6h 回避用）
 name: EDINET Corpus
 
-run-name: ${{ format('{0} {1} — {2}', inputs.doc_type || 'scheduled', inputs.year || '', inputs.months || '1-12') }}
+run-name: ${{ format('{0} {1} — {2} (chunk {3}d)', inputs.doc_type || 'scheduled', inputs.year || '', inputs.months || '1-12', inputs.chunk_days || '0') }}
 
 on:
   workflow_dispatch:
@@ -29,6 +29,11 @@ on:
         description: "月（カンマ or 範囲 例: 1,3,5 または 9-12）。未指定で全12ヶ月"
         required: false
         type: string
+      chunk_days:
+        description: "月内をさらに分割する日数（例: 7 で約1週間ずつ別ジョブ）。0 または空＝従来どおり月全体を1ジョブ"
+        required: false
+        default: "0"
+        type: string
       request_delay:
         description: "EDINET API リクエスト間隔（秒）。未指定時は 3"
         required: false
@@ -42,42 +47,86 @@ env:
 
 jobs:
   prepare:
-    name: prepare months
+    name: prepare date chunks
     runs-on: ubuntu-latest
     outputs:
-      months_json: ${{ steps.months.outputs.json }}
+      chunks_json: ${{ steps.chunks.outputs.json }}
     steps:
-      - name: Parse months (9-12, 1,3,5 or 1-3,6,9-12 → JSON array)
-        id: months
-        run: |
-          json=$(python3 -c '
-          import json, os
-          s = (os.environ.get("MONTHS_INPUT") or "1,2,3,4,5,6,7,8,9,10,11,12").strip() or "1,2,3,4,5,6,7,8,9,10,11,12"
-          out = []
-          for part in s.split(","):
-            part = part.strip()
-            if "-" in part:
-              a, b = part.split("-", 1)
-              out.extend(range(int(a.strip()), int(b.strip()) + 1))
-            else:
-              out.append(int(part))
-          out = sorted(set(m for m in out if 1 <= m <= 12))
-          print(json.dumps(out))
-          ')
-          echo "json=$json" >> "$GITHUB_OUTPUT"
+      - name: Build matrix (full month per job, or sub-chunks within each month)
+        id: chunks
         env:
+          YEAR: ${{ inputs.year }}
           MONTHS_INPUT: ${{ inputs.months || '1,2,3,4,5,6,7,8,9,10,11,12' }}
+          CHUNK_DAYS: ${{ inputs.chunk_days || '0' }}
+        run: |
+          python3 <<'PY'
+          import json, os, calendar
+          from datetime import date
+
+          year = int(os.environ["YEAR"])
+          months_str = (os.environ.get("MONTHS_INPUT") or "1,2,3,4,5,6,7,8,9,10,11,12").strip() or "1,2,3,4,5,6,7,8,9,10,11,12"
+          raw = (os.environ.get("CHUNK_DAYS") or "0").strip() or "0"
+          chunk_days = int(raw)
+
+          months = []
+          for part in months_str.split(","):
+              part = part.strip()
+              if not part:
+                  continue
+              if "-" in part:
+                  a, b = part.split("-", 1)
+                  months.extend(range(int(a.strip()), int(b.strip()) + 1))
+              else:
+                  months.append(int(part))
+          months = sorted(set(m for m in months if 1 <= m <= 12))
+          if not months:
+              raise SystemExit("no valid months in MONTHS_INPUT")
+
+          include = []
+
+          def add_full_month(y: int, m: int) -> None:
+              if m == 12:
+                  end = date(y + 1, 1, 1)
+              else:
+                  end = date(y, m + 1, 1)
+              include.append(
+                  {"start": date(y, m, 1).strftime("%Y-%m-%d"), "end": end.strftime("%Y-%m-%d")}
+              )
+
+          def add_sub_month(y: int, m: int, days: int) -> None:
+              _, last = calendar.monthrange(y, m)
+              d = 1
+              while d <= last:
+                  ed = min(d + days - 1, last)
+                  include.append(
+                      {
+                          "start": date(y, m, d).strftime("%Y-%m-%d"),
+                          "end": date(y, m, ed).strftime("%Y-%m-%d"),
+                      }
+                  )
+                  d = ed + 1
+
+          for m in months:
+              if chunk_days <= 0:
+                  add_full_month(year, m)
+              else:
+                  add_sub_month(year, m, chunk_days)
+
+          out = json.dumps(include, separators=(",", ":"))
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"json={out}\n")
+          PY
 
   corpus:
-    name: "${{ inputs.doc_type }} ${{ inputs.year }}-${{ matrix.month }}"
+    name: "${{ inputs.doc_type }} ${{ matrix.start }}→${{ matrix.end }}"
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 720 # 6時間
     strategy:
       fail-fast: false
-      max-parallel: 1 # EDINET 負荷軽減: 月ジョブは1つずつ順次実行
+      max-parallel: 1 # EDINET 負荷軽減: チャンクは1つずつ順次実行
       matrix:
-        month: ${{ fromJson(needs.prepare.outputs.months_json) }}
+        include: ${{ fromJson(needs.prepare.outputs.chunks_json) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -99,20 +148,20 @@ jobs:
         working-directory: edinet-wrapper
         run: mkdir -p data
 
-      - name: Run corpus (one month)
+      - name: Run corpus (one date range)
         working-directory: edinet-wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           EDINET_REQUEST_DELAY: ${{ inputs.request_delay || '3' }}
           DOC_TYPE: ${{ inputs.doc_type || 'quarterly' }}
-          YEAR: ${{ inputs.year || '2024' }}
-          MONTH: ${{ matrix.month }}
+          START_DATE: ${{ matrix.start }}
+          END_DATE: ${{ matrix.end }}
         run: bash scripts/download/edinet_corpus.sh
 
       - name: Upload corpus artifact (optional)
         if: success()
         uses: actions/upload-artifact@v7
         with:
-          name: edinet_corpus-${{ inputs.doc_type || 'quarterly' }}-${{ inputs.year || '2024' }}-${{ matrix.month }}
+          name: edinet_corpus-${{ inputs.doc_type || 'quarterly' }}-${{ matrix.start }}_to_${{ matrix.end }}
           path: edinet-wrapper/edinet_corpus/
           retention-days: 7

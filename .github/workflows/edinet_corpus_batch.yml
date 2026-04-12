@@ -24,6 +24,11 @@ on:
         description: "月（カンマ or 範囲 例: 9-12）。未指定で全12ヶ月"
         required: false
         type: string
+      chunk_days:
+        description: "月内分割日数（edinet_corpus と同じ。例: 7）。空または 0 で月1ジョブ"
+        required: false
+        default: "0"
+        type: string
       wait_for_completion:
         description: "各 corpus 完了を待ってから次を発行（推奨: true）"
         required: false
@@ -51,6 +56,7 @@ jobs:
           END="${{ inputs.end_year }}"
           DOC_TYPES="${{ inputs.doc_types }}"
           MONTHS="${{ inputs.months }}"
+          CHUNK_DAYS="${{ inputs.chunk_days }}"
           API="https://api.github.com/repos/$REPO"
 
           wait_run() {
@@ -73,13 +79,26 @@ jobs:
             for doc_type in $(echo "$DOC_TYPES" | tr ',' ' '); do
               doc_type=$(echo "$doc_type" | xargs)
               [ -z "$doc_type" ] && continue
-              echo "=== Dispatching: year=$year doc_type=$doc_type months=${MONTHS:-all} ==="
-              if [ -n "$MONTHS" ]; then
+              echo "=== Dispatching: year=$year doc_type=$doc_type months=${MONTHS:-all} chunk_days=${CHUNK_DAYS:-0} ==="
+              if [ -n "$MONTHS" ] && [ -n "$CHUNK_DAYS" ] && [ "$CHUNK_DAYS" != "0" ]; then
+                inputs=$(jq -n \
+                  --arg doc_type "$doc_type" \
+                  --arg year "$year" \
+                  --arg months "$MONTHS" \
+                  --arg chunk_days "$CHUNK_DAYS" \
+                  '{doc_type: $doc_type, year: $year, months: $months, chunk_days: $chunk_days}')
+              elif [ -n "$MONTHS" ]; then
                 inputs=$(jq -n \
                   --arg doc_type "$doc_type" \
                   --arg year "$year" \
                   --arg months "$MONTHS" \
                   '{doc_type: $doc_type, year: $year, months: $months}')
+              elif [ -n "$CHUNK_DAYS" ] && [ "$CHUNK_DAYS" != "0" ]; then
+                inputs=$(jq -n \
+                  --arg doc_type "$doc_type" \
+                  --arg year "$year" \
+                  --arg chunk_days "$CHUNK_DAYS" \
+                  '{doc_type: $doc_type, year: $year, chunk_days: $chunk_days}')
               else
                 inputs=$(jq -n \
                   --arg doc_type "$doc_type" \
