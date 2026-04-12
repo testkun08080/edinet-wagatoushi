@@ -1,0 +1,1 @@
+DOC_TYPE=annual START_DATE=2021-06-24 END_DATE=2021-06-30 bash scripts/download/edinet_corpus.sh

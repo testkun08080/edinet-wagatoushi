@@ -1,0 +1,92 @@
+# 1日分: 有報・大量保有。workflow_dispatch + 日次 schedule（マトリクスなし）
+name: EDINET one-day fetch
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "対象日 YYYY-MM-DD（提出日ベース）。空欄＝実行時点の昨日（Asia/Tokyo）"
+        required: false
+        type: string
+      doc_types:
+        description: "カンマ区切り（例: annual,large_holding）。空欄＝ annual,large_holding"
+        required: false
+        type: string
+      request_delay:
+        description: "EDINET API リクエスト間隔（秒）"
+        required: false
+        default: "3"
+        type: string
+      skip_existing_companies:
+        description: "既に出力にファイルがある企業はスキップ"
+        required: false
+        default: true
+        type: boolean
+  schedule:
+    # 毎日 02:00 JST 付近（UTC 前日 17:00）
+    - cron: "0 17 * * *"
+
+env:
+  UV_COMPILE_BYTECODE: 0
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        working-directory: edinet-wrapper
+        run: uv sync
+
+      - name: Ensure data directory for EDINET code list
+        working-directory: edinet-wrapper
+        run: mkdir -p data
+
+      - name: Run one-day fetch
+        working-directory: edinet-wrapper
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -e
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            DELAY="${{ inputs.request_delay }}"
+            [ -z "$DELAY" ] && DELAY=3
+            export EDINET_REQUEST_DELAY="$DELAY"
+            if [ "${{ inputs.skip_existing_companies }}" = "true" ]; then
+              export SKIP_EXISTING_COMPANIES=1
+            fi
+            DOC_TYPES_INPUT="${{ inputs.doc_types }}"
+            if [ -n "${DOC_TYPES_INPUT}" ]; then
+              export EDINET_ONE_DAY_DOC_TYPES="${DOC_TYPES_INPUT}"
+            fi
+            ARG="${{ inputs.target_date }}"
+          else
+            export EDINET_REQUEST_DELAY=3
+            export SKIP_EXISTING_COMPANIES=1
+            unset EDINET_ONE_DAY_DOC_TYPES
+            ARG=""
+          fi
+          if [ -n "$ARG" ]; then
+            bash scripts/download/edinet_fetch_one_day.sh "$ARG"
+          else
+            bash scripts/download/edinet_fetch_one_day.sh
+          fi
+
+      - name: Upload corpus artifact
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: edinet-one-day-${{ github.event_name == 'workflow_dispatch' && (inputs.target_date || 'yesterday-jst') || format('scheduled-{0}', github.run_id) }}
+          path: edinet-wrapper/edinet_corpus/
+          retention-days: 7

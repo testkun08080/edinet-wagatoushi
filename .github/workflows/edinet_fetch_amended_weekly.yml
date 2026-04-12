@@ -1,0 +1,84 @@
+# 週1: 訂正開示のみ（有報訂正・大量保有訂正）。日次ワークフローとは別スケジュール。
+name: EDINET amended weekly (one day)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "対象日 YYYY-MM-DD（空欄＝実行時点の昨日 Asia/Tokyo）"
+        required: false
+        type: string
+      request_delay:
+        description: "EDINET API リクエスト間隔（秒）"
+        required: false
+        default: "3"
+        type: string
+      skip_existing_companies:
+        description: "既に出力にファイルがある企業はスキップ"
+        required: false
+        default: true
+        type: boolean
+  schedule:
+    # 月曜 02:00 JST 付近（UTC 日曜 17:00）
+    - cron: "0 17 * * 0"
+
+env:
+  UV_COMPILE_BYTECODE: 0
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        working-directory: edinet-wrapper
+        run: uv sync
+
+      - name: Ensure data directory for EDINET code list
+        working-directory: edinet-wrapper
+        run: mkdir -p data
+
+      - name: Run one-day fetch (amended types only)
+        working-directory: edinet-wrapper
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -e
+          export EDINET_ONE_DAY_DOC_TYPES=annual_amended,large_holding_amended
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            DELAY="${{ inputs.request_delay }}"
+            [ -z "$DELAY" ] && DELAY=3
+            export EDINET_REQUEST_DELAY="$DELAY"
+            if [ "${{ inputs.skip_existing_companies }}" = "true" ]; then
+              export SKIP_EXISTING_COMPANIES=1
+            fi
+            ARG="${{ inputs.target_date }}"
+          else
+            export EDINET_REQUEST_DELAY=3
+            export SKIP_EXISTING_COMPANIES=1
+            ARG=""
+          fi
+          if [ -n "$ARG" ]; then
+            bash scripts/download/edinet_fetch_one_day.sh "$ARG"
+          else
+            bash scripts/download/edinet_fetch_one_day.sh
+          fi
+
+      - name: Upload corpus artifact
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: edinet-amended-weekly-${{ github.run_id }}
+          path: edinet-wrapper/edinet_corpus/
+          retention-days: 7
