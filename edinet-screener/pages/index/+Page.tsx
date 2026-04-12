@@ -33,8 +33,8 @@ export default function Page() {
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
       <div className="shrink-0 px-4 pt-4 pb-0 lg:px-6 lg:pt-6">
         <Card>
-          <CardHeader className="flex justify-end">
-            <CardAction>
+          <CardHeader className="has-data-[slot=card-action]:grid-cols-1">
+            <CardAction className="col-start-1 justify-self-start">
               <div className="flex flex-wrap items-center gap-1.5">
                 <FavoritesViewToggle />
                 <Separator orientation="vertical" className="!h-6 mx-1 hidden sm:block" />
