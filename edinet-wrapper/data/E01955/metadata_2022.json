@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E01955",
+  "download_date": "2026-04-01T07:55:01.039343",
+  "date_range": {
+    "start": "2022-01-01",
+    "end": "2022-12-31"
+  },
+  "calendar_year": 2022,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100NEKD",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第75期第1四半期(令和3年10月1日－令和3年12月31日)",
+      "periodStart": "2021-10-01",
+      "periodEnd": "2021-12-31",
+      "submitDateTime": "2022-02-10 13:10",
+      "file_type": "tsv",
+      "output_dir": "data/E01955/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100O0ZR",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第75期第2四半期(令和4年1月1日－令和4年3月31日)",
+      "periodStart": "2022-01-01",
+      "periodEnd": "2022-03-31",
+      "submitDateTime": "2022-05-13 13:24",
+      "file_type": "tsv",
+      "output_dir": "data/E01955/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100OZ8M",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第75期第3四半期(令和4年4月1日－令和4年6月30日)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2022-06-30",
+      "submitDateTime": "2022-08-12 12:05",
+      "file_type": "tsv",
+      "output_dir": "data/E01955/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100PTBM",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第75期(令和3年10月1日－令和4年9月30日)",
+      "periodStart": "2021-10-01",
+      "periodEnd": "2022-09-30",
+      "submitDateTime": "2022-12-16 15:15",
+      "file_type": "tsv",
+      "output_dir": "data/E01955/annual",
+      "skipped": false
+    }
+  ]
+}

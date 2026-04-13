@@ -1,0 +1,377 @@
+{
+  "edinet_code": "E02367",
+  "download_date": "2026-03-27T17:05:27.973231",
+  "date_range": {
+    "start": "2016-03-29",
+    "end": "2026-03-27"
+  },
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "total_documents": 36,
+  "documents": [
+    {
+      "docID": "S10082NV",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第76期(2015/04/01－2016/03/31)",
+      "periodStart": "2015-04-01",
+      "periodEnd": "2016-03-31",
+      "submitDateTime": "2016-06-30 09:15",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S1008CCQ",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第77期第1四半期(2016/04/01－2016/06/30)",
+      "periodStart": "2016-04-01",
+      "periodEnd": "2016-06-30",
+      "submitDateTime": "2016-08-09 13:28",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S1008YXR",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第77期第2四半期(2016/07/01－2016/09/30)",
+      "periodStart": "2016-07-01",
+      "periodEnd": "2016-09-30",
+      "submitDateTime": "2016-11-11 10:35",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S1009LM3",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第77期第3四半期(2016/10/01－2016/12/31)",
+      "periodStart": "2016-10-01",
+      "periodEnd": "2016-12-31",
+      "submitDateTime": "2017-02-13 10:29",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100APYF",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第77期(2016/04/01－2017/03/31)",
+      "periodStart": "2016-04-01",
+      "periodEnd": "2017-03-31",
+      "submitDateTime": "2017-06-30 09:12",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100B26S",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第78期第1四半期(2017/04/01－2017/06/30)",
+      "periodStart": "2017-04-01",
+      "periodEnd": "2017-06-30",
+      "submitDateTime": "2017-08-10 10:51",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100BN9Y",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第78期第2四半期(2017/07/01－2017/09/30)",
+      "periodStart": "2017-07-01",
+      "periodEnd": "2017-09-30",
+      "submitDateTime": "2017-11-10 13:38",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100CA18",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第78期第3四半期(2017/10/01－2017/12/31)",
+      "periodStart": "2017-10-01",
+      "periodEnd": "2017-12-31",
+      "submitDateTime": "2018-02-13 11:29",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100D6WC",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第78期(平成29年4月1日－平成30年3月31日)",
+      "periodStart": "2017-04-01",
+      "periodEnd": "2018-03-31",
+      "submitDateTime": "2018-06-29 11:58",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100DS4W",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第79期第1四半期(2018/04/01－2018/06/30)",
+      "periodStart": "2018-04-01",
+      "periodEnd": "2018-06-30",
+      "submitDateTime": "2018-08-10 09:00",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100EELE",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第79期第2四半期(2018/07/01－2018/09/30)",
+      "periodStart": "2018-07-01",
+      "periodEnd": "2018-09-30",
+      "submitDateTime": "2018-11-09 10:24",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100F5MA",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第79期第3四半期(2018/10/01－2018/12/31)",
+      "periodStart": "2018-10-01",
+      "periodEnd": "2018-12-31",
+      "submitDateTime": "2019-02-12 14:55",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100G23Z",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第79期(平成30年4月1日－平成31年3月31日)",
+      "periodStart": "2018-04-01",
+      "periodEnd": "2019-03-31",
+      "submitDateTime": "2019-06-28 09:40",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100GM7G",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第80期第1四半期(2019/04/01－2019/06/30)",
+      "periodStart": "2019-04-01",
+      "periodEnd": "2019-06-30",
+      "submitDateTime": "2019-08-09 11:15",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100H93H",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第80期第2四半期(2019/07/01－2019/09/30)",
+      "periodStart": "2019-07-01",
+      "periodEnd": "2019-09-30",
+      "submitDateTime": "2019-11-11 11:28",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100HVMF",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第80期第3四半期(令和1年10月1日－令和1年12月31日)",
+      "periodStart": "2019-10-01",
+      "periodEnd": "2019-12-31",
+      "submitDateTime": "2020-02-12 11:40",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100ITKB",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第80期(平成31年4月1日－令和2年3月31日)",
+      "periodStart": "2019-04-01",
+      "periodEnd": "2020-03-31",
+      "submitDateTime": "2020-06-29 11:20",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100JDN7",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第81期第1四半期(令和2年4月1日－令和2年6月30日)",
+      "periodStart": "2020-04-01",
+      "periodEnd": "2020-06-30",
+      "submitDateTime": "2020-08-12 11:09",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100JSFA",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第81期第2四半期(令和2年7月1日－令和2年9月30日)",
+      "periodStart": "2020-07-01",
+      "periodEnd": "2020-09-30",
+      "submitDateTime": "2020-11-12 12:12",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100KH75",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第81期第3四半期(令和2年10月1日－令和2年12月31日)",
+      "periodStart": "2020-10-01",
+      "periodEnd": "2020-12-31",
+      "submitDateTime": "2021-02-10 13:43",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100LK4Y",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第81期(令和2年4月1日－令和3年3月31日)",
+      "periodStart": "2020-04-01",
+      "periodEnd": "2021-03-31",
+      "submitDateTime": "2021-06-30 12:15",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100M3BM",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第82期第1四半期(令和3年4月1日－令和3年6月30日)",
+      "periodStart": "2021-04-01",
+      "periodEnd": "2021-06-30",
+      "submitDateTime": "2021-08-11 12:11",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100MPS6",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第82期第2四半期(令和3年7月1日－令和3年9月30日)",
+      "periodStart": "2021-07-01",
+      "periodEnd": "2021-09-30",
+      "submitDateTime": "2021-11-11 11:11",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100NBQA",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第82期第3四半期(令和3年10月1日－令和3年12月31日)",
+      "periodStart": "2021-10-01",
+      "periodEnd": "2021-12-31",
+      "submitDateTime": "2022-02-10 11:16",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100O9PP",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第82期(令和3年4月1日－令和4年3月31日)",
+      "periodStart": "2021-04-01",
+      "periodEnd": "2022-03-31",
+      "submitDateTime": "2022-06-30 13:56",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100OUL7",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第83期第1四半期(令和4年4月1日－令和4年6月30日)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2022-06-30",
+      "submitDateTime": "2022-08-10 10:48",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100PI0L",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第83期第2四半期(令和4年7月1日－令和4年9月30日)",
+      "periodStart": "2022-07-01",
+      "periodEnd": "2022-09-30",
+      "submitDateTime": "2022-11-11 10:42",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100Q2ZS",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第83期第3四半期(2022/10/01－2022/12/31)",
+      "periodStart": "2022-10-01",
+      "periodEnd": "2022-12-31",
+      "submitDateTime": "2023-02-10 10:43",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100QY8A",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第83期(2022/04/01－2023/03/31)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2023-03-31",
+      "submitDateTime": "2023-06-26 12:36",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100RIUM",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第84期第1四半期(2023/04/01－2023/06/30)",
+      "periodStart": "2023-04-01",
+      "periodEnd": "2023-06-30",
+      "submitDateTime": "2023-08-10 10:06",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100S40F",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第84期第2四半期(2023/07/01－2023/09/30)",
+      "periodStart": "2023-07-01",
+      "periodEnd": "2023-09-30",
+      "submitDateTime": "2023-11-10 11:38",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100SPJ8",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第84期第3四半期(2023/10/01－2023/12/31)",
+      "periodStart": "2023-10-01",
+      "periodEnd": "2023-12-31",
+      "submitDateTime": "2024-02-09 10:39",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/quarterly"
+    },
+    {
+      "docID": "S100TMMG",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第84期(2023/04/01－2024/03/31)",
+      "periodStart": "2023-04-01",
+      "periodEnd": "2024-03-31",
+      "submitDateTime": "2024-06-28 12:22",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100UMXB",
+      "doc_type": "semiannual",
+      "docDescription": "半期報告書－第85期(2024/04/01－2025/03/31)",
+      "periodStart": "2024-04-01",
+      "periodEnd": "2025-03-31",
+      "submitDateTime": "2024-11-08 11:11",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/semiannual"
+    },
+    {
+      "docID": "S100W73A",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第85期(2024/04/01－2025/03/31)",
+      "periodStart": "2024-04-01",
+      "periodEnd": "2025-03-31",
+      "submitDateTime": "2025-06-26 12:26",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/annual"
+    },
+    {
+      "docID": "S100WY6A",
+      "doc_type": "semiannual",
+      "docDescription": "半期報告書－第86期(2025/04/01－2026/03/31)",
+      "periodStart": "2025-04-01",
+      "periodEnd": "2026-03-31",
+      "submitDateTime": "2025-11-07 11:13",
+      "file_type": "tsv",
+      "output_dir": "data/E02367/semiannual"
+    }
+  ]
+}

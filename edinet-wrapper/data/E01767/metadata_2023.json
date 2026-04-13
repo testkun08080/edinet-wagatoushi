@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E01767",
+  "download_date": "2026-04-01T09:48:35.750248",
+  "date_range": {
+    "start": "2023-01-01",
+    "end": "2023-12-31"
+  },
+  "calendar_year": 2023,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100Q6N3",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第99期第3四半期(2022/10/01－2022/12/31)",
+      "periodStart": "2022-10-01",
+      "periodEnd": "2022-12-31",
+      "submitDateTime": "2023-02-14 14:19",
+      "file_type": "tsv",
+      "output_dir": "data/E01767/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100R4I6",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第99期(2022/04/01－2023/03/31)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2023-03-31",
+      "submitDateTime": "2023-06-27 16:33",
+      "file_type": "tsv",
+      "output_dir": "data/E01767/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100ROTA",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第100期第1四半期(2023/04/01－2023/06/30)",
+      "periodStart": "2023-04-01",
+      "periodEnd": "2023-06-30",
+      "submitDateTime": "2023-08-14 14:14",
+      "file_type": "tsv",
+      "output_dir": "data/E01767/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100S8CF",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第100期第2四半期(2023/07/01－2023/09/30)",
+      "periodStart": "2023-07-01",
+      "periodEnd": "2023-09-30",
+      "submitDateTime": "2023-11-14 16:01",
+      "file_type": "tsv",
+      "output_dir": "data/E01767/quarterly",
+      "skipped": false
+    }
+  ]
+}

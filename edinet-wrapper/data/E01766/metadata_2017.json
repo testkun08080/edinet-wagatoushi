@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E01766",
+  "download_date": "2026-03-31T16:26:11.989637",
+  "date_range": {
+    "start": "2017-01-01",
+    "end": "2017-12-31"
+  },
+  "calendar_year": 2017,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S1009K3F",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第117期第3四半期(2016/10/01－2016/12/31)",
+      "periodStart": "2016-10-01",
+      "periodEnd": "2016-12-31",
+      "submitDateTime": "2017-02-03 14:44",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100AMOL",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第117期(2016/04/01－2017/03/31)",
+      "periodStart": "2016-04-01",
+      "periodEnd": "2017-03-31",
+      "submitDateTime": "2017-06-26 15:48",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100B06V",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第118期第1四半期(2017/04/01－2017/06/30)",
+      "periodStart": "2017-04-01",
+      "periodEnd": "2017-06-30",
+      "submitDateTime": "2017-08-04 15:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100BLCD",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第118期第2四半期(2017/07/01－2017/09/30)",
+      "periodStart": "2017-07-01",
+      "periodEnd": "2017-09-30",
+      "submitDateTime": "2017-11-01 14:37",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    }
+  ]
+}

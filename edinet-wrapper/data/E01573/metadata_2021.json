@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E01573",
+  "download_date": "2026-04-01T02:42:37.193376",
+  "date_range": {
+    "start": "2021-01-01",
+    "end": "2021-12-31"
+  },
+  "calendar_year": 2021,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100KMI7",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第85期第3四半期(令和2年10月1日－令和2年12月31日)",
+      "periodStart": "2020-10-01",
+      "periodEnd": "2020-12-31",
+      "submitDateTime": "2021-02-04 15:01",
+      "file_type": "tsv",
+      "output_dir": "data/E01573/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100LSZ1",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第85期(令和2年4月1日－令和3年3月31日)",
+      "periodStart": "2020-04-01",
+      "periodEnd": "2021-03-31",
+      "submitDateTime": "2021-06-29 15:05",
+      "file_type": "tsv",
+      "output_dir": "data/E01573/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100M3UO",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第86期第1四半期(令和3年4月1日－令和3年6月30日)",
+      "periodStart": "2021-04-01",
+      "periodEnd": "2021-06-30",
+      "submitDateTime": "2021-08-06 15:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01573/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100MO5S",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第86期第2四半期(令和3年7月1日－令和3年9月30日)",
+      "periodStart": "2021-07-01",
+      "periodEnd": "2021-09-30",
+      "submitDateTime": "2021-11-05 15:01",
+      "file_type": "tsv",
+      "output_dir": "data/E01573/quarterly",
+      "skipped": false
+    }
+  ]
+}

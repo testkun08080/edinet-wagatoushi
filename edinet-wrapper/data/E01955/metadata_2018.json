@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E01955",
+  "download_date": "2026-03-31T20:24:10.471653",
+  "date_range": {
+    "start": "2018-01-01",
+    "end": "2018-12-31"
+  },
+  "calendar_year": 2018,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100C9PD",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第71期第1四半期(2017/10/01－2017/12/31)",
+      "periodStart": "2017-10-01",
+      "periodEnd": "2017-12-31",
+      "submitDateTime": "2018-02-09 09:17",
+      "file_type": "tsv",
+      "output_dir": "data/E01955/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100CX2E",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第71期第2四半期(2018/01/01－2018/03/31)",
+      "periodStart": "2018-01-01",
+      "periodEnd": "2018-03-31",
+      "submitDateTime": "2018-05-10 12:47",
+      "file_type": "tsv",
+      "output_dir": "data/E01955/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100DT0L",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第71期第3四半期(2018/04/01－2018/06/30)",
+      "periodStart": "2018-04-01",
+      "periodEnd": "2018-06-30",
+      "submitDateTime": "2018-08-09 09:04",
+      "file_type": "tsv",
+      "output_dir": "data/E01955/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100ERPG",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第71期(平成29年10月1日－平成30年9月30日)",
+      "periodStart": "2017-10-01",
+      "periodEnd": "2018-09-30",
+      "submitDateTime": "2018-12-20 12:55",
+      "file_type": "tsv",
+      "output_dir": "data/E01955/annual",
+      "skipped": false
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "edinet_code": "E01766",
+  "download_date": "2026-04-01T09:29:23.128877",
+  "date_range": {
+    "start": "2023-01-01",
+    "end": "2023-12-31"
+  },
+  "calendar_year": 2023,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 7,
+  "downloaded_count": 7,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100Q2IN",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第123期第3四半期(2022/10/01－2022/12/31)",
+      "periodStart": "2022-10-01",
+      "periodEnd": "2022-12-31",
+      "submitDateTime": "2023-02-03 15:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100R3OA",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第123期(2022/04/01－2023/03/31)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2023-03-31",
+      "submitDateTime": "2023-06-26 16:10",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100RE3F",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書（短期大量譲渡）",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2023-07-13 10:52",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100RI62",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第124期第1四半期(2023/04/01－2023/06/30)",
+      "periodStart": "2023-04-01",
+      "periodEnd": "2023-06-30",
+      "submitDateTime": "2023-08-02 15:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100S3I1",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第124期第2四半期(2023/07/01－2023/09/30)",
+      "periodStart": "2023-07-01",
+      "periodEnd": "2023-09-30",
+      "submitDateTime": "2023-10-31 15:05",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100SEIT",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書（短期大量譲渡）",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2023-12-04 14:01",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100SHMN",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2023-12-19 10:35",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/large_holding",
+      "skipped": false
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E02055",
+  "download_date": "2026-03-31T22:52:34.637121",
+  "date_range": {
+    "start": "2019-01-01",
+    "end": "2019-12-31"
+  },
+  "calendar_year": 2019,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100F3AC",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第62期第3四半期(2018/10/01－2018/12/31)",
+      "periodStart": "2018-10-01",
+      "periodEnd": "2018-12-31",
+      "submitDateTime": "2019-02-08 13:10",
+      "file_type": "tsv",
+      "output_dir": "data/E02055/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100GA2K",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第62期(平成30年4月1日－平成31年3月31日)",
+      "periodStart": "2018-04-01",
+      "periodEnd": "2019-03-31",
+      "submitDateTime": "2019-06-26 16:35",
+      "file_type": "tsv",
+      "output_dir": "data/E02055/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100GPJH",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第63期第1四半期(2019/04/01－2019/06/30)",
+      "periodStart": "2019-04-01",
+      "periodEnd": "2019-06-30",
+      "submitDateTime": "2019-08-09 14:30",
+      "file_type": "tsv",
+      "output_dir": "data/E02055/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100H9UL",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第63期第2四半期(2019/07/01－2019/09/30)",
+      "periodStart": "2019-07-01",
+      "periodEnd": "2019-09-30",
+      "submitDateTime": "2019-11-08 10:24",
+      "file_type": "tsv",
+      "output_dir": "data/E02055/quarterly",
+      "skipped": false
+    }
+  ]
+}
