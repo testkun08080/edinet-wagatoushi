@@ -33,12 +33,6 @@ import {
   filterPeriodsByVisibleYears,
   type AnalyzeVisibleYears,
 } from "../../../lib/analyzePeriodRange.js";
-import {
-  ANALYZE_REPORT_KIND_OPTIONS,
-  analyzeReportKindLabel,
-  reportMatchesKind,
-  type AnalyzeReportKind,
-} from "../../../lib/analyzeReportKind.js";
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -236,7 +230,6 @@ export default function Page() {
   const { isFavorite, toggleFavorite } = useFavorites();
   const [mainTab, setMainTab] = useState("summary");
   const [analyzeVisibleYears, setAnalyzeVisibleYears] = useState<AnalyzeVisibleYears>(3);
-  const [analyzeReportKind, setAnalyzeReportKind] = useState<AnalyzeReportKind>("quarter");
 
   useEffect(() => {
     if (company) {
@@ -250,17 +243,12 @@ export default function Page() {
 
   useEffect(() => {
     setAnalyzeVisibleYears(3);
-    setAnalyzeReportKind("quarter");
   }, [company?.secCode]);
 
   const periods = company?.periods ?? [];
-  const reportFilteredPeriods = useMemo(
-    () => periods.filter((p) => reportMatchesKind(p.docDescription, analyzeReportKind)),
-    [periods, analyzeReportKind],
-  );
   const filteredPeriods = useMemo(
-    () => filterPeriodsByVisibleYears(reportFilteredPeriods, analyzeVisibleYears),
-    [reportFilteredPeriods, analyzeVisibleYears],
+    () => filterPeriodsByVisibleYears(periods, analyzeVisibleYears),
+    [periods, analyzeVisibleYears],
   );
 
   const tableMillionCaption =
@@ -327,36 +315,10 @@ export default function Page() {
             <div className="flex flex-col gap-3">
               <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                 <CalendarRange className="text-muted-foreground size-4 shrink-0" aria-hidden />
-                <span className="text-sm font-medium">開示・期間</span>
-                <span className="text-muted-foreground text-xs">
-                  書類の種類と年数は全タブ共通（同一決算期末の重複提出はサーバ側で除去済み）
-                </span>
+                <span className="text-sm font-medium">表示期間</span>
+                <span className="text-muted-foreground text-xs">有価証券報告書（通期）のみ表示</span>
               </div>
               <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
-                <ToggleGroup
-                  type="single"
-                  value={analyzeReportKind}
-                  onValueChange={(v: string) => {
-                    if (!v) return;
-                    if ((ANALYZE_REPORT_KIND_OPTIONS as readonly string[]).includes(v)) {
-                      setAnalyzeReportKind(v as AnalyzeReportKind);
-                    }
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="w-full shrink-0 gap-0 lg:w-fit"
-                >
-                  {ANALYZE_REPORT_KIND_OPTIONS.map((k) => (
-                    <ToggleGroupItem
-                      key={k}
-                      value={k}
-                      aria-label={`${analyzeReportKindLabel[k]}報告書のみ表示`}
-                      className="min-w-0 flex-1 px-2.5 lg:flex-none lg:px-3 data-[state=on]:bg-accent"
-                    >
-                      {analyzeReportKindLabel[k]}
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
                 <ToggleGroup
                   type="single"
                   value={String(analyzeVisibleYears)}

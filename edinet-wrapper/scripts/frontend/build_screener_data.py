@@ -268,10 +268,14 @@ def _read_raw_tsv(tsv_path: Path) -> dict:
 def collect_tsv_paths(data_set_root: Path, edinet_code: str) -> list[tuple[Path, Path]]:
     pairs = []
     for tsv_path in data_set_root.rglob("*.tsv"):
-        if f"/{edinet_code}/" in str(tsv_path) or f"\\{edinet_code}\\" in str(tsv_path):
-            json_path = tsv_path.with_suffix(".json")
-            if json_path.exists():
-                pairs.append((tsv_path, json_path))
+        if f"/{edinet_code}/" not in str(tsv_path) and f"\\{edinet_code}\\" not in str(tsv_path):
+            continue
+        # 有価証券報告書（annual）のみ対象 — 四半期・半期はスキップ
+        if "/annual/" not in str(tsv_path) and "\\annual\\" not in str(tsv_path):
+            continue
+        json_path = tsv_path.with_suffix(".json")
+        if json_path.exists():
+            pairs.append((tsv_path, json_path))
 
     def load_period(p):
         with open(p[1], encoding="utf-8") as f:
@@ -349,6 +353,14 @@ def process_company(
 
     if not periods:
         return None
+
+    # 同一 periodEnd の重複排除（訂正報告書対応: submitDateTime が最新のものを残す）
+    seen: dict[str, dict] = {}
+    for p in periods:
+        key = p["periodEnd"]
+        if key not in seen or p["submitDateTime"] > seen[key]["submitDateTime"]:
+            seen[key] = p
+    periods = sorted(seen.values(), key=lambda p: p["periodEnd"])
 
     sec_code = (sec_code or "").lstrip("0") or sec_code or ""
 
