@@ -55,6 +55,17 @@ export type CompanyMetric = {
   時価総額?: number | null;
   ネットキャッシュ?: number | null;
   ネットキャッシュ比率?: number | null;
+  salesGrowthYoY?: string | null;
+  opGrowthYoY?: string | null;
+  epsGrowthYoY?: string | null;
+  dividendGrowthYoY?: string | null;
+  salesCagr3y?: string | null;
+  salesCagr5y?: string | null;
+  consecutiveDivIncreases?: number | null;
+  currentRatio?: number | null;
+  deRatio?: number | null;
+  roic?: number | null;
+  piotroskiFScore?: number | null;
 };
 
 function formatSales(s: string | null): string {
@@ -238,6 +249,28 @@ function getCellValue(
       return formatSales(m.fcf ?? null);
     case "financingCF":
       return formatSales(m.財務CF);
+    case "salesGrowthYoY":
+      return formatRatio(m.salesGrowthYoY ?? null);
+    case "opGrowthYoY":
+      return formatRatio(m.opGrowthYoY ?? null);
+    case "epsGrowthYoY":
+      return formatRatio(m.epsGrowthYoY ?? null);
+    case "dividendGrowthYoY":
+      return formatRatio(m.dividendGrowthYoY ?? null);
+    case "salesCagr3y":
+      return formatRatio(m.salesCagr3y ?? null);
+    case "salesCagr5y":
+      return formatRatio(m.salesCagr5y ?? null);
+    case "consecutiveDivIncreases":
+      return m.consecutiveDivIncreases != null ? String(m.consecutiveDivIncreases) : "－";
+    case "currentRatio":
+      return m.currentRatio != null ? m.currentRatio.toFixed(2) : "－";
+    case "deRatio":
+      return m.deRatio != null ? m.deRatio.toFixed(2) : "－";
+    case "roic":
+      return m.roic != null ? (m.roic * 100).toFixed(2) + "%" : "－";
+    case "piotroskiFScore":
+      return m.piotroskiFScore != null ? String(m.piotroskiFScore) : "－";
     default:
       return "－";
   }
@@ -335,6 +368,28 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
       return m.fcf != null ? parseFloat(m.fcf) : -Infinity;
     case "financingCF":
       return m.財務CF != null ? parseFloat(m.財務CF) : -Infinity;
+    case "salesGrowthYoY":
+      return m.salesGrowthYoY != null ? parseFloat(m.salesGrowthYoY) : -Infinity;
+    case "opGrowthYoY":
+      return m.opGrowthYoY != null ? parseFloat(m.opGrowthYoY) : -Infinity;
+    case "epsGrowthYoY":
+      return m.epsGrowthYoY != null ? parseFloat(m.epsGrowthYoY) : -Infinity;
+    case "dividendGrowthYoY":
+      return m.dividendGrowthYoY != null ? parseFloat(m.dividendGrowthYoY) : -Infinity;
+    case "salesCagr3y":
+      return m.salesCagr3y != null ? parseFloat(m.salesCagr3y) : -Infinity;
+    case "salesCagr5y":
+      return m.salesCagr5y != null ? parseFloat(m.salesCagr5y) : -Infinity;
+    case "consecutiveDivIncreases":
+      return m.consecutiveDivIncreases ?? -Infinity;
+    case "currentRatio":
+      return m.currentRatio ?? -Infinity;
+    case "deRatio":
+      return m.deRatio ?? -Infinity;
+    case "roic":
+      return m.roic ?? -Infinity;
+    case "piotroskiFScore":
+      return m.piotroskiFScore ?? -Infinity;
     default:
       return "";
   }

@@ -1,21 +1,6 @@
 {
   "companies": [
     {
-      "edinetCode": "E02367",
-      "secCode": "7974",
-      "filerName": "任天堂株式会社"
-    },
-    {
-      "edinetCode": "E04473",
-      "secCode": "94240",
-      "filerName": "日本通信株式会社"
-    },
-    {
-      "edinetCode": "E04908",
-      "secCode": "96160",
-      "filerName": "株式会社共立メンテナンス"
-    },
-    {
       "edinetCode": "E01573",
       "secCode": "63700",
       "filerName": "栗田工業株式会社"
@@ -39,6 +24,36 @@
       "edinetCode": "E01767",
       "secCode": "67030",
       "filerName": "沖電気工業株式会社"
+    },
+    {
+      "edinetCode": "E01780",
+      "secCode": "67620",
+      "filerName": "ＴＤＫ株式会社"
+    },
+    {
+      "edinetCode": "E01955",
+      "secCode": "69650",
+      "filerName": "浜松ホトニクス株式会社"
+    },
+    {
+      "edinetCode": "E02055",
+      "secCode": "67970",
+      "filerName": "名古屋電機工業株式会社"
+    },
+    {
+      "edinetCode": "E02367",
+      "secCode": "7974",
+      "filerName": "任天堂株式会社"
+    },
+    {
+      "edinetCode": "E04473",
+      "secCode": "94240",
+      "filerName": "日本通信株式会社"
+    },
+    {
+      "edinetCode": "E04908",
+      "secCode": "96160",
+      "filerName": "株式会社共立メンテナンス"
     }
   ]
 }

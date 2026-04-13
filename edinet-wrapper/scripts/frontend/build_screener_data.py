@@ -166,6 +166,184 @@ def _net_cash(
         return None
 
 
+def _annual_periods(periods: list[dict]) -> list[dict]:
+    """有価証券報告書のみ抽出。periodEnd 昇順で重複除去済みを返す。"""
+    seen: set[str] = set()
+    result: list[dict] = []
+    for p in periods:
+        desc = p.get("docDescription", "")
+        if "有価証券報告書" not in desc:
+            continue
+        if "四半期" in desc or "半期" in desc:
+            continue
+        pe = p.get("periodEnd", "")
+        if pe in seen:
+            continue
+        seen.add(pe)
+        result.append(p)
+    result.sort(key=lambda p: p.get("periodEnd", ""))
+    return result
+
+
+def _yoy_growth(current: float | None, prior: float | None) -> float | None:
+    """YoY 成長率（小数: 0.15 = 15%）。prior=0 や None は None。"""
+    if current is None or prior is None or prior == 0:
+        return None
+    return (current - prior) / abs(prior)
+
+
+def _cagr(start_val: float | None, end_val: float | None, years: int) -> float | None:
+    """CAGR（小数）。両方正の場合のみ算出。"""
+    if start_val is None or end_val is None or start_val <= 0 or end_val <= 0 or years <= 0:
+        return None
+    return (end_val / start_val) ** (1.0 / years) - 1.0
+
+
+def _consecutive_div_increases(annual_periods: list[dict]) -> int:
+    """最新から遡って DPS が増加し続けている年数をカウント。"""
+    dps_values: list[float] = []
+    for p in reversed(annual_periods):
+        s = p.get("summary", {})
+        dps = _parse_number(s.get("１株当たり配当額"))
+        if dps is None:
+            break
+        dps_values.append(dps)
+    # dps_values は最新→古い順
+    count = 0
+    for i in range(len(dps_values) - 1):
+        if dps_values[i] > dps_values[i + 1]:
+            count += 1
+        else:
+            break
+    return count
+
+
+def _compute_current_ratio(current_assets: str | None, current_liabilities: str | None) -> float | None:
+    ca = _parse_number(current_assets)
+    cl = _parse_number(current_liabilities)
+    if ca is None or cl is None or cl == 0:
+        return None
+    return round(ca / cl, 4)
+
+
+def _compute_de_ratio(liabilities: str | None, net_assets: str | None) -> float | None:
+    d = _parse_number(liabilities)
+    e = _parse_number(net_assets)
+    if d is None or e is None or e == 0:
+        return None
+    return round(d / e, 4)
+
+
+def _compute_roic(
+    op_profit: str | None,
+    total_assets: str | None,
+    current_liabilities: str | None,
+    tax_expense: str | None,
+    pre_tax_income: str | None,
+) -> float | None:
+    """ROIC = 営業利益*(1-実効税率) / (総資産-流動負債)。"""
+    op = _parse_number(op_profit)
+    ta = _parse_number(total_assets)
+    cl = _parse_number(current_liabilities)
+    if op is None or ta is None or cl is None:
+        return None
+    invested = ta - cl
+    if invested <= 0:
+        return None
+    tax = _parse_number(tax_expense)
+    pretax = _parse_number(pre_tax_income)
+    if tax is not None and pretax is not None and pretax > 0:
+        tax_rate = min(max(tax / pretax, 0), 1.0)
+    else:
+        tax_rate = 0.3
+    nopat = op * (1 - tax_rate)
+    return round(nopat / invested, 6)
+
+
+def _piotroski_f_score(
+    cur_s: dict, pri_s: dict,
+    cur_pl: dict, pri_pl: dict,
+    cur_bs: dict, pri_bs: dict,
+    cur_cf: dict,
+) -> int | None:
+    """Piotroski F-Score (0-9)。前年データなしは None。"""
+    if not pri_s:
+        return None
+
+    def _g(d: dict, *keys: str) -> float | None:
+        for k in keys:
+            v = _parse_number(d.get(k))
+            if v is not None:
+                return v
+        return None
+
+    # Current year values
+    ni = _g(cur_s, "親会社株主に帰属する当期純利益", "親会社株主に帰属する当期純利益 (IFRS)")
+    ta = _g(cur_s, "総資産額")
+    ocf = _g(cur_s, "営業活動によるキャッシュ・フロー") or _g(cur_cf, "営業キャッシュフロー")
+    sales = _g(cur_s, "売上高") or _g(cur_s, "売上収益（IFRS）") or _g(cur_pl, "売上高")
+    gross = _g(cur_pl, "売上総利益又は売上総損失（△）", "売上総利益")
+    ca = _g(cur_bs, "流動資産")
+    cl = _g(cur_bs, "流動負債")
+    liab = _g(cur_bs, "負債")
+    shares = _g(cur_s, "発行済株式総数（普通株式）")
+
+    # Prior year values
+    p_ni = _g(pri_s, "親会社株主に帰属する当期純利益", "親会社株主に帰属する当期純利益 (IFRS)")
+    p_ta = _g(pri_s, "総資産額")
+    p_sales = _g(pri_s, "売上高") or _g(pri_s, "売上収益（IFRS）") or _g(pri_pl, "売上高")
+    p_gross = _g(pri_pl, "売上総利益又は売上総損失（△）", "売上総利益")
+    p_ca = _g(pri_bs, "流動資産")
+    p_cl = _g(pri_bs, "流動負債")
+    p_liab = _g(pri_bs, "負債")
+    p_shares = _g(pri_s, "発行済株式総数（普通株式）")
+
+    score = 0
+
+    # 1. ROA positive (net income > 0)
+    if ni is not None and ni > 0:
+        score += 1
+
+    # 2. Operating CF positive
+    if ocf is not None and ocf > 0:
+        score += 1
+
+    # 3. Delta ROA > 0
+    if ni is not None and ta is not None and ta > 0 and p_ni is not None and p_ta is not None and p_ta > 0:
+        if (ni / ta) > (p_ni / p_ta):
+            score += 1
+
+    # 4. Accruals: OCF > net income
+    if ocf is not None and ni is not None and ocf > ni:
+        score += 1
+
+    # 5. Leverage decreasing (debt/assets)
+    if liab is not None and ta is not None and ta > 0 and p_liab is not None and p_ta is not None and p_ta > 0:
+        if (liab / ta) < (p_liab / p_ta):
+            score += 1
+
+    # 6. Liquidity increasing (current ratio)
+    if ca is not None and cl is not None and cl > 0 and p_ca is not None and p_cl is not None and p_cl > 0:
+        if (ca / cl) > (p_ca / p_cl):
+            score += 1
+
+    # 7. No new share dilution
+    if shares is not None and p_shares is not None and shares <= p_shares:
+        score += 1
+
+    # 8. Gross margin increasing
+    if gross is not None and sales is not None and sales > 0 and p_gross is not None and p_sales is not None and p_sales > 0:
+        if (gross / sales) > (p_gross / p_sales):
+            score += 1
+
+    # 9. Asset turnover increasing
+    if sales is not None and ta is not None and ta > 0 and p_sales is not None and p_ta is not None and p_ta > 0:
+        if (sales / ta) > (p_sales / p_ta):
+            score += 1
+
+    return score
+
+
 def _has_value(v) -> bool:
     if v is None:
         return False
@@ -396,6 +574,65 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
     icf = s.get("投資活動によるキャッシュ・フロー") or cf.get("投資キャッシュフロー")
     payout_ratio_computed = _compute_payout_ratio_dps_eps(dps_raw, eps_raw)
     dividend_yield = _compute_dividend_yield_pct(dps_raw, eps_raw, per)
+
+    # --- Growth metrics (annual periods only) ---
+    annual = _annual_periods(periods)
+    latest_annual = annual[-1] if annual else None
+    prior_annual = annual[-2] if len(annual) >= 2 else None
+
+    def _annual_sales(p: dict | None) -> float | None:
+        if p is None:
+            return None
+        ss = p.get("summary", {})
+        pp = p.get("pl", {})
+        return _parse_number(ss.get("売上高")) or _parse_number(ss.get("売上収益（IFRS）")) or _parse_number(pp.get("売上高"))
+
+    def _annual_op(p: dict | None) -> float | None:
+        if p is None:
+            return None
+        return _parse_number(p.get("pl", {}).get("営業利益"))
+
+    def _annual_eps(p: dict | None) -> float | None:
+        if p is None:
+            return None
+        return _parse_number(p.get("summary", {}).get("１株当たり当期純利益又は当期純損失"))
+
+    def _annual_dps(p: dict | None) -> float | None:
+        if p is None:
+            return None
+        ss = p.get("summary", {})
+        return _parse_number(ss.get("１株当たり配当額")) or _parse_number(ss.get("１株当たり中間配当額"))
+
+    cur_sales = _annual_sales(latest_annual)
+    pri_sales = _annual_sales(prior_annual)
+    sales_growth_yoy = _yoy_growth(cur_sales, pri_sales)
+    op_growth_yoy = _yoy_growth(_annual_op(latest_annual), _annual_op(prior_annual))
+    eps_growth_yoy = _yoy_growth(_annual_eps(latest_annual), _annual_eps(prior_annual))
+    div_growth_yoy = _yoy_growth(_annual_dps(latest_annual), _annual_dps(prior_annual))
+
+    # CAGR
+    prior_3y = annual[-4] if len(annual) >= 4 else None
+    prior_5y = annual[-6] if len(annual) >= 6 else None
+    sales_cagr_3y = _cagr(_annual_sales(prior_3y), cur_sales, 3)
+    sales_cagr_5y = _cagr(_annual_sales(prior_5y), cur_sales, 5)
+
+    consec_div = _consecutive_div_increases(annual)
+
+    # F-Score
+    f_score: int | None = None
+    if latest_annual and prior_annual:
+        f_score = _piotroski_f_score(
+            latest_annual.get("summary", {}), prior_annual.get("summary", {}),
+            latest_annual.get("pl", {}), prior_annual.get("pl", {}),
+            latest_annual.get("bs", {}), prior_annual.get("bs", {}),
+            latest_annual.get("cf", {}),
+        )
+
+    def _fmt_growth(v: float | None) -> str | None:
+        if v is None:
+            return None
+        return _format_ratio_decimal(v)
+
     return {
         "edinetCode": edinet_code,
         "secCode": sec_code,
@@ -436,6 +673,19 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
         "時価総額": None,
         "ネットキャッシュ": _net_cash(bs.get("流動資産"), bs.get("投資有価証券"), bs.get("負債")),
         "ネットキャッシュ比率": None,
+        # --- Growth metrics ---
+        "salesGrowthYoY": _fmt_growth(sales_growth_yoy),
+        "opGrowthYoY": _fmt_growth(op_growth_yoy),
+        "epsGrowthYoY": _fmt_growth(eps_growth_yoy),
+        "dividendGrowthYoY": _fmt_growth(div_growth_yoy),
+        "salesCagr3y": _fmt_growth(sales_cagr_3y),
+        "salesCagr5y": _fmt_growth(sales_cagr_5y),
+        "consecutiveDivIncreases": consec_div,
+        # --- Safety / Efficiency ---
+        "currentRatio": _compute_current_ratio(bs.get("流動資産"), bs.get("流動負債")),
+        "deRatio": _compute_de_ratio(bs.get("負債"), s.get("純資産額")),
+        "roic": _compute_roic(pl.get("営業利益"), s.get("総資産額"), bs.get("流動負債"), pl.get("法人所得税費用"), pl.get("経常利益") or pl.get("税金等調整前当期純利益")),
+        "piotroskiFScore": f_score,
     }
 
 

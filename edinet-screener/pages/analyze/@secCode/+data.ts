@@ -61,6 +61,17 @@ export type CompanyMetricsRow = {
   時価総額?: number | null;
   ネットキャッシュ?: number | null;
   ネットキャッシュ比率?: number | null;
+  salesGrowthYoY?: string | null;
+  opGrowthYoY?: string | null;
+  epsGrowthYoY?: string | null;
+  dividendGrowthYoY?: string | null;
+  salesCagr3y?: string | null;
+  salesCagr5y?: string | null;
+  consecutiveDivIncreases?: number | null;
+  currentRatio?: number | null;
+  deRatio?: number | null;
+  roic?: number | null;
+  piotroskiFScore?: number | null;
 };
 
 export type Data = Awaited<ReturnType<typeof data>>;

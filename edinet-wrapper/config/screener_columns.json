@@ -44,7 +44,19 @@
     { "id": "operatingCF", "label": "営業CF", "category": "cash", "metricsKey": "営業CF" },
     { "id": "investingCF", "label": "投資CF", "category": "cash", "metricsKey": "投資CF" },
     { "id": "fcf", "label": "FCF", "category": "cash", "metricsKey": "fcf", "computed": true },
-    { "id": "financingCF", "label": "財務CF", "category": "cash", "metricsKey": "財務CF" }
+    { "id": "financingCF", "label": "財務CF", "category": "cash", "metricsKey": "財務CF" },
+
+    { "id": "salesGrowthYoY", "label": "売上高成長率(YoY)", "category": "growth", "metricsKey": "salesGrowthYoY", "computed": true },
+    { "id": "opGrowthYoY", "label": "営業利益成長率(YoY)", "category": "growth", "metricsKey": "opGrowthYoY", "computed": true },
+    { "id": "epsGrowthYoY", "label": "EPS成長率(YoY)", "category": "growth", "metricsKey": "epsGrowthYoY", "computed": true },
+    { "id": "dividendGrowthYoY", "label": "配当成長率(YoY)", "category": "growth", "metricsKey": "dividendGrowthYoY", "computed": true },
+    { "id": "salesCagr3y", "label": "売上高CAGR(3年)", "category": "growth", "metricsKey": "salesCagr3y", "computed": true },
+    { "id": "salesCagr5y", "label": "売上高CAGR(5年)", "category": "growth", "metricsKey": "salesCagr5y", "computed": true },
+    { "id": "consecutiveDivIncreases", "label": "連続増配年数", "category": "growth", "metricsKey": "consecutiveDivIncreases", "computed": true },
+    { "id": "currentRatio", "label": "流動比率", "category": "balancesheet", "metricsKey": "currentRatio", "computed": true },
+    { "id": "deRatio", "label": "D/Eレシオ", "category": "balancesheet", "metricsKey": "deRatio", "computed": true },
+    { "id": "roic", "label": "ROIC", "category": "valuation", "metricsKey": "roic", "computed": true },
+    { "id": "piotroskiFScore", "label": "Piotroski F-Score", "category": "valuation", "metricsKey": "piotroskiFScore", "computed": true }
   ]
 }
 

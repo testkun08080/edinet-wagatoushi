@@ -32,7 +32,7 @@ export function ColumnVisibilityControls() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64 max-h-[70vh] overflow-y-auto">
-        {(["basic", "valuation", "performance", "balancesheet", "cash"] as const).map(
+        {(["basic", "valuation", "performance", "balancesheet", "cash", "growth"] as const).map(
           (cat, catIdx) => {
             const cols = columnConfig.filter((c) => c.category === cat);
             if (cols.length === 0) return null;
