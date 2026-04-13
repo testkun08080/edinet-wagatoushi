@@ -128,10 +128,7 @@ const DEFAULT_VISIBLE: ColumnId[] = COLUMN_IDS;
 
 const STORAGE_KEY = "edinet-screener-column-visibility";
 
-const DEFAULT_VISIBILITY = COLUMN_IDS.reduce(
-  (acc, id) => ({ ...acc, [id]: true }),
-  {} as Record<ColumnId, boolean>
-);
+const DEFAULT_VISIBILITY = COLUMN_IDS.reduce((acc, id) => ({ ...acc, [id]: true }), {} as Record<ColumnId, boolean>);
 
 function loadVisibility(): Record<ColumnId, boolean> {
   if (typeof window === "undefined") return DEFAULT_VISIBILITY;
@@ -200,10 +197,7 @@ export function ColumnVisibilityProvider({ children }: { children: ReactNode }) 
     setVisibility(COLUMN_IDS.reduce((acc, id) => ({ ...acc, [id]: true }), {} as Record<ColumnId, boolean>));
   }, []);
 
-  const columnLabel = useCallback(
-    (id: ColumnId) => COLUMN_CONFIG.find((c) => c.id === id)?.label ?? id,
-    []
-  );
+  const columnLabel = useCallback((id: ColumnId) => COLUMN_CONFIG.find((c) => c.id === id)?.label ?? id, []);
 
   const getCategoryLabel = useCallback((cat: ColumnCategory) => CATEGORY_LABELS[cat], []);
 
