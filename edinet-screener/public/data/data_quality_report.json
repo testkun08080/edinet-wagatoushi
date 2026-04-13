@@ -498,15 +498,11 @@
       ]
     },
     "roic": {
-      "filled": 6,
-      "missing": 5,
+      "filled": 10,
+      "missing": 1,
       "total": 11,
       "missingSecCodes": [
-        "63700",
-        "65010",
-        "67010",
-        "67020",
-        "67620"
+        "65010"
       ]
     },
     "piotroskiFScore": {
@@ -519,7 +515,7 @@
   "byCompany": {
     "63700": {
       "filerName": "栗田工業株式会社",
-      "missingCount": 23,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -542,8 +538,7 @@
         "ネットキャッシュ比率",
         "epsGrowthYoY",
         "dividendGrowthYoY",
-        "deRatio",
-        "roic"
+        "deRatio"
       ]
     },
     "65010": {
@@ -582,7 +577,7 @@
     },
     "67010": {
       "filerName": "日本電気株式会社",
-      "missingCount": 23,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -605,13 +600,12 @@
         "ネットキャッシュ比率",
         "epsGrowthYoY",
         "dividendGrowthYoY",
-        "deRatio",
-        "roic"
+        "deRatio"
       ]
     },
     "67020": {
       "filerName": "富士通株式会社",
-      "missingCount": 23,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -634,8 +628,7 @@
         "ネットキャッシュ比率",
         "epsGrowthYoY",
         "dividendGrowthYoY",
-        "deRatio",
-        "roic"
+        "deRatio"
       ]
     },
     "67030": {
@@ -655,7 +648,7 @@
     },
     "67620": {
       "filerName": "ＴＤＫ株式会社",
-      "missingCount": 27,
+      "missingCount": 26,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -682,8 +675,7 @@
         "epsGrowthYoY",
         "dividendGrowthYoY",
         "salesCagr5y",
-        "deRatio",
-        "roic"
+        "deRatio"
       ]
     },
     "69650": {

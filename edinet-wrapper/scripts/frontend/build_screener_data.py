@@ -684,7 +684,13 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
         # --- Safety / Efficiency ---
         "currentRatio": _compute_current_ratio(bs.get("流動資産"), bs.get("流動負債")),
         "deRatio": _compute_de_ratio(bs.get("負債"), s.get("純資産額")),
-        "roic": _compute_roic(pl.get("営業利益"), s.get("総資産額"), bs.get("流動負債"), pl.get("法人所得税費用"), pl.get("経常利益") or pl.get("税金等調整前当期純利益")),
+        "roic": _compute_roic(
+            pl.get("営業利益"),
+            s.get("総資産額") or bs.get("総資産"),
+            bs.get("流動負債"),
+            pl.get("法人所得税費用"),
+            pl.get("税引前利益") or pl.get("税金等調整前当期純利益") or pl.get("経常利益"),
+        ),
         "piotroskiFScore": f_score,
     }
 
@@ -861,9 +867,16 @@ def write_column_manifest(output_dir: Path, *, config_path: Path) -> None:
     except Exception:
         return
 
+    # Emit repo-relative path (avoid leaking absolute paths from the build machine)
+    try:
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        rel_config = config_path.resolve().relative_to(repo_root)
+        generated_from = rel_config.as_posix()
+    except (ValueError, OSError):
+        generated_from = config_path.name
     manifest = {
         "version": 1,
-        "generatedFrom": str(config_path),
+        "generatedFrom": generated_from,
         "columns": config.get("columns", []),
     }
     (output_dir / "column_manifest.json").write_text(
