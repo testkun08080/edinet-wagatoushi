@@ -114,44 +114,46 @@ export function AppSidebar() {
 
         {isAnalyzePage && (
           <>
-            {/* Analyze page: Search */}
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <Search className="mr-1.5 size-3.5" />
-                企業検索
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <div className="px-2">
-                  <Input
-                    placeholder="会社名・銘柄コードで検索"
-                    value={analyzeSearchQuery}
-                    onChange={(e) => setAnalyzeSearchQuery(e.target.value)}
-                    className="h-8"
-                  />
-                </div>
-                {analyzeSearchResults.length > 0 && (
-                  <ScrollArea className="max-h-48 mt-1">
-                    <SidebarMenu>
-                      {analyzeSearchResults.map((c) => (
-                        <SidebarMenuItem key={c.secCode}>
-                          <SidebarMenuButton asChild size="sm">
-                            <a href={`/analyze/${c.secCode}`}>
-                              <BarChart3 className="size-3.5" />
-                              <span className="truncate">{formatDisplayName(c.filerName)}</span>
-                              <Badge variant="outline" className="ml-auto text-[10px]">
-                                {c.secCode}
-                              </Badge>
-                            </a>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      ))}
-                    </SidebarMenu>
-                  </ScrollArea>
-                )}
-              </SidebarGroupContent>
-            </SidebarGroup>
+            {/* アイコン幅では Input が潰れるため非表示（一覧ページのフィルターと同様） */}
+            <div className="group-data-[collapsible=icon]:hidden">
+              <SidebarGroup>
+                <SidebarGroupLabel>
+                  <Search className="mr-1.5 size-3.5" />
+                  企業検索
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <div className="px-2">
+                    <Input
+                      placeholder="会社名・銘柄コードで検索"
+                      value={analyzeSearchQuery}
+                      onChange={(e) => setAnalyzeSearchQuery(e.target.value)}
+                      className="h-8"
+                    />
+                  </div>
+                  {analyzeSearchResults.length > 0 && (
+                    <ScrollArea className="max-h-48 mt-1">
+                      <SidebarMenu>
+                        {analyzeSearchResults.map((c) => (
+                          <SidebarMenuItem key={c.secCode}>
+                            <SidebarMenuButton asChild size="sm">
+                              <a href={`/analyze/${c.secCode}`}>
+                                <BarChart3 className="size-3.5" />
+                                <span className="truncate">{formatDisplayName(c.filerName)}</span>
+                                <Badge variant="outline" className="ml-auto text-[10px]">
+                                  {c.secCode}
+                                </Badge>
+                              </a>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </ScrollArea>
+                  )}
+                </SidebarGroupContent>
+              </SidebarGroup>
 
-            <SidebarSeparator />
+              <SidebarSeparator />
+            </div>
 
             {/* Favorites */}
             <SidebarGroup>
