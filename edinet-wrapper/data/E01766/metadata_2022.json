@@ -1,0 +1,99 @@
+{
+  "edinet_code": "E01766",
+  "download_date": "2026-04-01T06:35:09.772814",
+  "date_range": {
+    "start": "2022-01-01",
+    "end": "2022-12-31"
+  },
+  "calendar_year": 2022,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 7,
+  "downloaded_count": 7,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100NBZX",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第122期第3四半期(令和3年10月1日－令和3年12月31日)",
+      "periodStart": "2021-10-01",
+      "periodEnd": "2021-12-31",
+      "submitDateTime": "2022-02-03 15:12",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100NJQN",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2022-02-21 15:14",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100OHKL",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第122期(令和3年4月1日－令和4年3月31日)",
+      "periodStart": "2021-04-01",
+      "periodEnd": "2022-03-31",
+      "submitDateTime": "2022-06-27 15:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100OTVT",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第123期第1四半期(令和4年4月1日－令和4年6月30日)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2022-06-30",
+      "submitDateTime": "2022-08-02 15:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100PD7D",
+      "doc_type": "large_holding",
+      "docDescription": "大量保有報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2022-10-17 16:16",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100PFZO",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第123期第2四半期(令和4年7月1日－令和4年9月30日)",
+      "periodStart": "2022-07-01",
+      "periodEnd": "2022-09-30",
+      "submitDateTime": "2022-11-02 15:39",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100PL0H",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2022-11-11 11:02",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/large_holding",
+      "skipped": false
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "edinet_code": "E04908",
+  "download_date": "2026-04-01T13:59:25.917765",
+  "date_range": {
+    "start": "2025-01-01",
+    "end": "2025-12-31"
+  },
+  "calendar_year": 2025,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 2,
+  "downloaded_count": 2,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100W29G",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第46期(2024/04/01－2025/03/31)",
+      "periodStart": "2024-04-01",
+      "periodEnd": "2025-03-31",
+      "submitDateTime": "2025-06-25 10:00",
+      "file_type": "tsv",
+      "output_dir": "data/E04908/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100X1O0",
+      "doc_type": "semiannual",
+      "docDescription": "半期報告書－第47期(2025/04/01－2026/03/31)",
+      "periodStart": "2025-04-01",
+      "periodEnd": "2026-03-31",
+      "submitDateTime": "2025-11-12 12:00",
+      "file_type": "tsv",
+      "output_dir": "data/E04908/semiannual",
+      "skipped": false
+    }
+  ]
+}

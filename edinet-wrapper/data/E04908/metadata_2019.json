@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E04908",
+  "download_date": "2026-03-31T20:42:51.739173",
+  "date_range": {
+    "start": "2019-01-01",
+    "end": "2019-12-31"
+  },
+  "calendar_year": 2019,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100F657",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第40期第3四半期(2018/10/01－2018/12/31)",
+      "periodStart": "2018-10-01",
+      "periodEnd": "2018-12-31",
+      "submitDateTime": "2019-02-13 15:13",
+      "file_type": "tsv",
+      "output_dir": "data/E04908/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100G8JI",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第40期(平成30年4月1日－平成31年3月31日)",
+      "periodStart": "2018-04-01",
+      "periodEnd": "2019-03-31",
+      "submitDateTime": "2019-06-26 16:23",
+      "file_type": "tsv",
+      "output_dir": "data/E04908/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100GR37",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第41期第1四半期(2019/04/01－2019/06/30)",
+      "periodStart": "2019-04-01",
+      "periodEnd": "2019-06-30",
+      "submitDateTime": "2019-08-13 15:20",
+      "file_type": "tsv",
+      "output_dir": "data/E04908/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100HBA4",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第41期第2四半期(2019/07/01－2019/09/30)",
+      "periodStart": "2019-07-01",
+      "periodEnd": "2019-09-30",
+      "submitDateTime": "2019-11-11 16:11",
+      "file_type": "tsv",
+      "output_dir": "data/E04908/quarterly",
+      "skipped": false
+    }
+  ]
+}

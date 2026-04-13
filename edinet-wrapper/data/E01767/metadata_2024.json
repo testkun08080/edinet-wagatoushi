@@ -1,0 +1,55 @@
+{
+  "edinet_code": "E01767",
+  "download_date": "2026-04-01T12:42:51.886571",
+  "date_range": {
+    "start": "2024-01-01",
+    "end": "2024-12-31"
+  },
+  "calendar_year": 2024,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 3,
+  "downloaded_count": 3,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100SURY",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第100期第3四半期(2023/10/01－2023/12/31)",
+      "periodStart": "2023-10-01",
+      "periodEnd": "2023-12-31",
+      "submitDateTime": "2024-02-14 15:55",
+      "file_type": "tsv",
+      "output_dir": "data/E01767/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100TOON",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第100期(2023/04/01－2024/03/31)",
+      "periodStart": "2023-04-01",
+      "periodEnd": "2024-03-31",
+      "submitDateTime": "2024-06-21 16:37",
+      "file_type": "tsv",
+      "output_dir": "data/E01767/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100UREM",
+      "doc_type": "semiannual",
+      "docDescription": "半期報告書－第101期(2024/04/01－2025/03/31)",
+      "periodStart": "2024-04-01",
+      "periodEnd": "2025-03-31",
+      "submitDateTime": "2024-11-14 14:53",
+      "file_type": "tsv",
+      "output_dir": "data/E01767/semiannual",
+      "skipped": false
+    }
+  ]
+}

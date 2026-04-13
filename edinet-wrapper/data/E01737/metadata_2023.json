@@ -1,0 +1,99 @@
+{
+  "edinet_code": "E01737",
+  "download_date": "2026-04-01T08:51:14.507582",
+  "date_range": {
+    "start": "2023-01-01",
+    "end": "2023-12-31"
+  },
+  "calendar_year": 2023,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 7,
+  "downloaded_count": 7,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100PY86",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2023-01-18 15:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01737/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100Q4NW",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第154期第3四半期(2022/10/01－2022/12/31)",
+      "periodStart": "2022-10-01",
+      "periodEnd": "2022-12-31",
+      "submitDateTime": "2023-02-09 14:02",
+      "file_type": "tsv",
+      "output_dir": "data/E01737/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100QA6X",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2023-02-27 15:04",
+      "file_type": "tsv",
+      "output_dir": "data/E01737/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100QERJ",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2023-03-27 15:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01737/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100QZT0",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第154期(2022/04/01－2023/03/31)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2023-03-31",
+      "submitDateTime": "2023-06-21 14:08",
+      "file_type": "tsv",
+      "output_dir": "data/E01737/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100RKHH",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第155期第1四半期(2023/04/01－2023/06/30)",
+      "periodStart": "2023-04-01",
+      "periodEnd": "2023-06-30",
+      "submitDateTime": "2023-08-08 13:58",
+      "file_type": "tsv",
+      "output_dir": "data/E01737/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100S7VJ",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第155期第2四半期(2023/07/01－2023/09/30)",
+      "periodStart": "2023-07-01",
+      "periodEnd": "2023-09-30",
+      "submitDateTime": "2023-11-10 14:49",
+      "file_type": "tsv",
+      "output_dir": "data/E01737/quarterly",
+      "skipped": false
+    }
+  ]
+}

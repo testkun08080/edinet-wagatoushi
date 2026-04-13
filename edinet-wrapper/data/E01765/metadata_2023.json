@@ -1,0 +1,77 @@
+{
+  "edinet_code": "E01765",
+  "download_date": "2026-04-01T09:10:07.378839",
+  "date_range": {
+    "start": "2023-01-01",
+    "end": "2023-12-31"
+  },
+  "calendar_year": 2023,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 5,
+  "downloaded_count": 5,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100Q1KD",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第185期第3四半期(2022/10/01－2022/12/31)",
+      "periodStart": "2022-10-01",
+      "periodEnd": "2022-12-31",
+      "submitDateTime": "2023-01-31 16:18",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100QDFA",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書（短期大量譲渡）",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2023-03-10 17:02",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100R0D0",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第185期(2022/04/01－2023/03/31)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2023-03-31",
+      "submitDateTime": "2023-06-22 16:45",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100RH1G",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第186期第1四半期(2023/04/01－2023/06/30)",
+      "periodStart": "2023-04-01",
+      "periodEnd": "2023-06-30",
+      "submitDateTime": "2023-07-28 15:23",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100S311",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第186期第2四半期(2023/07/01－2023/09/30)",
+      "periodStart": "2023-07-01",
+      "periodEnd": "2023-09-30",
+      "submitDateTime": "2023-10-31 14:31",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/quarterly",
+      "skipped": false
+    }
+  ]
+}

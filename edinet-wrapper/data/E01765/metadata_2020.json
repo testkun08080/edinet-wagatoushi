@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E01765",
+  "download_date": "2026-04-01T00:28:27.458919",
+  "date_range": {
+    "start": "2020-01-01",
+    "end": "2020-12-31"
+  },
+  "calendar_year": 2020,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100HTQI",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第182期第3四半期(令和1年10月1日－令和1年12月31日)",
+      "periodStart": "2019-10-01",
+      "periodEnd": "2019-12-31",
+      "submitDateTime": "2020-01-30 13:13",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100IXT2",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第182期(平成31年4月1日－令和2年3月31日)",
+      "periodStart": "2019-04-01",
+      "periodEnd": "2020-03-31",
+      "submitDateTime": "2020-06-24 15:53",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100JBWF",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第183期第1四半期(令和2年4月1日－令和2年6月30日)",
+      "periodStart": "2020-04-01",
+      "periodEnd": "2020-06-30",
+      "submitDateTime": "2020-07-31 15:30",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100K01R",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第183期第2四半期(令和2年7月1日－令和2年9月30日)",
+      "periodStart": "2020-07-01",
+      "periodEnd": "2020-09-30",
+      "submitDateTime": "2020-10-30 16:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/quarterly",
+      "skipped": false
+    }
+  ]
+}

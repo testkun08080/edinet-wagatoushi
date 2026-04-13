@@ -1,0 +1,66 @@
+{
+  "edinet_code": "E02055",
+  "download_date": "2026-04-01T07:35:02.401754",
+  "date_range": {
+    "start": "2022-01-01",
+    "end": "2022-12-31"
+  },
+  "calendar_year": 2022,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 4,
+  "downloaded_count": 4,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100NG3H",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第65期第3四半期(令和3年10月1日－令和3年12月31日)",
+      "periodStart": "2021-10-01",
+      "periodEnd": "2021-12-31",
+      "submitDateTime": "2022-02-10 10:30",
+      "file_type": "tsv",
+      "output_dir": "data/E02055/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100OCAT",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第65期(令和3年4月1日－令和4年3月31日)",
+      "periodStart": "2021-04-01",
+      "periodEnd": "2022-03-31",
+      "submitDateTime": "2022-06-23 14:55",
+      "file_type": "tsv",
+      "output_dir": "data/E02055/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100OVLO",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第66期第1四半期(令和4年4月1日－令和4年6月30日)",
+      "periodStart": "2022-04-01",
+      "periodEnd": "2022-06-30",
+      "submitDateTime": "2022-08-05 11:37",
+      "file_type": "tsv",
+      "output_dir": "data/E02055/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100PK35",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第66期第2四半期(令和4年7月1日－令和4年9月30日)",
+      "periodStart": "2022-07-01",
+      "periodEnd": "2022-09-30",
+      "submitDateTime": "2022-11-11 09:45",
+      "file_type": "tsv",
+      "output_dir": "data/E02055/quarterly",
+      "skipped": false
+    }
+  ]
+}

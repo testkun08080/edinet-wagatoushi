@@ -1,0 +1,77 @@
+{
+  "edinet_code": "E01766",
+  "download_date": "2026-04-01T03:39:21.251285",
+  "date_range": {
+    "start": "2021-01-01",
+    "end": "2021-12-31"
+  },
+  "calendar_year": 2021,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 5,
+  "downloaded_count": 5,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100KMXG",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第121期第3四半期(令和2年10月1日－令和2年12月31日)",
+      "periodStart": "2020-10-01",
+      "periodEnd": "2020-12-31",
+      "submitDateTime": "2021-02-03 15:10",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100L4F2",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書（短期大量譲渡）",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2021-04-05 15:09",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100LT4R",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第121期(令和2年4月1日－令和3年3月31日)",
+      "periodStart": "2020-04-01",
+      "periodEnd": "2021-03-31",
+      "submitDateTime": "2021-06-28 15:16",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100M3NE",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第122期第1四半期(令和3年4月1日－令和3年6月30日)",
+      "periodStart": "2021-04-01",
+      "periodEnd": "2021-06-30",
+      "submitDateTime": "2021-08-03 15:09",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    },
+    {
+      "docID": "S100MOUD",
+      "doc_type": "quarterly",
+      "docDescription": "四半期報告書－第122期第2四半期(令和3年7月1日－令和3年9月30日)",
+      "periodStart": "2021-07-01",
+      "periodEnd": "2021-09-30",
+      "submitDateTime": "2021-11-01 15:08",
+      "file_type": "tsv",
+      "output_dir": "data/E01766/quarterly",
+      "skipped": false
+    }
+  ]
+}

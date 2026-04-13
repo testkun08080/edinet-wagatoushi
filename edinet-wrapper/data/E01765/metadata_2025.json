@@ -1,0 +1,110 @@
+{
+  "edinet_code": "E01765",
+  "download_date": "2026-04-01T14:54:54.973076",
+  "date_range": {
+    "start": "2025-01-01",
+    "end": "2025-12-31"
+  },
+  "calendar_year": 2025,
+  "doc_types": [
+    "annual",
+    "quarterly",
+    "semiannual",
+    "large_holding"
+  ],
+  "file_type": "tsv",
+  "skip_existing": true,
+  "total_documents": 8,
+  "downloaded_count": 8,
+  "skipped_count": 0,
+  "documents": [
+    {
+      "docID": "S100V34M",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2025-01-14 15:15",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100V4R8",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2025-01-24 16:11",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100VEM6",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2025-03-14 15:44",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100VV22",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2025-06-02 15:01",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100VZ85",
+      "doc_type": "annual",
+      "docDescription": "有価証券報告書－第187期(2024/04/01－2025/03/31)",
+      "periodStart": "2024-04-01",
+      "periodEnd": "2025-03-31",
+      "submitDateTime": "2025-06-19 15:51",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/annual",
+      "skipped": false
+    },
+    {
+      "docID": "S100W7XM",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2025-06-30 13:30",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/large_holding",
+      "skipped": false
+    },
+    {
+      "docID": "S100WXD8",
+      "doc_type": "semiannual",
+      "docDescription": "半期報告書－第188期(2025/04/01－2026/03/31)",
+      "periodStart": "2025-04-01",
+      "periodEnd": "2026-03-31",
+      "submitDateTime": "2025-10-29 16:22",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/semiannual",
+      "skipped": false
+    },
+    {
+      "docID": "S100WZ9J",
+      "doc_type": "large_holding",
+      "docDescription": "変更報告書（短期大量譲渡）",
+      "periodStart": null,
+      "periodEnd": null,
+      "submitDateTime": "2025-11-06 16:00",
+      "file_type": "tsv",
+      "output_dir": "data/E01765/large_holding",
+      "skipped": false
+    }
+  ]
+}
