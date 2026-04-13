@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedFrom": "/Users/dangpee/Git/edinet-wagatoushi/.claude/worktrees/wizardly-shannon/edinet-wrapper/config/screener_columns.json",
+  "generatedFrom": "/home/user/edinet-wagatoushi/edinet-wrapper/config/screener_columns.json",
   "columns": [
     {
       "id": "filerName",
