@@ -43,9 +43,20 @@ export type ColumnId =
   | "operatingCF"
   | "investingCF"
   | "fcf"
-  | "financingCF";
+  | "financingCF"
+  | "salesGrowthYoY"
+  | "opGrowthYoY"
+  | "epsGrowthYoY"
+  | "dividendGrowthYoY"
+  | "salesCagr3y"
+  | "salesCagr5y"
+  | "consecutiveDivIncreases"
+  | "currentRatio"
+  | "deRatio"
+  | "roic"
+  | "piotroskiFScore";
 
-export type ColumnCategory = "basic" | "valuation" | "performance" | "balancesheet" | "cash";
+export type ColumnCategory = "basic" | "valuation" | "performance" | "balancesheet" | "cash" | "growth";
 
 const COLUMN_CONFIG: { id: ColumnId; label: string; category: ColumnCategory }[] = [
   { id: "filerName", label: "会社名*", category: "basic" },
@@ -89,6 +100,17 @@ const COLUMN_CONFIG: { id: ColumnId; label: string; category: ColumnCategory }[]
   { id: "investingCF", label: "投資CF", category: "cash" },
   { id: "fcf", label: "FCF", category: "cash" },
   { id: "financingCF", label: "財務CF", category: "cash" },
+  { id: "salesGrowthYoY", label: "売上高成長率(YoY)", category: "growth" },
+  { id: "opGrowthYoY", label: "営業利益成長率(YoY)", category: "growth" },
+  { id: "epsGrowthYoY", label: "EPS成長率(YoY)", category: "growth" },
+  { id: "dividendGrowthYoY", label: "配当成長率(YoY)", category: "growth" },
+  { id: "salesCagr3y", label: "売上高CAGR(3年)", category: "growth" },
+  { id: "salesCagr5y", label: "売上高CAGR(5年)", category: "growth" },
+  { id: "consecutiveDivIncreases", label: "連続増配年数", category: "growth" },
+  { id: "currentRatio", label: "流動比率", category: "balancesheet" },
+  { id: "deRatio", label: "D/Eレシオ", category: "balancesheet" },
+  { id: "roic", label: "ROIC", category: "valuation" },
+  { id: "piotroskiFScore", label: "Piotroski F-Score", category: "valuation" },
 ];
 
 const COLUMN_IDS = COLUMN_CONFIG.map((c) => c.id);
@@ -99,16 +121,14 @@ const CATEGORY_LABELS: Record<ColumnCategory, string> = {
   performance: "業績・収益性",
   balancesheet: "バランスシート",
   cash: "キャッシュ関連",
+  growth: "成長性",
 };
 
 const DEFAULT_VISIBLE: ColumnId[] = COLUMN_IDS;
 
 const STORAGE_KEY = "edinet-screener-column-visibility";
 
-const DEFAULT_VISIBILITY = COLUMN_IDS.reduce(
-  (acc, id) => ({ ...acc, [id]: true }),
-  {} as Record<ColumnId, boolean>
-);
+const DEFAULT_VISIBILITY = COLUMN_IDS.reduce((acc, id) => ({ ...acc, [id]: true }), {} as Record<ColumnId, boolean>);
 
 function loadVisibility(): Record<ColumnId, boolean> {
   if (typeof window === "undefined") return DEFAULT_VISIBILITY;
@@ -177,10 +197,7 @@ export function ColumnVisibilityProvider({ children }: { children: ReactNode }) 
     setVisibility(COLUMN_IDS.reduce((acc, id) => ({ ...acc, [id]: true }), {} as Record<ColumnId, boolean>));
   }, []);
 
-  const columnLabel = useCallback(
-    (id: ColumnId) => COLUMN_CONFIG.find((c) => c.id === id)?.label ?? id,
-    []
-  );
+  const columnLabel = useCallback((id: ColumnId) => COLUMN_CONFIG.find((c) => c.id === id)?.label ?? id, []);
 
   const getCategoryLabel = useCallback((cat: ColumnCategory) => CATEGORY_LABELS[cat], []);
 

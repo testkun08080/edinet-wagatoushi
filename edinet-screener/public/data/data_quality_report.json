@@ -1,429 +1,521 @@
 {
   "summary": {
-    "totalCompanies": 8,
-    "totalColumns": 39
+    "totalCompanies": 11,
+    "totalColumns": 50
   },
   "byColumn": {
     "edinetCode": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "secCode": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "filerName": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "計算日": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "決算月": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "自己資本比率": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "EPS": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "dilutedEPS": {
       "filled": 2,
-      "missing": 6,
-      "total": 8,
+      "missing": 9,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240"
       ]
     },
     "売上高": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "経常利益": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "当期純利益": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "純資産額": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "総資産額": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "包括利益": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "BPS": {
-      "filled": 7,
-      "missing": 1,
-      "total": 8,
+      "filled": 9,
+      "missing": 2,
+      "total": 11,
       "missingSecCodes": [
-        "65010"
+        "65010",
+        "67620"
       ]
     },
     "ROE": {
-      "filled": 7,
-      "missing": 1,
-      "total": 8,
+      "filled": 9,
+      "missing": 2,
+      "total": 11,
       "missingSecCodes": [
-        "65010"
+        "65010",
+        "67620"
       ]
     },
     "roeCalculated": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "roa": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "equityRatioCalculated": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "営業利益": {
-      "filled": 7,
+      "filled": 10,
       "missing": 1,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": [
         "65010"
       ]
     },
     "営業CF": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "投資CF": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "fcf": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "財務CF": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "現金残高": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "配当性向": {
       "filled": 0,
-      "missing": 8,
-      "total": 8,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
-        "96160",
         "63700",
         "65010",
         "67010",
         "67020",
-        "67030"
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
       ]
     },
     "payoutRatioComputed": {
       "filled": 0,
-      "missing": 8,
-      "total": 8,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
-        "96160",
         "63700",
         "65010",
         "67010",
         "67020",
-        "67030"
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
       ]
     },
     "dividendPerShare": {
       "filled": 0,
-      "missing": 8,
-      "total": 8,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
-        "96160",
         "63700",
         "65010",
         "67010",
         "67020",
-        "67030"
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
       ]
     },
     "発行済株式総数": {
       "filled": 0,
-      "missing": 8,
-      "total": 8,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
-        "96160",
         "63700",
         "65010",
         "67010",
         "67020",
-        "67030"
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
       ]
     },
     "流動資産": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "流動負債": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "負債": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "投資有価証券": {
-      "filled": 4,
-      "missing": 4,
-      "total": 8,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
         "63700",
         "65010",
         "67010",
-        "67020"
+        "67020",
+        "67620"
       ]
     },
     "PER": {
-      "filled": 7,
-      "missing": 1,
-      "total": 8,
+      "filled": 9,
+      "missing": 2,
+      "total": 11,
       "missingSecCodes": [
-        "65010"
+        "65010",
+        "67620"
       ]
     },
     "PBR": {
       "filled": 0,
-      "missing": 8,
-      "total": 8,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
-        "96160",
         "63700",
         "65010",
         "67010",
         "67020",
-        "67030"
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
       ]
     },
     "配当利回り": {
       "filled": 0,
-      "missing": 8,
-      "total": 8,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
-        "96160",
         "63700",
         "65010",
         "67010",
         "67020",
-        "67030"
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
       ]
     },
     "時価総額": {
       "filled": 0,
-      "missing": 8,
-      "total": 8,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
-        "96160",
         "63700",
         "65010",
         "67010",
         "67020",
-        "67030"
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
       ]
     },
     "ネットキャッシュ": {
-      "filled": 8,
+      "filled": 11,
       "missing": 0,
-      "total": 8,
+      "total": 11,
       "missingSecCodes": []
     },
     "ネットキャッシュ比率": {
       "filled": 0,
-      "missing": 8,
-      "total": 8,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "7974",
-        "94240",
-        "96160",
         "63700",
         "65010",
         "67010",
         "67020",
-        "67030"
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
       ]
+    },
+    "salesGrowthYoY": {
+      "filled": 11,
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
+    },
+    "opGrowthYoY": {
+      "filled": 10,
+      "missing": 1,
+      "total": 11,
+      "missingSecCodes": [
+        "65010"
+      ]
+    },
+    "epsGrowthYoY": {
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
+      "missingSecCodes": [
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
+      ]
+    },
+    "dividendGrowthYoY": {
+      "filled": 0,
+      "missing": 11,
+      "total": 11,
+      "missingSecCodes": [
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "69650",
+        "67970",
+        "7974",
+        "94240",
+        "96160"
+      ]
+    },
+    "salesCagr3y": {
+      "filled": 11,
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
+    },
+    "salesCagr5y": {
+      "filled": 10,
+      "missing": 1,
+      "total": 11,
+      "missingSecCodes": [
+        "67620"
+      ]
+    },
+    "consecutiveDivIncreases": {
+      "filled": 11,
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
+    },
+    "currentRatio": {
+      "filled": 11,
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
+    },
+    "deRatio": {
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
+      "missingSecCodes": [
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
+      ]
+    },
+    "roic": {
+      "filled": 10,
+      "missing": 1,
+      "total": 11,
+      "missingSecCodes": [
+        "65010"
+      ]
+    },
+    "piotroskiFScore": {
+      "filled": 11,
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
     }
   },
   "byCompany": {
-    "7974": {
-      "filerName": "任天堂株式会社",
-      "missingCount": 9,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率"
-      ]
-    },
-    "94240": {
-      "filerName": "日本通信株式会社",
-      "missingCount": 9,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率"
-      ]
-    },
-    "96160": {
-      "filerName": "株式会社共立メンテナンス",
-      "missingCount": 8,
-      "missingKeys": [
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率"
-      ]
-    },
     "63700": {
       "filerName": "栗田工業株式会社",
-      "missingCount": 19,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -443,12 +535,15 @@
         "PBR",
         "配当利回り",
         "時価総額",
-        "ネットキャッシュ比率"
+        "ネットキャッシュ比率",
+        "epsGrowthYoY",
+        "dividendGrowthYoY",
+        "deRatio"
       ]
     },
     "65010": {
       "filerName": "株式会社日立製作所",
-      "missingCount": 23,
+      "missingCount": 28,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -472,12 +567,17 @@
         "PBR",
         "配当利回り",
         "時価総額",
-        "ネットキャッシュ比率"
+        "ネットキャッシュ比率",
+        "opGrowthYoY",
+        "epsGrowthYoY",
+        "dividendGrowthYoY",
+        "deRatio",
+        "roic"
       ]
     },
     "67010": {
       "filerName": "日本電気株式会社",
-      "missingCount": 19,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -497,12 +597,15 @@
         "PBR",
         "配当利回り",
         "時価総額",
-        "ネットキャッシュ比率"
+        "ネットキャッシュ比率",
+        "epsGrowthYoY",
+        "dividendGrowthYoY",
+        "deRatio"
       ]
     },
     "67020": {
       "filerName": "富士通株式会社",
-      "missingCount": 19,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -522,12 +625,15 @@
         "PBR",
         "配当利回り",
         "時価総額",
-        "ネットキャッシュ比率"
+        "ネットキャッシュ比率",
+        "epsGrowthYoY",
+        "dividendGrowthYoY",
+        "deRatio"
       ]
     },
     "67030": {
       "filerName": "沖電気工業株式会社",
-      "missingCount": 8,
+      "missingCount": 9,
       "missingKeys": [
         "配当性向",
         "payoutRatioComputed",
@@ -536,7 +642,119 @@
         "PBR",
         "配当利回り",
         "時価総額",
-        "ネットキャッシュ比率"
+        "ネットキャッシュ比率",
+        "dividendGrowthYoY"
+      ]
+    },
+    "67620": {
+      "filerName": "ＴＤＫ株式会社",
+      "missingCount": 26,
+      "missingKeys": [
+        "自己資本比率",
+        "EPS",
+        "dilutedEPS",
+        "経常利益",
+        "純資産額",
+        "総資産額",
+        "包括利益",
+        "BPS",
+        "ROE",
+        "roeCalculated",
+        "roa",
+        "equityRatioCalculated",
+        "配当性向",
+        "payoutRatioComputed",
+        "dividendPerShare",
+        "発行済株式総数",
+        "投資有価証券",
+        "PER",
+        "PBR",
+        "配当利回り",
+        "時価総額",
+        "ネットキャッシュ比率",
+        "epsGrowthYoY",
+        "dividendGrowthYoY",
+        "salesCagr5y",
+        "deRatio"
+      ]
+    },
+    "69650": {
+      "filerName": "浜松ホトニクス株式会社",
+      "missingCount": 10,
+      "missingKeys": [
+        "dilutedEPS",
+        "配当性向",
+        "payoutRatioComputed",
+        "dividendPerShare",
+        "発行済株式総数",
+        "PBR",
+        "配当利回り",
+        "時価総額",
+        "ネットキャッシュ比率",
+        "dividendGrowthYoY"
+      ]
+    },
+    "67970": {
+      "filerName": "名古屋電機工業株式会社",
+      "missingCount": 10,
+      "missingKeys": [
+        "dilutedEPS",
+        "配当性向",
+        "payoutRatioComputed",
+        "dividendPerShare",
+        "発行済株式総数",
+        "PBR",
+        "配当利回り",
+        "時価総額",
+        "ネットキャッシュ比率",
+        "dividendGrowthYoY"
+      ]
+    },
+    "7974": {
+      "filerName": "任天堂株式会社",
+      "missingCount": 10,
+      "missingKeys": [
+        "dilutedEPS",
+        "配当性向",
+        "payoutRatioComputed",
+        "dividendPerShare",
+        "発行済株式総数",
+        "PBR",
+        "配当利回り",
+        "時価総額",
+        "ネットキャッシュ比率",
+        "dividendGrowthYoY"
+      ]
+    },
+    "94240": {
+      "filerName": "日本通信株式会社",
+      "missingCount": 10,
+      "missingKeys": [
+        "dilutedEPS",
+        "配当性向",
+        "payoutRatioComputed",
+        "dividendPerShare",
+        "発行済株式総数",
+        "PBR",
+        "配当利回り",
+        "時価総額",
+        "ネットキャッシュ比率",
+        "dividendGrowthYoY"
+      ]
+    },
+    "96160": {
+      "filerName": "株式会社共立メンテナンス",
+      "missingCount": 9,
+      "missingKeys": [
+        "配当性向",
+        "payoutRatioComputed",
+        "dividendPerShare",
+        "発行済株式総数",
+        "PBR",
+        "配当利回り",
+        "時価総額",
+        "ネットキャッシュ比率",
+        "dividendGrowthYoY"
       ]
     }
   }

@@ -156,6 +156,17 @@ const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
   { key: "ネットキャッシュ比率", label: "ネットキャッシュ比率" },
   { key: "発行済株式総数", label: "発行済株式総数" },
   { key: "投資有価証券", label: "投資有価証券" },
+  { key: "salesGrowthYoY", label: "売上高成長率(YoY)" },
+  { key: "opGrowthYoY", label: "営業利益成長率(YoY)" },
+  { key: "epsGrowthYoY", label: "EPS成長率(YoY)" },
+  { key: "dividendGrowthYoY", label: "配当成長率(YoY)" },
+  { key: "salesCagr3y", label: "売上高CAGR(3年)" },
+  { key: "salesCagr5y", label: "売上高CAGR(5年)" },
+  { key: "consecutiveDivIncreases", label: "連続増配年数" },
+  { key: "currentRatio", label: "流動比率" },
+  { key: "deRatio", label: "D/Eレシオ" },
+  { key: "roic", label: "ROIC" },
+  { key: "piotroskiFScore", label: "Piotroski F-Score" },
 ];
 
 function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
@@ -184,6 +195,14 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
               let display: string;
               if (val === null || val === undefined) {
                 display = "－";
+              } else if (key === "piotroskiFScore" && typeof val === "number") {
+                display = String(val);
+              } else if (key === "consecutiveDivIncreases" && typeof val === "number") {
+                display = `${val}年`;
+              } else if ((key === "currentRatio" || key === "deRatio") && typeof val === "number") {
+                display = val.toFixed(2);
+              } else if (key === "roic" && typeof val === "number") {
+                display = (val * 100).toFixed(2) + "%";
               } else if (
                 (key === "ROE" ||
                   key === "自己資本比率" ||
@@ -191,7 +210,13 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
                   key === "roeCalculated" ||
                   key === "roa" ||
                   key === "equityRatioCalculated" ||
-                  key === "payoutRatioComputed") &&
+                  key === "payoutRatioComputed" ||
+                  key === "salesGrowthYoY" ||
+                  key === "opGrowthYoY" ||
+                  key === "epsGrowthYoY" ||
+                  key === "dividendGrowthYoY" ||
+                  key === "salesCagr3y" ||
+                  key === "salesCagr5y") &&
                 typeof val === "string"
               ) {
                 const n = parseFloat(val);
