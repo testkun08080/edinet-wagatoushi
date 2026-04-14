@@ -1,0 +1,60 @@
+name: Screener CI
+
+on:
+  pull_request:
+    paths:
+      - "edinet-screener/**"
+      - "edinet-wrapper/scripts/frontend/**"
+      - ".github/workflows/screener-ci.yml"
+  workflow_dispatch:
+
+env:
+  UV_COMPILE_BYTECODE: 0
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  lint-and-build-sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: edinet-screener/package-lock.json
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install wrapper dependencies
+        working-directory: edinet-wrapper
+        run: uv sync
+
+      - name: Build sample public/data
+        working-directory: edinet-wrapper
+        run: |
+          uv run python scripts/frontend/build_screener_data.py \
+            --mode sample \
+            --list scripts/frontend/sample_companies.json \
+            --data_set "${GITHUB_WORKSPACE}/data-set" \
+            --output "${GITHUB_WORKSPACE}/edinet-screener/public/data" \
+            --no_report \
+            --no_raw_tsv
+
+      - name: Install screener dependencies
+        working-directory: edinet-screener
+        run: npm ci
+
+      - name: Lint
+        working-directory: edinet-screener
+        run: npm run lint
+
+      - name: Build app with sample data
+        working-directory: edinet-screener
+        run: npm run build:app

@@ -9,6 +9,9 @@ npm create vike@latest --- --react --tailwindcss --daisyui --google-analytics --
 - **`npm run build`**: プロジェクトルートに `data-set/` がある場合はそこから、**`DATA_SET_URL` が設定されている場合はその URL から未取得時のみ取得**してから、`public/data` を生成し Vike ビルドします。どちらも無い場合はデータ生成をスキップします。
 - **`npm run build:app`**: データ生成を行わず Vike ビルドのみ実行。
 - **リモートのデータセットでビルド**: `DATA_SET_URL=https://.../data-set.zip npm run build`（zip / tar.gz 対応）。データをどこかにホストしておき、ローカルに置かずにビルド可能。詳しくは [docs/DATA_SET_ALTERNATIVES.md](../docs/DATA_SET_ALTERNATIVES.md)。
+- **`npm run package:data`**: `public/data` を `public-data.tar.gz` にパッケージ化（`PUBLIC_DATA_ARCHIVE` で出力先指定可）。
+- **`npm run restore:data`**: `public-data.tar.gz` を展開して `public/data` を復元（`PUBLIC_DATA_ARCHIVE` で入力指定可）。
+- **Cloudflare + GitHub CI/CD**: 日次データ生成・R2格納・Workersデプロイの運用手順は [docs/CLOUDFLARE_GITHUB_CICD.md](../docs/CLOUDFLARE_GITHUB_CICD.md) を参照。
 
 ## Contents
 

@@ -1,0 +1,136 @@
+name: Screener data pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      dataset_tier:
+        description: "sample or prod"
+        required: true
+        default: "sample"
+        type: choice
+        options:
+          - sample
+          - prod
+      sample_list:
+        description: "sample list json path (sample tier only)"
+        required: false
+        default: "scripts/frontend/sample_companies.json"
+        type: string
+      object_prefix:
+        description: "R2 object prefix"
+        required: false
+        default: "datasets"
+        type: string
+      data_set_url:
+        description: "prod build input archive url (.zip/.tar.gz)"
+        required: false
+        type: string
+      no_raw_tsv:
+        description: "omit raw_tsv payload"
+        required: false
+        default: true
+        type: boolean
+      no_report:
+        description: "omit all_keys report output"
+        required: false
+        default: true
+        type: boolean
+  schedule:
+    - cron: "0 16 * * *"
+
+env:
+  UV_COMPILE_BYTECODE: 0
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install wrapper dependencies
+        working-directory: edinet-wrapper
+        run: uv sync
+
+      - name: Build screener data
+        working-directory: edinet-screener
+        env:
+          DATASET_TIER: ${{ github.event_name == 'workflow_dispatch' && inputs.dataset_tier || 'prod' }}
+          SAMPLE_LIST: ${{ github.event_name == 'workflow_dispatch' && inputs.sample_list || 'scripts/frontend/sample_companies.json' }}
+          NO_RAW_TSV: ${{ github.event_name == 'workflow_dispatch' && inputs.no_raw_tsv || 'true' }}
+          NO_REPORT: ${{ github.event_name == 'workflow_dispatch' && inputs.no_report || 'true' }}
+          DATA_SET_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.data_set_url || secrets.DATA_SET_URL }}
+        run: |
+          set -euo pipefail
+          export DATA_SET_PATH="${GITHUB_WORKSPACE}/data-set"
+          export SCREENER_NO_REPORT=0
+          if [ "$NO_REPORT" = "true" ]; then
+            export SCREENER_NO_REPORT=1
+          fi
+          export SCREENER_NO_RAW_TSV=0
+          if [ "$NO_RAW_TSV" = "true" ]; then
+            export SCREENER_NO_RAW_TSV=1
+          fi
+          if [ "$DATASET_TIER" = "sample" ]; then
+            if [ -n "${DATA_SET_URL:-}" ]; then
+              export SCREENER_BUILD_MODE=sample
+              export SCREENER_SAMPLE_LIST="${SAMPLE_LIST}"
+              bash scripts/generate-data.sh
+            else
+              echo "[pipeline] DATA_SET_URL が無いため、既存 public/data をそのままパッケージ化します。"
+            fi
+            exit 0
+          fi
+          if [ -z "${DATA_SET_URL:-}" ]; then
+            echo "[pipeline] prod では DATA_SET_URL が必要です。" >&2
+            exit 1
+          fi
+          export SCREENER_BUILD_MODE=full
+          bash scripts/generate-data.sh
+
+      - name: Package public data
+        working-directory: edinet-screener
+        env:
+          PUBLIC_DATA_ARCHIVE: ${{ github.workspace }}/public-data.tar.gz
+        run: npm run package:data
+
+      - name: Install screener dependencies (wrangler)
+        working-directory: edinet-screener
+        run: npm ci
+
+      - name: Upload archive to R2
+        working-directory: edinet-screener
+        id: upload_r2
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_BUCKET: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
+          OBJECT_PREFIX: ${{ github.event_name == 'workflow_dispatch' && inputs.object_prefix || 'datasets' }}
+          DATASET_TIER: ${{ github.event_name == 'workflow_dispatch' && inputs.dataset_tier || 'prod' }}
+          ARCHIVE_PATH: ${{ github.workspace }}/public-data.tar.gz
+        run: |
+          set -euo pipefail
+          stamp="$(date -u +%Y-%m-%d)"
+          version_key="${OBJECT_PREFIX}/${DATASET_TIER}/${stamp}/public-data.tar.gz"
+          latest_key="${OBJECT_PREFIX}/${DATASET_TIER}/latest/public-data.tar.gz"
+          npx wrangler r2 object put "${R2_BUCKET}/${version_key}" --file "$ARCHIVE_PATH"
+          npx wrangler r2 object put "${R2_BUCKET}/${latest_key}" --file "$ARCHIVE_PATH"
+          {
+            echo "version_key=${version_key}"
+            echo "latest_key=${latest_key}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Upload archive artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: public-data-${{ github.event_name == 'workflow_dispatch' && inputs.dataset_tier || 'prod' }}-${{ github.run_id }}
+          path: public-data.tar.gz
+          retention-days: 7

@@ -2,6 +2,8 @@
   "scripts": {
     "dev": "vike dev",
     "generate-data": "bash scripts/generate-data.sh",
+    "package:data": "bash scripts/package-public-data.sh",
+    "restore:data": "bash scripts/restore-public-data.sh",
     "build": "npm run generate-data && vike build",
     "build:app": "vike build",
     "preview": "vike preview",
