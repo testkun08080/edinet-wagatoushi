@@ -29,6 +29,13 @@ body {
   overscroll-behavior: contain;
 }
 
+/* Mobile: prevent horizontal scroll on the Sheet wrapper and its inner flex container */
+[data-sidebar="sidebar"][data-mobile="true"],
+[data-sidebar="sidebar"][data-mobile="true"] > div {
+  overflow-x: hidden;
+  touch-action: pan-y;
+}
+
 /* Page Transition Animation */
 #page-content {
   opacity: 1;
