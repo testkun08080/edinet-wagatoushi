@@ -4,12 +4,29 @@ a {
 }
 
 /* Reset */
+html {
+  overscroll-behavior: none;
+}
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  overscroll-behavior: none;
 }
 * {
   box-sizing: border-box;
+}
+
+/* Prevent iOS input zoom (font-size must be >= 16px on touch devices) */
+@media (hover: none) and (pointer: coarse) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Prevent diagonal scroll leaking horizontally in sidebar */
+[data-sidebar="content"] {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 /* Page Transition Animation */
