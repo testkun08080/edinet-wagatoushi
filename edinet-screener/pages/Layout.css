@@ -23,17 +23,19 @@ body {
   }
 }
 
-/* Prevent diagonal scroll leaking horizontally in sidebar */
+/* Prevent horizontal scroll in all sidebar containers */
+[data-sidebar="sidebar"],
+[data-sidebar="sidebar"] > div,
+[data-sidebar="content"],
+[data-sidebar="content"] [data-slot="scroll-area-viewport"] {
+  overflow-x: hidden !important;
+}
+
+/* Restrict touch scrolling to vertical only in sidebar */
+[data-sidebar="sidebar"],
 [data-sidebar="content"] {
   touch-action: pan-y;
   overscroll-behavior: contain;
-}
-
-/* Mobile: prevent horizontal scroll on the Sheet wrapper and its inner flex container */
-[data-sidebar="sidebar"][data-mobile="true"],
-[data-sidebar="sidebar"][data-mobile="true"] > div {
-  overflow-x: hidden;
-  touch-action: pan-y;
 }
 
 /* Page Transition Animation */
