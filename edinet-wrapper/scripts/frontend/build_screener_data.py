@@ -1091,7 +1091,7 @@ def main() -> None:
         print(f"  --list から {len(codes)} 社を読み込みました: {args.list}")
     if not codes:
         script_dir = Path(__file__).parent
-        default_list = script_dir / "sample_11companies.json"
+        default_list = script_dir / "sample_companies.json"
         if default_list.exists():
             codes = load_edinet_codes_from_list_file(default_list)
             print(f"  企業未指定のため {default_list.name} の {len(codes)} 社を使用します。")
