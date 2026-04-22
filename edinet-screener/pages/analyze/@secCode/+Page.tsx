@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useData } from "vike-react/useData";
 import { useConfig } from "vike-react/useConfig";
-import type { Data, CompanyMetricsRow } from "./+data.js";
+import { usePageContext } from "vike-react/usePageContext";
+import { normalizeCompanySummary, type CompanySummary, type CompanyMetricsRow } from "./companyData.js";
 import { useRecentCompanies } from "../../../components/RecentCompaniesContext.js";
 import { useFavorites } from "../../../components/FavoritesContext.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
@@ -251,7 +251,12 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
 }
 
 export default function Page() {
-  const { company, metrics, error } = useData<Data>();
+  const pageContext = usePageContext();
+  const secCode = pageContext.routeParams?.secCode;
+  const [company, setCompany] = useState<CompanySummary | null>(null);
+  const [metrics, setMetrics] = useState<CompanyMetricsRow | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const config = useConfig();
   // data() 内では useConfig が使えない（getPageContext が無いと React フックに落ちる）。ページコンポーネントで設定する。
   config({
@@ -262,6 +267,67 @@ export default function Page() {
   const [mainTab, setMainTab] = useState("summary");
   const [analyzeVisibleYears, setAnalyzeVisibleYears] = useState<AnalyzeVisibleYears>(3);
   const [analyzeReportKind, setAnalyzeReportKind] = useState<AnalyzeReportKind>("quarter");
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!secCode) {
+        if (!cancelled) {
+          setCompany(null);
+          setMetrics(null);
+          setError("証券コードが指定されていません");
+          setLoading(false);
+        }
+        return;
+      }
+      if (!cancelled) {
+        setLoading(true);
+        setError(null);
+      }
+      try {
+        const [companyRes, metricsRes] = await Promise.all([
+          fetch(`/data/summaries/${secCode}.json`),
+          fetch("/data/company_metrics.json"),
+        ]);
+        if (!companyRes.ok) {
+          if (companyRes.status === 404) {
+            if (!cancelled) {
+              setCompany(null);
+              setMetrics(null);
+              setError(`証券コード ${secCode} のデータが見つかりません。企業一覧から選択してください。`);
+              setLoading(false);
+            }
+            return;
+          }
+          throw new Error(`HTTP ${companyRes.status}`);
+        }
+        const nextCompany = normalizeCompanySummary(await companyRes.json(), secCode);
+        let nextMetrics: CompanyMetricsRow | null = null;
+        if (metricsRes.ok) {
+          const metricsData = (await metricsRes.json()) as { metrics?: CompanyMetricsRow[] };
+          nextMetrics = metricsData.metrics?.find((m) => m.secCode === secCode) ?? null;
+        }
+        if (!cancelled) {
+          setCompany(nextCompany);
+          setMetrics(nextMetrics);
+          setError(null);
+          setLoading(false);
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        if (!cancelled) {
+          setCompany(null);
+          setMetrics(null);
+          setError(`データの取得に失敗しました: ${msg}`);
+          setLoading(false);
+        }
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [secCode]);
 
   useEffect(() => {
     if (company) {
@@ -306,7 +372,7 @@ export default function Page() {
     );
   }
 
-  if (!company) {
+  if (loading || !company) {
     return (
       <div className="p-6 space-y-4">
         <Skeleton className="h-8 w-64" />
@@ -316,7 +382,7 @@ export default function Page() {
     );
   }
 
-  const { filerName, secCode } = company;
+  const { filerName, secCode: companySecCode } = company;
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
@@ -327,18 +393,18 @@ export default function Page() {
             <div>
               <CardTitle className="text-xl font-bold tracking-tight">{formatDisplayName(filerName)}</CardTitle>
               <CardDescription className="flex items-center gap-2 mt-1">
-                <Badge variant="outline">{secCode}</Badge>
+                <Badge variant="outline">{companySecCode}</Badge>
                 <span>EDINET 四半期報告書データ</span>
               </CardDescription>
             </div>
             <CardAction>
               <Button
-                variant={isFavorite(secCode) ? "default" : "outline"}
+                variant={isFavorite(companySecCode) ? "default" : "outline"}
                 size="sm"
-                onClick={() => toggleFavorite(secCode)}
+                onClick={() => toggleFavorite(companySecCode)}
               >
-                <Star className={`size-4 ${isFavorite(secCode) ? "fill-current" : ""}`} />
-                {isFavorite(secCode) ? "お気に入り登録済" : "お気に入りに追加"}
+                <Star className={`size-4 ${isFavorite(companySecCode) ? "fill-current" : ""}`} />
+                {isFavorite(companySecCode) ? "お気に入り登録済" : "お気に入りに追加"}
               </Button>
             </CardAction>
           </CardHeader>

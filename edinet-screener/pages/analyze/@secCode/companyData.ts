@@ -1,7 +1,3 @@
-// https://vike.dev/data
-
-import type { PageContextServer } from "vike/types";
-
 export type CompanySummary = {
   edinetCode: string;
   secCode: string;
@@ -74,8 +70,6 @@ export type CompanyMetricsRow = {
   piotroskiFScore?: number | null;
 };
 
-export type Data = Awaited<ReturnType<typeof data>>;
-
 function compareSubmitDateTime(a: string, b: string): number {
   return a.localeCompare(b, "en");
 }
@@ -101,7 +95,7 @@ function dedupePeriodsByPeriodEndAndDoc(periods: CompanySummary["periods"]): Com
 }
 
 /** JSON の欠損で periods が無いと画面が例外落ちするため正規化する */
-function normalizeCompanySummary(raw: unknown, secCode: string): CompanySummary {
+export function normalizeCompanySummary(raw: unknown, secCode: string): CompanySummary {
   if (!raw || typeof raw !== "object") {
     throw new Error("企業データの形式が不正です");
   }
@@ -132,116 +126,4 @@ function normalizeCompanySummary(raw: unknown, secCode: string): CompanySummary 
     filerName: String(o.filerName ?? "（無題）"),
     periods: dedupePeriodsByPeriodEndAndDoc(periods),
   };
-}
-
-/**
- * SSR / Workers では urlOriginal が相対パスのみのことがあり new URL() が例外になる。
- * Vike の urlParsed.origin を最優先する。
- */
-function resolveFetchOrigin(pageContext: PageContextServer): string {
-  const parsedOrigin = pageContext.urlParsed?.origin;
-  if (typeof parsedOrigin === "string" && parsedOrigin.length > 0) {
-    return parsedOrigin;
-  }
-  const raw = pageContext.urlOriginal;
-  if (typeof raw === "string" && /^https?:\/\//i.test(raw)) {
-    try {
-      return new URL(raw).origin;
-    } catch {
-      /* fall through */
-    }
-  }
-  if (typeof window !== "undefined" && window.location?.origin) {
-    return window.location.origin;
-  }
-  const headers = pageContext.headers;
-  if (headers) {
-    const h = headers as Record<string, string | undefined>;
-    const host = h.host ?? h.Host ?? h["host"] ?? h["HOST"];
-    if (typeof host === "string" && host.length > 0) {
-      const proto = h["x-forwarded-proto"] === "https" ? "https" : "http";
-      return `${proto}://${host}`;
-    }
-  }
-  // Last resort: match the Vike dev server port used by this project.
-  return "http://localhost:3000";
-}
-
-async function fetchWithTimeout(url: string, timeoutMs: number): Promise<Response> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, { signal: controller.signal });
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-/** 同一オリジンで JSON を取得。Photon/Workers では node:fs が使えないため fetch のみ。 */
-async function fetchPublicJson(path: string, base: string, timeoutMs: number): Promise<Response> {
-  const normalized = path.startsWith("/") ? path : `/${path}`;
-  const primary = await fetchWithTimeout(`${base}${normalized}`, timeoutMs);
-  if (primary.ok || primary.status !== 404) {
-    return primary;
-  }
-  // localhost と 127.0.0.1 で静的配信の扱いが分かれる環境向け
-  try {
-    const u = new URL(base);
-    if (u.hostname === "localhost") {
-      u.hostname = "127.0.0.1";
-    } else if (u.hostname === "127.0.0.1") {
-      u.hostname = "localhost";
-    } else {
-      return primary;
-    }
-    const second = await fetchWithTimeout(`${u.origin}${normalized}`, timeoutMs);
-    if (second.ok || second.status !== 404) {
-      return second;
-    }
-  } catch {
-    /* ignore */
-  }
-  return primary;
-}
-
-export async function data(pageContext: PageContextServer) {
-  const secCode = pageContext.routeParams?.secCode;
-  if (!secCode) {
-    return { company: null, metrics: null, error: "証券コードが指定されていません" };
-  }
-
-  try {
-    const base = resolveFetchOrigin(pageContext);
-
-    // Ensure we don't keep Vike's globalContext pending indefinitely.
-    // (Vike warns when a Promise hasn't resolved after ~3s in dev.)
-    const timeoutMs = 2500;
-    const [companyRes, metricsRes] = await Promise.all([
-      fetchPublicJson(`/data/summaries/${secCode}.json`, base, timeoutMs),
-      fetchPublicJson("/data/company_metrics.json", base, timeoutMs),
-    ]);
-
-    if (!companyRes.ok) {
-      if (companyRes.status === 404) {
-        return {
-          company: null,
-          metrics: null,
-          error: `証券コード ${secCode} のデータが見つかりません。企業一覧から選択してください。`,
-        };
-      }
-      throw new Error(`HTTP ${companyRes.status}`);
-    }
-    const company = normalizeCompanySummary(await companyRes.json(), secCode);
-
-    let metrics: CompanyMetricsRow | null = null;
-    if (metricsRes.ok) {
-      const metricsData = (await metricsRes.json()) as { metrics?: CompanyMetricsRow[] };
-      metrics = metricsData.metrics?.find((m) => m.secCode === secCode) ?? null;
-    }
-
-    return { company, metrics, error: null };
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    return { company: null, metrics: null, error: `データの取得に失敗しました: ${msg}` };
-  }
 }
