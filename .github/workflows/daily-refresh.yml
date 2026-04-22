@@ -1,0 +1,146 @@
+name: Screener daily refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      data_scope:
+        description: "データ生成モード"
+        required: true
+        default: "sample"
+        type: choice
+        options:
+          - sample
+          - full
+      force_dataset_download:
+        description: "既存 data-set があっても再取得する"
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # 毎日 05:10 JST（UTC 20:10）
+    - cron: "10 20 * * *"
+
+env:
+  UV_COMPILE_BYTECODE: 0
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: edinet-screener/package-lock.json
+
+      - name: Install wrapper dependencies
+        working-directory: edinet-wrapper
+        run: uv sync
+
+      - name: Install frontend dependencies
+        working-directory: edinet-screener
+        run: npm ci
+
+      - name: Resolve run parameters
+        id: params
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_SCOPE: ${{ inputs.data_scope }}
+          INPUT_FORCE_DOWNLOAD: ${{ inputs.force_dataset_download }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            SCOPE="${INPUT_SCOPE:-sample}"
+            FORCE_DL="${INPUT_FORCE_DOWNLOAD:-false}"
+          else
+            SCOPE="sample"
+            FORCE_DL="false"
+          fi
+          echo "scope=$SCOPE" >> "$GITHUB_OUTPUT"
+          echo "force_download=$FORCE_DL" >> "$GITHUB_OUTPUT"
+
+      - name: Build screener data
+        working-directory: edinet-screener
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          DATA_SET_URL: ${{ secrets.DATA_SET_URL }}
+          DATA_SCOPE: ${{ steps.params.outputs.scope }}
+          FORCE_DOWNLOAD: ${{ steps.params.outputs.force_download == 'true' && '1' || '0' }}
+        run: npm run generate-data
+
+      - name: Validate generated data quality
+        working-directory: edinet-screener
+        run: |
+          set -euo pipefail
+          test -f public/data/company_metrics.json
+          test -f public/data/companies.json
+          test -d public/data/summaries
+          SUMMARY_COUNT=$(ls -1 public/data/summaries/*.json 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$SUMMARY_COUNT" -lt 1 ]; then
+            echo "summaries が生成されていません。"
+            exit 1
+          fi
+          python3 <<'PY'
+          import json, pathlib
+          p = pathlib.Path("public/data/company_metrics.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          metrics = data.get("metrics", [])
+          if not metrics:
+              raise SystemExit("metrics が空です。")
+          print(f"metrics rows: {len(metrics)}")
+          PY
+
+      - name: Test build frontend
+        working-directory: edinet-screener
+        run: npm run build:app
+
+      - name: Commit and push generated data
+        run: |
+          set -euo pipefail
+          BRANCH="${GITHUB_REF_NAME}"
+          git add edinet-screener/public/data
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(data): refresh screener data (${{ steps.params.outputs.scope }})"
+          git push origin "HEAD:${BRANCH}"
+
+      - name: Write run summary
+        if: always()
+        working-directory: edinet-screener
+        run: |
+          {
+            echo "## Screener refresh result"
+            echo "- Scope: \`${{ steps.params.outputs.scope }}\`"
+            echo "- Force download: \`${{ steps.params.outputs.force_download }}\`"
+            echo "- Delivery: \`commit/push (Cloudflare Git integration)\`"
+            if [ -f public/data/company_metrics.json ]; then
+              python3 <<'PY'
+          import json, pathlib
+          p = pathlib.Path("public/data/company_metrics.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          metrics = data.get("metrics", [])
+          print(f"- metrics rows: `{len(metrics)}`")
+          PY
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
