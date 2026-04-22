@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # ビルド前に data-set から public/data を生成する。
 # DATA_SET_URL が設定されていれば、先にリモートから data-set を取得する。
+# DATA_SCOPE=sample|full で生成対象を切替（未指定時は sample）。
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -31,7 +32,13 @@ if [ ! -d "$WRAPPER" ] || [ ! -f "$WRAPPER/scripts/frontend/build_screener_data.
 fi
 
 OUTPUT="${OUTPUT_PATH:-$SCREENER_ROOT/public/data}"
+DATA_SCOPE="${DATA_SCOPE:-sample}"
 
-echo "[generate-data] data-set から public/data を生成します..."
-(cd "$WRAPPER" && uv run python scripts/frontend/build_screener_data.py --mode sample --data_set "$DATA_SET" --output "$OUTPUT")
+if [ "$DATA_SCOPE" != "sample" ] && [ "$DATA_SCOPE" != "full" ]; then
+  echo "[generate-data] DATA_SCOPE は sample または full を指定してください。（現在: $DATA_SCOPE）"
+  exit 1
+fi
+
+echo "[generate-data] data-set から public/data を生成します... (mode=$DATA_SCOPE)"
+(cd "$WRAPPER" && uv run python scripts/frontend/build_screener_data.py --mode "$DATA_SCOPE" --data_set "$DATA_SET" --output "$OUTPUT")
 echo "[generate-data] 完了。"

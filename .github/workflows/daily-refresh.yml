@@ -1,0 +1,155 @@
+name: Screener daily refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      data_scope:
+        description: "データ生成モード"
+        required: true
+        default: "sample"
+        type: choice
+        options:
+          - sample
+          - full
+      deploy_env:
+        description: "デプロイ先（production は手動実行のみ推奨）"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
+      force_dataset_download:
+        description: "既存 data-set があっても再取得する"
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # 毎日 05:10 JST（UTC 20:10）
+    - cron: "10 20 * * *"
+
+env:
+  UV_COMPILE_BYTECODE: 0
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  refresh-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_env || 'staging' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: edinet-screener/package-lock.json
+
+      - name: Install wrapper dependencies
+        working-directory: edinet-wrapper
+        run: uv sync
+
+      - name: Install frontend dependencies
+        working-directory: edinet-screener
+        run: npm ci
+
+      - name: Resolve run parameters
+        id: params
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_SCOPE: ${{ inputs.data_scope }}
+          INPUT_ENV: ${{ inputs.deploy_env }}
+          INPUT_FORCE_DOWNLOAD: ${{ inputs.force_dataset_download }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            SCOPE="${INPUT_SCOPE:-sample}"
+            DEPLOY_ENV="${INPUT_ENV:-staging}"
+            FORCE_DL="${INPUT_FORCE_DOWNLOAD:-false}"
+          else
+            SCOPE="sample"
+            DEPLOY_ENV="staging"
+            FORCE_DL="false"
+          fi
+          echo "scope=$SCOPE" >> "$GITHUB_OUTPUT"
+          echo "deploy_env=$DEPLOY_ENV" >> "$GITHUB_OUTPUT"
+          echo "force_download=$FORCE_DL" >> "$GITHUB_OUTPUT"
+
+      - name: Build screener data
+        working-directory: edinet-screener
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          DATA_SET_URL: ${{ secrets.DATA_SET_URL }}
+          DATA_SCOPE: ${{ steps.params.outputs.scope }}
+          FORCE_DOWNLOAD: ${{ steps.params.outputs.force_download == 'true' && '1' || '0' }}
+        run: npm run generate-data
+
+      - name: Validate generated data quality
+        working-directory: edinet-screener
+        run: |
+          set -euo pipefail
+          test -f public/data/company_metrics.json
+          test -f public/data/companies.json
+          test -d public/data/summaries
+          SUMMARY_COUNT=$(ls -1 public/data/summaries/*.json 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$SUMMARY_COUNT" -lt 1 ]; then
+            echo "summaries が生成されていません。"
+            exit 1
+          fi
+          python3 <<'PY'
+          import json, pathlib
+          p = pathlib.Path("public/data/company_metrics.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          metrics = data.get("metrics", [])
+          if not metrics:
+              raise SystemExit("metrics が空です。")
+          print(f"metrics rows: {len(metrics)}")
+          PY
+
+      - name: Build frontend
+        working-directory: edinet-screener
+        run: npm run build:app
+
+      - name: Deploy to Cloudflare Workers
+        working-directory: edinet-screener
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.params.outputs.deploy_env }}" = "production" ]; then
+            npm run deploy
+          else
+            npx wrangler deploy --env staging
+          fi
+
+      - name: Write run summary
+        if: always()
+        working-directory: edinet-screener
+        run: |
+          {
+            echo "## Screener refresh result"
+            echo "- Scope: \`${{ steps.params.outputs.scope }}\`"
+            echo "- Deploy env: \`${{ steps.params.outputs.deploy_env }}\`"
+            echo "- Force download: \`${{ steps.params.outputs.force_download }}\`"
+            if [ -f public/data/company_metrics.json ]; then
+              python3 <<'PY'
+          import json, pathlib
+          p = pathlib.Path("public/data/company_metrics.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          metrics = data.get("metrics", [])
+          print(f"- metrics rows: `{len(metrics)}`")
+          PY
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -2,5 +2,10 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "edinet-screener",
   "compatibility_date": "2025-09-06",
-  "main": "virtual:photon:cloudflare:server-entry"
+  "main": "virtual:photon:cloudflare:server-entry",
+  "env": {
+    "staging": {
+      "name": "edinet-screener-staging"
+    }
+  }
 }
