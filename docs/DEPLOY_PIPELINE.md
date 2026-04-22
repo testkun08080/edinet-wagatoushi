@@ -1,0 +1,59 @@
+# DEPLOY PIPELINE (Production-ready)
+
+このドキュメントは、`sample` 運用から `full` 運用へ切り替え可能な本番想定パイプラインを定義します。
+
+## 目的
+
+- サンプルデータでも本番と同じ実行経路で毎日更新する
+- 切替は設定値のみ（`DATA_SCOPE=full`）で行う
+- 失敗時に壊れたデータをデプロイしない
+
+## データ配置
+
+大容量データは Cloudflare R2 に配置し、公開用JSONはビルド時に生成します。
+
+### R2 オブジェクト命名規約
+
+- `raw/{docType}/{year}/{month}/...`
+  - 例: `raw/annual/2026/04/S100XYZ1.tsv`
+- `build-input/{scope}/{snapshotDate}/...`
+  - 例: `build-input/sample/2026-04-22/manifest.json`
+  - 例: `build-input/full/2026-04-22/manifest.json`
+- `snapshots/{scope}/{snapshotDate}/public-data.tar.zst`
+  - 例: `snapshots/sample/2026-04-22/public-data.tar.zst`
+
+### 推奨メタデータキー
+
+- `x-scope`: `sample` or `full`
+- `x-source`: `edinet`
+- `x-generated-at`: ISO8601 timestamp
+- `x-run-id`: GitHub Actions run id
+
+## 日次パイプライン
+
+Workflow: `.github/workflows/daily-refresh.yml`
+
+1. 依存関係セットアップ（uv + node）
+2. `npm run generate-data` 実行（`DATA_SCOPE=sample|full`）
+3. 品質ゲート（`company_metrics.json` / `companies.json` / `summaries/*.json` の存在と件数）
+4. テストビルド（`npm run build:app`）
+5. 生成結果を `edinet-screener/public/data` に commit/push
+6. Cloudflare Git integration により自動デプロイ
+
+## sample -> full 切替手順
+
+1. 手動実行で `data_scope=full` を指定
+2. 連続運転と表示確認を行う
+3. 問題なければ Cloudflare 側で production branch へ反映
+4. 安定後、必要なら scheduled 側の既定 scope を `full` に変更
+
+## 必要な GitHub Secrets
+
+- `EDINET_API_KEY`
+- `DATA_SET_URL` (任意、R2/外部URLから data-set を取得する場合)
+
+## 運用ルール
+
+- 失敗時はデプロイしない（前回配信を維持）
+- sample 運用中も同じワークフローを使う
+- 週1回は full で staging 検証を実行し、差分不整合を検知する
