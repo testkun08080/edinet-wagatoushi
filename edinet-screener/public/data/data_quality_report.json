@@ -63,7 +63,7 @@
       "missing": 9,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "63700",
         "65010",
@@ -231,7 +231,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -249,7 +249,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -267,7 +267,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -285,7 +285,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -342,7 +342,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -360,7 +360,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -378,7 +378,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -402,7 +402,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -446,7 +446,7 @@
       "missing": 11,
       "total": 11,
       "missingSecCodes": [
-        "79740",
+        "7974",
         "94240",
         "96160",
         "63700",
@@ -460,28 +460,17 @@
       ]
     },
     "salesCagr3y": {
+      "filled": 11,
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
+    },
+    "salesCagr5y": {
       "filled": 10,
       "missing": 1,
       "total": 11,
       "missingSecCodes": [
         "67620"
-      ]
-    },
-    "salesCagr5y": {
-      "filled": 1,
-      "missing": 10,
-      "total": 11,
-      "missingSecCodes": [
-        "79740",
-        "94240",
-        "96160",
-        "63700",
-        "65010",
-        "67010",
-        "67020",
-        "67030",
-        "67620",
-        "67970"
       ]
     },
     "consecutiveDivIncreases": {
@@ -524,9 +513,9 @@
     }
   },
   "byCompany": {
-    "79740": {
+    "7974": {
       "filerName": "任天堂株式会社",
-      "missingCount": 11,
+      "missingCount": 10,
       "missingKeys": [
         "dilutedEPS",
         "配当性向",
@@ -537,13 +526,12 @@
         "配当利回り",
         "時価総額",
         "ネットキャッシュ比率",
-        "dividendGrowthYoY",
-        "salesCagr5y"
+        "dividendGrowthYoY"
       ]
     },
     "94240": {
       "filerName": "日本通信株式会社",
-      "missingCount": 11,
+      "missingCount": 10,
       "missingKeys": [
         "dilutedEPS",
         "配当性向",
@@ -554,13 +542,12 @@
         "配当利回り",
         "時価総額",
         "ネットキャッシュ比率",
-        "dividendGrowthYoY",
-        "salesCagr5y"
+        "dividendGrowthYoY"
       ]
     },
     "96160": {
       "filerName": "株式会社共立メンテナンス",
-      "missingCount": 10,
+      "missingCount": 9,
       "missingKeys": [
         "配当性向",
         "payoutRatioComputed",
@@ -570,13 +557,12 @@
         "配当利回り",
         "時価総額",
         "ネットキャッシュ比率",
-        "dividendGrowthYoY",
-        "salesCagr5y"
+        "dividendGrowthYoY"
       ]
     },
     "63700": {
       "filerName": "栗田工業株式会社",
-      "missingCount": 23,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -599,13 +585,12 @@
         "ネットキャッシュ比率",
         "epsGrowthYoY",
         "dividendGrowthYoY",
-        "salesCagr5y",
         "deRatio"
       ]
     },
     "65010": {
       "filerName": "株式会社日立製作所",
-      "missingCount": 29,
+      "missingCount": 28,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -633,14 +618,13 @@
         "opGrowthYoY",
         "epsGrowthYoY",
         "dividendGrowthYoY",
-        "salesCagr5y",
         "deRatio",
         "roic"
       ]
     },
     "67010": {
       "filerName": "日本電気株式会社",
-      "missingCount": 23,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -663,13 +647,12 @@
         "ネットキャッシュ比率",
         "epsGrowthYoY",
         "dividendGrowthYoY",
-        "salesCagr5y",
         "deRatio"
       ]
     },
     "67020": {
       "filerName": "富士通株式会社",
-      "missingCount": 23,
+      "missingCount": 22,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -692,13 +675,12 @@
         "ネットキャッシュ比率",
         "epsGrowthYoY",
         "dividendGrowthYoY",
-        "salesCagr5y",
         "deRatio"
       ]
     },
     "67030": {
       "filerName": "沖電気工業株式会社",
-      "missingCount": 10,
+      "missingCount": 9,
       "missingKeys": [
         "配当性向",
         "payoutRatioComputed",
@@ -708,13 +690,12 @@
         "配当利回り",
         "時価総額",
         "ネットキャッシュ比率",
-        "dividendGrowthYoY",
-        "salesCagr5y"
+        "dividendGrowthYoY"
       ]
     },
     "67620": {
       "filerName": "ＴＤＫ株式会社",
-      "missingCount": 27,
+      "missingCount": 26,
       "missingKeys": [
         "自己資本比率",
         "EPS",
@@ -740,14 +721,13 @@
         "ネットキャッシュ比率",
         "epsGrowthYoY",
         "dividendGrowthYoY",
-        "salesCagr3y",
         "salesCagr5y",
         "deRatio"
       ]
     },
     "67970": {
       "filerName": "名古屋電機工業株式会社",
-      "missingCount": 11,
+      "missingCount": 10,
       "missingKeys": [
         "dilutedEPS",
         "配当性向",
@@ -758,8 +738,7 @@
         "配当利回り",
         "時価総額",
         "ネットキャッシュ比率",
-        "dividendGrowthYoY",
-        "salesCagr5y"
+        "dividendGrowthYoY"
       ]
     },
     "69650": {
