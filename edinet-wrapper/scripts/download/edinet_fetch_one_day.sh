@@ -12,8 +12,8 @@
 # 既存企業ディレクトリを丸ごとスキップする場合:
 #   SKIP_EXISTING_COMPANIES=1 ./scripts/download/edinet_fetch_one_day.sh
 #
-# 取得する doc_type を変えたい場合（カンマ区切り、デフォルト: annual,large_holding）:
-#   EDINET_ONE_DAY_DOC_TYPES=annual,large_holding,annual_amended ./scripts/download/edinet_fetch_one_day.sh
+# 取得する doc_type を変えたい場合（カンマ区切り、デフォルト: annual,quarterly,semiannual,large_holding）:
+#   EDINET_ONE_DAY_DOC_TYPES=annual,quarterly,semiannual,large_holding,annual_amended ./scripts/download/edinet_fetch_one_day.sh
 #
 set -euo pipefail
 
@@ -25,7 +25,7 @@ if [ -z "${TARGET_DATE}" ]; then
   TARGET_DATE="$(TZ=Asia/Tokyo python3 -c "from datetime import date, timedelta; print((date.today() - timedelta(days=1)).isoformat())")"
 fi
 
-RAW_TYPES="${EDINET_ONE_DAY_DOC_TYPES:-annual,large_holding}"
+RAW_TYPES="${EDINET_ONE_DAY_DOC_TYPES:-annual,quarterly,semiannual,large_holding}"
 IFS=',' read -r -a DOC_TYPES <<< "${RAW_TYPES// /}"
 
 for doc_type in "${DOC_TYPES[@]}"; do

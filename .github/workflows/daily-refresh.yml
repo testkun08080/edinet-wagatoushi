@@ -11,6 +11,15 @@ on:
         options:
           - sample
           - full
+      data_source:
+        description: "データソース(dataset|d1|hybrid)"
+        required: false
+        default: "hybrid"
+        type: choice
+        options:
+          - dataset
+          - d1
+          - hybrid
       force_dataset_download:
         description: "既存 data-set があっても再取得する"
         required: false
@@ -63,18 +72,39 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           INPUT_SCOPE: ${{ inputs.data_scope }}
+          INPUT_SOURCE: ${{ inputs.data_source }}
           INPUT_FORCE_DOWNLOAD: ${{ inputs.force_dataset_download }}
         run: |
           set -euo pipefail
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             SCOPE="${INPUT_SCOPE:-sample}"
+            SOURCE="${INPUT_SOURCE:-hybrid}"
             FORCE_DL="${INPUT_FORCE_DOWNLOAD:-false}"
           else
             SCOPE="sample"
+            SOURCE="hybrid"
             FORCE_DL="false"
           fi
           echo "scope=$SCOPE" >> "$GITHUB_OUTPUT"
+          echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
           echo "force_download=$FORCE_DL" >> "$GITHUB_OUTPUT"
+
+      - name: Ingest daily EDINET into D1-compatible DB
+        if: ${{ steps.params.outputs.source == 'd1' || steps.params.outputs.source == 'hybrid' }}
+        working-directory: edinet-wrapper
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          EDINET_REQUEST_DELAY: "3"
+        run: |
+          set -euo pipefail
+          uv run python scripts/pipeline/ingest_daily_edinet_to_db.py \
+            --doc_types "annual,quarterly,semiannual,large_holding" \
+            --db_path state/edinet_pipeline.db \
+            --schema_path sql/d1_schema.sql \
+            --raw_root raw \
+            --scope daily-refresh
+          uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
+          uv run python scripts/pipeline/check_daily_delta.py --db_path state/edinet_pipeline.db --max_drop_ratio 0.7
 
       - name: Build screener data
         working-directory: edinet-screener
@@ -82,8 +112,29 @@ jobs:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           DATA_SET_URL: ${{ secrets.DATA_SET_URL }}
           DATA_SCOPE: ${{ steps.params.outputs.scope }}
+          DATA_SOURCE: ${{ steps.params.outputs.source }}
+          D1_DB_PATH: ../edinet-wrapper/state/edinet_pipeline.db
           FORCE_DOWNLOAD: ${{ steps.params.outputs.force_download == 'true' && '1' || '0' }}
         run: npm run generate-data
+
+      - name: Hybrid compatibility check (dataset vs d1)
+        if: ${{ steps.params.outputs.source == 'hybrid' }}
+        working-directory: edinet-wrapper
+        run: |
+          set -euo pipefail
+          if [ ! -d "../data-set" ]; then
+            echo "No data-set found. Skip compatibility check."
+            exit 0
+          fi
+          TMP_BASELINE="$(mktemp -d)"
+          uv run python scripts/frontend/build_screener_data.py \
+            --mode "${{ steps.params.outputs.scope }}" \
+            --data_set ../data-set \
+            --output "$TMP_BASELINE"
+          uv run python scripts/pipeline/compare_public_data_outputs.py \
+            --baseline "$TMP_BASELINE" \
+            --candidate ../edinet-screener/public/data \
+            --max_missing_ratio 0.10
 
       - name: Validate generated data quality
         working-directory: edinet-screener
@@ -132,6 +183,7 @@ jobs:
           {
             echo "## Screener refresh result"
             echo "- Scope: \`${{ steps.params.outputs.scope }}\`"
+            echo "- Source: \`${{ steps.params.outputs.source }}\`"
             echo "- Force download: \`${{ steps.params.outputs.force_download }}\`"
             echo "- Delivery: \`commit/push (Cloudflare Git integration)\`"
             if [ -f public/data/company_metrics.json ]; then

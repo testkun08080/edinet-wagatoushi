@@ -3,6 +3,8 @@
     "dev": "vike dev",
     "generate:ogp": "tsx scripts/generate-ogp.tsx",
     "generate-data": "bash scripts/generate-data.sh",
+    "d1:apply-schema:staging": "bash scripts/d1-apply-schema.sh staging",
+    "d1:apply-schema:production": "bash scripts/d1-apply-schema.sh production",
     "build": "npm run generate:ogp && npm run generate-data && vike build",
     "build:app": "vike build",
     "preview": "vike preview",

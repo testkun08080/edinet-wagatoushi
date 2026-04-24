@@ -3,9 +3,51 @@
   "name": "edinet-screener",
   "compatibility_date": "2025-09-06",
   "main": "virtual:photon:cloudflare:server-entry",
+  "d1_databases": [
+    {
+      "binding": "EDINET_DB",
+      "database_name": "edinet-screener-dev",
+      "database_id": "REPLACE_WITH_DEV_D1_DATABASE_ID"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "EDINET_RAW_BUCKET",
+      "bucket_name": "edinet-raw-dev"
+    }
+  ],
   "env": {
     "staging": {
-      "name": "edinet-screener-staging"
+      "name": "edinet-screener-staging",
+      "d1_databases": [
+        {
+          "binding": "EDINET_DB",
+          "database_name": "edinet-screener-staging",
+          "database_id": "REPLACE_WITH_STAGING_D1_DATABASE_ID"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "EDINET_RAW_BUCKET",
+          "bucket_name": "edinet-raw-staging"
+        }
+      ]
+    },
+    "production": {
+      "name": "edinet-screener",
+      "d1_databases": [
+        {
+          "binding": "EDINET_DB",
+          "database_name": "edinet-screener-prod",
+          "database_id": "REPLACE_WITH_PROD_D1_DATABASE_ID"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "EDINET_RAW_BUCKET",
+          "bucket_name": "edinet-raw-prod"
+        }
+      ]
     }
   }
 }
