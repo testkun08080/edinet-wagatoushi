@@ -1,4 +1,4 @@
-# 1日分: 有報・大量保有。workflow_dispatch + 日次 schedule（マトリクスなし）
+# 1日分: 有報・四半期・半期・大量保有。workflow_dispatch + 日次 schedule（マトリクスなし）
 name: EDINET one-day fetch
 
 on:
@@ -9,7 +9,7 @@ on:
         required: false
         type: string
       doc_types:
-        description: "カンマ区切り（例: annual,large_holding）。空欄＝ annual,large_holding"
+        description: "カンマ区切り（例: annual,quarterly,semiannual,large_holding）。空欄＝ annual,quarterly,semiannual,large_holding"
         required: false
         type: string
       request_delay:
@@ -74,7 +74,7 @@ jobs:
           else
             export EDINET_REQUEST_DELAY=3
             export SKIP_EXISTING_COMPANIES=1
-            unset EDINET_ONE_DAY_DOC_TYPES
+            export EDINET_ONE_DAY_DOC_TYPES="annual,quarterly,semiannual,large_holding"
             ARG=""
           fi
           if [ -n "$ARG" ]; then

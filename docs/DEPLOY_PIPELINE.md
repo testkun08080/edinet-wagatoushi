@@ -1,6 +1,7 @@
 # DEPLOY PIPELINE (Production-ready)
 
 このドキュメントは、`sample` 運用から `full` 運用へ切り替え可能な本番想定パイプラインを定義します。
+現在は `DATA_SOURCE=dataset|d1|hybrid` を選択可能です。
 
 ## 目的
 
@@ -34,11 +35,12 @@
 Workflow: `.github/workflows/daily-refresh.yml`
 
 1. 依存関係セットアップ（uv + node）
-2. `npm run generate-data` 実行（`DATA_SCOPE=sample|full`）
-3. 品質ゲート（`company_metrics.json` / `companies.json` / `summaries/*.json` の存在と件数）
-4. テストビルド（`npm run build:app`）
-5. 生成結果を `edinet-screener/public/data` に commit/push
-6. Cloudflare Git integration により自動デプロイ
+2. `uv run python scripts/pipeline/ingest_daily_edinet_to_db.py` 実行（`data_source=d1|hybrid` 時）
+3. `npm run generate-data` 実行（`DATA_SCOPE=sample|full`, `DATA_SOURCE=dataset|d1|hybrid`）
+4. 品質ゲート（`company_metrics.json` / `companies.json` / `summaries/*.json` の存在と件数）
+5. テストビルド（`npm run build:app`）
+6. 生成結果を `edinet-screener/public/data` に commit/push
+7. Cloudflare Git integration により自動デプロイ
 
 ## sample -> full 切替手順
 
@@ -51,6 +53,23 @@ Workflow: `.github/workflows/daily-refresh.yml`
 
 - `EDINET_API_KEY`
 - `DATA_SET_URL` (任意、R2/外部URLから data-set を取得する場合)
+
+## Cloudflare 環境分離（dev / staging / prod）
+
+- `edinet-screener/wrangler.jsonc` に `EDINET_DB` (D1) と `EDINET_RAW_BUCKET` (R2) を環境別で定義
+- 初回は D1 スキーマを適用:
+  - `cd edinet-screener && npm run d1:apply-schema:staging`
+  - `cd edinet-screener && npm run d1:apply-schema:production`
+
+## Hybrid 運用ルール
+
+- `hybrid` では D1 互換DBが存在すれば DB 由来で `public/data` を生成、なければ data-set へフォールバック
+- D1 取り込み後に `check_daily_delta.py` を実行し、前日比の急減（既定 70%超）を失敗扱いにする
+- 配信前ゲート:
+  - D1取り込み成功
+  - JSON生成成功
+  - フロントビルド成功
+  - 上記を満たす場合のみ commit/push
 
 ## 運用ルール
 
