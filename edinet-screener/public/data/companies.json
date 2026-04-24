@@ -1,59 +1,34 @@
 {
   "companies": [
     {
-      "edinetCode": "E02367",
-      "secCode": "7974",
-      "filerName": "任天堂株式会社"
+      "edinetCode": "E02960",
+      "secCode": "27760",
+      "filerName": "新都ホールディングス株式会社"
     },
     {
-      "edinetCode": "E04473",
-      "secCode": "94240",
-      "filerName": "日本通信株式会社"
+      "edinetCode": "E23841",
+      "secCode": "31590",
+      "filerName": "丸善ＣＨＩホールディングス株式会社"
     },
     {
-      "edinetCode": "E04908",
-      "secCode": "96160",
-      "filerName": "株式会社共立メンテナンス"
+      "edinetCode": "E05204",
+      "secCode": "42870",
+      "filerName": "株式会社ジャストプランニング"
     },
     {
-      "edinetCode": "E01573",
-      "secCode": "63700",
-      "filerName": "栗田工業株式会社"
+      "edinetCode": "E02490",
+      "secCode": "43690",
+      "filerName": "株式会社　トリケミカル研究所"
     },
     {
-      "edinetCode": "E01737",
-      "secCode": "65010",
-      "filerName": "株式会社日立製作所"
+      "edinetCode": "E02065",
+      "secCode": "67570",
+      "filerName": "株式会社ＯＳＧコーポレーション"
     },
     {
-      "edinetCode": "E01765",
-      "secCode": "67010",
-      "filerName": "日本電気株式会社"
-    },
-    {
-      "edinetCode": "E01766",
-      "secCode": "67020",
-      "filerName": "富士通株式会社"
-    },
-    {
-      "edinetCode": "E01767",
-      "secCode": "67030",
-      "filerName": "沖電気工業株式会社"
-    },
-    {
-      "edinetCode": "E01780",
-      "secCode": "67620",
-      "filerName": "ＴＤＫ株式会社"
-    },
-    {
-      "edinetCode": "E02055",
-      "secCode": "67970",
-      "filerName": "名古屋電機工業株式会社"
-    },
-    {
-      "edinetCode": "E01955",
-      "secCode": "69650",
-      "filerName": "浜松ホトニクス株式会社"
+      "edinetCode": "E02016",
+      "secCode": "68980",
+      "filerName": "トミタ電機株式会社"
     }
   ]
 }
