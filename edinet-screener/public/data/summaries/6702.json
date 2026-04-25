@@ -1,6 +1,6 @@
 {
   "edinetCode": "E01766",
-  "secCode": "67020",
+  "secCode": "6702",
   "filerName": "富士通株式会社",
   "periods": [
     {
@@ -18,7 +18,7 @@
       "pl": {},
       "bs": {},
       "cf": {},
-      "rawTsvPath": "raw_tsv/67020/S1009K3F.json"
+      "rawTsvPath": "raw_tsv/6702/S1009K3F.json"
     },
     {
       "periodStart": "2016-04-01",
@@ -57,7 +57,7 @@
       "cf": {
         "投資キャッシュフロー": "-161481000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100AMOL.json"
+      "rawTsvPath": "raw_tsv/6702/S100AMOL.json"
     },
     {
       "periodStart": "2017-04-01",
@@ -74,7 +74,7 @@
       "pl": {},
       "bs": {},
       "cf": {},
-      "rawTsvPath": "raw_tsv/67020/S100B06V.json"
+      "rawTsvPath": "raw_tsv/6702/S100B06V.json"
     },
     {
       "periodStart": "2017-07-01",
@@ -91,7 +91,7 @@
       "pl": {},
       "bs": {},
       "cf": {},
-      "rawTsvPath": "raw_tsv/67020/S100BLCD.json"
+      "rawTsvPath": "raw_tsv/6702/S100BLCD.json"
     },
     {
       "periodStart": "2017-10-01",
@@ -108,7 +108,7 @@
       "pl": {},
       "bs": {},
       "cf": {},
-      "rawTsvPath": "raw_tsv/67020/S100C7TZ.json"
+      "rawTsvPath": "raw_tsv/6702/S100C7TZ.json"
     },
     {
       "periodStart": "2017-04-01",
@@ -147,7 +147,7 @@
       "cf": {
         "投資キャッシュフロー": "-128873000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100DCSS.json"
+      "rawTsvPath": "raw_tsv/6702/S100DCSS.json"
     },
     {
       "periodStart": "2018-04-01",
@@ -164,7 +164,7 @@
       "pl": {},
       "bs": {},
       "cf": {},
-      "rawTsvPath": "raw_tsv/67020/S100DR4H.json"
+      "rawTsvPath": "raw_tsv/6702/S100DR4H.json"
     },
     {
       "periodStart": "2018-07-01",
@@ -181,7 +181,7 @@
       "pl": {},
       "bs": {},
       "cf": {},
-      "rawTsvPath": "raw_tsv/67020/S100EDH2.json"
+      "rawTsvPath": "raw_tsv/6702/S100EDH2.json"
     },
     {
       "periodStart": "2018-10-01",
@@ -198,7 +198,7 @@
       "pl": {},
       "bs": {},
       "cf": {},
-      "rawTsvPath": "raw_tsv/67020/S100F2X8.json"
+      "rawTsvPath": "raw_tsv/6702/S100F2X8.json"
     },
     {
       "periodStart": "2018-04-01",
@@ -267,7 +267,7 @@
         "財務キャッシュフロー": "-136622000000",
         "現金及び現金同等物": "416684000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100G5W7.json"
+      "rawTsvPath": "raw_tsv/6702/S100G5W7.json"
     },
     {
       "periodStart": "2019-04-01",
@@ -314,7 +314,7 @@
         "財務キャッシュフロー": "-55416000000",
         "現金及び現金同等物": "464078000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100GKW0.json"
+      "rawTsvPath": "raw_tsv/6702/S100GKW0.json"
     },
     {
       "periodStart": "2019-07-01",
@@ -361,7 +361,7 @@
         "財務キャッシュフロー": "-58787000000",
         "現金及び現金同等物": "413002000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100H7I4.json"
+      "rawTsvPath": "raw_tsv/6702/S100H7I4.json"
     },
     {
       "periodStart": "2019-10-01",
@@ -408,7 +408,7 @@
         "財務キャッシュフロー": "-83453000000",
         "現金及び現金同等物": "504240000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100HV9Z.json"
+      "rawTsvPath": "raw_tsv/6702/S100HV9Z.json"
     },
     {
       "periodStart": "2019-04-01",
@@ -460,7 +460,7 @@
         "財務キャッシュフロー": "-193164000000",
         "現金及び現金同等物": "451857000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100IVC3.json"
+      "rawTsvPath": "raw_tsv/6702/S100IVC3.json"
     },
     {
       "periodStart": "2020-04-01",
@@ -507,7 +507,7 @@
         "財務キャッシュフロー": "-23831000000",
         "現金及び現金同等物": "568907000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100JCOB.json"
+      "rawTsvPath": "raw_tsv/6702/S100JCOB.json"
     },
     {
       "periodStart": "2020-07-01",
@@ -554,7 +554,7 @@
         "財務キャッシュフロー": "-75585000000",
         "現金及び現金同等物": "491076000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100K04O.json"
+      "rawTsvPath": "raw_tsv/6702/S100K04O.json"
     },
     {
       "periodStart": "2020-10-01",
@@ -601,7 +601,7 @@
         "財務キャッシュフロー": "-146889000000",
         "現金及び現金同等物": "467420000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100KMXG.json"
+      "rawTsvPath": "raw_tsv/6702/S100KMXG.json"
     },
     {
       "periodStart": "2020-04-01",
@@ -653,7 +653,7 @@
         "財務キャッシュフロー": "-219626000000",
         "現金及び現金同等物": "481832000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100LT4R.json"
+      "rawTsvPath": "raw_tsv/6702/S100LT4R.json"
     },
     {
       "periodStart": "2021-04-01",
@@ -700,7 +700,7 @@
         "財務キャッシュフロー": "-68995000000",
         "現金及び現金同等物": "576466000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100M3NE.json"
+      "rawTsvPath": "raw_tsv/6702/S100M3NE.json"
     },
     {
       "periodStart": "2021-07-01",
@@ -747,7 +747,7 @@
         "財務キャッシュフロー": "-109234000000",
         "現金及び現金同等物": "475882000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100MOUD.json"
+      "rawTsvPath": "raw_tsv/6702/S100MOUD.json"
     },
     {
       "periodStart": "2021-10-01",
@@ -794,7 +794,7 @@
         "財務キャッシュフロー": "-165213000000",
         "現金及び現金同等物": "427654000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100NBZX.json"
+      "rawTsvPath": "raw_tsv/6702/S100NBZX.json"
     },
     {
       "periodStart": "2021-04-01",
@@ -846,7 +846,7 @@
         "財務キャッシュフロー": "-193685000000",
         "現金及び現金同等物": "484020000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100OHKL.json"
+      "rawTsvPath": "raw_tsv/6702/S100OHKL.json"
     },
     {
       "periodStart": "2022-04-01",
@@ -894,7 +894,7 @@
         "財務キャッシュフロー": "-68626000000",
         "現金及び現金同等物": "472737000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100OTVT.json"
+      "rawTsvPath": "raw_tsv/6702/S100OTVT.json"
     },
     {
       "periodStart": "2022-07-01",
@@ -942,7 +942,7 @@
         "財務キャッシュフロー": "-83444000000",
         "現金及び現金同等物": "457574000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100PFZO.json"
+      "rawTsvPath": "raw_tsv/6702/S100PFZO.json"
     },
     {
       "periodStart": "2022-10-01",
@@ -990,7 +990,7 @@
         "財務キャッシュフロー": "-170150000000",
         "現金及び現金同等物": "368728000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100Q2IN.json"
+      "rawTsvPath": "raw_tsv/6702/S100Q2IN.json"
     },
     {
       "periodStart": "2022-04-01",
@@ -1043,7 +1043,7 @@
         "財務キャッシュフロー": "-313585000000",
         "現金及び現金同等物": "355901000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100R3OA.json"
+      "rawTsvPath": "raw_tsv/6702/S100R3OA.json"
     },
     {
       "periodStart": "2023-04-01",
@@ -1091,7 +1091,7 @@
         "財務キャッシュフロー": "-24852000000",
         "現金及び現金同等物": "465948000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100RI62.json"
+      "rawTsvPath": "raw_tsv/6702/S100RI62.json"
     },
     {
       "periodStart": "2023-07-01",
@@ -1139,7 +1139,7 @@
         "財務キャッシュフロー": "-43249000000",
         "現金及び現金同等物": "360803000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100S3I1.json"
+      "rawTsvPath": "raw_tsv/6702/S100S3I1.json"
     },
     {
       "periodStart": "2023-10-01",
@@ -1187,7 +1187,7 @@
         "財務キャッシュフロー": "-69547000000",
         "現金及び現金同等物": "363836000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100SQFB.json"
+      "rawTsvPath": "raw_tsv/6702/S100SQFB.json"
     },
     {
       "periodStart": "2023-04-01",
@@ -1240,7 +1240,7 @@
         "財務キャッシュフロー": "-181488000000",
         "現金及び現金同等物": "342139000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100TQ5C.json"
+      "rawTsvPath": "raw_tsv/6702/S100TQ5C.json"
     },
     {
       "periodStart": "2024-04-01",
@@ -1287,7 +1287,7 @@
         "財務キャッシュフロー": "-26319000000",
         "現金及び現金同等物": "356667000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100UMP3.json"
+      "rawTsvPath": "raw_tsv/6702/S100UMP3.json"
     },
     {
       "periodStart": "2024-04-01",
@@ -1339,7 +1339,7 @@
         "財務キャッシュフロー": "-240454000000",
         "現金及び現金同等物": "236079000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100W1DS.json"
+      "rawTsvPath": "raw_tsv/6702/S100W1DS.json"
     },
     {
       "periodStart": "2025-04-01",
@@ -1386,7 +1386,7 @@
         "財務キャッシュフロー": "-114828000000",
         "現金及び現金同等物": "647637000000"
       },
-      "rawTsvPath": "raw_tsv/67020/S100WXVS.json"
+      "rawTsvPath": "raw_tsv/6702/S100WXVS.json"
     }
   ]
 }

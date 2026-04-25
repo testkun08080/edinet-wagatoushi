@@ -1,6 +1,6 @@
 {
   "edinetCode": "E01767",
-  "secCode": "67030",
+  "secCode": "6703",
   "filerName": "沖電気工業株式会社",
   "periods": [
     {
@@ -107,7 +107,7 @@
         "現金及び現金同等物の増減額": "515000000",
         "現金及び現金同等物": "47043000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S1009M4U.json"
+      "rawTsvPath": "raw_tsv/6703/S1009M4U.json"
     },
     {
       "periodStart": "2016-04-01",
@@ -234,7 +234,7 @@
         "現金及び現金同等物の増減額": "5453000000",
         "現金及び現金同等物": "51980000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100AFA6.json"
+      "rawTsvPath": "raw_tsv/6703/S100AFA6.json"
     },
     {
       "periodStart": "2017-04-01",
@@ -342,7 +342,7 @@
         "現金及び現金同等物の増減額": "-3094000000",
         "現金及び現金同等物": "48885000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100B1TO.json"
+      "rawTsvPath": "raw_tsv/6703/S100B1TO.json"
     },
     {
       "periodStart": "2017-07-01",
@@ -451,7 +451,7 @@
         "現金及び現金同等物の増減額": "-7848000000",
         "現金及び現金同等物": "44132000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100BO7U.json"
+      "rawTsvPath": "raw_tsv/6703/S100BO7U.json"
     },
     {
       "periodStart": "2017-10-01",
@@ -560,7 +560,7 @@
         "現金及び現金同等物の増減額": "-7142000000",
         "現金及び現金同等物": "44838000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100CCF6.json"
+      "rawTsvPath": "raw_tsv/6703/S100CCF6.json"
     },
     {
       "periodStart": "2017-04-01",
@@ -685,7 +685,7 @@
         "現金及び現金同等物の増減額": "-6498000000",
         "現金及び現金同等物": "45481000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100D2JU.json"
+      "rawTsvPath": "raw_tsv/6703/S100D2JU.json"
     },
     {
       "periodStart": "2018-04-01",
@@ -792,7 +792,7 @@
         "現金及び現金同等物の増減額": "1137000000",
         "現金及び現金同等物": "46619000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100DW2N.json"
+      "rawTsvPath": "raw_tsv/6703/S100DW2N.json"
     },
     {
       "periodStart": "2018-07-01",
@@ -901,7 +901,7 @@
         "現金及び現金同等物の増減額": "-3973000000",
         "現金及び現金同等物": "41508000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100E5ZT.json"
+      "rawTsvPath": "raw_tsv/6703/S100E5ZT.json"
     },
     {
       "periodStart": "2018-10-01",
@@ -1013,7 +1013,7 @@
         "現金及び現金同等物の増減額": "-8409000000",
         "現金及び現金同等物": "37072000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100F6BP.json"
+      "rawTsvPath": "raw_tsv/6703/S100F6BP.json"
     },
     {
       "periodStart": "2018-04-01",
@@ -1141,7 +1141,7 @@
         "現金及び現金同等物の増減額": "-18657000000",
         "現金及び現金同等物": "26823000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100FYEO.json"
+      "rawTsvPath": "raw_tsv/6703/S100FYEO.json"
     },
     {
       "periodStart": "2019-04-01",
@@ -1249,7 +1249,7 @@
         "現金及び現金同等物の増減額": "6765000000",
         "現金及び現金同等物": "33589000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100GQR5.json"
+      "rawTsvPath": "raw_tsv/6703/S100GQR5.json"
     },
     {
       "periodStart": "2019-07-01",
@@ -1360,7 +1360,7 @@
         "現金及び現金同等物の増減額": "-192000000",
         "現金及び現金同等物": "26631000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100HB6W.json"
+      "rawTsvPath": "raw_tsv/6703/S100HB6W.json"
     },
     {
       "periodStart": "2019-10-01",
@@ -1471,7 +1471,7 @@
         "現金及び現金同等物の増減額": "6837000000",
         "現金及び現金同等物": "33661000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100HZYJ.json"
+      "rawTsvPath": "raw_tsv/6703/S100HZYJ.json"
     },
     {
       "periodStart": "2019-04-01",
@@ -1597,7 +1597,7 @@
         "現金及び現金同等物の増減額": "19693000000",
         "現金及び現金同等物": "46517000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100ISE1.json"
+      "rawTsvPath": "raw_tsv/6703/S100ISE1.json"
     },
     {
       "periodStart": "2020-04-01",
@@ -1703,7 +1703,7 @@
         "現金及び現金同等物の増減額": "5599000000",
         "現金及び現金同等物": "52116000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100JIB7.json"
+      "rawTsvPath": "raw_tsv/6703/S100JIB7.json"
     },
     {
       "periodStart": "2020-07-01",
@@ -1811,7 +1811,7 @@
         "現金及び現金同等物の増減額": "-300000000",
         "現金及び現金同等物": "46216000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100K74S.json"
+      "rawTsvPath": "raw_tsv/6703/S100K74S.json"
     },
     {
       "periodStart": "2020-10-01",
@@ -1921,7 +1921,7 @@
         "現金及び現金同等物の増減額": "-7325000000",
         "現金及び現金同等物": "39191000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100KSLE.json"
+      "rawTsvPath": "raw_tsv/6703/S100KSLE.json"
     },
     {
       "periodStart": "2020-04-01",
@@ -2048,7 +2048,7 @@
         "現金及び現金同等物の増減額": "-4686000000",
         "現金及び現金同等物": "41830000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100LT41.json"
+      "rawTsvPath": "raw_tsv/6703/S100LT41.json"
     },
     {
       "periodStart": "2021-04-01",
@@ -2154,7 +2154,7 @@
         "現金及び現金同等物の増減額": "10682000000",
         "現金及び現金同等物": "52512000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100M8F6.json"
+      "rawTsvPath": "raw_tsv/6703/S100M8F6.json"
     },
     {
       "periodStart": "2021-07-01",
@@ -2262,7 +2262,7 @@
         "現金及び現金同等物の増減額": "-3830000000",
         "現金及び現金同等物": "38000000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100MTYO.json"
+      "rawTsvPath": "raw_tsv/6703/S100MTYO.json"
     },
     {
       "periodStart": "2021-10-01",
@@ -2369,7 +2369,7 @@
         "現金及び現金同等物の増減額": "-11476000000",
         "現金及び現金同等物": "30354000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100NG7B.json"
+      "rawTsvPath": "raw_tsv/6703/S100NG7B.json"
     },
     {
       "periodStart": "2021-04-01",
@@ -2496,7 +2496,7 @@
         "現金及び現金同等物の増減額": "-8451000000",
         "現金及び現金同等物": "33379000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100OG8E.json"
+      "rawTsvPath": "raw_tsv/6703/S100OG8E.json"
     },
     {
       "periodStart": "2022-04-01",
@@ -2598,7 +2598,7 @@
         "現金及び現金同等物の増減額": "817000000",
         "現金及び現金同等物": "34196000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100OYCU.json"
+      "rawTsvPath": "raw_tsv/6703/S100OYCU.json"
     },
     {
       "periodStart": "2022-07-01",
@@ -2701,7 +2701,7 @@
         "現金及び現金同等物の増減額": "-1695000000",
         "現金及び現金同等物": "31683000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100PK29.json"
+      "rawTsvPath": "raw_tsv/6703/S100PK29.json"
     },
     {
       "periodStart": "2022-10-01",
@@ -2805,7 +2805,7 @@
         "現金及び現金同等物の増減額": "-611000000",
         "現金及び現金同等物": "32767000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100Q6N3.json"
+      "rawTsvPath": "raw_tsv/6703/S100Q6N3.json"
     },
     {
       "periodStart": "2022-04-01",
@@ -2928,7 +2928,7 @@
         "現金及び現金同等物の増減額": "4119000000",
         "現金及び現金同等物": "37498000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100R4I6.json"
+      "rawTsvPath": "raw_tsv/6703/S100R4I6.json"
     },
     {
       "periodStart": "2023-04-01",
@@ -3030,7 +3030,7 @@
         "現金及び現金同等物の増減額": "-6694000000",
         "現金及び現金同等物": "30804000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100ROTA.json"
+      "rawTsvPath": "raw_tsv/6703/S100ROTA.json"
     },
     {
       "periodStart": "2023-07-01",
@@ -3134,7 +3134,7 @@
         "現金及び現金同等物の増減額": "-8741000000",
         "現金及び現金同等物": "28756000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100S8CF.json"
+      "rawTsvPath": "raw_tsv/6703/S100S8CF.json"
     },
     {
       "periodStart": "2023-10-01",
@@ -3239,7 +3239,7 @@
         "現金及び現金同等物の増減額": "-7872000000",
         "現金及び現金同等物": "29625000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100SURY.json"
+      "rawTsvPath": "raw_tsv/6703/S100SURY.json"
     },
     {
       "periodStart": "2023-04-01",
@@ -3360,7 +3360,7 @@
         "現金及び現金同等物の増減額": "-3076000000",
         "現金及び現金同等物": "34422000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100TOON.json"
+      "rawTsvPath": "raw_tsv/6703/S100TOON.json"
     },
     {
       "periodStart": "2024-04-01",
@@ -3461,7 +3461,7 @@
         "現金及び現金同等物の増減額": "-3519000000",
         "現金及び現金同等物": "30903000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100UREM.json"
+      "rawTsvPath": "raw_tsv/6703/S100UREM.json"
     },
     {
       "periodStart": "2024-04-01",
@@ -3583,7 +3583,7 @@
         "現金及び現金同等物の増減額": "1814000000",
         "現金及び現金同等物": "36237000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100W0R4.json"
+      "rawTsvPath": "raw_tsv/6703/S100W0R4.json"
     },
     {
       "periodStart": "2025-04-01",
@@ -3689,7 +3689,7 @@
         "現金及び現金同等物の増減額": "-7350000000",
         "現金及び現金同等物": "28886000000"
       },
-      "rawTsvPath": "raw_tsv/67030/S100X3IE.json"
+      "rawTsvPath": "raw_tsv/6703/S100X3IE.json"
     }
   ]
 }
