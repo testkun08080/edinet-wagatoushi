@@ -38,29 +38,32 @@ def main() -> None:
     conn = sqlite3.connect(args.db_path)
     conn.row_factory = sqlite3.Row
 
-    rows = conn.execute(
-        """
-        SELECT
-          pf.edinet_code,
-          pf.sec_code,
-          pf.filer_name,
-          pf.doc_id,
-          pf.doc_type,
-          pf.period_start,
-          pf.period_end,
-          pf.submit_date_time,
-          d.doc_description,
-          pf.summary_json,
-          pf.pl_json,
-          pf.bs_json,
-          pf.cf_json,
-          pf.raw_tsv_path
-        FROM period_financials pf
-        JOIN documents d ON d.doc_id = pf.doc_id
-        WHERE d.withdrawal_status IS NULL OR d.withdrawal_status != '1'
-        ORDER BY pf.sec_code, pf.period_end
-        """
-    ).fetchall()
+    try:
+        rows = conn.execute(
+            """
+            SELECT
+              pf.edinet_code,
+              pf.sec_code,
+              pf.filer_name,
+              pf.doc_id,
+              pf.doc_type,
+              pf.period_start,
+              pf.period_end,
+              pf.submit_date_time,
+              d.doc_description,
+              pf.summary_json,
+              pf.pl_json,
+              pf.bs_json,
+              pf.cf_json,
+              pf.raw_tsv_path
+            FROM period_financials pf
+            JOIN documents d ON d.doc_id = pf.doc_id
+            WHERE d.withdrawal_status IS NULL OR d.withdrawal_status != '1'
+            ORDER BY pf.sec_code, pf.period_end
+            """
+        ).fetchall()
+    finally:
+        conn.close()
 
     by_company: dict[str, dict] = {}
     for row in rows:

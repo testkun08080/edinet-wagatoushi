@@ -92,7 +92,9 @@ CREATE TABLE IF NOT EXISTS sec_code_latest_periods (
   latest_doc_id TEXT NOT NULL,
   latest_period_end TEXT NOT NULL,
   latest_submit_date_time TEXT,
-  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (edinet_code) REFERENCES companies(edinet_code),
+  FOREIGN KEY (latest_doc_id) REFERENCES documents(doc_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_documents_submit_date

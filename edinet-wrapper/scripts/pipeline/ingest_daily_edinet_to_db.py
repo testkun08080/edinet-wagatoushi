@@ -13,7 +13,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import sqlite3
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -317,6 +316,7 @@ def main() -> None:
             sec_code = normalize_sec_code(result.secCode)
             upsert_company(conn, downloader, result.edinetCode, sec_code, result.filerName or "")
             upsert_document(conn, result, doc_type)
+            touched_doc_ids.add(result.docID)
 
             year = target.strftime("%Y")
             month = target.strftime("%m")
@@ -339,7 +339,6 @@ def main() -> None:
 
             if tsv_path.exists() and upsert_period_financials(conn, result, doc_type, tsv_path):
                 ingested_documents += 1
-                touched_doc_ids.add(result.docID)
             else:
                 skipped_documents += 1
 

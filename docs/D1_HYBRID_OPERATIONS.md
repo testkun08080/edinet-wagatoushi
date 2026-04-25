@@ -1,4 +1,4 @@
-# D1 Hybrid Operations
+# D1 Production Operations
 
 ## 目的
 
@@ -17,11 +17,17 @@ DDL は `edinet-wrapper/sql/d1_schema.sql` を正とする。
 
 ## 初回シード
 
-`edinet-wrapper/data` を初期コーパスとして D1 に投入する。
+`edinet-wrapper/data` を初期コーパスとして D1 に投入する。通常のローカル検証では production seed は不要。
 
 ```bash
 cd edinet-screener
 npm run d1:seed:staging
+```
+
+production はライブ D1 への一回限りの初期投入時だけ実行する。
+
+```bash
+cd edinet-screener
 npm run d1:seed:production
 ```
 

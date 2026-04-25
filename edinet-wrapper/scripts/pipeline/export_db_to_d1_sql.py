@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import sqlite3
 from pathlib import Path
 from typing import Iterable
@@ -43,7 +44,15 @@ def parse_args() -> argparse.Namespace:
 def sql_quote(value) -> str:
     if value is None:
         return "NULL"
-    if isinstance(value, (int, float)):
+    if isinstance(value, bool):
+        return "1" if value else "0"
+    if isinstance(value, (bytes, bytearray)):
+        return "X'" + bytes(value).hex() + "'"
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            return "NULL"
+        return str(value)
+    if isinstance(value, int):
         return str(value)
     text = str(value).replace("'", "''")
     return f"'{text}'"
@@ -55,10 +64,15 @@ def table_exists(conn: sqlite3.Connection, table: str) -> bool:
 
 
 def table_columns(conn: sqlite3.Connection, table: str) -> list[str]:
-    return [row[1] for row in conn.execute(f"PRAGMA table_info({table})").fetchall()]
+    if table not in CONFLICT_COLUMNS:
+        raise ValueError(f"Unexpected table: {table}")
+    # The table name is allow-listed above; PRAGMA cannot bind identifiers.
+    return [row[1] for row in conn.execute(f"PRAGMA table_info({table})").fetchall()]  # noqa: S608
 
 
 def upsert_sql(table: str, columns: list[str], row: sqlite3.Row) -> str:
+    if table not in CONFLICT_COLUMNS:
+        raise ValueError(f"Unexpected table: {table}")
     conflict = CONFLICT_COLUMNS[table]
     quoted_columns = ", ".join(columns)
     values = ", ".join(sql_quote(row[col]) for col in columns)
@@ -81,8 +95,11 @@ def read_doc_ids(path: Path | None) -> set[str] | None:
 
 
 def iter_rows(conn: sqlite3.Connection, table: str, doc_ids: set[str] | None) -> Iterable[sqlite3.Row]:
+    if table not in CONFLICT_COLUMNS:
+        raise ValueError(f"Unexpected table: {table}")
     if doc_ids is None or table not in {"documents", "period_financials", "raw_files_index"}:
-        yield from conn.execute(f"SELECT * FROM {table}")
+        # The table name is allow-listed above; SELECT cannot bind identifiers.
+        yield from conn.execute(f"SELECT * FROM {table}")  # noqa: S608
         return
 
     if not doc_ids:

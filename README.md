@@ -51,6 +51,7 @@ uv run python scripts/frontend/build_screener_data.py --metrics_only
 bash scripts/pipeline/run_daily_hybrid.sh
 
 # D1 Production: edinet-wrapper/data を Cloudflare D1 に初期投入
+# production はライブ D1 への一回限りの初期投入時だけ実行
 cd ../edinet-screener
 npm run d1:seed:staging
 npm run d1:seed:production

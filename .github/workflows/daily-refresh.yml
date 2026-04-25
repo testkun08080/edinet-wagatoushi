@@ -25,6 +25,14 @@ on:
         required: false
         default: false
         type: boolean
+      d1_environment:
+        description: "D1 environment for manual runs"
+        required: false
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
   schedule:
     # 毎日 05:10 JST（UTC 20:10）
     - cron: "10 20 * * *"
@@ -74,20 +82,24 @@ jobs:
           INPUT_SCOPE: ${{ inputs.data_scope }}
           INPUT_SOURCE: ${{ inputs.data_source }}
           INPUT_FORCE_DOWNLOAD: ${{ inputs.force_dataset_download }}
+          INPUT_D1_ENVIRONMENT: ${{ inputs.d1_environment }}
         run: |
           set -euo pipefail
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             SCOPE="${INPUT_SCOPE:-full}"
             SOURCE="${INPUT_SOURCE:-d1}"
             FORCE_DL="${INPUT_FORCE_DOWNLOAD:-false}"
+            D1_ENVIRONMENT="${INPUT_D1_ENVIRONMENT:-staging}"
           else
             SCOPE="full"
             SOURCE="d1"
             FORCE_DL="false"
+            D1_ENVIRONMENT="production"
           fi
           echo "scope=$SCOPE" >> "$GITHUB_OUTPUT"
           echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
           echo "force_download=$FORCE_DL" >> "$GITHUB_OUTPUT"
+          echo "d1_environment=$D1_ENVIRONMENT" >> "$GITHUB_OUTPUT"
 
       - name: Preserve previous public data metrics
         working-directory: edinet-screener
@@ -104,13 +116,15 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
         run: |
           set -euo pipefail
           mkdir -p ../edinet-wrapper/state
-          npm run d1:apply-schema:production
+          bash scripts/d1-apply-schema.sh "$D1_ENVIRONMENT"
           wrangler d1 export EDINET_DB \
-            --env production \
+            --env "$D1_ENVIRONMENT" \
             --remote \
+            --no-schema \
             --output ../edinet-wrapper/state/d1-export.sql
           cd ../edinet-wrapper
           uv run python scripts/pipeline/load_sql_dump_to_sqlite.py \
@@ -143,6 +157,7 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
         run: |
           set -euo pipefail
           rm -rf state/d1-delta-sql
@@ -152,7 +167,7 @@ jobs:
             --where_doc_ids_file state/touched_doc_ids.txt \
             --chunk_rows 50
           cd ../edinet-screener
-          bash scripts/d1-execute-sql-dir.sh production ../edinet-wrapper/state/d1-delta-sql
+          bash scripts/d1-execute-sql-dir.sh "$D1_ENVIRONMENT" ../edinet-wrapper/state/d1-delta-sql
 
       - name: Build screener data
         working-directory: edinet-screener
@@ -223,6 +238,7 @@ jobs:
             echo "## Screener refresh result"
             echo "- Scope: \`${{ steps.params.outputs.scope }}\`"
             echo "- Source: \`${{ steps.params.outputs.source }}\`"
+            echo "- D1 environment: \`${{ steps.params.outputs.d1_environment }}\`"
             echo "- Force download: \`${{ steps.params.outputs.force_download }}\`"
             echo "- Delivery: \`commit/push (Cloudflare Git integration)\`"
             if [ -f public/data/company_metrics.json ]; then

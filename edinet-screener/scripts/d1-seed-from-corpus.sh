@@ -2,11 +2,15 @@
 set -euo pipefail
 
 ENVIRONMENT="${1:-}"
-if [ -z "$ENVIRONMENT" ]; then
-  echo "Usage: $0 <environment>"
-  echo "example: $0 staging"
-  exit 1
-fi
+case "$ENVIRONMENT" in
+  staging | production) ;;
+  *)
+    echo "Usage: $0 <staging|production>"
+    echo "example: $0 staging"
+    echo "WARNING: production seeds the live D1 database from edinet-wrapper/data."
+    exit 1
+    ;;
+esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCREENER_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"

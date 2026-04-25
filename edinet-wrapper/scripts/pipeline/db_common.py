@@ -46,6 +46,8 @@ def load_builder_module() -> Any:
 
 def flatten_parsed_section(section: dict) -> dict:
     module = load_builder_module()
+    if not isinstance(section, dict):
+        return {}
     return module._flatten_for_period(section)  # noqa: SLF001 - pipeline reuse of frontend-compatible flattener
 
 
@@ -66,7 +68,7 @@ def load_edinet_master(data_root: Path) -> dict[str, dict[str, str | None]]:
     if not csv_path.exists():
         return {}
 
-    with csv_path.open(encoding="shift_jis", errors="replace") as f:
+    with csv_path.open(encoding="shift_jis", errors="strict") as f:
         reader = csv.reader(f)
         next(reader, None)
         header = next(reader, None)

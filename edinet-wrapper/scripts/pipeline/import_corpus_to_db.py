@@ -88,7 +88,12 @@ def main() -> None:
     imported = 0
     skipped = 0
     for doc_type, tsv_path, json_path in pairs:
-        meta = json.loads(json_path.read_text(encoding="utf-8"))
+        try:
+            meta = json.loads(json_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            skipped += 1
+            print(f"Skipping malformed metadata JSON: path={json_path} error={exc}")
+            continue
         edinet_code = meta.get("edinetCode") or tsv_path.parts[-3]
         doc_id = meta.get("docID") or tsv_path.stem
         meta["edinetCode"] = edinet_code
