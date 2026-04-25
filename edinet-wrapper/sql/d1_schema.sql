@@ -84,6 +84,17 @@ CREATE TABLE IF NOT EXISTS daily_metrics (
   generated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 事前集計: 証券コードごとの最新提出を高速参照するためのマテリアライズテーブル
+CREATE TABLE IF NOT EXISTS sec_code_latest_periods (
+  sec_code TEXT PRIMARY KEY,
+  edinet_code TEXT NOT NULL,
+  filer_name TEXT NOT NULL,
+  latest_doc_id TEXT NOT NULL,
+  latest_period_end TEXT NOT NULL,
+  latest_submit_date_time TEXT,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE INDEX IF NOT EXISTS idx_documents_submit_date
   ON documents(submit_date_time);
 
@@ -98,3 +109,6 @@ CREATE INDEX IF NOT EXISTS idx_period_financials_submit_date
 
 CREATE INDEX IF NOT EXISTS idx_raw_files_doc_file_type
   ON raw_files_index(doc_id, file_type);
+
+CREATE INDEX IF NOT EXISTS idx_sec_code_latest_periods_period_end
+  ON sec_code_latest_periods(latest_period_end);

@@ -11,6 +11,8 @@ import json
 import sqlite3
 from pathlib import Path
 
+from db_common import normalize_public_raw_tsv_path, normalize_sec_code
+
 
 def load_builder_functions():
     script_path = Path(__file__).resolve().parent.parent / "frontend" / "build_screener_data.py"
@@ -47,6 +49,7 @@ def main() -> None:
           pf.period_start,
           pf.period_end,
           pf.submit_date_time,
+          d.doc_description,
           pf.summary_json,
           pf.pl_json,
           pf.bs_json,
@@ -61,7 +64,7 @@ def main() -> None:
 
     by_company: dict[str, dict] = {}
     for row in rows:
-        sec_code = (row["sec_code"] or "").lstrip("0") or (row["sec_code"] or "")
+        sec_code = normalize_sec_code(row["sec_code"])
         if not sec_code:
             continue
         item = by_company.setdefault(
@@ -78,13 +81,13 @@ def main() -> None:
                 "periodStart": row["period_start"],
                 "periodEnd": row["period_end"],
                 "docID": row["doc_id"],
-                "docDescription": row["doc_type"],
+                "docDescription": row["doc_description"] or row["doc_type"],
                 "submitDateTime": row["submit_date_time"],
                 "summary": json.loads(row["summary_json"]),
                 "pl": json.loads(row["pl_json"]),
                 "bs": json.loads(row["bs_json"]),
                 "cf": json.loads(row["cf_json"]),
-                "rawTsvPath": row["raw_tsv_path"],
+                "rawTsvPath": normalize_public_raw_tsv_path(row["raw_tsv_path"]),
             }
         )
 
@@ -108,6 +111,11 @@ def main() -> None:
             json.dumps(summary_data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
         metrics.append(summary_to_metrics_row(summary_data))
+
+    expected_summary_files = {f"{sec_code}.json" for sec_code in by_company}
+    for stale_path in summaries_dir.glob("*.json"):
+        if stale_path.name not in expected_summary_files:
+            stale_path.unlink()
 
     (output_dir / "companies.json").write_text(
         json.dumps({"companies": companies}, ensure_ascii=False, indent=2), encoding="utf-8"
