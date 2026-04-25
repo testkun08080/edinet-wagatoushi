@@ -121,7 +121,8 @@ jobs:
           set -euo pipefail
           mkdir -p ../edinet-wrapper/state
           bash scripts/d1-apply-schema.sh "$D1_ENVIRONMENT"
-          wrangler d1 export EDINET_DB \
+          WRANGLER_BIN="$(bash -c 'source scripts/resolve-wrangler.sh; resolve_wrangler "$PWD"')"
+          "$WRANGLER_BIN" d1 export EDINET_DB \
             --env "$D1_ENVIRONMENT" \
             --remote \
             --no-schema \
