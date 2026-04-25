@@ -6,7 +6,7 @@ on:
       data_scope:
         description: "データ生成モード"
         required: true
-        default: "sample"
+        default: "full"
         type: choice
         options:
           - sample
@@ -14,7 +14,7 @@ on:
       data_source:
         description: "データソース(dataset|d1|hybrid)"
         required: false
-        default: "hybrid"
+        default: "d1"
         type: choice
         options:
           - dataset
@@ -25,6 +25,14 @@ on:
         required: false
         default: false
         type: boolean
+      d1_environment:
+        description: "D1 environment for manual runs"
+        required: false
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
   schedule:
     # 毎日 05:10 JST（UTC 20:10）
     - cron: "10 20 * * *"
@@ -74,20 +82,56 @@ jobs:
           INPUT_SCOPE: ${{ inputs.data_scope }}
           INPUT_SOURCE: ${{ inputs.data_source }}
           INPUT_FORCE_DOWNLOAD: ${{ inputs.force_dataset_download }}
+          INPUT_D1_ENVIRONMENT: ${{ inputs.d1_environment }}
         run: |
           set -euo pipefail
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            SCOPE="${INPUT_SCOPE:-sample}"
-            SOURCE="${INPUT_SOURCE:-hybrid}"
+            SCOPE="${INPUT_SCOPE:-full}"
+            SOURCE="${INPUT_SOURCE:-d1}"
             FORCE_DL="${INPUT_FORCE_DOWNLOAD:-false}"
+            D1_ENVIRONMENT="${INPUT_D1_ENVIRONMENT:-staging}"
           else
-            SCOPE="sample"
-            SOURCE="hybrid"
+            SCOPE="full"
+            SOURCE="d1"
             FORCE_DL="false"
+            D1_ENVIRONMENT="production"
           fi
           echo "scope=$SCOPE" >> "$GITHUB_OUTPUT"
           echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
           echo "force_download=$FORCE_DL" >> "$GITHUB_OUTPUT"
+          echo "d1_environment=$D1_ENVIRONMENT" >> "$GITHUB_OUTPUT"
+
+      - name: Preserve previous public data metrics
+        working-directory: edinet-screener
+        run: |
+          set -euo pipefail
+          mkdir -p ../edinet-wrapper/state
+          if [ -f public/data/company_metrics.json ]; then
+            cp public/data/company_metrics.json ../edinet-wrapper/state/previous_company_metrics.json
+          fi
+
+      - name: Prepare D1 snapshot locally
+        if: ${{ steps.params.outputs.source == 'd1' || steps.params.outputs.source == 'hybrid' }}
+        working-directory: edinet-screener
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
+        run: |
+          set -euo pipefail
+          mkdir -p ../edinet-wrapper/state
+          bash scripts/d1-apply-schema.sh "$D1_ENVIRONMENT"
+          wrangler d1 export EDINET_DB \
+            --env "$D1_ENVIRONMENT" \
+            --remote \
+            --no-schema \
+            --output ../edinet-wrapper/state/d1-export.sql
+          cd ../edinet-wrapper
+          uv run python scripts/pipeline/load_sql_dump_to_sqlite.py \
+            --sql_path state/d1-export.sql \
+            --db_path state/edinet_pipeline.db \
+            --schema_path sql/d1_schema.sql \
+            --reset
 
       - name: Ingest daily EDINET into D1-compatible DB
         if: ${{ steps.params.outputs.source == 'd1' || steps.params.outputs.source == 'hybrid' }}
@@ -102,9 +146,28 @@ jobs:
             --db_path state/edinet_pipeline.db \
             --schema_path sql/d1_schema.sql \
             --raw_root raw \
-            --scope daily-refresh
+            --scope daily-refresh \
+            --touched_doc_ids_out state/touched_doc_ids.txt
           uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
           uv run python scripts/pipeline/check_daily_delta.py --db_path state/edinet_pipeline.db --max_drop_ratio 0.7
+
+      - name: Persist daily delta to Cloudflare D1
+        if: ${{ steps.params.outputs.source == 'd1' || steps.params.outputs.source == 'hybrid' }}
+        working-directory: edinet-wrapper
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
+        run: |
+          set -euo pipefail
+          rm -rf state/d1-delta-sql
+          uv run python scripts/pipeline/export_db_to_d1_sql.py \
+            --db_path state/edinet_pipeline.db \
+            --output_dir state/d1-delta-sql \
+            --where_doc_ids_file state/touched_doc_ids.txt \
+            --chunk_rows 50
+          cd ../edinet-screener
+          bash scripts/d1-execute-sql-dir.sh "$D1_ENVIRONMENT" ../edinet-wrapper/state/d1-delta-sql
 
       - name: Build screener data
         working-directory: edinet-screener
@@ -143,20 +206,11 @@ jobs:
           test -f public/data/company_metrics.json
           test -f public/data/companies.json
           test -d public/data/summaries
-          SUMMARY_COUNT=$(ls -1 public/data/summaries/*.json 2>/dev/null | wc -l | tr -d ' ')
-          if [ "$SUMMARY_COUNT" -lt 1 ]; then
-            echo "summaries が生成されていません。"
-            exit 1
-          fi
-          python3 <<'PY'
-          import json, pathlib
-          p = pathlib.Path("public/data/company_metrics.json")
-          data = json.loads(p.read_text(encoding="utf-8"))
-          metrics = data.get("metrics", [])
-          if not metrics:
-              raise SystemExit("metrics が空です。")
-          print(f"metrics rows: {len(metrics)}")
-          PY
+          cd ../edinet-wrapper
+          uv run python scripts/pipeline/validate_public_data.py \
+            --public_data ../edinet-screener/public/data \
+            --previous_metrics state/previous_company_metrics.json \
+            --max_drop_ratio 0.1
 
       - name: Test build frontend
         working-directory: edinet-screener
@@ -184,6 +238,7 @@ jobs:
             echo "## Screener refresh result"
             echo "- Scope: \`${{ steps.params.outputs.scope }}\`"
             echo "- Source: \`${{ steps.params.outputs.source }}\`"
+            echo "- D1 environment: \`${{ steps.params.outputs.d1_environment }}\`"
             echo "- Force download: \`${{ steps.params.outputs.force_download }}\`"
             echo "- Delivery: \`commit/push (Cloudflare Git integration)\`"
             if [ -f public/data/company_metrics.json ]; then

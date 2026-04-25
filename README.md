@@ -33,7 +33,7 @@ npm install
   `edinet-wrapper` のダウンロードスクリプトまたは GitHub Actions で EDINET コーパスを取得し、`data-set/` に配置
 2. **スクリーナー用データ生成**
   `edinet-wrapper` から `companies.json` / `summaries/*.json` / `company_metrics.json` を生成
-  （`DATA_SOURCE=hybrid` の場合は D1 互換 DB を優先）
+  （本番運用では `DATA_SOURCE=d1` で Cloudflare D1 を正本にする）
 3. **フロント起動・ビルド**
   `edinet-screener` で `npm run dev` または `npm run build`
 
@@ -50,6 +50,13 @@ uv run python scripts/frontend/build_screener_data.py --metrics_only
 # D1 Hybrid: 日次取得→DB投入→品質チェック
 bash scripts/pipeline/run_daily_hybrid.sh
 
+# D1 Production: edinet-wrapper/data を Cloudflare D1 に初期投入
+# production はライブ D1 への一回限りの初期投入時だけ実行
+cd ../edinet-screener
+npm run d1:seed:staging
+npm run d1:seed:production
+cd ../edinet-wrapper
+
 # D1 Hybrid: DBから public/data を生成
 uv run python scripts/pipeline/build_public_data_from_db.py --db_path state/edinet_pipeline.db --output ../edinet-screener/public/data
 ```
@@ -65,7 +72,7 @@ npm run d1:apply-schema:staging
 ```
 
 `DATA_SET_URL` を指定すると、リモートに置いたアーカイブから `data-set` を取得してビルドできます。
-`DATA_SOURCE=d1|hybrid` を指定すると、`edinet-wrapper/state/edinet_pipeline.db`（D1互換DB）を優先して `public/data` を生成します。
+`DATA_SOURCE=d1|hybrid` を指定すると、`edinet-wrapper/state/edinet_pipeline.db`（remote D1 から復元したローカルDB）を優先して `public/data` を生成します。
 
 ## ドキュメント案内
 

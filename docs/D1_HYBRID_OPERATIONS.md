@@ -1,8 +1,8 @@
-# D1 Hybrid Operations
+# D1 Production Operations
 
 ## 目的
 
-既存の `public/data` 配信を維持したまま、日次の EDINET 取得結果を D1 互換 DB に集約し、そこから配信用 JSON を生成する。
+既存の `public/data` 配信を維持したまま、Cloudflare D1 を本番DBの正本として運用し、そこから配信用 JSON を生成する。
 
 ## テーブル設計（最小）
 
@@ -15,7 +15,25 @@
 
 DDL は `edinet-wrapper/sql/d1_schema.sql` を正とする。
 
-## 日次実行
+## 初回シード
+
+`edinet-wrapper/data` を初期コーパスとして D1 に投入する。通常のローカル検証では production seed は不要。
+
+```bash
+cd edinet-screener
+npm run d1:seed:staging
+```
+
+production はライブ D1 への一回限りの初期投入時だけ実行する。
+
+```bash
+cd edinet-screener
+npm run d1:seed:production
+```
+
+事前に `wrangler.jsonc` の `EDINET_DB` binding に実際の D1 `database_id` を設定し、Cloudflare 認証を済ませる。
+
+## ローカル日次実行
 
 ```bash
 cd edinet-wrapper
@@ -29,7 +47,7 @@ cd edinet-wrapper
 bash scripts/pipeline/run_daily_hybrid.sh 2026-04-23
 ```
 
-## JSON 生成
+## JSON 生成（ローカルDBから）
 
 ```bash
 cd edinet-wrapper
@@ -48,13 +66,15 @@ uv run python scripts/pipeline/compare_public_data_outputs.py \
   --max_missing_ratio 0.10
 ```
 
-## Cloudflare 反映
+## Cloudflare 日次反映
 
 1. D1 スキーマ適用（初回・変更時）
    - `cd edinet-screener && npm run d1:apply-schema:staging`
    - `cd edinet-screener && npm run d1:apply-schema:production`
-2. `.github/workflows/daily-refresh.yml` を `data_source=hybrid` で実行
-3. 成果物 commit/push 後、Cloudflare Git integration で自動配信
+2. `.github/workflows/daily-refresh.yml` を `data_source=d1` で実行
+3. Workflow は remote D1 を export してローカルSQLiteへ復元し、日次差分を取り込み、差分SQLを D1 にUPSERTする
+4. D1全体から `public/data` を生成し、品質ゲート通過後に commit/push する
+5. 成果物 commit/push 後、Cloudflare Git integration で自動配信
 
 ## スケール時の方針
 

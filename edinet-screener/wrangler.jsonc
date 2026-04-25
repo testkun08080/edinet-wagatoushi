@@ -5,10 +5,24 @@
   "main": "virtual:photon:cloudflare:server-entry",
   "env": {
     "staging": {
-      "name": "edinet-screener-staging"
+      "name": "edinet-screener-staging",
+      "d1_databases": [
+        {
+          "binding": "EDINET_DB",
+          "database_name": "edinet-screener-staging-db",
+          "database_id": "f0c1acbc-9678-451f-a3d6-1fe80b5c9e42"
+        }
+      ]
     },
     "production": {
-      "name": "edinet-screener"
+      "name": "edinet-screener",
+      "d1_databases": [
+        {
+          "binding": "EDINET_DB",
+          "database_name": "edinet-screener-production-db",
+          "database_id": "0ef66ddd-570a-423e-be53-b913243d8f4a"
+        }
+      ]
     }
   }
 }

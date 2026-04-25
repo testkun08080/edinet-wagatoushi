@@ -13,7 +13,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import sqlite3
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -23,6 +22,7 @@ from loguru import logger
 import polars as pl
 
 from edinet_wrapper import Downloader, parse_tsv
+from db_common import normalize_sec_code
 
 DOC_TYPES_DEFAULT = ("annual", "quarterly", "semiannual", "large_holding")
 RAW_FILE_TYPES = ("tsv", "pdf", "json")
@@ -38,6 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scope", type=str, default="daily")
     parser.add_argument("--listed_only", action="store_true")
     parser.add_argument("--request_delay", type=float, default=None)
+    parser.add_argument("--touched_doc_ids_out", type=Path, default=None)
     return parser.parse_args()
 
 
@@ -115,7 +116,7 @@ def upsert_document(conn: sqlite3.Connection, result, doc_type: str) -> None:
         (
             result.docID,
             result.edinetCode,
-            (result.secCode or "").lstrip("0") or (result.secCode or ""),
+            normalize_sec_code(result.secCode),
             doc_type,
             result.ordinanceCode,
             result.formCode,
@@ -174,7 +175,7 @@ def upsert_period_financials(conn: sqlite3.Connection, result, doc_type: str, ts
     parsed = parse_tsv(str(tsv_path))
     if parsed is None:
         return False
-    sec_code = (result.secCode or "").lstrip("0") or (result.secCode or "")
+    sec_code = normalize_sec_code(result.secCode)
     conn.execute(
         """
         INSERT INTO period_financials (
@@ -297,6 +298,7 @@ def main() -> None:
     ingested_documents = 0
     skipped_documents = 0
     error_count = 0
+    touched_doc_ids: set[str] = set()
 
     for result in results:
         try:
@@ -311,9 +313,10 @@ def main() -> None:
                 continue
 
             fetched_documents += 1
-            sec_code = (result.secCode or "").lstrip("0") or (result.secCode or "")
+            sec_code = normalize_sec_code(result.secCode)
             upsert_company(conn, downloader, result.edinetCode, sec_code, result.filerName or "")
             upsert_document(conn, result, doc_type)
+            touched_doc_ids.add(result.docID)
 
             year = target.strftime("%Y")
             month = target.strftime("%m")
@@ -362,6 +365,13 @@ def main() -> None:
     write_daily_metrics(conn, target.isoformat())
     conn.commit()
     conn.close()
+
+    if args.touched_doc_ids_out is not None:
+        args.touched_doc_ids_out.parent.mkdir(parents=True, exist_ok=True)
+        args.touched_doc_ids_out.write_text(
+            "".join(f"{doc_id}\n" for doc_id in sorted(touched_doc_ids)),
+            encoding="utf-8",
+        )
 
     logger.info(
         "Pipeline completed status={} fetched={} ingested={} skipped={} errors={}",
