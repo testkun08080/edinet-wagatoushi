@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCREENER_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/resolve-wrangler.sh"
+WRANGLER="$(resolve_wrangler "$SCREENER_ROOT")"
+
 ENVIRONMENT="${1:-}"
 SQL_DIR="${2:-}"
 START_FROM="${3:-}"
@@ -47,7 +52,7 @@ while IFS= read -r chunk || [ -n "$chunk" ]; do
   fi
   SKIPPING=0
   echo "[d1] applying $chunk to env=$ENVIRONMENT"
-  if wrangler d1 execute EDINET_DB --env "$ENVIRONMENT" --remote --file "$SQL_DIR/$chunk"; then
+  if "$WRANGLER" d1 execute EDINET_DB --env "$ENVIRONMENT" --remote --file "$SQL_DIR/$chunk"; then
     continue
   else
     status=$?
