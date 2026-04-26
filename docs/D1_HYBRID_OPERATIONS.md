@@ -37,14 +37,29 @@ npm run d1:seed:production
 
 ```bash
 cd edinet-wrapper
-bash scripts/pipeline/run_daily_hybrid.sh
+uv run python scripts/pipeline/ingest_daily_edinet_to_db.py \
+  --doc_types "annual,quarterly,semiannual,large_holding" \
+  --db_path state/edinet_pipeline.db \
+  --schema_path sql/d1_schema.sql \
+  --raw_root raw \
+  --scope daily-refresh \
+  --touched_doc_ids_out state/touched_doc_ids.txt
+uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
 ```
 
 指定日で再実行:
 
 ```bash
 cd edinet-wrapper
-bash scripts/pipeline/run_daily_hybrid.sh 2026-04-23
+uv run python scripts/pipeline/ingest_daily_edinet_to_db.py \
+  --target_date 2026-04-23 \
+  --doc_types "annual,quarterly,semiannual,large_holding" \
+  --db_path state/edinet_pipeline.db \
+  --schema_path sql/d1_schema.sql \
+  --raw_root raw \
+  --scope daily-refresh \
+  --touched_doc_ids_out state/touched_doc_ids.txt
+uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
 ```
 
 ## JSON 生成（ローカルDBから）
@@ -54,16 +69,6 @@ cd edinet-wrapper
 uv run python scripts/pipeline/build_public_data_from_db.py \
   --db_path state/edinet_pipeline.db \
   --output ../edinet-screener/public/data
-```
-
-互換性比較（dataset 版 vs D1 版）:
-
-```bash
-cd edinet-wrapper
-uv run python scripts/pipeline/compare_public_data_outputs.py \
-  --baseline /path/to/baseline/public-data \
-  --candidate ../edinet-screener/public/data \
-  --max_missing_ratio 0.10
 ```
 
 ## Cloudflare 日次反映

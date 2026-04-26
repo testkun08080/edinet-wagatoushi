@@ -47,8 +47,15 @@ uv run python scripts/frontend/build_screener_data.py --mode sample E00004 E0360
 uv run python scripts/frontend/build_screener_data.py --mode full
 uv run python scripts/frontend/build_screener_data.py --metrics_only
 
-# D1 Hybrid: 日次取得→DB投入→品質チェック
-bash scripts/pipeline/run_daily_hybrid.sh
+# D1: 日次取得→DB投入→品質チェック
+uv run python scripts/pipeline/ingest_daily_edinet_to_db.py \
+  --doc_types "annual,quarterly,semiannual,large_holding" \
+  --db_path state/edinet_pipeline.db \
+  --schema_path sql/d1_schema.sql \
+  --raw_root raw \
+  --scope daily-refresh \
+  --touched_doc_ids_out state/touched_doc_ids.txt
+uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
 
 # D1 Production: edinet-wrapper/data を Cloudflare D1 に初期投入
 # production はライブ D1 への一回限りの初期投入時だけ実行
@@ -57,7 +64,7 @@ npm run d1:seed:staging
 npm run d1:seed:production
 cd ../edinet-wrapper
 
-# D1 Hybrid: DBから public/data を生成
+# D1: DBから public/data を生成
 uv run python scripts/pipeline/build_public_data_from_db.py --db_path state/edinet_pipeline.db --output ../edinet-screener/public/data
 ```
 
@@ -72,7 +79,7 @@ npm run d1:apply-schema:staging
 ```
 
 `DATA_SET_URL` を指定すると、リモートに置いたアーカイブから `data-set` を取得してビルドできます。
-`DATA_SOURCE=d1|hybrid` を指定すると、`edinet-wrapper/state/edinet_pipeline.db`（remote D1 から復元したローカルDB）を優先して `public/data` を生成します。
+`DATA_SOURCE=d1` を指定すると、`edinet-wrapper/state/edinet_pipeline.db`（remote D1 から復元したローカルDB）から `public/data` を生成します。
 
 ## ドキュメント案内
 

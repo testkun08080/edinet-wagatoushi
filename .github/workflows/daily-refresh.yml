@@ -12,14 +12,13 @@ on:
           - sample
           - full
       data_source:
-        description: "データソース(dataset|d1|hybrid)"
+        description: "データソース(dataset|d1)"
         required: false
         default: "d1"
         type: choice
         options:
           - dataset
           - d1
-          - hybrid
       force_dataset_download:
         description: "既存 data-set があっても再取得する"
         required: false
@@ -111,7 +110,7 @@ jobs:
           fi
 
       - name: Prepare D1 snapshot locally
-        if: ${{ steps.params.outputs.source == 'd1' || steps.params.outputs.source == 'hybrid' }}
+        if: ${{ steps.params.outputs.source == 'd1' }}
         working-directory: edinet-screener
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -135,7 +134,7 @@ jobs:
             --reset
 
       - name: Ingest daily EDINET into D1-compatible DB
-        if: ${{ steps.params.outputs.source == 'd1' || steps.params.outputs.source == 'hybrid' }}
+        if: ${{ steps.params.outputs.source == 'd1' }}
         working-directory: edinet-wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
@@ -153,7 +152,7 @@ jobs:
           echo "Skip daily delta check temporarily (company_count baseline investigation in progress)"
 
       - name: Persist daily delta to Cloudflare D1
-        if: ${{ steps.params.outputs.source == 'd1' || steps.params.outputs.source == 'hybrid' }}
+        if: ${{ steps.params.outputs.source == 'd1' }}
         working-directory: edinet-wrapper
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -180,25 +179,6 @@ jobs:
           D1_DB_PATH: ../edinet-wrapper/state/edinet_pipeline.db
           FORCE_DOWNLOAD: ${{ steps.params.outputs.force_download == 'true' && '1' || '0' }}
         run: npm run generate-data
-
-      - name: Hybrid compatibility check (dataset vs d1)
-        if: ${{ steps.params.outputs.source == 'hybrid' }}
-        working-directory: edinet-wrapper
-        run: |
-          set -euo pipefail
-          if [ ! -d "../data-set" ]; then
-            echo "No data-set found. Skip compatibility check."
-            exit 0
-          fi
-          TMP_BASELINE="$(mktemp -d)"
-          uv run python scripts/frontend/build_screener_data.py \
-            --mode "${{ steps.params.outputs.scope }}" \
-            --data_set ../data-set \
-            --output "$TMP_BASELINE"
-          uv run python scripts/pipeline/compare_public_data_outputs.py \
-            --baseline "$TMP_BASELINE" \
-            --candidate ../edinet-screener/public/data \
-            --max_missing_ratio 0.10
 
       - name: Validate generated data quality
         working-directory: edinet-screener

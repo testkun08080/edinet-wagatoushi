@@ -1,7 +1,7 @@
 # DEPLOY PIPELINE (Production-ready)
 
 このドキュメントは、`sample` 運用から `full` 運用へ切り替え可能な本番想定パイプラインを定義します。
-現在は `DATA_SOURCE=dataset|d1|hybrid` を選択可能です。本番運用では `d1` を既定とし、Cloudflare D1 を永続DBの正本にします。
+現在は `DATA_SOURCE=dataset|d1` を選択可能です。本番運用では `d1` を既定とし、Cloudflare D1 を永続DBの正本にします。
 
 ## 目的
 
@@ -35,10 +35,10 @@
 Workflow: `.github/workflows/daily-refresh.yml`
 
 1. 依存関係セットアップ（uv + node）
-2. D1 export をローカルSQLiteへ復元（`data_source=d1|hybrid` 時）
+2. D1 export をローカルSQLiteへ復元（`data_source=d1` 時）
 3. `uv run python scripts/pipeline/ingest_daily_edinet_to_db.py` 実行し、日次差分をローカルDBへUPSERT
 4. 差分SQLを remote D1 へ適用
-5. `npm run generate-data` 実行（`DATA_SCOPE=sample|full`, `DATA_SOURCE=dataset|d1|hybrid`）
+5. `npm run generate-data` 実行（`DATA_SCOPE=sample|full`, `DATA_SOURCE=dataset|d1`）
 6. 品質ゲート（`company_metrics.json` / `companies.json` / `summaries/*.json` の存在・件数・必須銘柄）
 7. テストビルド（`npm run build:app`）
 8. 生成結果を `edinet-screener/public/data` に commit/push

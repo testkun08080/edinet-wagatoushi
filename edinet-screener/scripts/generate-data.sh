@@ -2,7 +2,7 @@
 # ビルド前に data-set または D1 互換 DB から public/data を生成する。
 # DATA_SET_URL が設定されていれば、先にリモートから data-set を取得する。
 # DATA_SCOPE=sample|full で生成対象を切替（未指定時は sample）。
-# DATA_SOURCE=dataset|d1|hybrid（未指定時は dataset）
+# DATA_SOURCE=dataset|d1（未指定時は dataset）
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,7 +19,7 @@ if [ "$DATA_SOURCE" != "d1" ]; then
   fi
 fi
 
-if [ "$DATA_SOURCE" = "dataset" ] || [ "$DATA_SOURCE" = "hybrid" ]; then
+if [ "$DATA_SOURCE" = "dataset" ]; then
   # data-set がない場合は edinet-wrapper/data にフォールバック（ローカル開発用サンプルデータ）
   if [ ! -d "$DATA_SET" ]; then
     if [ -d "$WRAPPER/data" ] && [ -n "$(ls -A "$WRAPPER/data" 2>/dev/null)" ]; then
@@ -32,6 +32,11 @@ if [ "$DATA_SOURCE" = "dataset" ] || [ "$DATA_SOURCE" = "hybrid" ]; then
       fi
     fi
   fi
+fi
+
+if [ "$DATA_SOURCE" != "dataset" ] && [ "$DATA_SOURCE" != "d1" ]; then
+  echo "[generate-data] DATA_SOURCE は dataset または d1 を指定してください。（現在: $DATA_SOURCE）"
+  exit 1
 fi
 
 if [ ! -d "$WRAPPER" ] || [ ! -f "$WRAPPER/scripts/frontend/build_screener_data.py" ]; then
@@ -50,14 +55,6 @@ fi
 if [ "$DATA_SOURCE" = "d1" ]; then
   D1_DB_PATH="${D1_DB_PATH:-$WRAPPER/state/edinet_pipeline.db}"
   echo "[generate-data] D1互換DB から public/data を生成します... (db=$D1_DB_PATH)"
-  (cd "$WRAPPER" && uv run python scripts/pipeline/build_public_data_from_db.py --db_path "$D1_DB_PATH" --output "$OUTPUT")
-  echo "[generate-data] 完了。"
-  exit 0
-fi
-
-if [ "$DATA_SOURCE" = "hybrid" ] && [ -f "${D1_DB_PATH:-$WRAPPER/state/edinet_pipeline.db}" ]; then
-  D1_DB_PATH="${D1_DB_PATH:-$WRAPPER/state/edinet_pipeline.db}"
-  echo "[generate-data] hybrid mode: D1互換DB を優先して生成します... (db=$D1_DB_PATH)"
   (cd "$WRAPPER" && uv run python scripts/pipeline/build_public_data_from_db.py --db_path "$D1_DB_PATH" --output "$OUTPUT")
   echo "[generate-data] 完了。"
   exit 0
