@@ -10,7 +10,7 @@
         {
           "binding": "EDINET_DB",
           "database_name": "edinet-screener-staging-db",
-          "database_id": "f0c1acbc-9678-451f-a3d6-1fe80b5c9e42"
+          "database_id": "557093c3-a9c5-420e-8fc2-9e4bc57f36f7"
         }
       ]
     },
@@ -20,7 +20,7 @@
         {
           "binding": "EDINET_DB",
           "database_name": "edinet-screener-production-db",
-          "database_id": "0ef66ddd-570a-423e-be53-b913243d8f4a"
+          "database_id": "c15ad570-7c7a-4152-8303-a3d75360de4c"
         }
       ]
     }
