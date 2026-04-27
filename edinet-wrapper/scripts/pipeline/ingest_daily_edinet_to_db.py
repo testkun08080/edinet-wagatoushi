@@ -14,7 +14,7 @@ import argparse
 import hashlib
 import json
 import sqlite3
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Iterable
 
@@ -45,7 +45,7 @@ def parse_args() -> argparse.Namespace:
 def resolve_target_date(raw_target_date: str) -> date:
     if raw_target_date:
         return datetime.strptime(raw_target_date, "%Y-%m-%d").date()
-    jst_today = datetime.utcnow() + timedelta(hours=9)
+    jst_today = datetime.now(UTC) + timedelta(hours=9)
     return (jst_today - timedelta(days=1)).date()
 
 
@@ -281,7 +281,7 @@ def main() -> None:
 
     apply_schema(conn, args.schema_path)
 
-    run_id = f"{args.scope}-{target.isoformat()}-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+    run_id = f"{args.scope}-{target.isoformat()}-{datetime.now(UTC).strftime('%Y%m%d%H%M%S')}"
     conn.execute(
         """
         INSERT INTO pipeline_runs (run_id, scope, target_date, status)
