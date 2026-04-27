@@ -25,7 +25,6 @@ from edinet_wrapper import Downloader, parse_tsv
 from db_common import normalize_sec_code
 
 DOC_TYPES_DEFAULT = ("annual", "quarterly", "semiannual", "large_holding")
-RAW_FILE_TYPES = ("tsv", "pdf", "json")
 
 
 def parse_args() -> argparse.Namespace:
@@ -324,16 +323,12 @@ def main() -> None:
             doc_dir.mkdir(parents=True, exist_ok=True)
 
             tsv_path = doc_dir / f"{result.docID}.tsv"
-            pdf_path = doc_dir / f"{result.docID}.pdf"
             json_path = doc_dir / f"{result.docID}.json"
-            ensure_parent_dirs((tsv_path, pdf_path, json_path))
+            ensure_parent_dirs((tsv_path, json_path))
 
             downloader.download_document(result.docID, "tsv", str(doc_dir))
             if tsv_path.exists():
                 upsert_raw_file_index(conn, result.docID, result.edinetCode, doc_type, "tsv", tsv_path)
-            downloader.download_document(result.docID, "pdf", str(doc_dir))
-            if pdf_path.exists():
-                upsert_raw_file_index(conn, result.docID, result.edinetCode, doc_type, "pdf", pdf_path)
             json_path.write_text(json.dumps(result.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
             upsert_raw_file_index(conn, result.docID, result.edinetCode, doc_type, "json", json_path)
 

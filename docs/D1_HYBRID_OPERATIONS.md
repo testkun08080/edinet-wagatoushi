@@ -74,8 +74,8 @@ uv run python scripts/pipeline/build_public_data_from_db.py \
 ## Cloudflare 日次反映
 
 1. D1 スキーマ適用（初回・変更時）
-   - `cd edinet-screener && npm run d1:apply-schema:staging`
-   - `cd edinet-screener && npm run d1:apply-schema:production`
+  - `cd edinet-screener && npm run d1:apply-schema:staging`
+  - `cd edinet-screener && npm run d1:apply-schema:production`
 2. `.github/workflows/daily-refresh.yml` を `data_source=d1` で実行
 3. Workflow は remote D1 を export してローカルSQLiteへ復元し、日次差分を取り込み、差分SQLを D1 にUPSERTする
 4. D1全体から `public/data` を生成し、品質ゲート通過後に commit/push する
@@ -86,3 +86,4 @@ uv run python scripts/pipeline/build_public_data_from_db.py \
 - 生ファイルは R2（`raw/...`）を正本にし、D1 は検索・配信向けメタ/集計を保持
 - 重い集計は `materialize_daily_aggregates.py` による事前計算テーブルへ分離
 - インデックス最適化は `period_financials(sec_code, period_end)` と `documents(doc_type, submit_date_time)` を起点に実施
+

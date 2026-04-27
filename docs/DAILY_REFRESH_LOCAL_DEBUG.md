@@ -148,6 +148,12 @@ cd edinet-wrapper
 uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
 ```
 
+補足（daily-refresh の取得物）:
+
+- `ingest_daily_edinet_to_db.py` は daily-refresh 用途では **TSV + JSON のみ** を `raw/` 配下に保存する
+- PDF は daily-refresh では利用しない（`period_financials` 生成は TSV パースのみで完結）
+- これにより API 呼び出し回数と保存容量を抑えられる
+
 期待値:
 
 - エラー終了しない
@@ -229,6 +235,9 @@ conn = sqlite3.connect("state/edinet_pipeline.db")
 for table in ["documents", "period_financials", "daily_metrics", "pipeline_runs"]:
     c = conn.execute(f"select count(*) from {table}").fetchone()[0]
     print(f"{table}: {c}")
+for file_type in ["tsv", "json", "pdf"]:
+    c = conn.execute("select count(*) from raw_files_index where file_type = ?", (file_type,)).fetchone()[0]
+    print(f"raw_files_index[{file_type}]: {c}")
 row = conn.execute("select run_id, status, target_date, finished_at from pipeline_runs order by finished_at desc limit 1").fetchone()
 print("latest_run:", row)
 conn.close()
@@ -311,4 +320,3 @@ WRANGLER_BIN="$(bash -c 'source scripts/resolve-wrangler.sh; resolve_wrangler "$
 - remote D1 更新済みだが公開データ未反映:
   - `npm run generate-data` 実行時の `DATA_SOURCE` が `d1` になっているか確認
   - `D1_DB_PATH` の参照先誤りがないか確認
-
