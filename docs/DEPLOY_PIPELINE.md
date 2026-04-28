@@ -68,12 +68,12 @@ Workflow: `.github/workflows/daily-refresh.yml`
 - 初回は `cd edinet-screener && npm run d1:seed:production` で `edinet-wrapper/data` を remote D1 に投入する
 - 日次更新では remote D1 をローカルSQLiteへ復元してから EDINET API の差分を取り込み、差分SQLを remote D1 に反映する
 - `public/data` は日次提出分だけではなく D1 全体から生成する
-- D1 取り込み後に `check_daily_delta.py` と `validate_public_data.py` を実行し、件数急減や必須銘柄欠落を失敗扱いにする
+- D1 取り込み後に `check_daily_delta.py` と `validate_public_data.py` を実行し、件数急減などを失敗扱いにする（`validate_public_data.py` に `--required_sec_codes` を渡した場合のみ、その銘柄の欠落も失敗になる）
 - 配信前ゲート:
   - D1取り込み成功
   - remote D1への差分反映成功
   - JSON生成成功
-  - 必須銘柄・件数整合性チェック成功
+  - JSON 整合性・件数チェック成功（任意の必須銘柄指定時はそれも含む）
   - フロントビルド成功
   - 上記を満たす場合のみ commit/push
 

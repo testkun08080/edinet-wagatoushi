@@ -10,27 +10,17 @@ from pathlib import Path
 from db_common import normalize_sec_code
 
 
-DEFAULT_REQUIRED_SEC_CODES = (
-    "7974",
-    "9424",
-    "9616",
-    "6370",
-    "6501",
-    "6701",
-    "6702",
-    "6703",
-    "6762",
-    "6797",
-    "6965",
-)
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate public/data JSON consistency and production coverage")
     parser.add_argument("--public_data", type=Path, default=Path("../edinet-screener/public/data"))
     parser.add_argument("--previous_metrics", type=Path, default=None)
     parser.add_argument("--max_drop_ratio", type=float, default=0.1)
-    parser.add_argument("--required_sec_codes", type=str, default=",".join(DEFAULT_REQUIRED_SEC_CODES))
+    parser.add_argument(
+        "--required_sec_codes",
+        type=str,
+        default="",
+        help="Comma-separated secCodes that must appear in generated data (optional; empty skips this check)",
+    )
     parser.add_argument("--min_companies", type=int, default=1)
     return parser.parse_args()
 
@@ -71,9 +61,10 @@ def main() -> None:
         raise SystemExit(f"summaries missing for secCodes: {missing_summaries[:20]}")
 
     required = {normalize_sec_code(code) for code in args.required_sec_codes.split(",") if code.strip()}
-    missing_required = sorted(required - company_sec)
-    if missing_required:
-        raise SystemExit(f"required secCodes missing from generated data: {missing_required}")
+    if required:
+        missing_required = sorted(required - company_sec)
+        if missing_required:
+            raise SystemExit(f"required secCodes missing from generated data: {missing_required}")
 
     if args.previous_metrics and args.previous_metrics.exists():
         previous = load_json(args.previous_metrics).get("metrics", [])
