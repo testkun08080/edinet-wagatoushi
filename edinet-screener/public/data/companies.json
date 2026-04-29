@@ -46,6 +46,46 @@
       "filerName": "株式会社ＡＣＣＥＳＳ"
     },
     {
+      "edinetCode": "E01573",
+      "secCode": "6370",
+      "filerName": "栗田工業株式会社"
+    },
+    {
+      "edinetCode": "E01737",
+      "secCode": "6501",
+      "filerName": "株式会社日立製作所"
+    },
+    {
+      "edinetCode": "E01765",
+      "secCode": "6701",
+      "filerName": "日本電気株式会社"
+    },
+    {
+      "edinetCode": "E01766",
+      "secCode": "6702",
+      "filerName": "富士通株式会社"
+    },
+    {
+      "edinetCode": "E01767",
+      "secCode": "6703",
+      "filerName": "沖電気工業株式会社"
+    },
+    {
+      "edinetCode": "E01780",
+      "secCode": "6762",
+      "filerName": "ＴＤＫ株式会社"
+    },
+    {
+      "edinetCode": "E02055",
+      "secCode": "6797",
+      "filerName": "名古屋電機工業株式会社"
+    },
+    {
+      "edinetCode": "E01955",
+      "secCode": "6965",
+      "filerName": "浜松ホトニクス株式会社"
+    },
+    {
       "edinetCode": "E34866",
       "secCode": "7064",
       "filerName": "株式会社ハウテレビジョン"
@@ -71,6 +111,11 @@
       "filerName": "株式会社ダブルエー"
     },
     {
+      "edinetCode": "E02367",
+      "secCode": "7974",
+      "filerName": "任天堂株式会社"
+    },
+    {
       "edinetCode": "E02665",
       "secCode": "8142",
       "filerName": "株式会社トーホー"
@@ -79,6 +124,16 @@
       "edinetCode": "E38739",
       "secCode": "9166",
       "filerName": "株式会社ＧＥＮＤＡ"
+    },
+    {
+      "edinetCode": "E04473",
+      "secCode": "9424",
+      "filerName": "日本通信株式会社"
+    },
+    {
+      "edinetCode": "E04908",
+      "secCode": "9616",
+      "filerName": "株式会社共立メンテナンス"
     },
     {
       "edinetCode": "E04599",
