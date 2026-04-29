@@ -68,41 +68,53 @@ def load_edinet_master(data_root: Path) -> dict[str, dict[str, str | None]]:
     if not csv_path.exists():
         return {}
 
-    with csv_path.open(encoding="shift_jis", errors="strict") as f:
-        reader = csv.reader(f)
-        next(reader, None)
-        header = next(reader, None)
-        if not header:
-            return {}
+    # Prefer shift_jis to keep compatibility with existing workflow, and
+    # transparently fallback to cp932 when vendor-specific bytes are included.
+    decode_error: UnicodeDecodeError | None = None
+    for encoding in ("shift_jis", "cp932"):
+        try:
+            with csv_path.open(encoding=encoding, errors="strict") as f:
+                reader = csv.reader(f)
+                next(reader, None)
+                header = next(reader, None)
+                if not header:
+                    return {}
 
-        def idx(name: str) -> int | None:
-            try:
-                return header.index(name)
-            except ValueError:
-                return None
+                def idx(name: str) -> int | None:
+                    try:
+                        return header.index(name)
+                    except ValueError:
+                        return None
 
-        idx_edinet = idx("ＥＤＩＮＥＴコード")
-        idx_sec = idx("証券コード")
-        idx_name = idx("提出者名")
-        idx_listed = idx("上場区分")
-        idx_industry = idx("提出者業種")
-        if idx_edinet is None:
-            return {}
+                idx_edinet = idx("ＥＤＩＮＥＴコード")
+                idx_sec = idx("証券コード")
+                idx_name = idx("提出者名")
+                idx_listed = idx("上場区分")
+                idx_industry = idx("提出者業種")
+                if idx_edinet is None:
+                    return {}
 
-        master: dict[str, dict[str, str | None]] = {}
-        for row in reader:
-            if len(row) <= idx_edinet:
-                continue
-            edinet_code = (row[idx_edinet] or "").strip().strip('"')
-            if not edinet_code:
-                continue
-            master[edinet_code] = {
-                "sec_code": normalize_sec_code(row[idx_sec]) if idx_sec is not None and len(row) > idx_sec else "",
-                "filer_name": (row[idx_name] or "").strip().strip('"') if idx_name is not None and len(row) > idx_name else "",
-                "listed_category": (row[idx_listed] or "").strip().strip('"') if idx_listed is not None and len(row) > idx_listed else None,
-                "industry": (row[idx_industry] or "").strip().strip('"') if idx_industry is not None and len(row) > idx_industry else None,
-            }
-        return master
+                master: dict[str, dict[str, str | None]] = {}
+                for row in reader:
+                    if len(row) <= idx_edinet:
+                        continue
+                    edinet_code = (row[idx_edinet] or "").strip().strip('"')
+                    if not edinet_code:
+                        continue
+                    master[edinet_code] = {
+                        "sec_code": normalize_sec_code(row[idx_sec]) if idx_sec is not None and len(row) > idx_sec else "",
+                        "filer_name": (row[idx_name] or "").strip().strip('"') if idx_name is not None and len(row) > idx_name else "",
+                        "listed_category": (row[idx_listed] or "").strip().strip('"') if idx_listed is not None and len(row) > idx_listed else None,
+                        "industry": (row[idx_industry] or "").strip().strip('"') if idx_industry is not None and len(row) > idx_industry else None,
+                    }
+                return master
+        except UnicodeDecodeError as exc:
+            decode_error = exc
+            continue
+
+    if decode_error is not None:
+        raise decode_error
+    return {}
 
 
 def public_raw_tsv_path(sec_code: str, doc_id: str) -> str:
