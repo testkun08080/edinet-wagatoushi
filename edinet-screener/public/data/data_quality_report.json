@@ -1,923 +1,521 @@
 {
   "summary": {
-    "totalCompanies": 31,
+    "totalCompanies": 11,
     "totalColumns": 50
   },
   "byColumn": {
     "edinetCode": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "secCode": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "filerName": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "計算日": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "決算月": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "自己資本比率": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "EPS": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "dilutedEPS": {
-      "filled": 8,
-      "missing": 23,
-      "total": 31,
+      "filled": 2,
+      "missing": 9,
+      "total": 11,
       "missingSecCodes": [
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762",
-        "6797",
-        "6965",
-        "7614",
-        "7674",
         "7974",
-        "8142",
-        "9424",
-        "9632"
+        "94240",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "売上高": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "経常利益": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "当期純利益": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "純資産額": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "総資産額": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "包括利益": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "BPS": {
-      "filled": 27,
-      "missing": 4,
-      "total": 31,
+      "filled": 9,
+      "missing": 2,
+      "total": 11,
       "missingSecCodes": [
-        "2551",
-        "3636",
-        "6501",
-        "6762"
+        "65010",
+        "67620"
       ]
     },
     "ROE": {
-      "filled": 25,
-      "missing": 6,
-      "total": 31,
+      "filled": 9,
+      "missing": 2,
+      "total": 11,
       "missingSecCodes": [
-        "2551",
-        "278A",
-        "3636",
-        "3681",
-        "6501",
-        "6762"
+        "65010",
+        "67620"
       ]
     },
     "roeCalculated": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "roa": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "equityRatioCalculated": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "営業利益": {
-      "filled": 30,
+      "filled": 10,
       "missing": 1,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6501"
+        "65010"
       ]
     },
     "営業CF": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "投資CF": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "fcf": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "財務CF": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "現金残高": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "配当性向": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "payoutRatioComputed": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "dividendPerShare": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "発行済株式総数": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "流動資産": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "流動負債": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "負債": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "投資有価証券": {
-      "filled": 24,
-      "missing": 7,
-      "total": 31,
+      "filled": 6,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762",
-        "7064",
-        "7674"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "PER": {
-      "filled": 22,
-      "missing": 9,
-      "total": 31,
+      "filled": 9,
+      "missing": 2,
+      "total": 11,
       "missingSecCodes": [
-        "2551",
-        "278A",
-        "3636",
-        "3681",
-        "4174",
-        "4813",
-        "6501",
-        "6762",
-        "7674"
+        "65010",
+        "67620"
       ]
     },
     "PBR": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "配当利回り": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "時価総額": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "ネットキャッシュ": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "ネットキャッシュ比率": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "salesGrowthYoY": {
       "filled": 11,
-      "missing": 20,
-      "total": 31,
-      "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
-        "8142",
-        "9166",
-        "9632"
-      ]
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
     },
     "opGrowthYoY": {
       "filled": 10,
-      "missing": 21,
-      "total": 31,
+      "missing": 1,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6501",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
-        "8142",
-        "9166",
-        "9632"
+        "65010"
       ]
     },
     "epsGrowthYoY": {
       "filled": 6,
-      "missing": 25,
-      "total": 31,
+      "missing": 5,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
-        "8142",
-        "9166",
-        "9632"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "dividendGrowthYoY": {
       "filled": 0,
-      "missing": 31,
-      "total": 31,
+      "missing": 11,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6703",
-        "6762",
-        "6797",
-        "6965",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
         "7974",
-        "8142",
-        "9166",
-        "9424",
-        "9616",
-        "9632"
+        "94240",
+        "96160",
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67030",
+        "67620",
+        "67970",
+        "69650"
       ]
     },
     "salesCagr3y": {
       "filled": 11,
-      "missing": 20,
-      "total": 31,
-      "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
-        "8142",
-        "9166",
-        "9632"
-      ]
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
     },
     "salesCagr5y": {
       "filled": 10,
-      "missing": 21,
-      "total": 31,
+      "missing": 1,
+      "total": 11,
       "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "6762",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
-        "8142",
-        "9166",
-        "9632"
+        "67620"
       ]
     },
     "consecutiveDivIncreases": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "currentRatio": {
-      "filled": 31,
+      "filled": 11,
       "missing": 0,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": []
     },
     "deRatio": {
-      "filled": 26,
+      "filled": 6,
       "missing": 5,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6370",
-        "6501",
-        "6701",
-        "6702",
-        "6762"
+        "63700",
+        "65010",
+        "67010",
+        "67020",
+        "67620"
       ]
     },
     "roic": {
-      "filled": 30,
+      "filled": 10,
       "missing": 1,
-      "total": 31,
+      "total": 11,
       "missingSecCodes": [
-        "6501"
+        "65010"
       ]
     },
     "piotroskiFScore": {
       "filled": 11,
-      "missing": 20,
-      "total": 31,
-      "missingSecCodes": [
-        "168A",
-        "2551",
-        "278A",
-        "3565",
-        "3636",
-        "3665",
-        "3681",
-        "3921",
-        "3955",
-        "4174",
-        "4334",
-        "4813",
-        "7064",
-        "7073",
-        "7614",
-        "7674",
-        "7683",
-        "8142",
-        "9166",
-        "9632"
-      ]
+      "missing": 0,
+      "total": 11,
+      "missingSecCodes": []
     }
   },
   "byCompany": {
-    "168A": {
-      "filerName": "株式会社イタミアート",
-      "missingCount": 15,
-      "missingKeys": [
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "2551": {
-      "filerName": "マルサンアイ株式会社",
-      "missingCount": 19,
-      "missingKeys": [
-        "dilutedEPS",
-        "BPS",
-        "ROE",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PER",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "278A": {
-      "filerName": "Ｔｅｒｒａ　Ｄｒｏｎｅ株式会社",
-      "missingCount": 18,
-      "missingKeys": [
-        "dilutedEPS",
-        "ROE",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PER",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "3565": {
-      "filerName": "アセンテック株式会社",
-      "missingCount": 16,
+    "7974": {
+      "filerName": "任天堂株式会社",
+      "missingCount": 10,
       "missingKeys": [
         "dilutedEPS",
         "配当性向",
@@ -928,43 +526,12 @@
         "配当利回り",
         "時価総額",
         "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
+        "dividendGrowthYoY"
       ]
     },
-    "3636": {
-      "filerName": "株式会社三菱総合研究所",
-      "missingCount": 19,
-      "missingKeys": [
-        "dilutedEPS",
-        "BPS",
-        "ROE",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PER",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "3665": {
-      "filerName": "株式会社エニグモ",
-      "missingCount": 16,
+    "94240": {
+      "filerName": "日本通信株式会社",
+      "missingCount": 10,
       "missingKeys": [
         "dilutedEPS",
         "配当性向",
@@ -975,64 +542,12 @@
         "配当利回り",
         "時価総額",
         "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
+        "dividendGrowthYoY"
       ]
     },
-    "3681": {
-      "filerName": "株式会社ブイキューブ",
-      "missingCount": 18,
-      "missingKeys": [
-        "dilutedEPS",
-        "ROE",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PER",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "3921": {
-      "filerName": "株式会社ネオジャパン",
-      "missingCount": 16,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "3955": {
-      "filerName": "株式会社イムラ",
-      "missingCount": 15,
+    "96160": {
+      "filerName": "株式会社共立メンテナンス",
+      "missingCount": 9,
       "missingKeys": [
         "配当性向",
         "payoutRatioComputed",
@@ -1042,84 +557,10 @@
         "配当利回り",
         "時価総額",
         "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
+        "dividendGrowthYoY"
       ]
     },
-    "4174": {
-      "filerName": "株式会社アピリッツ",
-      "missingCount": 17,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PER",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "4334": {
-      "filerName": "株式会社ユークス",
-      "missingCount": 16,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "4813": {
-      "filerName": "株式会社ＡＣＣＥＳＳ",
-      "missingCount": 17,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PER",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "6370": {
+    "63700": {
       "filerName": "栗田工業株式会社",
       "missingCount": 22,
       "missingKeys": [
@@ -1147,7 +588,7 @@
         "deRatio"
       ]
     },
-    "6501": {
+    "65010": {
       "filerName": "株式会社日立製作所",
       "missingCount": 28,
       "missingKeys": [
@@ -1181,7 +622,7 @@
         "roic"
       ]
     },
-    "6701": {
+    "67010": {
       "filerName": "日本電気株式会社",
       "missingCount": 22,
       "missingKeys": [
@@ -1209,7 +650,7 @@
         "deRatio"
       ]
     },
-    "6702": {
+    "67020": {
       "filerName": "富士通株式会社",
       "missingCount": 22,
       "missingKeys": [
@@ -1237,7 +678,7 @@
         "deRatio"
       ]
     },
-    "6703": {
+    "67030": {
       "filerName": "沖電気工業株式会社",
       "missingCount": 9,
       "missingKeys": [
@@ -1252,7 +693,7 @@
         "dividendGrowthYoY"
       ]
     },
-    "6762": {
+    "67620": {
       "filerName": "ＴＤＫ株式会社",
       "missingCount": 26,
       "missingKeys": [
@@ -1284,7 +725,7 @@
         "deRatio"
       ]
     },
-    "6797": {
+    "67970": {
       "filerName": "名古屋電機工業株式会社",
       "missingCount": 10,
       "missingKeys": [
@@ -1300,7 +741,7 @@
         "dividendGrowthYoY"
       ]
     },
-    "6965": {
+    "69650": {
       "filerName": "浜松ホトニクス株式会社",
       "missingCount": 10,
       "missingKeys": [
@@ -1314,228 +755,6 @@
         "時価総額",
         "ネットキャッシュ比率",
         "dividendGrowthYoY"
-      ]
-    },
-    "7064": {
-      "filerName": "株式会社ハウテレビジョン",
-      "missingCount": 16,
-      "missingKeys": [
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "投資有価証券",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "7073": {
-      "filerName": "株式会社ジェイック",
-      "missingCount": 15,
-      "missingKeys": [
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "7614": {
-      "filerName": "株式会社オーエムツーネットワーク",
-      "missingCount": 16,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "7674": {
-      "filerName": "株式会社ＮＡＴＴＹ　ＳＷＡＮＫＹホールディングス",
-      "missingCount": 18,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "投資有価証券",
-        "PER",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "7683": {
-      "filerName": "株式会社ダブルエー",
-      "missingCount": 15,
-      "missingKeys": [
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "7974": {
-      "filerName": "任天堂株式会社",
-      "missingCount": 10,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "dividendGrowthYoY"
-      ]
-    },
-    "8142": {
-      "filerName": "株式会社トーホー",
-      "missingCount": 16,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "9166": {
-      "filerName": "株式会社ＧＥＮＤＡ",
-      "missingCount": 15,
-      "missingKeys": [
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
-      ]
-    },
-    "9424": {
-      "filerName": "日本通信株式会社",
-      "missingCount": 10,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "dividendGrowthYoY"
-      ]
-    },
-    "9616": {
-      "filerName": "株式会社共立メンテナンス",
-      "missingCount": 9,
-      "missingKeys": [
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "dividendGrowthYoY"
-      ]
-    },
-    "9632": {
-      "filerName": "スバル興業株式会社",
-      "missingCount": 16,
-      "missingKeys": [
-        "dilutedEPS",
-        "配当性向",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "発行済株式総数",
-        "PBR",
-        "配当利回り",
-        "時価総額",
-        "ネットキャッシュ比率",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
       ]
     }
   }

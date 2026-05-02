@@ -1,159 +1,59 @@
 {
   "companies": [
     {
-      "edinetCode": "E39273",
-      "secCode": "168A",
-      "filerName": "株式会社イタミアート"
-    },
-    {
-      "edinetCode": "E00422",
-      "secCode": "2551",
-      "filerName": "マルサンアイ株式会社"
-    },
-    {
-      "edinetCode": "E40060",
-      "secCode": "278A",
-      "filerName": "Ｔｅｒｒａ　Ｄｒｏｎｅ株式会社"
-    },
-    {
-      "edinetCode": "E33109",
-      "secCode": "3565",
-      "filerName": "アセンテック株式会社"
-    },
-    {
-      "edinetCode": "E23492",
-      "secCode": "3636",
-      "filerName": "株式会社三菱総合研究所"
-    },
-    {
-      "edinetCode": "E26703",
-      "secCode": "3665",
-      "filerName": "株式会社エニグモ"
-    },
-    {
-      "edinetCode": "E30114",
-      "secCode": "3681",
-      "filerName": "株式会社ブイキューブ"
-    },
-    {
-      "edinetCode": "E31902",
-      "secCode": "3921",
-      "filerName": "株式会社ネオジャパン"
-    },
-    {
-      "edinetCode": "E00688",
-      "secCode": "3955",
-      "filerName": "株式会社イムラ"
-    },
-    {
-      "edinetCode": "E36213",
-      "secCode": "4174",
-      "filerName": "株式会社アピリッツ"
-    },
-    {
-      "edinetCode": "E05254",
-      "secCode": "4334",
-      "filerName": "株式会社ユークス"
-    },
-    {
-      "edinetCode": "E05168",
-      "secCode": "4813",
-      "filerName": "株式会社ＡＣＣＥＳＳ"
-    },
-    {
-      "edinetCode": "E01573",
-      "secCode": "6370",
-      "filerName": "栗田工業株式会社"
-    },
-    {
-      "edinetCode": "E01737",
-      "secCode": "6501",
-      "filerName": "株式会社日立製作所"
-    },
-    {
-      "edinetCode": "E01765",
-      "secCode": "6701",
-      "filerName": "日本電気株式会社"
-    },
-    {
-      "edinetCode": "E01766",
-      "secCode": "6702",
-      "filerName": "富士通株式会社"
-    },
-    {
-      "edinetCode": "E01767",
-      "secCode": "6703",
-      "filerName": "沖電気工業株式会社"
-    },
-    {
-      "edinetCode": "E01780",
-      "secCode": "6762",
-      "filerName": "ＴＤＫ株式会社"
-    },
-    {
-      "edinetCode": "E02055",
-      "secCode": "6797",
-      "filerName": "名古屋電機工業株式会社"
-    },
-    {
-      "edinetCode": "E01955",
-      "secCode": "6965",
-      "filerName": "浜松ホトニクス株式会社"
-    },
-    {
-      "edinetCode": "E34866",
-      "secCode": "7064",
-      "filerName": "株式会社ハウテレビジョン"
-    },
-    {
-      "edinetCode": "E35187",
-      "secCode": "7073",
-      "filerName": "株式会社ジェイック"
-    },
-    {
-      "edinetCode": "E03317",
-      "secCode": "7614",
-      "filerName": "株式会社オーエムツーネットワーク"
-    },
-    {
-      "edinetCode": "E34747",
-      "secCode": "7674",
-      "filerName": "株式会社ＮＡＴＴＹ　ＳＷＡＮＫＹホールディングス"
-    },
-    {
-      "edinetCode": "E35170",
-      "secCode": "7683",
-      "filerName": "株式会社ダブルエー"
-    },
-    {
       "edinetCode": "E02367",
       "secCode": "7974",
       "filerName": "任天堂株式会社"
     },
     {
-      "edinetCode": "E02665",
-      "secCode": "8142",
-      "filerName": "株式会社トーホー"
-    },
-    {
-      "edinetCode": "E38739",
-      "secCode": "9166",
-      "filerName": "株式会社ＧＥＮＤＡ"
-    },
-    {
       "edinetCode": "E04473",
-      "secCode": "9424",
+      "secCode": "94240",
       "filerName": "日本通信株式会社"
     },
     {
       "edinetCode": "E04908",
-      "secCode": "9616",
+      "secCode": "96160",
       "filerName": "株式会社共立メンテナンス"
     },
     {
-      "edinetCode": "E04599",
-      "secCode": "9632",
-      "filerName": "スバル興業株式会社"
+      "edinetCode": "E01573",
+      "secCode": "63700",
+      "filerName": "栗田工業株式会社"
+    },
+    {
+      "edinetCode": "E01737",
+      "secCode": "65010",
+      "filerName": "株式会社日立製作所"
+    },
+    {
+      "edinetCode": "E01765",
+      "secCode": "67010",
+      "filerName": "日本電気株式会社"
+    },
+    {
+      "edinetCode": "E01766",
+      "secCode": "67020",
+      "filerName": "富士通株式会社"
+    },
+    {
+      "edinetCode": "E01767",
+      "secCode": "67030",
+      "filerName": "沖電気工業株式会社"
+    },
+    {
+      "edinetCode": "E01780",
+      "secCode": "67620",
+      "filerName": "ＴＤＫ株式会社"
+    },
+    {
+      "edinetCode": "E02055",
+      "secCode": "67970",
+      "filerName": "名古屋電機工業株式会社"
+    },
+    {
+      "edinetCode": "E01955",
+      "secCode": "69650",
+      "filerName": "浜松ホトニクス株式会社"
     }
   ]
 }
