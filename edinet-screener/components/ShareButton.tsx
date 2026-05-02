@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useFilters } from "./FilterContext";
 import { Button } from "./ui/button";
 import {
@@ -8,10 +9,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Share2 } from "lucide-react";
+import { Check, Share2 } from "lucide-react";
 
 export function ShareButton() {
   const { getShareableUrl } = useFilters();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyUrl = () => {
+    const url = getShareableUrl();
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleShare = (platform: "twitter" | "line" | "email") => {
     const shareUrl = getShareableUrl();
@@ -50,6 +59,10 @@ export function ShareButton() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
+        <DropdownMenuItem onClick={handleCopyUrl} className="flex items-center gap-2 cursor-pointer">
+          {copied ? <Check className="size-4" /> : <Share2 className="size-4" />}
+          <span>{copied ? "URLをコピーしました" : "URLをコピー"}</span>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleShare("twitter")} className="flex items-center gap-2 cursor-pointer">
           <span>𝕏 Twitter で共有</span>
         </DropdownMenuItem>

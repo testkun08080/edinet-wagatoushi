@@ -175,7 +175,7 @@ export function TableDownloadButton() {
       title={loading ? "ダウンロード中" : "現在のフィルター・表示列でCSVをダウンロード"}
     >
       {loading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
-      <span className="text-xs sm:text-sm">{loading ? "処理中…" : "CSVでダウンロード"}</span>
+      {/* <span className="text-xs sm:text-sm">{loading ? "処理中…" : "CSVでダウンロード"}</span> */}
     </Button>
   );
 }
