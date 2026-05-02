@@ -496,7 +496,7 @@ export function CompanyTable() {
               <TableHead
                 key={id}
                 className={`${getHeadAlign(id)} cursor-pointer select-none hover:bg-muted/50 transition-colors ${
-                  id === "filerName" ? "sticky left-0 z-10 bg-background" : ""
+                  id === "filerName" ? "md:sticky md:left-0 md:z-10 bg-background" : ""
                 }`}
                 onClick={() => handleSort(id)}
               >
@@ -520,7 +520,7 @@ export function CompanyTable() {
                 <TableCell
                   key={id}
                   className={`${getCellAlign(id)} ${
-                    id === "filerName" ? "sticky left-0 z-10 bg-background font-medium" : ""
+                    id === "filerName" ? "md:sticky md:left-0 md:z-10 bg-background font-medium" : ""
                   }`}
                 >
                   {getCellValue(m, id, { isFavorite, toggleFavorite })}
