@@ -14,6 +14,7 @@ import { Separator } from "../components/ui/separator";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbPage } from "../components/ui/breadcrumb";
 import { usePageContext } from "vike-react/usePageContext";
 import { initializeGA, trackPageView } from "../lib/analytics";
+import { DarkModeToggle } from "../components/DarkModeToggle";
 
 function AppHeader() {
   const pageContext = usePageContext();
@@ -36,7 +37,7 @@ function AppHeader() {
           : "企業一覧";
 
   return (
-    <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+    <header className="flex h-12 shrink-0 items-center justify-between gap-2 border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 !h-4" />
@@ -48,6 +49,7 @@ function AppHeader() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
+      <DarkModeToggle />
     </header>
   );
 }
