@@ -7,7 +7,7 @@
     "d1:apply-schema:production": "bash scripts/d1-apply-schema.sh production",
     "d1:seed:staging": "bash scripts/d1-seed-from-corpus.sh staging",
     "d1:seed:production": "bash scripts/d1-seed-from-corpus.sh production",
-    "build": "npm run generate:ogp && npm run generate-data && vike build",
+    "build": "npm run generate:ogp && npm run build:app",
     "build:app": "vike build",
     "preview": "vike preview",
     "test": "vike build && vike preview",
