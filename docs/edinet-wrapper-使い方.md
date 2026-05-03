@@ -14,14 +14,14 @@
 | **`build_screener_data.py`**    | `data-set` 内の TSV+JSON を走査し、`edinet-screener/public/data/` に **正規化済み JSON** を出力            |
 | **ダウンロード系**              | `download_company_10years.py` 等 — EDINET API キーが必要な場合は `edinet-wrapper/.env` に `EDINET_API_KEY` |
 
-フロントは **TSV を直接読まず**、`companies.json` / `summaries/{secCode}.json` / `company_metrics.json` を読みます。
+フロントは **TSV を直接読まず**、主に **`company_metrics.json`** と **`summaries/{secCode}.json`** を読みます（大株主タブは `summaries` の `rawTsvPath` があるとき **`raw_tsv/...`**）。**`companies.json`** は `public/data` に出力されますが、**現行の一覧・分析 UI からは `fetch` していません**（企業識別子は `company_metrics` の各行に含まれる）。
 
 ---
 
 ## 2. フロントの列とデータの対応
 
-- **列定義の単一ソース**: `edinet-wrapper/config/screener_columns.json`  
-  ビルド時に `edinet-screener/public/data/column_manifest.json` が同内容で生成されます。
+- **列定義のリポジトリ正**: `edinet-wrapper/config/screener_columns.json`  
+  ビルド時に `edinet-screener/public/data/column_manifest.json` が同内容で生成されます（外部ツール・確認用）。**ランタイムの列 UI**は [`ColumnVisibilityContext`](../edinet-screener/components/ColumnVisibilityContext.tsx) の **`COLUMN_CONFIG` ハードコード**が実態のため、**`screener_columns.json` と手動同期が必須**（詳細は [METRICS_UI_AND_DB_GAP.md](./METRICS_UI_AND_DB_GAP.md)）。
 - **1 銘柄 1 行の指標**: `company_metrics.json` の `metrics[]`。キー名は `metricsKey`（例: `ROE`, `PER`, `dividendPerShare`）と一致させています。
 - **型**: 多くは文字列（円・比率の生値）、`PER` / `配当利回り` など一部は数値。
 
@@ -46,7 +46,7 @@
 | ROE（算出）`roeCalculated` | 親会社帰属当期純利益 ÷ 純資産額（**最新期**の数値）                                                                                                                                            |
 | 配当利回り（`配当利回り`） | DPS ÷ (EPS×PER) の**参考値**。PER が開示ベースのため市場利回りとは異なる。異常値は `null`（実装ルールあり）                                                                                    |
 
-詳細は [EDINET指標の分類.md](./EDINET指標の分類.md) を参照してください。
+詳細は [EDINET指標の分類.md](./EDINET指標の分類.md)（開示↔メトリクスの整理）、[DATA_PIPELINE_AND_CALCULATIONS.md](./DATA_PIPELINE_AND_CALCULATIONS.md)（コード準拠の正本）、[METRICS_UI_AND_DB_GAP.md](./METRICS_UI_AND_DB_GAP.md)（列・DB 差分）を参照してください。
 
 ---
 
@@ -134,10 +134,10 @@ TSV を読み直さないため高速です。列定義や `summary_to_metrics_r
 
 | ファイル                           | 説明                                                                 |
 | ---------------------------------- | -------------------------------------------------------------------- |
-| `companies.json`                   | 一覧用の企業リスト（サンプルモードでは `--list` または引数の社のみ） |
+| `companies.json`                   | 企業マスタ（ビルド出力。サンプルは `--list` または引数の社のみ）。**現行 UI は一覧に未使用**（`company_metrics` を読む） |
 | `summaries/{secCode}.json`         | 企業ごとの全期間の `summary` / `pl` / `bs` / `cf`                    |
 | `company_metrics.json`             | テーブル用の最新スナップショット 1 行／銘柄                          |
-| `column_manifest.json`             | 列 ID と `metricsKey` の対応（フロントの列定義と同期）               |
+| `column_manifest.json`             | 列 ID と `metricsKey` の対応（`screener_columns.json` のコピー。**ランタイムは未読**、列 UI は `ColumnVisibilityContext`） |
 | `data_quality_report.json` / `.md` | 列ごとの欠損集計                                                     |
 | `all_keys_report.json` / `.md`     | サンプル時オプションで、各期のキー一覧                               |
 | `raw_tsv/`                         | オプションで、パース元 TSV のメタ付きコピー                          |
@@ -148,8 +148,10 @@ TSV を読み直さないため高速です。列定義や `summary_to_metrics_r
 
 | ドキュメント                                                     | 内容                               |
 | ---------------------------------------------------------------- | ---------------------------------- |
+| [DATA_PIPELINE_AND_CALCULATIONS.md](./DATA_PIPELINE_AND_CALCULATIONS.md) | パイプライン・算出式・表示換算のコード準拠正本 |
+| [METRICS_UI_AND_DB_GAP.md](./METRICS_UI_AND_DB_GAP.md)           | 列・メトリクス・DB と UI のギャップ |
 | [EDINET指標の分類.md](./EDINET指標の分類.md)                     | 開示そのまま／算出／株価が要る指標 |
 | [不足データまとめ.md](./不足データまとめ.md)                     | 欠損しやすい項目と原因の整理       |
-| [ビルドとデータ品質のプラン.md](./ビルドとデータ品質のプラン.md) | 品質レポート・列定義の設計メモ     |
+| [ビルドとデータ品質のプラン.md](./ビルドとデータ品質のプラン.md) | 品質レポート・列定義の設計メモ（一部未導入） |
 | `../edinet-screener/docs/SAMPLE_DATA_COMMANDS.md`                | スクリーナー向けコマンド集         |
 | `../edinet-wrapper/scripts/download/docs/README_DOWNLOAD.md`     | ダウンロード手順                   |

@@ -2,6 +2,8 @@
 
 このドキュメントでは、**EDINET 報告書の取得 → サンプルデータ生成 → Vike ビルド → スクリーナー表示**までの一連の流れと、各コンポーネントの役割を整理します。
 
+**指標の算出式・表示換算・パーサの優先順位などの詳細**はコード準拠の正本として [DATA_PIPELINE_AND_CALCULATIONS.md](./DATA_PIPELINE_AND_CALCULATIONS.md) を参照してください。列・`company_metrics` キー・DB と UI の差分一覧は [METRICS_UI_AND_DB_GAP.md](./METRICS_UI_AND_DB_GAP.md) を参照してください。
+
 **現在の運用方針**: 各ステップは**すべて手動**。**J-Quants 関連はオミット**（使用しない）。
 
 ---
@@ -42,7 +44,7 @@
 
 | ソース | 役割 | 主な取得内容 |
 |--------|------|----------------|
-| **EDINET** | 開示ベースの財務・経営データ | 有価証券報告書・四半期報告書・半期報告書の XBRL/TSV。BS・PL・CF・サマリ（EPS, BPS, 売上高, 経常利益, 純資産, ROE など）。**J-Quants はオミット**のため、PER/PBR・時価総額など株価連動指標は取得しない。 |
+| **EDINET** | 開示ベースの財務・経営データ | 有価証券報告書・四半期報告書・半期報告書の XBRL/TSV。BS・PL・CF・サマリ（EPS, BPS, 売上高, 経常利益, 純資産, ROE、開示ベースの株価収益率→`PER` など）。**J-Quants はオミット**のため、**市場株価 API に依存する** PBR・時価総額等は未連携（`company_metrics` では欠損になり得る）。 |
 
 ---
 
@@ -85,7 +87,7 @@
 - **中身**:
   - **companies.json**: 企業一覧（EDINET コード・証券コード・名称など）。
   - **summaries/<証券コード>.json**: 企業ごとの期間別サマリ・PL/BS/CF 等（TSV パース結果）。
-  - **company_metrics.json**: テーブル表示用の 1 銘柄 1 行の指標（EDINET 由来: EPS, BPS, 売上高, 経常利益, 純資産, ネットキャッシュ など）。J-Quants はオミットのため PER/PBR 等は含まない。
+  - **company_metrics.json**: テーブル表示用の 1 銘柄 1 行の指標（EDINET 由来: EPS, BPS, 売上高, 経常利益, 純資産、開示の株価収益率からの `PER` など）。**市場株価が要る** PBR・時価総額等は未連携のため欠損になり得る。
 
 詳細は [edinet-screener/docs/SAMPLE_DATA_COMMANDS.md](../edinet-screener/docs/SAMPLE_DATA_COMMANDS.md) を参照。
 
@@ -94,11 +96,12 @@
 ### 3.3 スクリーナーで表示する（edinet-screener）
 
 - **技術**: Vike + React。SSR あり。データは **public/data** の静的 JSON を `fetch` で読み込み。
-- **利用ファイル**:
-  - `/data/companies.json` … 企業一覧
-  - `/data/company_metrics.json` … 一覧テーブル・サイドバー・分析ページ用の指標
+- **利用ファイル（`fetch` 実装ベース）**:
+  - `/data/company_metrics.json` … 一覧テーブル・サイドバー・分析ページの指標（**企業名・証券コードも各行に含む**）
   - `/data/summaries/<secCode>.json` … 企業別詳細（分析ページ）
-- **表示するデータ**: フロントエンドでは **EDINET 由来のデータ（companies, summaries, company_metrics）** を表示。**J-Quants はオミット**のため PER/PBR・時価総額・株価チャートは取得・表示しない。
+  - `/data/raw_tsv/...` … 大株主タブ等で `summaries` の `rawTsvPath` が指すときのみ
+- **ビルドでは生成するが現行 UI からは `fetch` していない**: `companies.json`、`column_manifest.json`（列定義の実体は `ColumnVisibilityContext` のハードコード。詳細は [METRICS_UI_AND_DB_GAP.md](./METRICS_UI_AND_DB_GAP.md)）
+- **表示するデータ**: フロントエンドでは **EDINET 由来の静的 JSON（主に `company_metrics` / `summaries`）** を表示。**J-Quants はオミット**のため市場株価チャートや市場ベースの時価連動は取得しない（開示ベースの `PER` 等は `company_metrics` に入り得る）。
 - **ビルドの順序**: 1) サンプルデータ生成（companies, summaries, company_metrics）→ 2) Vike ビルド（`npm run build` または `npm run build:app`）。
 - **開発**: `npm run dev` で開発サーバー。既に存在する `public/data` をそのまま表示。
 

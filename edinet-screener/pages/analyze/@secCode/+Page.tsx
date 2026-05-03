@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 import { MajorShareholdersTimeSeries } from "../../../components/MajorShareholdersTimeSeries.js";
 import { SummaryCharts } from "../../../components/SummaryCharts.js";
-import { DataAttributionBlock } from "../../../components/DataAttributionBlock.js";
 import { ToggleGroup, ToggleGroupItem } from "../../../components/ui/toggle-group";
 import {
   ANALYZE_VISIBLE_YEAR_OPTIONS,
@@ -511,7 +510,6 @@ export default function Page() {
                 periods={filteredPeriods}
                 unitCaption={tableMillionCaption}
               />
-              <DataAttributionBlock compact />
             </TabsContent>
             <TabsContent value="shihyo" className="min-h-0">
               <IndicatorsTable metrics={metrics} />

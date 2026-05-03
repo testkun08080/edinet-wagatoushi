@@ -2,6 +2,9 @@
 
 `build_screener_data.py` → `company_metrics.json` / `summaries/{secCode}.json` → フロント（`CompanyTable` / `SummaryCharts`）の全体的なデータフローを整理したドキュメントです。
 
+> **正本との役割分担（2026）**  
+> パイプライン・算出式・`fetch` 対象ファイルの事実関係は [DATA_PIPELINE_AND_CALCULATIONS.md](./DATA_PIPELINE_AND_CALCULATIONS.md) と [METRICS_UI_AND_DB_GAP.md](./METRICS_UI_AND_DB_GAP.md)。本書は開示キーとメトリクス表示の対応整理が主眼です。
+
 ---
 
 ## データフロー概要
@@ -239,7 +242,7 @@ EDINET TSV
 | -------------------------------------------------------- | ----------------------------------------- |
 | `edinet-wrapper/scripts/frontend/build_screener_data.py` | データ生成スクリプト（マッピングの中心）                      |
 | `edinet-wrapper/config/screener_columns.json`            | カラム定義（id / label / category / metricsKey） |
-| `edinet-screener/public/data/column_manifest.json`       | ↑のコピー（フロントから参照）                           |
+| `edinet-screener/public/data/column_manifest.json`       | ↑のコピー（ビルド成果物。**ランタイムは未 `fetch`**。列 UI は `ColumnVisibilityContext`） |
 | `edinet-screener/public/data/company_metrics.json`       | スクリーナーテーブル用フラットデータ                        |
 | `edinet-screener/public/data/summaries/{secCode}.json`   | 企業詳細用時系列データ                               |
 | `edinet-screener/components/CompanyTable.tsx`            | スクリーナーテーブル（getCellValue / getSortValue）   |

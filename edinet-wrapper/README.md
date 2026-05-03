@@ -5,6 +5,8 @@
 - **Downloader**: EDINET API で有価証券報告書等をダウンロード（リトライ・非 JSON 対応済み）
 - **Parser**: TSV から貸借対照表（BS）・損益計算書（PL）・キャッシュフロー（CF）・サマリ等を抽出
 
+取得から `public/data` 生成・指標の式までの詳細はリポジトリ直下の [docs/DATA_PIPELINE_AND_CALCULATIONS.md](../docs/DATA_PIPELINE_AND_CALCULATIONS.md) を参照してください。
+
 本プロジェクトでは **uv** を前提にセットアップ・実行します。
 
 ---
