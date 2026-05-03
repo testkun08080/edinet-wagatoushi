@@ -9,6 +9,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Skeleton } from "./ui/skeleton";
 import { ArrowUp, ArrowDown, Star } from "lucide-react";
+import { formatRatioDecimalStringAsPercent, formatYenStringAsMillionYen } from "../lib/metricFormat.js";
 
 export type CompanyMetric = {
   edinetCode: string;
@@ -68,19 +69,8 @@ export type CompanyMetric = {
   piotroskiFScore?: number | null;
 };
 
-function formatSales(s: string | null): string {
-  if (s == null || s === "") return "－";
-  const n = parseFloat(s) / 1_000_000;
-  if (isNaN(n)) return "－";
-  return n.toLocaleString(undefined, { maximumFractionDigits: 0 });
-}
-
-function formatRatio(s: string | null): string {
-  if (s == null || s === "") return "－";
-  const n = parseFloat(s);
-  if (isNaN(n)) return s;
-  return (n * 100).toFixed(2) + "%";
-}
+const formatSales = formatYenStringAsMillionYen;
+const formatRatio = formatRatioDecimalStringAsPercent;
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -101,8 +91,10 @@ export function passesFilter(
   if (f.minEps && !isNaN(eps) && eps < parseFloat(f.minEps)) return false;
   if (f.maxEps && !isNaN(eps) && eps > parseFloat(f.maxEps)) return false;
   const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
-  if (f.minSales && !isNaN(sales) && sales < parseFloat(f.minSales)) return false;
-  if (f.maxSales && !isNaN(sales) && sales > parseFloat(f.maxSales)) return false;
+  const minSalesYen = f.minSales && f.minSales !== "" ? parseFloat(f.minSales) * 1_000_000 : NaN;
+  const maxSalesYen = f.maxSales && f.maxSales !== "" ? parseFloat(f.maxSales) * 1_000_000 : NaN;
+  if (!isNaN(minSalesYen) && !isNaN(sales) && sales < minSalesYen) return false;
+  if (!isNaN(maxSalesYen) && !isNaN(sales) && sales > maxSalesYen) return false;
   const roe = m.ROE != null ? parseFloat(m.ROE) : NaN;
   if (f.minRoe != null && f.minRoe !== "" && !isNaN(roe) && roe < parseFloat(f.minRoe)) return false;
   if (f.maxRoe != null && f.maxRoe !== "" && !isNaN(roe) && roe > parseFloat(f.maxRoe)) return false;

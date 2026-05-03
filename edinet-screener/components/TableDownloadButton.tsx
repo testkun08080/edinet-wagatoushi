@@ -7,20 +7,10 @@ import { useFavorites } from "./FavoritesContext.js";
 import { passesFilter, type CompanyMetric } from "./CompanyTable.js";
 import { Button } from "./ui/button";
 import { Download, Loader2 } from "lucide-react";
+import { formatRatioDecimalStringAsPercent, formatYenStringAsMillionYen } from "../lib/metricFormat.js";
 
-function formatSales(s: string | null): string {
-  if (s == null || s === "") return "－";
-  const n = parseFloat(s) / 1_000_000;
-  if (isNaN(n)) return "－";
-  return n.toLocaleString(undefined, { maximumFractionDigits: 0 });
-}
-
-function formatRatio(s: string | null): string {
-  if (s == null || s === "") return "－";
-  const n = parseFloat(s);
-  if (isNaN(n)) return s;
-  return (n * 100).toFixed(2) + "%";
-}
+const formatSales = formatYenStringAsMillionYen;
+const formatRatio = formatRatioDecimalStringAsPercent;
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
