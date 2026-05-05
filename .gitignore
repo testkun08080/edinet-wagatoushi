@@ -13,3 +13,5 @@ dist
 .agents/*
 edinet-wrapper/state/
 edinet-wrapper/raw/
+
+.DS_Store
