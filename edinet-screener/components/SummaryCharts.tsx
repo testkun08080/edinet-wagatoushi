@@ -26,8 +26,8 @@ type Period = {
 /** 配当カード用（company_metrics の該当フィールドのみ） */
 export type DividendMetricsSnapshot = {
   dividendPerShare: string | null;
-  配当利回り: number | null;
-  配当性向: string | null;
+  dividendYield: number | null;
+  payoutRatio: string | null;
 } | null;
 
 function parseIntYen(raw: string | undefined): number | null {
@@ -425,8 +425,8 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
 
       {metrics &&
         (metrics.dividendPerShare != null ||
-          metrics.配当利回り != null ||
-          (metrics.配当性向 != null && metrics.配当性向 !== "")) && (
+          metrics.dividendYield != null ||
+          (metrics.payoutRatio != null && metrics.payoutRatio !== "")) && (
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">配当まわり（最新スナップショット）</CardTitle>
@@ -445,16 +445,16 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
                 <div className="rounded-lg border bg-muted/30 p-3">
                   <dt className="text-muted-foreground text-xs">配当利回り</dt>
                   <dd className="mt-1 font-semibold tabular-nums">
-                    {metrics.配当利回り != null ? `${metrics.配当利回り.toFixed(2)}%` : "―"}
+                    {metrics.dividendYield != null ? `${metrics.dividendYield.toFixed(2)}%` : "―"}
                   </dd>
                 </div>
                 <div className="rounded-lg border bg-muted/30 p-3">
                   <dt className="text-muted-foreground text-xs">配当性向</dt>
                   <dd className="mt-1 font-semibold tabular-nums">
-                    {metrics.配当性向 != null && metrics.配当性向 !== ""
+                    {metrics.payoutRatio != null && metrics.payoutRatio !== ""
                       ? (() => {
-                          const r = parseFloat(metrics.配当性向);
-                          return Number.isFinite(r) ? `${(r * 100).toFixed(2)}%` : metrics.配当性向;
+                          const r = parseFloat(metrics.payoutRatio);
+                          return Number.isFinite(r) ? `${(r * 100).toFixed(2)}%` : metrics.payoutRatio;
                         })()
                       : "―"}
                   </dd>
