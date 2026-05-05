@@ -1,0 +1,9 @@
+services:
+  screener:
+    build: ./edinet-screener
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./edinet-screener/public:/app/public:ro

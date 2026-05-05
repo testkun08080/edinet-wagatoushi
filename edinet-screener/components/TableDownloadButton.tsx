@@ -25,23 +25,23 @@ function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
     case "edinetCode":
       return m.edinetCode ?? "";
     case "calcDate":
-      return m.計算日 ?? "－";
+      return m.calcDate ?? "－";
     case "fiscalMonth":
-      return m.決算月 ?? "－";
+      return m.fiscalMonth ?? "－";
     case "PER":
       return m.PER != null ? m.PER.toFixed(1) : "－";
     case "PBR":
       return m.PBR != null ? m.PBR.toFixed(2) : "－";
     case "dividendYield":
-      return m.配当利回り != null ? m.配当利回り.toFixed(2) + "%" : "－";
+      return m.dividendYield != null ? m.dividendYield.toFixed(2) + "%" : "－";
     case "marketCap":
-      return m.時価総額 != null ? formatSales(String(m.時価総額)) : "－";
+      return m.marketCap != null ? formatSales(String(m.marketCap)) : "－";
     case "netCash":
-      return m.ネットキャッシュ != null ? formatSales(String(m.ネットキャッシュ)) : "－";
+      return m.netCash != null ? formatSales(String(m.netCash)) : "－";
     case "netCashRatio":
-      return m.ネットキャッシュ比率 != null ? (m.ネットキャッシュ比率 * 100).toFixed(2) + "%" : "－";
+      return m.netCashRatio != null ? (m.netCashRatio * 100).toFixed(2) + "%" : "－";
     case "equityRatio":
-      return formatRatio(m.自己資本比率);
+      return formatRatio(m.equityRatio);
     case "ROE":
       return formatRatio(m.ROE);
     case "EPS":
@@ -57,57 +57,57 @@ function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
     case "BPS":
       return m.BPS ?? "－";
     case "payoutRatio":
-      return formatRatio(m.配当性向);
+      return formatRatio(m.payoutRatio);
     case "payoutRatioComputed":
       return formatRatio(m.payoutRatioComputed ?? null);
     case "sales":
-      return formatSales(m.売上高);
+      return formatSales(m.sales);
     case "operatingProfit":
-      return formatSales(m.営業利益);
+      return formatSales(m.operatingProfit);
     case "operatingProfitRatio": {
-      const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
-      const op = m.営業利益 != null ? parseFloat(m.営業利益) : NaN;
+      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
+      const op = m.operatingProfit != null ? parseFloat(m.operatingProfit) : NaN;
       if (isNaN(sales) || isNaN(op) || sales === 0) return "－";
       return ((op / sales) * 100).toFixed(2) + "%";
     }
     case "netIncome":
-      return formatSales(m.当期純利益);
+      return formatSales(m.netIncome);
     case "netProfitRatio": {
-      const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
-      const ni = m.当期純利益 != null ? parseFloat(m.当期純利益) : NaN;
+      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
+      const ni = m.netIncome != null ? parseFloat(m.netIncome) : NaN;
       if (isNaN(sales) || isNaN(ni) || sales === 0) return "－";
       return ((ni / sales) * 100).toFixed(2) + "%";
     }
     case "liabilities":
-      return formatSales(m.負債);
+      return formatSales(m.liabilities);
     case "currentLiabilities":
-      return formatSales(m.流動負債);
+      return formatSales(m.currentLiabilities);
     case "currentAssets":
-      return formatSales(m.流動資産);
+      return formatSales(m.currentAssets);
     case "investmentSecurities":
-      return formatSales(m.投資有価証券);
+      return formatSales(m.investmentSecurities);
     case "cashBalance":
-      return formatSales(m.現金残高);
+      return formatSales(m.cashBalance);
     case "dividendPerShare":
       return m.dividendPerShare ?? "－";
     case "sharesOutstanding":
-      return m.発行済株式総数 != null ? parseInt(m.発行済株式総数, 10).toLocaleString() : "－";
+      return m.sharesOutstanding != null ? parseInt(m.sharesOutstanding, 10).toLocaleString() : "－";
     case "recurringProfit":
-      return formatSales(m.経常利益);
+      return formatSales(m.recurringProfit);
     case "comprehensiveIncome":
-      return formatSales(m.包括利益);
+      return formatSales(m.comprehensiveIncome);
     case "netAssets":
-      return formatSales(m.純資産額);
+      return formatSales(m.netAssets);
     case "totalAssets":
-      return formatSales(m.総資産額);
+      return formatSales(m.totalAssets);
     case "operatingCF":
-      return formatSales(m.営業CF);
+      return formatSales(m.operatingCF);
     case "investingCF":
-      return formatSales(m.投資CF);
+      return formatSales(m.investingCF);
     case "fcf":
       return formatSales(m.fcf ?? null);
     case "financingCF":
-      return formatSales(m.財務CF);
+      return formatSales(m.financingCF);
     default:
       return "－";
   }

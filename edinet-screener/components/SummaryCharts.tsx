@@ -13,7 +13,7 @@ import {
 } from "./ui/chart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
-import { pickCfDividendPaid, pickPlRevenueForChart, pickSummaryRevenueForChart } from "../lib/financialPickers.js";
+import { pickCfDividendPaid, pickPlRevenueForChart, pickSummaryRevenueForChart } from "../lib/financial-pickers.js";
 
 type Period = {
   periodEnd: string;

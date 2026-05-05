@@ -31,13 +31,13 @@ import {
   ANALYZE_VISIBLE_YEAR_OPTIONS,
   filterPeriodsByVisibleYears,
   type AnalyzeVisibleYears,
-} from "../../../lib/analyzePeriodRange.js";
+} from "../../../lib/analyze-period-range.js";
 import {
   ANALYZE_REPORT_KIND_OPTIONS,
   analyzeReportKindLabel,
   reportMatchesKind,
   type AnalyzeReportKind,
-} from "../../../lib/analyzeReportKind.js";
+} from "../../../lib/analyze-report-kind.js";
 import {
   ANALYZE_HEADCOUNT_ROW_KEYS,
   formatAnalyzeFinancialTableCell,

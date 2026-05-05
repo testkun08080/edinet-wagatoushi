@@ -15,16 +15,16 @@ export type CompanyMetric = {
   edinetCode: string;
   secCode: string;
   filerName: string;
-  計算日: string | null;
-  決算月: string | null;
-  自己資本比率: string | null;
+  calcDate: string | null;
+  fiscalMonth: string | null;
+  equityRatio: string | null;
   EPS: string | null;
-  売上高: string | null;
-  経常利益: string | null;
-  当期純利益: string | null;
-  純資産額: string | null;
-  総資産額: string | null;
-  包括利益: string | null;
+  sales: string | null;
+  recurringProfit: string | null;
+  netIncome: string | null;
+  netAssets: string | null;
+  totalAssets: string | null;
+  comprehensiveIncome: string | null;
   BPS: string | null;
   ROE: string | null;
   /** 親会社純利益÷純資産額（開示ROEと別） */
@@ -38,24 +38,24 @@ export type CompanyMetric = {
   payoutRatioComputed?: string | null;
   /** 営業CF＋投資CF */
   fcf?: string | null;
-  営業利益: string | null;
-  営業CF: string | null;
-  投資CF: string | null;
-  財務CF: string | null;
-  現金残高: string | null;
-  配当性向: string | null;
+  operatingProfit: string | null;
+  operatingCF: string | null;
+  investingCF: string | null;
+  financingCF: string | null;
+  cashBalance: string | null;
+  payoutRatio: string | null;
   dividendPerShare: string | null;
-  発行済株式総数: string | null;
-  流動資産: string | null;
-  流動負債: string | null;
-  負債: string | null;
-  投資有価証券: string | null;
+  sharesOutstanding: string | null;
+  currentAssets: string | null;
+  currentLiabilities: string | null;
+  liabilities: string | null;
+  investmentSecurities: string | null;
   PER: number | null;
   PBR: number | null;
-  配当利回り: number | null;
-  時価総額?: number | null;
-  ネットキャッシュ?: number | null;
-  ネットキャッシュ比率?: number | null;
+  dividendYield: number | null;
+  marketCap?: number | null;
+  netCash?: number | null;
+  netCashRatio?: number | null;
   salesGrowthYoY?: string | null;
   opGrowthYoY?: string | null;
   epsGrowthYoY?: string | null;
@@ -84,13 +84,13 @@ export function passesFilter(
   if (f.showOnlyFavorites && !favorites.has(m.secCode)) return false;
   if (f.searchName.trim() && !m.filerName.toLowerCase().includes(f.searchName.trim().toLowerCase())) return false;
   if (f.searchCode.trim() && !m.secCode.includes(f.searchCode.trim())) return false;
-  const eq = m.自己資本比率 != null ? parseFloat(m.自己資本比率) : NaN;
+  const eq = m.equityRatio != null ? parseFloat(m.equityRatio) : NaN;
   if (f.minEquityRatio && !isNaN(eq) && eq < parseFloat(f.minEquityRatio)) return false;
   if (f.maxEquityRatio && !isNaN(eq) && eq > parseFloat(f.maxEquityRatio)) return false;
   const eps = m.EPS != null ? parseFloat(m.EPS) : NaN;
   if (f.minEps && !isNaN(eps) && eps < parseFloat(f.minEps)) return false;
   if (f.maxEps && !isNaN(eps) && eps > parseFloat(f.maxEps)) return false;
-  const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
+  const sales = m.sales != null ? parseFloat(m.sales) : NaN;
   const minSalesYen = f.minSales && f.minSales !== "" ? parseFloat(f.minSales) * 1_000_000 : NaN;
   const maxSalesYen = f.maxSales && f.maxSales !== "" ? parseFloat(f.maxSales) * 1_000_000 : NaN;
   if (!isNaN(minSalesYen) && !isNaN(sales) && sales < minSalesYen) return false;
@@ -98,7 +98,7 @@ export function passesFilter(
   const roe = m.ROE != null ? parseFloat(m.ROE) : NaN;
   if (f.minRoe != null && f.minRoe !== "" && !isNaN(roe) && roe < parseFloat(f.minRoe)) return false;
   if (f.maxRoe != null && f.maxRoe !== "" && !isNaN(roe) && roe > parseFloat(f.maxRoe)) return false;
-  const totalAssets = m.総資産額 != null ? parseFloat(m.総資産額) : NaN;
+  const totalAssets = m.totalAssets != null ? parseFloat(m.totalAssets) : NaN;
   if (
     f.minTotalAssets != null &&
     f.minTotalAssets !== "" &&
@@ -158,23 +158,23 @@ function getCellValue(
     case "edinetCode":
       return m.edinetCode;
     case "calcDate":
-      return m.計算日 ?? "－";
+      return m.calcDate ?? "－";
     case "fiscalMonth":
-      return m.決算月 ?? "－";
+      return m.fiscalMonth ?? "－";
     case "PER":
       return m.PER != null ? m.PER.toFixed(1) : "－";
     case "PBR":
       return m.PBR != null ? m.PBR.toFixed(2) : "－";
     case "dividendYield":
-      return m.配当利回り != null ? m.配当利回り.toFixed(2) + "%" : "－";
+      return m.dividendYield != null ? m.dividendYield.toFixed(2) + "%" : "－";
     case "marketCap":
-      return m.時価総額 != null ? formatSales(String(m.時価総額)) : "－";
+      return m.marketCap != null ? formatSales(String(m.marketCap)) : "－";
     case "netCash":
-      return m.ネットキャッシュ != null ? formatSales(String(m.ネットキャッシュ)) : "－";
+      return m.netCash != null ? formatSales(String(m.netCash)) : "－";
     case "netCashRatio":
-      return m.ネットキャッシュ比率 != null ? (m.ネットキャッシュ比率 * 100).toFixed(2) + "%" : "－";
+      return m.netCashRatio != null ? (m.netCashRatio * 100).toFixed(2) + "%" : "－";
     case "equityRatio":
-      return formatRatio(m.自己資本比率);
+      return formatRatio(m.equityRatio);
     case "ROE":
       return formatRatio(m.ROE);
     case "EPS":
@@ -190,57 +190,57 @@ function getCellValue(
     case "BPS":
       return m.BPS ?? "－";
     case "payoutRatio":
-      return formatRatio(m.配当性向);
+      return formatRatio(m.payoutRatio);
     case "payoutRatioComputed":
       return formatRatio(m.payoutRatioComputed ?? null);
     case "sales":
-      return formatSales(m.売上高);
+      return formatSales(m.sales);
     case "operatingProfit":
-      return formatSales(m.営業利益);
+      return formatSales(m.operatingProfit);
     case "operatingProfitRatio": {
-      const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
-      const op = m.営業利益 != null ? parseFloat(m.営業利益) : NaN;
+      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
+      const op = m.operatingProfit != null ? parseFloat(m.operatingProfit) : NaN;
       if (isNaN(sales) || isNaN(op) || sales === 0) return "－";
       return ((op / sales) * 100).toFixed(2) + "%";
     }
     case "netIncome":
-      return formatSales(m.当期純利益);
+      return formatSales(m.netIncome);
     case "netProfitRatio": {
-      const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
-      const ni = m.当期純利益 != null ? parseFloat(m.当期純利益) : NaN;
+      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
+      const ni = m.netIncome != null ? parseFloat(m.netIncome) : NaN;
       if (isNaN(sales) || isNaN(ni) || sales === 0) return "－";
       return ((ni / sales) * 100).toFixed(2) + "%";
     }
     case "liabilities":
-      return formatSales(m.負債);
+      return formatSales(m.liabilities);
     case "currentLiabilities":
-      return formatSales(m.流動負債);
+      return formatSales(m.currentLiabilities);
     case "currentAssets":
-      return formatSales(m.流動資産);
+      return formatSales(m.currentAssets);
     case "investmentSecurities":
-      return formatSales(m.投資有価証券);
+      return formatSales(m.investmentSecurities);
     case "cashBalance":
-      return formatSales(m.現金残高);
+      return formatSales(m.cashBalance);
     case "dividendPerShare":
       return m.dividendPerShare ?? "－";
     case "sharesOutstanding":
-      return m.発行済株式総数 != null ? parseInt(m.発行済株式総数, 10).toLocaleString() : "－";
+      return m.sharesOutstanding != null ? parseInt(m.sharesOutstanding, 10).toLocaleString() : "－";
     case "recurringProfit":
-      return formatSales(m.経常利益);
+      return formatSales(m.recurringProfit);
     case "comprehensiveIncome":
-      return formatSales(m.包括利益);
+      return formatSales(m.comprehensiveIncome);
     case "netAssets":
-      return formatSales(m.純資産額);
+      return formatSales(m.netAssets);
     case "totalAssets":
-      return formatSales(m.総資産額);
+      return formatSales(m.totalAssets);
     case "operatingCF":
-      return formatSales(m.営業CF);
+      return formatSales(m.operatingCF);
     case "investingCF":
-      return formatSales(m.投資CF);
+      return formatSales(m.investingCF);
     case "fcf":
       return formatSales(m.fcf ?? null);
     case "financingCF":
-      return formatSales(m.財務CF);
+      return formatSales(m.financingCF);
     case "salesGrowthYoY":
       return formatRatio(m.salesGrowthYoY ?? null);
     case "opGrowthYoY":
@@ -277,23 +277,23 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
     case "edinetCode":
       return m.edinetCode ?? "";
     case "calcDate":
-      return m.計算日 ?? "";
+      return m.calcDate ?? "";
     case "fiscalMonth":
-      return m.決算月 ?? "";
+      return m.fiscalMonth ?? "";
     case "PER":
       return m.PER ?? -Infinity;
     case "PBR":
       return m.PBR ?? -Infinity;
     case "dividendYield":
-      return m.配当利回り ?? -Infinity;
+      return m.dividendYield ?? -Infinity;
     case "marketCap":
-      return m.時価総額 ?? -Infinity;
+      return m.marketCap ?? -Infinity;
     case "netCash":
-      return m.ネットキャッシュ ?? -Infinity;
+      return m.netCash ?? -Infinity;
     case "netCashRatio":
-      return m.ネットキャッシュ比率 ?? -Infinity;
+      return m.netCashRatio ?? -Infinity;
     case "equityRatio":
-      return m.自己資本比率 != null ? parseFloat(m.自己資本比率) : -Infinity;
+      return m.equityRatio != null ? parseFloat(m.equityRatio) : -Infinity;
     case "ROE":
       return m.ROE != null ? parseFloat(m.ROE) : -Infinity;
     case "EPS":
@@ -309,57 +309,57 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
     case "BPS":
       return m.BPS != null ? parseFloat(m.BPS) : -Infinity;
     case "payoutRatio":
-      return m.配当性向 != null ? parseFloat(m.配当性向) : -Infinity;
+      return m.payoutRatio != null ? parseFloat(m.payoutRatio) : -Infinity;
     case "payoutRatioComputed":
       return m.payoutRatioComputed != null ? parseFloat(m.payoutRatioComputed) : -Infinity;
     case "sales":
-      return m.売上高 != null ? parseFloat(m.売上高) : -Infinity;
+      return m.sales != null ? parseFloat(m.sales) : -Infinity;
     case "operatingProfit":
-      return m.営業利益 != null ? parseFloat(m.営業利益) : -Infinity;
+      return m.operatingProfit != null ? parseFloat(m.operatingProfit) : -Infinity;
     case "operatingProfitRatio": {
-      const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
-      const op = m.営業利益 != null ? parseFloat(m.営業利益) : NaN;
+      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
+      const op = m.operatingProfit != null ? parseFloat(m.operatingProfit) : NaN;
       if (isNaN(sales) || sales === 0) return -Infinity;
       return isNaN(op) ? -Infinity : op / sales;
     }
     case "netIncome":
-      return m.当期純利益 != null ? parseFloat(m.当期純利益) : -Infinity;
+      return m.netIncome != null ? parseFloat(m.netIncome) : -Infinity;
     case "netProfitRatio": {
-      const sales = m.売上高 != null ? parseFloat(m.売上高) : NaN;
-      const ni = m.当期純利益 != null ? parseFloat(m.当期純利益) : NaN;
+      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
+      const ni = m.netIncome != null ? parseFloat(m.netIncome) : NaN;
       if (isNaN(sales) || sales === 0) return -Infinity;
       return isNaN(ni) ? -Infinity : ni / sales;
     }
     case "liabilities":
-      return m.負債 != null ? parseFloat(m.負債) : -Infinity;
+      return m.liabilities != null ? parseFloat(m.liabilities) : -Infinity;
     case "currentLiabilities":
-      return m.流動負債 != null ? parseFloat(m.流動負債) : -Infinity;
+      return m.currentLiabilities != null ? parseFloat(m.currentLiabilities) : -Infinity;
     case "currentAssets":
-      return m.流動資産 != null ? parseFloat(m.流動資産) : -Infinity;
+      return m.currentAssets != null ? parseFloat(m.currentAssets) : -Infinity;
     case "investmentSecurities":
-      return m.投資有価証券 != null ? parseFloat(m.投資有価証券) : -Infinity;
+      return m.investmentSecurities != null ? parseFloat(m.investmentSecurities) : -Infinity;
     case "cashBalance":
-      return m.現金残高 != null ? parseFloat(m.現金残高) : -Infinity;
+      return m.cashBalance != null ? parseFloat(m.cashBalance) : -Infinity;
     case "dividendPerShare":
       return m.dividendPerShare != null ? parseFloat(m.dividendPerShare) : -Infinity;
     case "sharesOutstanding":
-      return m.発行済株式総数 != null ? parseFloat(m.発行済株式総数) : -Infinity;
+      return m.sharesOutstanding != null ? parseFloat(m.sharesOutstanding) : -Infinity;
     case "recurringProfit":
-      return m.経常利益 != null ? parseFloat(m.経常利益) : -Infinity;
+      return m.recurringProfit != null ? parseFloat(m.recurringProfit) : -Infinity;
     case "comprehensiveIncome":
-      return m.包括利益 != null ? parseFloat(m.包括利益) : -Infinity;
+      return m.comprehensiveIncome != null ? parseFloat(m.comprehensiveIncome) : -Infinity;
     case "netAssets":
-      return m.純資産額 != null ? parseFloat(m.純資産額) : -Infinity;
+      return m.netAssets != null ? parseFloat(m.netAssets) : -Infinity;
     case "totalAssets":
-      return m.総資産額 != null ? parseFloat(m.総資産額) : -Infinity;
+      return m.totalAssets != null ? parseFloat(m.totalAssets) : -Infinity;
     case "operatingCF":
-      return m.営業CF != null ? parseFloat(m.営業CF) : -Infinity;
+      return m.operatingCF != null ? parseFloat(m.operatingCF) : -Infinity;
     case "investingCF":
-      return m.投資CF != null ? parseFloat(m.投資CF) : -Infinity;
+      return m.investingCF != null ? parseFloat(m.investingCF) : -Infinity;
     case "fcf":
       return m.fcf != null ? parseFloat(m.fcf) : -Infinity;
     case "financingCF":
-      return m.財務CF != null ? parseFloat(m.財務CF) : -Infinity;
+      return m.financingCF != null ? parseFloat(m.financingCF) : -Infinity;
     case "salesGrowthYoY":
       return m.salesGrowthYoY != null ? parseFloat(m.salesGrowthYoY) : -Infinity;
     case "opGrowthYoY":
