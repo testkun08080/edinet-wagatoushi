@@ -219,7 +219,7 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
               let display: string;
               if (val === null || val === undefined) {
                 display = "－";
-              } else if (key === "計算日" || key === "決算月") {
+              } else if (key === "calcDate" || key === "fiscalMonth") {
                 display = String(val);
               } else if (key === "piotroskiFScore" && typeof val === "number") {
                 display = String(val);
