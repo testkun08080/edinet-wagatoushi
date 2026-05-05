@@ -13,6 +13,7 @@
 | — | [edinet-wrapper-使い方.md](./edinet-wrapper-使い方.md) | `edinet-wrapper` のコマンドとフロント連携メモ |
 | — | [EDINET指標の分類.md](./EDINET指標の分類.md) | 開示項目とメトリクス表示のマッピング整理 |
 | — | [ビルドとデータ品質のプラン.md](./ビルドとデータ品質のプラン.md) | 当初の設計メモ（**一部未導入**）。現状との差は上記 METRICS / DATA_PIPELINE を正とする |
+| — | [EDINET_DB_VS_SCREENER.md](./EDINET_DB_VS_SCREENER.md) | EDINET DB と **edinet-screener** の機能比較表、および **§9 現行データで実装しうるギャップ**のピックアップ |
 | — | [不足データまとめ.md](./不足データまとめ.md)、[DEPLOY_PIPELINE.md](./DEPLOY_PIPELINE.md) など | 調査・デプロイ用の補助資料 |
 
 **よくある誤解の整理**: `public/data/column_manifest.json` と `companies.json` はビルドで生成されるが、**現行の `edinet-screener` は実行時にこれらを `fetch` していない**。一覧・分析の主データは `company_metrics.json` と `summaries/{secCode}.json`（必要時 `raw_tsv/...`）。列 UI は `ColumnVisibilityContext` のハードコードが実態。

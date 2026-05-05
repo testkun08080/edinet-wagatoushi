@@ -38,32 +38,48 @@ import {
   reportMatchesKind,
   type AnalyzeReportKind,
 } from "../../../lib/analyzeReportKind.js";
+import {
+  ANALYZE_HEADCOUNT_ROW_KEYS,
+  formatAnalyzeFinancialTableCell,
+  formatRatioDecimalStringAsPercent,
+  formatSharesCountString,
+  formatYenStringAsMillionYen,
+} from "../../../lib/metricFormat.js";
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
 }
 
-function formatNum(s: string): string {
-  const n = parseInt(s, 10);
-  if (isNaN(n)) return s;
-  if (Math.abs(n) >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + "B";
-  if (Math.abs(n) >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
-  if (Math.abs(n) >= 1_000) return (n / 1_000).toFixed(1) + "K";
-  return n.toLocaleString();
-}
+const INDICATOR_YEN_STRING_KEYS = new Set<keyof CompanyMetricsRow>([
+  "売上高",
+  "営業利益",
+  "経常利益",
+  "当期純利益",
+  "包括利益",
+  "純資産額",
+  "総資産額",
+  "流動資産",
+  "流動負債",
+  "負債",
+  "営業CF",
+  "投資CF",
+  "fcf",
+  "財務CF",
+  "現金残高",
+  "投資有価証券",
+]);
 
-/** 円ベースの整数を百万円に換算。小数を含み絶対値が小さいものは比率・EPS 等としてそのまま近い形で表示 */
-function formatMillionYenCell(s: string): string {
-  if (s == null || s === "" || s === "－") return "－";
-  const cleaned = String(s).replace(/,/g, "").trim();
-  if (cleaned === "－") return "－";
-  const n = parseFloat(cleaned);
-  if (Number.isNaN(n)) return s;
-  if (/[.]/.test(cleaned) && Math.abs(n) < 1_000_000) {
-    return n.toLocaleString("ja-JP", { maximumFractionDigits: 4 });
-  }
-  const millions = n / 1_000_000;
-  return millions.toLocaleString("ja-JP", { maximumFractionDigits: 2 });
+const INDICATOR_PER_SHARE_STRING_KEYS = new Set<keyof CompanyMetricsRow>([
+  "EPS",
+  "dilutedEPS",
+  "BPS",
+  "dividendPerShare",
+]);
+
+function hasRenderableTableCell(v: unknown): boolean {
+  if (v == null) return false;
+  const t = String(v).replace(/,/g, "").trim();
+  return t !== "" && t !== "－" && t !== "-";
 }
 
 function DataTable({
@@ -79,7 +95,12 @@ function DataTable({
   for (const row of data) {
     Object.keys(row).forEach((k) => keys.add(k));
   }
-  const keyList = Array.from(keys).filter((k) => k && data.some((r) => r[k]));
+  /** 人数行は全期 null のときも表示（四半期だけ見ていると欠損が続き、truthy 判定で行ごと消えていた） */
+  const keyList = Array.from(keys).filter((k) => {
+    if (!k) return false;
+    if (ANALYZE_HEADCOUNT_ROW_KEYS.has(k)) return true;
+    return data.some((r) => hasRenderableTableCell(r[k]));
+  });
 
   if (keyList.length === 0) return null;
 
@@ -105,7 +126,7 @@ function DataTable({
                   <TableCell className="font-medium sticky left-0 bg-background">{key}</TableCell>
                   {periods.map((p, i) => (
                     <TableCell key={p.periodEnd} className="text-right tabular-nums">
-                      {formatMillionYenCell(data[i]?.[key] ?? "－")}
+                      {formatAnalyzeFinancialTableCell(key, data[i]?.[key] ?? "－")}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -121,50 +142,50 @@ function DataTable({
 const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
   { key: "計算日", label: "計算日" },
   { key: "決算月", label: "決算月" },
-  { key: "売上高", label: "売上高" },
-  { key: "営業利益", label: "営業利益" },
-  { key: "経常利益", label: "経常利益" },
-  { key: "当期純利益", label: "当期純利益" },
-  { key: "包括利益", label: "包括利益" },
-  { key: "EPS", label: "EPS" },
-  { key: "dilutedEPS", label: "希薄化EPS" },
-  { key: "BPS", label: "BPS" },
-  { key: "ROE", label: "ROE" },
-  { key: "roeCalculated", label: "ROE（算出）" },
-  { key: "roa", label: "ROA" },
-  { key: "equityRatioCalculated", label: "自己資本比率（算出）" },
-  { key: "PER", label: "PER" },
-  { key: "PBR", label: "PBR" },
-  { key: "純資産額", label: "純資産額" },
-  { key: "総資産額", label: "総資産額" },
-  { key: "自己資本比率", label: "自己資本比率" },
-  { key: "流動資産", label: "流動資産" },
-  { key: "流動負債", label: "流動負債" },
-  { key: "負債", label: "負債" },
-  { key: "営業CF", label: "営業CF" },
-  { key: "投資CF", label: "投資CF" },
-  { key: "fcf", label: "FCF" },
-  { key: "財務CF", label: "財務CF" },
-  { key: "現金残高", label: "現金残高" },
-  { key: "配当性向", label: "配当性向" },
-  { key: "payoutRatioComputed", label: "配当性向（算出）" },
-  { key: "dividendPerShare", label: "1株当たり配当金" },
-  { key: "配当利回り", label: "配当利回り" },
-  { key: "時価総額", label: "時価総額" },
-  { key: "ネットキャッシュ", label: "ネットキャッシュ" },
-  { key: "ネットキャッシュ比率", label: "ネットキャッシュ比率" },
-  { key: "発行済株式総数", label: "発行済株式総数" },
-  { key: "投資有価証券", label: "投資有価証券" },
-  { key: "salesGrowthYoY", label: "売上高成長率(YoY)" },
-  { key: "opGrowthYoY", label: "営業利益成長率(YoY)" },
-  { key: "epsGrowthYoY", label: "EPS成長率(YoY)" },
-  { key: "dividendGrowthYoY", label: "配当成長率(YoY)" },
-  { key: "salesCagr3y", label: "売上高CAGR(3年)" },
-  { key: "salesCagr5y", label: "売上高CAGR(5年)" },
+  { key: "売上高", label: "売上高（百万円）" },
+  { key: "営業利益", label: "営業利益（百万円）" },
+  { key: "経常利益", label: "経常利益（百万円）" },
+  { key: "当期純利益", label: "当期純利益（百万円）" },
+  { key: "包括利益", label: "包括利益（百万円）" },
+  { key: "EPS", label: "EPS（円）" },
+  { key: "dilutedEPS", label: "希薄化EPS（円）" },
+  { key: "BPS", label: "BPS（円）" },
+  { key: "ROE", label: "ROE（%）" },
+  { key: "roeCalculated", label: "ROE（算出・%）" },
+  { key: "roa", label: "ROA（%）" },
+  { key: "equityRatioCalculated", label: "自己資本比率（算出・%）" },
+  { key: "PER", label: "PER（倍）" },
+  { key: "PBR", label: "PBR（倍）" },
+  { key: "純資産額", label: "純資産額（百万円）" },
+  { key: "総資産額", label: "総資産額（百万円）" },
+  { key: "自己資本比率", label: "自己資本比率（%）" },
+  { key: "流動資産", label: "流動資産（百万円）" },
+  { key: "流動負債", label: "流動負債（百万円）" },
+  { key: "負債", label: "負債（百万円）" },
+  { key: "営業CF", label: "営業CF（百万円）" },
+  { key: "投資CF", label: "投資CF（百万円）" },
+  { key: "fcf", label: "FCF（百万円）" },
+  { key: "財務CF", label: "財務CF（百万円）" },
+  { key: "現金残高", label: "現金残高（百万円）" },
+  { key: "配当性向", label: "配当性向（%）" },
+  { key: "payoutRatioComputed", label: "配当性向（算出・%）" },
+  { key: "dividendPerShare", label: "1株当たり配当金（円）" },
+  { key: "配当利回り", label: "配当利回り（%）" },
+  { key: "時価総額", label: "時価総額（百万円）" },
+  { key: "ネットキャッシュ", label: "ネットキャッシュ（百万円）" },
+  { key: "ネットキャッシュ比率", label: "ネットキャッシュ比率（%）" },
+  { key: "発行済株式総数", label: "発行済株式総数（株）" },
+  { key: "投資有価証券", label: "投資有価証券（百万円）" },
+  { key: "salesGrowthYoY", label: "売上高成長率(YoY)（%）" },
+  { key: "opGrowthYoY", label: "営業利益成長率(YoY)（%）" },
+  { key: "epsGrowthYoY", label: "EPS成長率(YoY)（%）" },
+  { key: "dividendGrowthYoY", label: "配当成長率(YoY)（%）" },
+  { key: "salesCagr3y", label: "売上高CAGR(3年)（%）" },
+  { key: "salesCagr5y", label: "売上高CAGR(5年)（%）" },
   { key: "consecutiveDivIncreases", label: "連続増配年数" },
   { key: "currentRatio", label: "流動比率" },
   { key: "deRatio", label: "D/Eレシオ" },
-  { key: "roic", label: "ROIC" },
+  { key: "roic", label: "ROIC（%）" },
   { key: "piotroskiFScore", label: "Piotroski F-Score" },
 ];
 
@@ -181,6 +202,10 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
   return (
     <Card>
       <CardContent className="p-0">
+        <p className="text-muted-foreground border-b px-4 py-2 text-xs leading-relaxed">
+          金額は百万円（元データは円÷1,000,000）。比率・成長率・ROIC は小数を×100して % 表示。PER・PBR
+          は倍。EPS・BPS・1株配当は円。発行済株式総数は株。
+        </p>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -194,6 +219,8 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
               let display: string;
               if (val === null || val === undefined) {
                 display = "－";
+              } else if (key === "計算日" || key === "決算月") {
+                display = String(val);
               } else if (key === "piotroskiFScore" && typeof val === "number") {
                 display = String(val);
               } else if (key === "consecutiveDivIncreases" && typeof val === "number") {
@@ -218,22 +245,34 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
                   key === "salesCagr5y") &&
                 typeof val === "string"
               ) {
-                const n = parseFloat(val);
-                display = Number.isFinite(n) ? `${(n * 100).toFixed(2)}%` : val;
+                display = formatRatioDecimalStringAsPercent(val);
               } else if (key === "ネットキャッシュ比率" && typeof val === "number") {
                 display = (val * 100).toFixed(2) + "%";
               } else if (typeof val === "number") {
-                if ((key === "時価総額" || key === "ネットキャッシュ") && Math.abs(val) >= 1000) {
-                  display = formatNum(String(val));
+                if (key === "PER") {
+                  display = val.toFixed(1);
+                } else if (key === "PBR") {
+                  display = val.toFixed(2);
+                } else if (key === "配当利回り") {
+                  display = val.toFixed(2) + "%";
+                } else if (key === "時価総額" || key === "ネットキャッシュ") {
+                  display = formatYenStringAsMillionYen(String(val));
                 } else {
                   display = val.toLocaleString(undefined, { maximumFractionDigits: 2 });
                 }
+              } else if (typeof val === "string") {
+                if (INDICATOR_YEN_STRING_KEYS.has(key)) {
+                  display = formatYenStringAsMillionYen(val);
+                } else if (key === "発行済株式総数") {
+                  display = formatSharesCountString(val);
+                } else if (INDICATOR_PER_SHARE_STRING_KEYS.has(key)) {
+                  const n = parseFloat(val.replace(/,/g, ""));
+                  display = Number.isFinite(n) ? n.toLocaleString("ja-JP", { maximumFractionDigits: 4 }) : val;
+                } else {
+                  display = val;
+                }
               } else {
-                const s = String(val);
-                const n = parseFloat(s);
-                if (isNaN(n)) display = s;
-                else if (Number.isInteger(n) && Math.abs(n) >= 1000) display = formatNum(s);
-                else display = n.toLocaleString(undefined, { maximumFractionDigits: 4 });
+                display = String(val);
               }
               return (
                 <TableRow key={key}>
@@ -354,7 +393,7 @@ export default function Page() {
   );
 
   const tableMillionCaption =
-    "金額のセルは百万円単位（元データの円を 1,000,000 で割った値）です。比率・単価など非金額はそのまま表示します。";
+    "円建の金額科目は百万円（÷1,000,000）。自己資本比率・配当性向・ROE 等は %（小数×100）。従業員数・平均臨時雇用人員は名（換算なし）。１株当たり項目・PER は換算なし。";
 
   if (error) {
     return (
