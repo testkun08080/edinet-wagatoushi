@@ -39,6 +39,7 @@ import {
   type AnalyzeReportKind,
 } from "../../../lib/analyzeReportKind.js";
 import {
+  ANALYZE_HEADCOUNT_ROW_KEYS,
   formatAnalyzeFinancialTableCell,
   formatRatioDecimalStringAsPercent,
   formatSharesCountString,
@@ -75,6 +76,12 @@ const INDICATOR_PER_SHARE_STRING_KEYS = new Set<keyof CompanyMetricsRow>([
   "dividendPerShare",
 ]);
 
+function hasRenderableTableCell(v: unknown): boolean {
+  if (v == null) return false;
+  const t = String(v).replace(/,/g, "").trim();
+  return t !== "" && t !== "－" && t !== "-";
+}
+
 function DataTable({
   data,
   periods,
@@ -88,7 +95,12 @@ function DataTable({
   for (const row of data) {
     Object.keys(row).forEach((k) => keys.add(k));
   }
-  const keyList = Array.from(keys).filter((k) => k && data.some((r) => r[k]));
+  /** 人数行は全期 null のときも表示（四半期だけ見ていると欠損が続き、truthy 判定で行ごと消えていた） */
+  const keyList = Array.from(keys).filter((k) => {
+    if (!k) return false;
+    if (ANALYZE_HEADCOUNT_ROW_KEYS.has(k)) return true;
+    return data.some((r) => hasRenderableTableCell(r[k]));
+  });
 
   if (keyList.length === 0) return null;
 

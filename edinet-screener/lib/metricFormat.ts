@@ -26,8 +26,8 @@ export function formatSharesCountString(s: string | null | undefined): string {
   return n.toLocaleString("ja-JP");
 }
 
-/** サマリー表などで人数として扱う行キー（円換算しない） */
-const HEADCOUNT_ROW_KEYS = new Set(["従業員数", "平均臨時雇用人員", "平均臨時雇用人数"]);
+/** サマリー表などで人数として扱う行キー（円換算しない）。DataTable で「全期 null でも行を残す」判定にも使う */
+export const ANALYZE_HEADCOUNT_ROW_KEYS = new Set(["従業員数", "平均臨時雇用人員", "平均臨時雇用人数"]);
 
 /** サマリー等で小数比率（×100 で %）として扱う行キー */
 const RATIO_DECIMAL_ROW_KEYS = new Set(["自己資本比率", "配当性向", "自己資本利益率、経営指標等"]);
@@ -48,7 +48,7 @@ export function formatAnalyzeFinancialTableCell(rowKey: string, raw: string | nu
   const cleaned = String(raw).replace(/,/g, "").trim();
   if (cleaned === "－" || cleaned === "-") return "－";
 
-  if (HEADCOUNT_ROW_KEYS.has(rowKey)) {
+  if (ANALYZE_HEADCOUNT_ROW_KEYS.has(rowKey)) {
     const n = parseFloat(cleaned);
     if (!Number.isFinite(n)) return String(raw);
     return Math.round(n).toLocaleString("ja-JP");
