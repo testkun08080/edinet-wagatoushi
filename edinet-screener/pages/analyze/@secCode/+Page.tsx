@@ -248,6 +248,8 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
                 display = formatRatioDecimalStringAsPercent(val);
               } else if (key === "netCashRatio" && typeof val === "number") {
                 display = (val * 100).toFixed(2) + "%";
+              } else if (key === "dividendYield" && typeof val === "number") {
+                display = val.toFixed(2) + "%";
               } else if (typeof val === "number") {
                 if (key === "PER") {
                   display = val.toFixed(1);
