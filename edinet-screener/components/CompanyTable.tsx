@@ -72,6 +72,17 @@ export type CompanyMetric = {
 const formatSales = formatYenStringAsMillionYen;
 const formatRatio = formatRatioDecimalStringAsPercent;
 
+function parseMetricNumber(value: string | number | null | undefined): number {
+  if (typeof value === "number") return value;
+  if (typeof value !== "string") return NaN;
+  return Number(value.replace(/,/g, "").trim());
+}
+
+function sortNum(value: string | number | null | undefined): number {
+  const n = parseMetricNumber(value);
+  return Number.isFinite(n) ? n : -Infinity;
+}
+
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
 }
@@ -84,21 +95,21 @@ export function passesFilter(
   if (f.showOnlyFavorites && !favorites.has(m.secCode)) return false;
   if (f.searchName.trim() && !m.filerName.toLowerCase().includes(f.searchName.trim().toLowerCase())) return false;
   if (f.searchCode.trim() && !m.secCode.includes(f.searchCode.trim())) return false;
-  const eq = m.equityRatio != null ? parseFloat(m.equityRatio) : NaN;
+  const eq = parseMetricNumber(m.equityRatio);
   if (f.minEquityRatio && !isNaN(eq) && eq < parseFloat(f.minEquityRatio)) return false;
   if (f.maxEquityRatio && !isNaN(eq) && eq > parseFloat(f.maxEquityRatio)) return false;
-  const eps = m.EPS != null ? parseFloat(m.EPS) : NaN;
+  const eps = parseMetricNumber(m.EPS);
   if (f.minEps && !isNaN(eps) && eps < parseFloat(f.minEps)) return false;
   if (f.maxEps && !isNaN(eps) && eps > parseFloat(f.maxEps)) return false;
-  const sales = m.sales != null ? parseFloat(m.sales) : NaN;
+  const sales = parseMetricNumber(m.sales);
   const minSalesYen = f.minSales && f.minSales !== "" ? parseFloat(f.minSales) * 1_000_000 : NaN;
   const maxSalesYen = f.maxSales && f.maxSales !== "" ? parseFloat(f.maxSales) * 1_000_000 : NaN;
   if (!isNaN(minSalesYen) && !isNaN(sales) && sales < minSalesYen) return false;
   if (!isNaN(maxSalesYen) && !isNaN(sales) && sales > maxSalesYen) return false;
-  const roe = m.ROE != null ? parseFloat(m.ROE) : NaN;
+  const roe = parseMetricNumber(m.ROE);
   if (f.minRoe != null && f.minRoe !== "" && !isNaN(roe) && roe < parseFloat(f.minRoe)) return false;
   if (f.maxRoe != null && f.maxRoe !== "" && !isNaN(roe) && roe > parseFloat(f.maxRoe)) return false;
-  const totalAssets = m.totalAssets != null ? parseFloat(m.totalAssets) : NaN;
+  const totalAssets = parseMetricNumber(m.totalAssets);
   if (
     f.minTotalAssets != null &&
     f.minTotalAssets !== "" &&
@@ -198,18 +209,18 @@ function getCellValue(
     case "operatingProfit":
       return formatSales(m.operatingProfit);
     case "operatingProfitRatio": {
-      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
-      const op = m.operatingProfit != null ? parseFloat(m.operatingProfit) : NaN;
-      if (isNaN(sales) || isNaN(op) || sales === 0) return "－";
-      return ((op / sales) * 100).toFixed(2) + "%";
+      const s = parseMetricNumber(m.sales);
+      const op = parseMetricNumber(m.operatingProfit);
+      if (isNaN(s) || isNaN(op) || s === 0) return "－";
+      return ((op / s) * 100).toFixed(2) + "%";
     }
     case "netIncome":
       return formatSales(m.netIncome);
     case "netProfitRatio": {
-      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
-      const ni = m.netIncome != null ? parseFloat(m.netIncome) : NaN;
-      if (isNaN(sales) || isNaN(ni) || sales === 0) return "－";
-      return ((ni / sales) * 100).toFixed(2) + "%";
+      const s = parseMetricNumber(m.sales);
+      const ni = parseMetricNumber(m.netIncome);
+      if (isNaN(s) || isNaN(ni) || s === 0) return "－";
+      return ((ni / s) * 100).toFixed(2) + "%";
     }
     case "liabilities":
       return formatSales(m.liabilities);
@@ -223,8 +234,10 @@ function getCellValue(
       return formatSales(m.cashBalance);
     case "dividendPerShare":
       return m.dividendPerShare ?? "－";
-    case "sharesOutstanding":
-      return m.sharesOutstanding != null ? parseInt(m.sharesOutstanding, 10).toLocaleString() : "－";
+    case "sharesOutstanding": {
+      const shares = sortNum(m.sharesOutstanding);
+      return Number.isFinite(shares) ? Math.round(shares).toLocaleString("ja-JP") : "－";
+    }
     case "recurringProfit":
       return formatSales(m.recurringProfit);
     case "comprehensiveIncome":
@@ -293,85 +306,85 @@ function getSortValue(m: CompanyMetric, colId: ColumnId): number | string {
     case "netCashRatio":
       return m.netCashRatio ?? -Infinity;
     case "equityRatio":
-      return m.equityRatio != null ? parseFloat(m.equityRatio) : -Infinity;
+      return sortNum(m.equityRatio);
     case "ROE":
-      return m.ROE != null ? parseFloat(m.ROE) : -Infinity;
+      return sortNum(m.ROE);
     case "EPS":
-      return m.EPS != null ? parseFloat(m.EPS) : -Infinity;
+      return sortNum(m.EPS);
     case "dilutedEPS":
-      return m.dilutedEPS != null ? parseFloat(m.dilutedEPS) : -Infinity;
+      return sortNum(m.dilutedEPS);
     case "roeCalculated":
-      return m.roeCalculated != null ? parseFloat(m.roeCalculated) : -Infinity;
+      return sortNum(m.roeCalculated);
     case "roa":
-      return m.roa != null ? parseFloat(m.roa) : -Infinity;
+      return sortNum(m.roa);
     case "equityRatioCalculated":
-      return m.equityRatioCalculated != null ? parseFloat(m.equityRatioCalculated) : -Infinity;
+      return sortNum(m.equityRatioCalculated);
     case "BPS":
-      return m.BPS != null ? parseFloat(m.BPS) : -Infinity;
+      return sortNum(m.BPS);
     case "payoutRatio":
-      return m.payoutRatio != null ? parseFloat(m.payoutRatio) : -Infinity;
+      return sortNum(m.payoutRatio);
     case "payoutRatioComputed":
-      return m.payoutRatioComputed != null ? parseFloat(m.payoutRatioComputed) : -Infinity;
+      return sortNum(m.payoutRatioComputed);
     case "sales":
-      return m.sales != null ? parseFloat(m.sales) : -Infinity;
+      return sortNum(m.sales);
     case "operatingProfit":
-      return m.operatingProfit != null ? parseFloat(m.operatingProfit) : -Infinity;
+      return sortNum(m.operatingProfit);
     case "operatingProfitRatio": {
-      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
-      const op = m.operatingProfit != null ? parseFloat(m.operatingProfit) : NaN;
-      if (isNaN(sales) || sales === 0) return -Infinity;
-      return isNaN(op) ? -Infinity : op / sales;
+      const s = parseMetricNumber(m.sales);
+      const op = parseMetricNumber(m.operatingProfit);
+      if (isNaN(s) || s === 0) return -Infinity;
+      return isNaN(op) ? -Infinity : op / s;
     }
     case "netIncome":
-      return m.netIncome != null ? parseFloat(m.netIncome) : -Infinity;
+      return sortNum(m.netIncome);
     case "netProfitRatio": {
-      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
-      const ni = m.netIncome != null ? parseFloat(m.netIncome) : NaN;
-      if (isNaN(sales) || sales === 0) return -Infinity;
-      return isNaN(ni) ? -Infinity : ni / sales;
+      const s = parseMetricNumber(m.sales);
+      const ni = parseMetricNumber(m.netIncome);
+      if (isNaN(s) || s === 0) return -Infinity;
+      return isNaN(ni) ? -Infinity : ni / s;
     }
     case "liabilities":
-      return m.liabilities != null ? parseFloat(m.liabilities) : -Infinity;
+      return sortNum(m.liabilities);
     case "currentLiabilities":
-      return m.currentLiabilities != null ? parseFloat(m.currentLiabilities) : -Infinity;
+      return sortNum(m.currentLiabilities);
     case "currentAssets":
-      return m.currentAssets != null ? parseFloat(m.currentAssets) : -Infinity;
+      return sortNum(m.currentAssets);
     case "investmentSecurities":
-      return m.investmentSecurities != null ? parseFloat(m.investmentSecurities) : -Infinity;
+      return sortNum(m.investmentSecurities);
     case "cashBalance":
-      return m.cashBalance != null ? parseFloat(m.cashBalance) : -Infinity;
+      return sortNum(m.cashBalance);
     case "dividendPerShare":
-      return m.dividendPerShare != null ? parseFloat(m.dividendPerShare) : -Infinity;
+      return sortNum(m.dividendPerShare);
     case "sharesOutstanding":
-      return m.sharesOutstanding != null ? parseFloat(m.sharesOutstanding) : -Infinity;
+      return sortNum(m.sharesOutstanding);
     case "recurringProfit":
-      return m.recurringProfit != null ? parseFloat(m.recurringProfit) : -Infinity;
+      return sortNum(m.recurringProfit);
     case "comprehensiveIncome":
-      return m.comprehensiveIncome != null ? parseFloat(m.comprehensiveIncome) : -Infinity;
+      return sortNum(m.comprehensiveIncome);
     case "netAssets":
-      return m.netAssets != null ? parseFloat(m.netAssets) : -Infinity;
+      return sortNum(m.netAssets);
     case "totalAssets":
-      return m.totalAssets != null ? parseFloat(m.totalAssets) : -Infinity;
+      return sortNum(m.totalAssets);
     case "operatingCF":
-      return m.operatingCF != null ? parseFloat(m.operatingCF) : -Infinity;
+      return sortNum(m.operatingCF);
     case "investingCF":
-      return m.investingCF != null ? parseFloat(m.investingCF) : -Infinity;
+      return sortNum(m.investingCF);
     case "fcf":
-      return m.fcf != null ? parseFloat(m.fcf) : -Infinity;
+      return sortNum(m.fcf);
     case "financingCF":
-      return m.financingCF != null ? parseFloat(m.financingCF) : -Infinity;
+      return sortNum(m.financingCF);
     case "salesGrowthYoY":
-      return m.salesGrowthYoY != null ? parseFloat(m.salesGrowthYoY) : -Infinity;
+      return sortNum(m.salesGrowthYoY);
     case "opGrowthYoY":
-      return m.opGrowthYoY != null ? parseFloat(m.opGrowthYoY) : -Infinity;
+      return sortNum(m.opGrowthYoY);
     case "epsGrowthYoY":
-      return m.epsGrowthYoY != null ? parseFloat(m.epsGrowthYoY) : -Infinity;
+      return sortNum(m.epsGrowthYoY);
     case "dividendGrowthYoY":
-      return m.dividendGrowthYoY != null ? parseFloat(m.dividendGrowthYoY) : -Infinity;
+      return sortNum(m.dividendGrowthYoY);
     case "salesCagr3y":
-      return m.salesCagr3y != null ? parseFloat(m.salesCagr3y) : -Infinity;
+      return sortNum(m.salesCagr3y);
     case "salesCagr5y":
-      return m.salesCagr5y != null ? parseFloat(m.salesCagr5y) : -Infinity;
+      return sortNum(m.salesCagr5y);
     case "consecutiveDivIncreases":
       return m.consecutiveDivIncreases ?? -Infinity;
     case "currentRatio":

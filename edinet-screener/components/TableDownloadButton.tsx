@@ -16,6 +16,13 @@ function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
 }
 
+function ratioOfSalesPct(numerator: string | null | undefined, sales: string | null | undefined): string {
+  const s = sales != null ? parseFloat(String(sales).replace(/,/g, "")) : NaN;
+  const n = numerator != null ? parseFloat(String(numerator).replace(/,/g, "")) : NaN;
+  if (!Number.isFinite(s) || !Number.isFinite(n) || s === 0) return "－";
+  return ((n / s) * 100).toFixed(2) + "%";
+}
+
 function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
   switch (colId) {
     case "filerName":
@@ -64,20 +71,12 @@ function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
       return formatSales(m.sales);
     case "operatingProfit":
       return formatSales(m.operatingProfit);
-    case "operatingProfitRatio": {
-      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
-      const op = m.operatingProfit != null ? parseFloat(m.operatingProfit) : NaN;
-      if (isNaN(sales) || isNaN(op) || sales === 0) return "－";
-      return ((op / sales) * 100).toFixed(2) + "%";
-    }
+    case "operatingProfitRatio":
+      return ratioOfSalesPct(m.operatingProfit, m.sales);
     case "netIncome":
       return formatSales(m.netIncome);
-    case "netProfitRatio": {
-      const sales = m.sales != null ? parseFloat(m.sales) : NaN;
-      const ni = m.netIncome != null ? parseFloat(m.netIncome) : NaN;
-      if (isNaN(sales) || isNaN(ni) || sales === 0) return "－";
-      return ((ni / sales) * 100).toFixed(2) + "%";
-    }
+    case "netProfitRatio":
+      return ratioOfSalesPct(m.netIncome, m.sales);
     case "liabilities":
       return formatSales(m.liabilities);
     case "currentLiabilities":
@@ -90,8 +89,11 @@ function getCellValueForExport(m: CompanyMetric, colId: ColumnId): string {
       return formatSales(m.cashBalance);
     case "dividendPerShare":
       return m.dividendPerShare ?? "－";
-    case "sharesOutstanding":
-      return m.sharesOutstanding != null ? parseInt(m.sharesOutstanding, 10).toLocaleString() : "－";
+    case "sharesOutstanding": {
+      if (m.sharesOutstanding == null || m.sharesOutstanding === "" || m.sharesOutstanding === "－") return "－";
+      const n = parseInt(String(m.sharesOutstanding).replace(/,/g, ""), 10);
+      return Number.isFinite(n) ? n.toLocaleString() : "－";
+    }
     case "recurringProfit":
       return formatSales(m.recurringProfit);
     case "comprehensiveIncome":

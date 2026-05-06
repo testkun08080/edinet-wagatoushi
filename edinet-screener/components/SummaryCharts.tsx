@@ -424,7 +424,7 @@ export function SummaryCharts({ periods, metrics }: { periods: Period[]; metrics
       </div>
 
       {metrics &&
-        (metrics.dividendPerShare != null ||
+        ((metrics.dividendPerShare != null && metrics.dividendPerShare !== "") ||
           metrics.dividendYield != null ||
           (metrics.payoutRatio != null && metrics.payoutRatio !== "")) && (
           <Card>

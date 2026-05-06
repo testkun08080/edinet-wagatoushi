@@ -550,7 +550,7 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
     sec_code = summary_data.get("secCode", "")
     filer_name = summary_data.get("filerName", "")
     if not summary_data.get("periods"):
-        return {}
+        return {"edinetCode": edinet_code, "secCode": sec_code, "filerName": filer_name}
     periods = summary_data["periods"]
     latest = periods[-1]
     s = _merge_edinet_valuation_from_older_periods(latest.get("summary") or {}, periods)
