@@ -71,6 +71,7 @@ export type CompanyMetric = {
 
 const formatSales = formatYenStringAsMillionYen;
 const formatRatio = formatRatioDecimalStringAsPercent;
+const ROW_LIMIT_OPTIONS = ["50", "100", "200", "500"] as const;
 
 function formatDisplayName(name: string): string {
   return name.replace(/^株式会社\s*|\s*株式会社$/g, "").trim() || name;
@@ -400,7 +401,7 @@ function getCellAlign(colId: ColumnId): string {
 }
 
 export function CompanyTable() {
-  const { filters } = useFilters();
+  const { filters, setFilter } = useFilters();
   const { favorites, isFavorite, toggleFavorite } = useFavorites();
   const { visibility, columnIds, columnLabel } = useColumnVisibility();
   const [metrics, setMetrics] = useState<CompanyMetric[]>([]);
@@ -452,6 +453,9 @@ export function CompanyTable() {
           const cmp = sa.localeCompare(sb, "ja");
           return sortAsc ? cmp : -cmp;
         });
+  const parsedLimit = Number.parseInt(filters.itemCount, 10);
+  const rowLimit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 50;
+  const displayed = sorted.slice(0, rowLimit);
 
   if (loading) {
     return (
@@ -481,6 +485,26 @@ export function CompanyTable() {
 
   return (
     <div className="rounded-lg border">
+      <div className="flex items-center justify-between gap-3 border-b bg-muted/30 px-3 py-2">
+        <span className="text-xs text-muted-foreground">
+          {filtered.length.toLocaleString()}件中 {displayed.length.toLocaleString()}件を表示
+        </span>
+        <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+          表示件数
+          <select
+            className="h-8 rounded-md border bg-background px-2 text-sm text-foreground"
+            value={ROW_LIMIT_OPTIONS.includes(filters.itemCount as (typeof ROW_LIMIT_OPTIONS)[number]) ? filters.itemCount : "50"}
+            onChange={(e) => setFilter("itemCount", e.target.value)}
+            aria-label="表示件数"
+          >
+            {ROW_LIMIT_OPTIONS.map((option) => (
+              <option key={option} value={option}>
+                {option}件
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -506,7 +530,7 @@ export function CompanyTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sorted.map((m) => (
+          {displayed.map((m) => (
             <TableRow key={m.edinetCode}>
               {visibleColumns.map((id) => (
                 <TableCell

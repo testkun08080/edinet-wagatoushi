@@ -16,6 +16,7 @@ export type FilterState = {
   minTotalAssets: string;
   maxTotalAssets: string;
   showOnlyFavorites: boolean;
+  itemCount: string;
 };
 
 const defaultFilters: FilterState = {
@@ -32,6 +33,7 @@ const defaultFilters: FilterState = {
   minTotalAssets: "",
   maxTotalAssets: "",
   showOnlyFavorites: false,
+  itemCount: "50",
 };
 
 type FilterContextValue = {
@@ -66,6 +68,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     if (params.has("minTotalAssets")) filterFromUrl.minTotalAssets = params.get("minTotalAssets") || "";
     if (params.has("maxTotalAssets")) filterFromUrl.maxTotalAssets = params.get("maxTotalAssets") || "";
     if (params.has("favorites")) filterFromUrl.showOnlyFavorites = params.get("favorites") === "1";
+    if (params.has("itemCount")) filterFromUrl.itemCount = params.get("itemCount") || "50";
 
     if (Object.keys(filterFromUrl).length > 0) {
       setFilters((prev) => ({ ...prev, ...filterFromUrl }));
@@ -95,6 +98,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     if (f.minTotalAssets) params.append("minTotalAssets", f.minTotalAssets);
     if (f.maxTotalAssets) params.append("maxTotalAssets", f.maxTotalAssets);
     if (f.showOnlyFavorites) params.append("favorites", "1");
+    if (f.itemCount && f.itemCount !== "50") params.append("itemCount", f.itemCount);
 
     const baseUrl = typeof window !== "undefined" ? window.location.origin + window.location.pathname : "";
     return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
