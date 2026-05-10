@@ -5,7 +5,7 @@ import logoUrl from "../assets/logo.svg";
 export function Head() {
   const siteTitle = "EDINET財務スクリーナー";
   const siteDescription = "EDINETから取得した有価証券報告書等を解析・可視化。10年分の財務データを検索・分析できるWebスクリーナー。個人投資家向けの無料ツール。";
-  const siteUrl = "https://edinet-screener.example.com";
+  const siteUrl = import.meta.env.PUBLIC_ENV__SITE_URL ?? "";
 
   return (
     <>
@@ -23,8 +23,8 @@ export function Head() {
       <meta property="og:title" content={siteTitle} />
       <meta property="og:description" content={siteDescription} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={siteUrl} />
-      <meta property="og:image" content={`${siteUrl}/og-image.png`} />
+      {siteUrl && <meta property="og:url" content={siteUrl} />}
+      {siteUrl && <meta property="og:image" content={`${siteUrl}/og-image.png`} />}
       <meta property="og:site_name" content={siteTitle} />
       <meta property="og:locale" content="ja_JP" />
 
@@ -32,10 +32,10 @@ export function Head() {
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={siteTitle} />
       <meta name="twitter:description" content={siteDescription} />
-      <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />
+      {siteUrl && <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />}
 
       {/* Canonical */}
-      <link rel="canonical" href={siteUrl} />
+      {siteUrl && <link rel="canonical" href={siteUrl} />}
 
       {/* Favicon */}
       <link rel="icon" href={logoUrl} />
@@ -55,7 +55,7 @@ export function Head() {
             "@type": "WebApplication",
             "name": siteTitle,
             "description": siteDescription,
-            "url": siteUrl,
+            ...(siteUrl ? { "url": siteUrl } : {}),
             "applicationCategory": "FinanceApplication",
             "offers": {
               "@type": "Offer",

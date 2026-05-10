@@ -31,13 +31,13 @@ import {
   ANALYZE_VISIBLE_YEAR_OPTIONS,
   filterPeriodsByVisibleYears,
   type AnalyzeVisibleYears,
-} from "../../../lib/analyzePeriodRange.js";
+} from "../../../lib/analyze-period-range.js";
 import {
   ANALYZE_REPORT_KIND_OPTIONS,
   analyzeReportKindLabel,
   reportMatchesKind,
   type AnalyzeReportKind,
-} from "../../../lib/analyzeReportKind.js";
+} from "../../../lib/analyze-report-kind.js";
 import {
   ANALYZE_HEADCOUNT_ROW_KEYS,
   formatAnalyzeFinancialTableCell,
@@ -51,22 +51,22 @@ function formatDisplayName(name: string): string {
 }
 
 const INDICATOR_YEN_STRING_KEYS = new Set<keyof CompanyMetricsRow>([
-  "売上高",
-  "営業利益",
-  "経常利益",
-  "当期純利益",
-  "包括利益",
-  "純資産額",
-  "総資産額",
-  "流動資産",
-  "流動負債",
-  "負債",
-  "営業CF",
-  "投資CF",
+  "sales",
+  "operatingProfit",
+  "recurringProfit",
+  "netIncome",
+  "comprehensiveIncome",
+  "netAssets",
+  "totalAssets",
+  "currentAssets",
+  "currentLiabilities",
+  "liabilities",
+  "operatingCF",
+  "investingCF",
   "fcf",
-  "財務CF",
-  "現金残高",
-  "投資有価証券",
+  "financingCF",
+  "cashBalance",
+  "investmentSecurities",
 ]);
 
 const INDICATOR_PER_SHARE_STRING_KEYS = new Set<keyof CompanyMetricsRow>([
@@ -140,13 +140,13 @@ function DataTable({
 }
 
 const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
-  { key: "計算日", label: "計算日" },
-  { key: "決算月", label: "決算月" },
-  { key: "売上高", label: "売上高（百万円）" },
-  { key: "営業利益", label: "営業利益（百万円）" },
-  { key: "経常利益", label: "経常利益（百万円）" },
-  { key: "当期純利益", label: "当期純利益（百万円）" },
-  { key: "包括利益", label: "包括利益（百万円）" },
+  { key: "calcDate", label: "計算日" },
+  { key: "fiscalMonth", label: "決算月" },
+  { key: "sales", label: "売上高（百万円）" },
+  { key: "operatingProfit", label: "営業利益（百万円）" },
+  { key: "recurringProfit", label: "経常利益（百万円）" },
+  { key: "netIncome", label: "当期純利益（百万円）" },
+  { key: "comprehensiveIncome", label: "包括利益（百万円）" },
   { key: "EPS", label: "EPS（円）" },
   { key: "dilutedEPS", label: "希薄化EPS（円）" },
   { key: "BPS", label: "BPS（円）" },
@@ -156,26 +156,26 @@ const INDICATOR_KEYS: { key: keyof CompanyMetricsRow; label: string }[] = [
   { key: "equityRatioCalculated", label: "自己資本比率（算出・%）" },
   { key: "PER", label: "PER（倍）" },
   { key: "PBR", label: "PBR（倍）" },
-  { key: "純資産額", label: "純資産額（百万円）" },
-  { key: "総資産額", label: "総資産額（百万円）" },
-  { key: "自己資本比率", label: "自己資本比率（%）" },
-  { key: "流動資産", label: "流動資産（百万円）" },
-  { key: "流動負債", label: "流動負債（百万円）" },
-  { key: "負債", label: "負債（百万円）" },
-  { key: "営業CF", label: "営業CF（百万円）" },
-  { key: "投資CF", label: "投資CF（百万円）" },
+  { key: "netAssets", label: "純資産額（百万円）" },
+  { key: "totalAssets", label: "総資産額（百万円）" },
+  { key: "equityRatio", label: "自己資本比率（%）" },
+  { key: "currentAssets", label: "流動資産（百万円）" },
+  { key: "currentLiabilities", label: "流動負債（百万円）" },
+  { key: "liabilities", label: "負債（百万円）" },
+  { key: "operatingCF", label: "営業CF（百万円）" },
+  { key: "investingCF", label: "投資CF（百万円）" },
   { key: "fcf", label: "FCF（百万円）" },
-  { key: "財務CF", label: "財務CF（百万円）" },
-  { key: "現金残高", label: "現金残高（百万円）" },
-  { key: "配当性向", label: "配当性向（%）" },
+  { key: "financingCF", label: "財務CF（百万円）" },
+  { key: "cashBalance", label: "現金及び現金同等物（百万円）" },
+  { key: "payoutRatio", label: "配当性向（%）" },
   { key: "payoutRatioComputed", label: "配当性向（算出・%）" },
   { key: "dividendPerShare", label: "1株当たり配当金（円）" },
-  { key: "配当利回り", label: "配当利回り（%）" },
-  { key: "時価総額", label: "時価総額（百万円）" },
-  { key: "ネットキャッシュ", label: "ネットキャッシュ（百万円）" },
-  { key: "ネットキャッシュ比率", label: "ネットキャッシュ比率（%）" },
-  { key: "発行済株式総数", label: "発行済株式総数（株）" },
-  { key: "投資有価証券", label: "投資有価証券（百万円）" },
+  { key: "dividendYield", label: "配当利回り（%）" },
+  { key: "marketCap", label: "時価総額（百万円）" },
+  { key: "netCash", label: "ネットキャッシュ（百万円）" },
+  { key: "netCashRatio", label: "ネットキャッシュ比率（%）" },
+  { key: "sharesOutstanding", label: "発行済株式総数（株）" },
+  { key: "investmentSecurities", label: "投資有価証券（百万円）" },
   { key: "salesGrowthYoY", label: "売上高成長率(YoY)（%）" },
   { key: "opGrowthYoY", label: "営業利益成長率(YoY)（%）" },
   { key: "epsGrowthYoY", label: "EPS成長率(YoY)（%）" },
@@ -219,7 +219,7 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
               let display: string;
               if (val === null || val === undefined) {
                 display = "－";
-              } else if (key === "計算日" || key === "決算月") {
+              } else if (key === "calcDate" || key === "fiscalMonth") {
                 display = String(val);
               } else if (key === "piotroskiFScore" && typeof val === "number") {
                 display = String(val);
@@ -231,8 +231,8 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
                 display = (val * 100).toFixed(2) + "%";
               } else if (
                 (key === "ROE" ||
-                  key === "自己資本比率" ||
-                  key === "配当性向" ||
+                  key === "equityRatio" ||
+                  key === "payoutRatio" ||
                   key === "roeCalculated" ||
                   key === "roa" ||
                   key === "equityRatioCalculated" ||
@@ -246,16 +246,18 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
                 typeof val === "string"
               ) {
                 display = formatRatioDecimalStringAsPercent(val);
-              } else if (key === "ネットキャッシュ比率" && typeof val === "number") {
+              } else if (key === "netCashRatio" && typeof val === "number") {
                 display = (val * 100).toFixed(2) + "%";
+              } else if (key === "dividendYield" && typeof val === "number") {
+                display = val.toFixed(2) + "%";
               } else if (typeof val === "number") {
                 if (key === "PER") {
                   display = val.toFixed(1);
                 } else if (key === "PBR") {
                   display = val.toFixed(2);
-                } else if (key === "配当利回り") {
+                } else if (key === "dividendYield") {
                   display = val.toFixed(2) + "%";
-                } else if (key === "時価総額" || key === "ネットキャッシュ") {
+                } else if (key === "marketCap" || key === "netCash") {
                   display = formatYenStringAsMillionYen(String(val));
                 } else {
                   display = val.toLocaleString(undefined, { maximumFractionDigits: 2 });
@@ -263,7 +265,7 @@ function IndicatorsTable({ metrics }: { metrics: CompanyMetricsRow | null }) {
               } else if (typeof val === "string") {
                 if (INDICATOR_YEN_STRING_KEYS.has(key)) {
                   display = formatYenStringAsMillionYen(val);
-                } else if (key === "発行済株式総数") {
+                } else if (key === "sharesOutstanding") {
                   display = formatSharesCountString(val);
                 } else if (INDICATOR_PER_SHARE_STRING_KEYS.has(key)) {
                   const n = parseFloat(val.replace(/,/g, ""));

@@ -550,7 +550,7 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
     sec_code = summary_data.get("secCode", "")
     filer_name = summary_data.get("filerName", "")
     if not summary_data.get("periods"):
-        return {}
+        return {"edinetCode": edinet_code, "secCode": sec_code, "filerName": filer_name}
     periods = summary_data["periods"]
     latest = periods[-1]
     s = _merge_edinet_valuation_from_older_periods(latest.get("summary") or {}, periods)
@@ -637,42 +637,42 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
         "edinetCode": edinet_code,
         "secCode": sec_code,
         "filerName": filer_name,
-        "計算日": period_end,
-        "決算月": fiscal_month,
-        "自己資本比率": s.get("自己資本比率"),
+        "calcDate": period_end,
+        "fiscalMonth": fiscal_month,
+        "equityRatio": s.get("自己資本比率"),
         "EPS": eps_raw,
         "dilutedEPS": diluted_eps,
-        "売上高": _pick_sales_line(s, pl),
-        "経常利益": s.get("経常利益"),
-        "当期純利益": net_income,
-        "純資産額": s.get("純資産額"),
-        "総資産額": s.get("総資産額"),
-        "包括利益": s.get("包括利益"),
+        "sales": _pick_sales_line(s, pl),
+        "recurringProfit": s.get("経常利益"),
+        "netIncome": net_income,
+        "netAssets": s.get("純資産額"),
+        "totalAssets": s.get("総資産額"),
+        "comprehensiveIncome": s.get("包括利益"),
         "BPS": s.get("１株当たり純資産額"),
         "ROE": s.get("自己資本利益率、経営指標等"),
         "roeCalculated": _compute_roe_calculated(net_income, s.get("純資産額")),
         "roa": _compute_roa(net_income, s.get("総資産額")),
         "equityRatioCalculated": _compute_equity_ratio_calculated(s.get("純資産額"), s.get("総資産額")),
-        "営業利益": pl.get("営業利益"),
-        "営業CF": ocf,
-        "投資CF": icf,
+        "operatingProfit": pl.get("営業利益"),
+        "operatingCF": ocf,
+        "investingCF": icf,
         "fcf": _compute_fcf(ocf, icf),
-        "財務CF": s.get("財務活動によるキャッシュ・フロー") or cf.get("財務キャッシュフロー"),
-        "現金残高": s.get("現金及び現金同等物の残高") or cf.get("現金及び現金同等物"),
-        "配当性向": s.get("配当性向"),
+        "financingCF": s.get("財務活動によるキャッシュ・フロー") or cf.get("財務キャッシュフロー"),
+        "cashBalance": s.get("現金及び現金同等物の残高") or cf.get("現金及び現金同等物"),
+        "payoutRatio": s.get("配当性向"),
         "payoutRatioComputed": payout_ratio_computed,
         "dividendPerShare": dps_raw,
-        "発行済株式総数": s.get("発行済株式総数（普通株式）"),
-        "流動資産": bs.get("流動資産"),
-        "流動負債": bs.get("流動負債"),
-        "負債": bs.get("負債"),
-        "投資有価証券": bs.get("投資有価証券"),
+        "sharesOutstanding": s.get("発行済株式総数（普通株式）"),
+        "currentAssets": bs.get("流動資産"),
+        "currentLiabilities": bs.get("流動負債"),
+        "liabilities": bs.get("負債"),
+        "investmentSecurities": bs.get("投資有価証券"),
         "PER": per,
         "PBR": None,
-        "配当利回り": dividend_yield,
-        "時価総額": None,
-        "ネットキャッシュ": _net_cash(bs.get("流動資産"), bs.get("投資有価証券"), bs.get("負債")),
-        "ネットキャッシュ比率": None,
+        "dividendYield": dividend_yield,
+        "marketCap": None,
+        "netCash": _net_cash(bs.get("流動資産"), bs.get("投資有価証券"), bs.get("負債")),
+        "netCashRatio": None,
         # --- Growth metrics ---
         "salesGrowthYoY": _fmt_growth(sales_growth_yoy),
         "opGrowthYoY": _fmt_growth(op_growth_yoy),
@@ -789,7 +789,7 @@ def write_data_quality_reports(output_dir: Path, metrics_list: list[dict], *, st
 
     if strict:
         # 最低限の重要項目（現状のフロントで最低限意味が出る）
-        critical = ["自己資本比率", "EPS", "売上高", "経常利益", "当期純利益", "総資産額", "純資産額"]
+        critical = ["equityRatio", "EPS", "sales", "recurringProfit", "netIncome", "totalAssets", "netAssets"]
         failed = []
         for k in critical:
             if k in by_column and by_column[k]["filled"] == 0:
