@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, useMemo, type ReactNode } from "react";
 import { useFilters } from "./FilterContext.js";
 import { useColumnVisibility, type ColumnId } from "./ColumnVisibilityContext.js";
 import { useFavorites } from "./FavoritesContext.js";
@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Skeleton } from "./ui/skeleton";
-import { ArrowUp, ArrowDown, Star } from "lucide-react";
+import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { formatRatioDecimalStringAsPercent, formatYenStringAsMillionYen } from "../lib/metricFormat.js";
 
 export type CompanyMetric = {
@@ -408,6 +408,7 @@ export function CompanyTable() {
   const [loading, setLoading] = useState(true);
   const [sortColumn, setSortColumn] = useState<ColumnId | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
+  const [pageIndex, setPageIndex] = useState(0);
 
   useEffect(() => {
     fetch("/data/company_metrics.json")
@@ -454,8 +455,59 @@ export function CompanyTable() {
           return sortAsc ? cmp : -cmp;
         });
   const parsedLimit = Number.parseInt(filters.itemCount, 10);
-  const rowLimit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 50;
-  const displayed = sorted.slice(0, rowLimit);
+  const pageSize = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 50;
+  const itemCountSelectValue = ROW_LIMIT_OPTIONS.includes(filters.itemCount as (typeof ROW_LIMIT_OPTIONS)[number])
+    ? filters.itemCount
+    : "50";
+  const totalRows = sorted.length;
+  const pageCount = Math.max(1, Math.ceil(totalRows / pageSize));
+
+  const filterSignature = useMemo(
+    () =>
+      JSON.stringify({
+        searchName: filters.searchName,
+        searchCode: filters.searchCode,
+        minEquityRatio: filters.minEquityRatio,
+        maxEquityRatio: filters.maxEquityRatio,
+        minEps: filters.minEps,
+        maxEps: filters.maxEps,
+        minSales: filters.minSales,
+        maxSales: filters.maxSales,
+        minRoe: filters.minRoe,
+        maxRoe: filters.maxRoe,
+        minTotalAssets: filters.minTotalAssets,
+        maxTotalAssets: filters.maxTotalAssets,
+        showOnlyFavorites: filters.showOnlyFavorites,
+      }),
+    [
+      filters.searchName,
+      filters.searchCode,
+      filters.minEquityRatio,
+      filters.maxEquityRatio,
+      filters.minEps,
+      filters.maxEps,
+      filters.minSales,
+      filters.maxSales,
+      filters.minRoe,
+      filters.maxRoe,
+      filters.minTotalAssets,
+      filters.maxTotalAssets,
+      filters.showOnlyFavorites,
+    ],
+  );
+
+  useEffect(() => {
+    setPageIndex(0);
+  }, [filterSignature]);
+
+  useEffect(() => {
+    setPageIndex((p) => Math.min(p, pageCount - 1));
+  }, [pageCount]);
+
+  const safePageIndex = Math.min(pageIndex, pageCount - 1);
+  const rangeStart = totalRows === 0 ? 0 : safePageIndex * pageSize + 1;
+  const rangeEnd = Math.min((safePageIndex + 1) * pageSize, totalRows);
+  const displayed = sorted.slice(safePageIndex * pageSize, safePageIndex * pageSize + pageSize);
 
   if (loading) {
     return (
@@ -485,25 +537,55 @@ export function CompanyTable() {
 
   return (
     <div className="rounded-lg border">
-      <div className="flex items-center justify-between gap-3 border-b bg-muted/30 px-3 py-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b bg-muted/30 px-3 py-2">
         <span className="text-xs text-muted-foreground">
-          {filtered.length.toLocaleString()}件中 {displayed.length.toLocaleString()}件を表示
+          {totalRows.toLocaleString()}件中{" "}
+          {totalRows === 0 ? "0" : `${rangeStart.toLocaleString()}〜${rangeEnd.toLocaleString()}`}件を表示
         </span>
-        <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-          表示件数
-          <select
-            className="h-8 rounded-md border bg-background px-2 text-sm text-foreground"
-            value={ROW_LIMIT_OPTIONS.includes(filters.itemCount as (typeof ROW_LIMIT_OPTIONS)[number]) ? filters.itemCount : "50"}
-            onChange={(e) => setFilter("itemCount", e.target.value)}
-            aria-label="表示件数"
-          >
-            {ROW_LIMIT_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}件
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-8 px-2"
+              disabled={safePageIndex <= 0}
+              onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
+              aria-label="前のページ"
+            >
+              <ChevronLeft className="size-4" />
+            </Button>
+            <span className="min-w-[5rem] text-center text-xs tabular-nums text-muted-foreground">
+              {safePageIndex + 1} / {pageCount}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-8 px-2"
+              disabled={safePageIndex >= pageCount - 1}
+              onClick={() => setPageIndex((p) => Math.min(pageCount - 1, p + 1))}
+              aria-label="次のページ"
+            >
+              <ChevronRight className="size-4" />
+            </Button>
+          </div>
+          <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+            1ページあたり
+            <select
+              className="h-8 rounded-md border bg-background px-2 text-sm text-foreground"
+              value={itemCountSelectValue}
+              onChange={(e) => setFilter("itemCount", e.target.value)}
+              aria-label="1ページあたりの件数"
+            >
+              {ROW_LIMIT_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}件
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
       <Table>
         <TableHeader>

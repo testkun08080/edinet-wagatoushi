@@ -134,13 +134,10 @@ export function TableDownloadButton() {
       const metrics = data.metrics ?? [];
 
       const filtered = metrics.filter((m) => passesFilter(m, filters, favorites));
-      const parsedLimit = Number.parseInt(filters.itemCount, 10);
-      const rowLimit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 50;
-      const limited = filtered.slice(0, rowLimit);
       const visibleColumns = columnIds.filter((id) => visibility[id]);
 
       const headers = visibleColumns.map((id) => columnLabel(id));
-      const rows = limited.map((m) =>
+      const rows = filtered.map((m) =>
         visibleColumns.map((id) => escapeCsvCell(getCellValueForExport(m, id))).join(","),
       );
 
