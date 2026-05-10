@@ -1,9 +1,859 @@
 {
   "companies": [
     {
-      "edinetCode": "E39273",
-      "secCode": "168A",
-      "filerName": "株式会社イタミアート"
+      "edinetCode": "E00012",
+      "secCode": "1301",
+      "filerName": "株式会社　極洋"
+    },
+    {
+      "edinetCode": "E00014",
+      "secCode": "1332",
+      "filerName": "株式会社ニッスイ"
+    },
+    {
+      "edinetCode": "E00015",
+      "secCode": "1333",
+      "filerName": "マルハニチロ株式会社"
+    },
+    {
+      "edinetCode": "E00007",
+      "secCode": "1375",
+      "filerName": "株式会社雪国まいたけ"
+    },
+    {
+      "edinetCode": "E00004",
+      "secCode": "1376",
+      "filerName": "カネコ種苗株式会社"
+    },
+    {
+      "edinetCode": "E00006",
+      "secCode": "1377",
+      "filerName": "株式会社　サカタのタネ"
+    },
+    {
+      "edinetCode": "E00008",
+      "secCode": "1379",
+      "filerName": "ホクト株式会社"
+    },
+    {
+      "edinetCode": "E00344",
+      "secCode": "1380",
+      "filerName": "株式会社秋川牧園"
+    },
+    {
+      "edinetCode": "E00009",
+      "secCode": "1381",
+      "filerName": "株式会社アクシーズ"
+    },
+    {
+      "edinetCode": "E00010",
+      "secCode": "1382",
+      "filerName": "株式会社ホーブ"
+    },
+    {
+      "edinetCode": "E00327",
+      "secCode": "1407",
+      "filerName": "株式会社ウエストホールディングス"
+    },
+    {
+      "edinetCode": "E00329",
+      "secCode": "1414",
+      "filerName": "ショーボンドホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00027",
+      "secCode": "1491",
+      "filerName": "中外鉱業株式会社"
+    },
+    {
+      "edinetCode": "E00036",
+      "secCode": "1515",
+      "filerName": "日鉄鉱業株式会社"
+    },
+    {
+      "edinetCode": "E00037",
+      "secCode": "1518",
+      "filerName": "三井松島ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00043",
+      "secCode": "1605",
+      "filerName": "株式会社ＩＮＰＥＸ"
+    },
+    {
+      "edinetCode": "E00041",
+      "secCode": "1662",
+      "filerName": "石油資源開発株式会社"
+    },
+    {
+      "edinetCode": "E00320",
+      "secCode": "1716",
+      "filerName": "第一カッター興業株式会社"
+    },
+    {
+      "edinetCode": "E00315",
+      "secCode": "1718",
+      "filerName": "美樹工業株式会社"
+    },
+    {
+      "edinetCode": "E00317",
+      "secCode": "1719",
+      "filerName": "株式会社安藤・間"
+    },
+    {
+      "edinetCode": "E00316",
+      "secCode": "1720",
+      "filerName": "東急建設株式会社"
+    },
+    {
+      "edinetCode": "E00322",
+      "secCode": "1721",
+      "filerName": "コムシスホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00313",
+      "secCode": "1723",
+      "filerName": "日本電技株式会社"
+    },
+    {
+      "edinetCode": "E00312",
+      "secCode": "1726",
+      "filerName": "株式会社ビーアールホールディングス"
+    },
+    {
+      "edinetCode": "E00304",
+      "secCode": "1736",
+      "filerName": "株式会社　オーテック"
+    },
+    {
+      "edinetCode": "E00302",
+      "secCode": "1739",
+      "filerName": "株式会社メルディアＤＣ"
+    },
+    {
+      "edinetCode": "E00299",
+      "secCode": "1743",
+      "filerName": "コーアツ工業株式会社"
+    },
+    {
+      "edinetCode": "E00288",
+      "secCode": "1757",
+      "filerName": "株式会社創建エース"
+    },
+    {
+      "edinetCode": "E00285",
+      "secCode": "1762",
+      "filerName": "株式会社髙松コンストラクショングループ"
+    },
+    {
+      "edinetCode": "E00282",
+      "secCode": "1764",
+      "filerName": "工藤建設株式会社"
+    },
+    {
+      "edinetCode": "E00281",
+      "secCode": "1766",
+      "filerName": "東建コーポレーション株式会社"
+    },
+    {
+      "edinetCode": "E00279",
+      "secCode": "1768",
+      "filerName": "株式会社ソネック"
+    },
+    {
+      "edinetCode": "E00277",
+      "secCode": "1770",
+      "filerName": "藤田エンジニアリング株式会社"
+    },
+    {
+      "edinetCode": "E00276",
+      "secCode": "1771",
+      "filerName": "日本乾溜工業株式会社"
+    },
+    {
+      "edinetCode": "E00273",
+      "secCode": "1775",
+      "filerName": "富士古河Ｅ＆Ｃ株式会社"
+    },
+    {
+      "edinetCode": "E00272",
+      "secCode": "1776",
+      "filerName": "三井住建道路株式会社"
+    },
+    {
+      "edinetCode": "E00268",
+      "secCode": "1780",
+      "filerName": "株式会社　ヤマウラ"
+    },
+    {
+      "edinetCode": "E00263",
+      "secCode": "1783",
+      "filerName": "株式会社ｆａｎｔａｓｉｓｔａ"
+    },
+    {
+      "edinetCode": "E00259",
+      "secCode": "1788",
+      "filerName": "株式会社三東工業社"
+    },
+    {
+      "edinetCode": "E00258",
+      "secCode": "1789",
+      "filerName": "株式会社ＥＴＳホールディングス"
+    },
+    {
+      "edinetCode": "E00254",
+      "secCode": "1795",
+      "filerName": "株式会社マサル"
+    },
+    {
+      "edinetCode": "E00251",
+      "secCode": "1798",
+      "filerName": "株式会社守谷商会"
+    },
+    {
+      "edinetCode": "E00052",
+      "secCode": "1801",
+      "filerName": "大成建設株式会社"
+    },
+    {
+      "edinetCode": "E00055",
+      "secCode": "1802",
+      "filerName": "株式会社大林組"
+    },
+    {
+      "edinetCode": "E00053",
+      "secCode": "1803",
+      "filerName": "清水建設株式会社"
+    },
+    {
+      "edinetCode": "E00063",
+      "secCode": "1805",
+      "filerName": "飛島建設株式会社"
+    },
+    {
+      "edinetCode": "E00167",
+      "secCode": "1807",
+      "filerName": "株式会社佐藤渡辺"
+    },
+    {
+      "edinetCode": "E00090",
+      "secCode": "1808",
+      "filerName": "株式会社　長谷工コーポレーション"
+    },
+    {
+      "edinetCode": "E00064",
+      "secCode": "1810",
+      "filerName": "松井建設株式会社"
+    },
+    {
+      "edinetCode": "E00069",
+      "secCode": "1811",
+      "filerName": "株式会社錢高組"
+    },
+    {
+      "edinetCode": "E00058",
+      "secCode": "1812",
+      "filerName": "鹿島建設株式会社"
+    },
+    {
+      "edinetCode": "E00097",
+      "secCode": "1813",
+      "filerName": "株式会社不動テトラ"
+    },
+    {
+      "edinetCode": "E00093",
+      "secCode": "1814",
+      "filerName": "大末建設株式会社"
+    },
+    {
+      "edinetCode": "E00065",
+      "secCode": "1815",
+      "filerName": "鉄建建設株式会社"
+    },
+    {
+      "edinetCode": "E00060",
+      "secCode": "1820",
+      "filerName": "西松建設株式会社"
+    },
+    {
+      "edinetCode": "E00085",
+      "secCode": "1821",
+      "filerName": "三井住友建設株式会社"
+    },
+    {
+      "edinetCode": "E00095",
+      "secCode": "1822",
+      "filerName": "大豊建設株式会社"
+    },
+    {
+      "edinetCode": "E00121",
+      "secCode": "1826",
+      "filerName": "佐田建設株式会社"
+    },
+    {
+      "edinetCode": "E00105",
+      "secCode": "1827",
+      "filerName": "株式会社ナカノフドー建設"
+    },
+    {
+      "edinetCode": "E00242",
+      "secCode": "1828",
+      "filerName": "田辺工業株式会社"
+    },
+    {
+      "edinetCode": "E00083",
+      "secCode": "1833",
+      "filerName": "株式会社奥村組"
+    },
+    {
+      "edinetCode": "E00112",
+      "secCode": "1835",
+      "filerName": "東鉄工業株式会社"
+    },
+    {
+      "edinetCode": "E00240",
+      "secCode": "1840",
+      "filerName": "株式会社土屋ホールディングス"
+    },
+    {
+      "edinetCode": "E00101",
+      "secCode": "1841",
+      "filerName": "サンユー建設株式会社"
+    },
+    {
+      "edinetCode": "E00239",
+      "secCode": "1844",
+      "filerName": "株式会社大盛工業"
+    },
+    {
+      "edinetCode": "E00117",
+      "secCode": "1847",
+      "filerName": "株式会社イチケン"
+    },
+    {
+      "edinetCode": "E00238",
+      "secCode": "1848",
+      "filerName": "株式会社富士ピー・エス"
+    },
+    {
+      "edinetCode": "E00118",
+      "secCode": "1850",
+      "filerName": "南海辰村建設株式会社"
+    },
+    {
+      "edinetCode": "E00120",
+      "secCode": "1852",
+      "filerName": "株式会社淺沼組"
+    },
+    {
+      "edinetCode": "E00147",
+      "secCode": "1860",
+      "filerName": "戸田建設株式会社"
+    },
+    {
+      "edinetCode": "E00056",
+      "secCode": "1861",
+      "filerName": "株式会社　熊谷組"
+    },
+    {
+      "edinetCode": "E00175",
+      "secCode": "1866",
+      "filerName": "北野建設株式会社"
+    },
+    {
+      "edinetCode": "E00179",
+      "secCode": "1867",
+      "filerName": "株式会社植木組"
+    },
+    {
+      "edinetCode": "E00201",
+      "secCode": "1869",
+      "filerName": "名工建設株式会社"
+    },
+    {
+      "edinetCode": "E00148",
+      "secCode": "1870",
+      "filerName": "矢作建設工業株式会社"
+    },
+    {
+      "edinetCode": "E00197",
+      "secCode": "1873",
+      "filerName": "株式会社日本ハウスホールディングス"
+    },
+    {
+      "edinetCode": "E00218",
+      "secCode": "1878",
+      "filerName": "大東建託株式会社"
+    },
+    {
+      "edinetCode": "E00221",
+      "secCode": "1879",
+      "filerName": "新日本建設株式会社"
+    },
+    {
+      "edinetCode": "E00066",
+      "secCode": "1882",
+      "filerName": "東亜道路工業株式会社"
+    },
+    {
+      "edinetCode": "E00067",
+      "secCode": "1884",
+      "filerName": "日本道路株式会社"
+    },
+    {
+      "edinetCode": "E00080",
+      "secCode": "1885",
+      "filerName": "東亜建設工業株式会社"
+    },
+    {
+      "edinetCode": "E00059",
+      "secCode": "1887",
+      "filerName": "日本国土開発株式会社"
+    },
+    {
+      "edinetCode": "E00081",
+      "secCode": "1888",
+      "filerName": "若築建設株式会社"
+    },
+    {
+      "edinetCode": "E00082",
+      "secCode": "1890",
+      "filerName": "東洋建設株式会社"
+    },
+    {
+      "edinetCode": "E00079",
+      "secCode": "1892",
+      "filerName": "徳倉建設株式会社"
+    },
+    {
+      "edinetCode": "E00086",
+      "secCode": "1893",
+      "filerName": "五洋建設株式会社"
+    },
+    {
+      "edinetCode": "E00133",
+      "secCode": "1897",
+      "filerName": "金下建設株式会社"
+    },
+    {
+      "edinetCode": "E00176",
+      "secCode": "1898",
+      "filerName": "世紀東急工業株式会社"
+    },
+    {
+      "edinetCode": "E00196",
+      "secCode": "1899",
+      "filerName": "株式会社福田組"
+    },
+    {
+      "edinetCode": "E00233",
+      "secCode": "1904",
+      "filerName": "大成温調株式会社"
+    },
+    {
+      "edinetCode": "E00232",
+      "secCode": "1905",
+      "filerName": "株式会社テノックス"
+    },
+    {
+      "edinetCode": "E00011",
+      "secCode": "1911",
+      "filerName": "住友林業株式会社"
+    },
+    {
+      "edinetCode": "E00204",
+      "secCode": "1914",
+      "filerName": "日本基礎技術株式会社"
+    },
+    {
+      "edinetCode": "E00048",
+      "secCode": "1925",
+      "filerName": "大和ハウス工業株式会社"
+    },
+    {
+      "edinetCode": "E00098",
+      "secCode": "1926",
+      "filerName": "ライト工業株式会社"
+    },
+    {
+      "edinetCode": "E00143",
+      "secCode": "1928",
+      "filerName": "積水ハウス株式会社"
+    },
+    {
+      "edinetCode": "E00142",
+      "secCode": "1929",
+      "filerName": "日特建設株式会社"
+    },
+    {
+      "edinetCode": "E00207",
+      "secCode": "1930",
+      "filerName": "北陸電気工事株式会社"
+    },
+    {
+      "edinetCode": "E00137",
+      "secCode": "1934",
+      "filerName": "株式会社ユアテック"
+    },
+    {
+      "edinetCode": "E00185",
+      "secCode": "1938",
+      "filerName": "日本リーテック株式会社"
+    },
+    {
+      "edinetCode": "E00181",
+      "secCode": "1939",
+      "filerName": "株式会社四電工"
+    },
+    {
+      "edinetCode": "E00073",
+      "secCode": "1941",
+      "filerName": "株式会社中電工"
+    },
+    {
+      "edinetCode": "E00074",
+      "secCode": "1942",
+      "filerName": "株式会社関電工"
+    },
+    {
+      "edinetCode": "E00075",
+      "secCode": "1944",
+      "filerName": "株式会社きんでん"
+    },
+    {
+      "edinetCode": "E00092",
+      "secCode": "1945",
+      "filerName": "株式会社東京エネシス"
+    },
+    {
+      "edinetCode": "E00076",
+      "secCode": "1946",
+      "filerName": "株式会社トーエネック"
+    },
+    {
+      "edinetCode": "E00114",
+      "secCode": "1949",
+      "filerName": "住友電設株式会社"
+    },
+    {
+      "edinetCode": "E00115",
+      "secCode": "1950",
+      "filerName": "日本電設工業株式会社"
+    },
+    {
+      "edinetCode": "E00094",
+      "secCode": "1951",
+      "filerName": "エクシオグループ株式会社"
+    },
+    {
+      "edinetCode": "E00227",
+      "secCode": "1952",
+      "filerName": "新日本空調株式会社"
+    },
+    {
+      "edinetCode": "E00146",
+      "secCode": "1959",
+      "filerName": "株式会社九電工"
+    },
+    {
+      "edinetCode": "E00173",
+      "secCode": "1960",
+      "filerName": "株式会社サンテック"
+    },
+    {
+      "edinetCode": "E00107",
+      "secCode": "1961",
+      "filerName": "三機工業株式会社"
+    },
+    {
+      "edinetCode": "E00119",
+      "secCode": "1964",
+      "filerName": "中外炉工業株式会社"
+    },
+    {
+      "edinetCode": "E00225",
+      "secCode": "1965",
+      "filerName": "株式会社テクノ菱和"
+    },
+    {
+      "edinetCode": "E00209",
+      "secCode": "1966",
+      "filerName": "株式会社　高田工業所"
+    },
+    {
+      "edinetCode": "E00138",
+      "secCode": "1967",
+      "filerName": "株式会社ヤマト"
+    },
+    {
+      "edinetCode": "E00113",
+      "secCode": "1968",
+      "filerName": "太平電業株式会社"
+    },
+    {
+      "edinetCode": "E00149",
+      "secCode": "1969",
+      "filerName": "高砂熱学工業株式会社"
+    },
+    {
+      "edinetCode": "E00210",
+      "secCode": "1973",
+      "filerName": "ＮＥＣネッツエスアイ株式会社"
+    },
+    {
+      "edinetCode": "E00153",
+      "secCode": "1975",
+      "filerName": "株式会社朝日工業社"
+    },
+    {
+      "edinetCode": "E00161",
+      "secCode": "1976",
+      "filerName": "明星工業株式会社"
+    },
+    {
+      "edinetCode": "E00183",
+      "secCode": "1979",
+      "filerName": "株式会社大気社"
+    },
+    {
+      "edinetCode": "E00194",
+      "secCode": "1980",
+      "filerName": "ダイダン株式会社"
+    },
+    {
+      "edinetCode": "E00168",
+      "secCode": "1982",
+      "filerName": "日比谷総合設備株式会社"
+    },
+    {
+      "edinetCode": "E00182",
+      "secCode": "1992",
+      "filerName": "神田通信機株式会社"
+    },
+    {
+      "edinetCode": "E00222",
+      "secCode": "1994",
+      "filerName": "高橋カーテンウォール工業株式会社"
+    },
+    {
+      "edinetCode": "E00248",
+      "secCode": "1999",
+      "filerName": "サイタホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00345",
+      "secCode": "2001",
+      "filerName": "株式会社ニップン"
+    },
+    {
+      "edinetCode": "E00346",
+      "secCode": "2002",
+      "filerName": "株式会社日清製粉グループ本社"
+    },
+    {
+      "edinetCode": "E00347",
+      "secCode": "2003",
+      "filerName": "日東富士製粉株式会社"
+    },
+    {
+      "edinetCode": "E00348",
+      "secCode": "2004",
+      "filerName": "昭和産業株式会社"
+    },
+    {
+      "edinetCode": "E00351",
+      "secCode": "2009",
+      "filerName": "鳥越製粉株式会社"
+    },
+    {
+      "edinetCode": "E00439",
+      "secCode": "2053",
+      "filerName": "中部飼料株式会社"
+    },
+    {
+      "edinetCode": "E00454",
+      "secCode": "2055",
+      "filerName": "日和産業株式会社"
+    },
+    {
+      "edinetCode": "E00502",
+      "secCode": "2058",
+      "filerName": "株式会社ヒガシマル"
+    },
+    {
+      "edinetCode": "E00354",
+      "secCode": "2107",
+      "filerName": "東洋精糖株式会社"
+    },
+    {
+      "edinetCode": "E00355",
+      "secCode": "2108",
+      "filerName": "日本甜菜製糖株式会社"
+    },
+    {
+      "edinetCode": "E00356",
+      "secCode": "2109",
+      "filerName": "ＤＭ三井製糖ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00361",
+      "secCode": "2112",
+      "filerName": "塩水港精糖株式会社"
+    },
+    {
+      "edinetCode": "E00360",
+      "secCode": "2114",
+      "filerName": "フジ日本精糖株式会社"
+    },
+    {
+      "edinetCode": "E00369",
+      "secCode": "2201",
+      "filerName": "森永製菓株式会社"
+    },
+    {
+      "edinetCode": "E00373",
+      "secCode": "2206",
+      "filerName": "江崎グリコ株式会社"
+    },
+    {
+      "edinetCode": "E00376",
+      "secCode": "2207",
+      "filerName": "名糖産業株式会社"
+    },
+    {
+      "edinetCode": "E00380",
+      "secCode": "2208",
+      "filerName": "株式会社ブルボン"
+    },
+    {
+      "edinetCode": "E00371",
+      "secCode": "2209",
+      "filerName": "井村屋グループ株式会社"
+    },
+    {
+      "edinetCode": "E00374",
+      "secCode": "2211",
+      "filerName": "株式会社不二家"
+    },
+    {
+      "edinetCode": "E00375",
+      "secCode": "2212",
+      "filerName": "山崎製パン株式会社"
+    },
+    {
+      "edinetCode": "E00377",
+      "secCode": "2215",
+      "filerName": "第一屋製パン株式会社"
+    },
+    {
+      "edinetCode": "E00381",
+      "secCode": "2217",
+      "filerName": "モロゾフ株式会社"
+    },
+    {
+      "edinetCode": "E00385",
+      "secCode": "2220",
+      "filerName": "亀田製菓株式会社"
+    },
+    {
+      "edinetCode": "E00386",
+      "secCode": "2221",
+      "filerName": "岩塚製菓株式会社"
+    },
+    {
+      "edinetCode": "E00387",
+      "secCode": "2222",
+      "filerName": "寿スピリッツ株式会社"
+    },
+    {
+      "edinetCode": "E00388",
+      "secCode": "2224",
+      "filerName": "株式会社コモ"
+    },
+    {
+      "edinetCode": "E00389",
+      "secCode": "2226",
+      "filerName": "株式会社湖池屋"
+    },
+    {
+      "edinetCode": "E00331",
+      "secCode": "2264",
+      "filerName": "森永乳業株式会社"
+    },
+    {
+      "edinetCode": "E00406",
+      "secCode": "2267",
+      "filerName": "株式会社ヤクルト本社"
+    },
+    {
+      "edinetCode": "E00474",
+      "secCode": "2268",
+      "filerName": "Ｂ－Ｒ　サーティワン　アイスクリーム株式会社"
+    },
+    {
+      "edinetCode": "E00335",
+      "secCode": "2281",
+      "filerName": "プリマハム株式会社"
+    },
+    {
+      "edinetCode": "E00334",
+      "secCode": "2282",
+      "filerName": "日本ハム株式会社"
+    },
+    {
+      "edinetCode": "E00443",
+      "secCode": "2286",
+      "filerName": "林兼産業株式会社"
+    },
+    {
+      "edinetCode": "E00458",
+      "secCode": "2288",
+      "filerName": "丸大食品株式会社"
+    },
+    {
+      "edinetCode": "E00341",
+      "secCode": "2291",
+      "filerName": "福留ハム株式会社"
+    },
+    {
+      "edinetCode": "E00342",
+      "secCode": "2292",
+      "filerName": "エスフーズ株式会社"
+    },
+    {
+      "edinetCode": "E00343",
+      "secCode": "2293",
+      "filerName": "滝沢ハム株式会社"
+    },
+    {
+      "edinetCode": "E00393",
+      "secCode": "2501",
+      "filerName": "サッポロホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00394",
+      "secCode": "2502",
+      "filerName": "アサヒグループホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00395",
+      "secCode": "2503",
+      "filerName": "キリンホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00467",
+      "secCode": "250A",
+      "filerName": "シマダヤ株式会社"
+    },
+    {
+      "edinetCode": "E00396",
+      "secCode": "2531",
+      "filerName": "宝ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00397",
+      "secCode": "2533",
+      "filerName": "オエノンホールディングス株式会社"
     },
     {
       "edinetCode": "E00422",
@@ -11,149 +861,461 @@
       "filerName": "マルサンアイ株式会社"
     },
     {
-      "edinetCode": "E40060",
-      "secCode": "278A",
-      "filerName": "Ｔｅｒｒａ　Ｄｒｏｎｅ株式会社"
+      "edinetCode": "E00408",
+      "secCode": "2573",
+      "filerName": "北海道コカ・コーラボトリング株式会社"
+    },
+    {
+<<<<<<< Updated upstream
+      "edinetCode": "E34285",
+      "secCode": "3496",
+      "filerName": "株式会社アズーム"
     },
     {
       "edinetCode": "E33109",
       "secCode": "3565",
       "filerName": "アセンテック株式会社"
+=======
+      "edinetCode": "E00417",
+      "secCode": "2579",
+      "filerName": "コカ・コーラボトラーズジャパンホールディングス株式会社"
+>>>>>>> Stashed changes
     },
     {
-      "edinetCode": "E23492",
-      "secCode": "3636",
-      "filerName": "株式会社三菱総合研究所"
+      "edinetCode": "E00424",
+      "secCode": "2590",
+      "filerName": "ダイドーグループホールディングス株式会社"
     },
     {
-      "edinetCode": "E26703",
-      "secCode": "3665",
-      "filerName": "株式会社エニグモ"
+      "edinetCode": "E00414",
+      "secCode": "2593",
+      "filerName": "株式会社伊藤園"
     },
     {
-      "edinetCode": "E30114",
-      "secCode": "3681",
-      "filerName": "株式会社ブイキューブ"
+      "edinetCode": "E00491",
+      "secCode": "2594",
+      "filerName": "キーコーヒー株式会社"
     },
     {
-      "edinetCode": "E31902",
-      "secCode": "3921",
-      "filerName": "株式会社ネオジャパン"
+      "edinetCode": "E00505",
+      "secCode": "2597",
+      "filerName": "株式会社ユニカフェ"
     },
     {
-      "edinetCode": "E00688",
-      "secCode": "3955",
-      "filerName": "株式会社イムラ"
+      "edinetCode": "E00421",
+      "secCode": "2599",
+      "filerName": "ジャパンフーズ株式会社"
     },
     {
-      "edinetCode": "E36213",
-      "secCode": "4174",
-      "filerName": "株式会社アピリッツ"
+      "edinetCode": "E00428",
+      "secCode": "2602",
+      "filerName": "日清オイリオグループ株式会社"
+    },
+    {
+<<<<<<< Updated upstream
+      "edinetCode": "E05233",
+      "secCode": "4320",
+      "filerName": "株式会社ＣＥホールディングス"
     },
     {
       "edinetCode": "E05254",
       "secCode": "4334",
       "filerName": "株式会社ユークス"
+=======
+      "edinetCode": "E00431",
+      "secCode": "2607",
+      "filerName": "不二製油グループ本社株式会社"
+>>>>>>> Stashed changes
     },
     {
-      "edinetCode": "E05168",
-      "secCode": "4813",
-      "filerName": "株式会社ＡＣＣＥＳＳ"
+      "edinetCode": "E00433",
+      "secCode": "2612",
+      "filerName": "かどや製油株式会社"
     },
     {
-      "edinetCode": "E01573",
-      "secCode": "6370",
-      "filerName": "栗田工業株式会社"
+      "edinetCode": "E00434",
+      "secCode": "2613",
+      "filerName": "株式会社Ｊ－オイルミルズ"
     },
     {
-      "edinetCode": "E01737",
-      "secCode": "6501",
-      "filerName": "株式会社日立製作所"
+      "edinetCode": "E00435",
+      "secCode": "2801",
+      "filerName": "キッコーマン株式会社"
     },
     {
-      "edinetCode": "E01765",
-      "secCode": "6701",
-      "filerName": "日本電気株式会社"
+      "edinetCode": "E00436",
+      "secCode": "2802",
+      "filerName": "味の素株式会社"
     },
     {
-      "edinetCode": "E01766",
-      "secCode": "6702",
-      "filerName": "富士通株式会社"
+      "edinetCode": "E00466",
+      "secCode": "2804",
+      "filerName": "ブルドックソース株式会社"
     },
     {
-      "edinetCode": "E01767",
-      "secCode": "6703",
-      "filerName": "沖電気工業株式会社"
+      "edinetCode": "E00452",
+      "secCode": "2805",
+      "filerName": "ヱスビー食品株式会社"
     },
     {
-      "edinetCode": "E01780",
-      "secCode": "6762",
-      "filerName": "ＴＤＫ株式会社"
+      "edinetCode": "E00464",
+      "secCode": "2809",
+      "filerName": "キユーピー株式会社"
     },
     {
-      "edinetCode": "E02055",
-      "secCode": "6797",
-      "filerName": "名古屋電機工業株式会社"
+      "edinetCode": "E00462",
+      "secCode": "2810",
+      "filerName": "ハウス食品グループ本社株式会社"
     },
     {
-      "edinetCode": "E01955",
-      "secCode": "6965",
-      "filerName": "浜松ホトニクス株式会社"
+      "edinetCode": "E00444",
+      "secCode": "2811",
+      "filerName": "カゴメ株式会社"
     },
     {
-      "edinetCode": "E34866",
-      "secCode": "7064",
-      "filerName": "株式会社ハウテレビジョン"
+      "edinetCode": "E00475",
+      "secCode": "2812",
+      "filerName": "焼津水産化学工業株式会社"
     },
     {
-      "edinetCode": "E35187",
-      "secCode": "7073",
-      "filerName": "株式会社ジェイック"
+      "edinetCode": "E00478",
+      "secCode": "2813",
+      "filerName": "和弘食品株式会社"
     },
     {
-      "edinetCode": "E03317",
-      "secCode": "7614",
-      "filerName": "株式会社オーエムツーネットワーク"
+      "edinetCode": "E00486",
+      "secCode": "2815",
+      "filerName": "アリアケジャパン株式会社"
     },
     {
-      "edinetCode": "E34747",
-      "secCode": "7674",
-      "filerName": "株式会社ＮＡＴＴＹ　ＳＷＡＮＫＹホールディングス"
+      "edinetCode": "E00513",
+      "secCode": "2818",
+      "filerName": "株式会社ピエトロ"
     },
     {
-      "edinetCode": "E35170",
-      "secCode": "7683",
-      "filerName": "株式会社ダブルエー"
+      "edinetCode": "E00514",
+      "secCode": "2819",
+      "filerName": "エバラ食品工業株式会社"
     },
     {
-      "edinetCode": "E02367",
-      "secCode": "7974",
-      "filerName": "任天堂株式会社"
+      "edinetCode": "E00503",
+      "secCode": "2830",
+      "filerName": "アヲハタ株式会社"
     },
     {
-      "edinetCode": "E02665",
-      "secCode": "8142",
-      "filerName": "株式会社トーホー"
+      "edinetCode": "E00508",
+      "secCode": "2831",
+      "filerName": "はごろもフーズ株式会社"
     },
     {
-      "edinetCode": "E38739",
-      "secCode": "9166",
-      "filerName": "株式会社ＧＥＮＤＡ"
+      "edinetCode": "E00446",
+      "secCode": "2871",
+      "filerName": "株式会社ニチレイ"
     },
     {
-      "edinetCode": "E04473",
-      "secCode": "9424",
-      "filerName": "日本通信株式会社"
+      "edinetCode": "E00461",
+      "secCode": "2875",
+      "filerName": "東洋水産株式会社"
     },
     {
-      "edinetCode": "E04908",
-      "secCode": "9616",
-      "filerName": "株式会社共立メンテナンス"
+      "edinetCode": "E00498",
+      "secCode": "2877",
+      "filerName": "日東ベスト株式会社"
     },
     {
-      "edinetCode": "E04599",
-      "secCode": "9632",
-      "filerName": "スバル興業株式会社"
+      "edinetCode": "E00442",
+      "secCode": "2892",
+      "filerName": "日本食品化工株式会社"
+    },
+    {
+      "edinetCode": "E00453",
+      "secCode": "2894",
+      "filerName": "石井食品株式会社"
+    },
+    {
+      "edinetCode": "E00457",
+      "secCode": "2897",
+      "filerName": "日清食品ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00469",
+      "secCode": "2899",
+      "filerName": "株式会社永谷園ホールディングス"
+    },
+    {
+      "edinetCode": "E00471",
+      "secCode": "2901",
+      "filerName": "石垣食品株式会社"
+    },
+    {
+      "edinetCode": "E00472",
+      "secCode": "2902",
+      "filerName": "太陽化学株式会社"
+    },
+    {
+      "edinetCode": "E00473",
+      "secCode": "2903",
+      "filerName": "シノブフーズ株式会社"
+    },
+    {
+      "edinetCode": "E00476",
+      "secCode": "2904",
+      "filerName": "一正蒲鉾株式会社"
+    },
+    {
+      "edinetCode": "E00480",
+      "secCode": "2907",
+      "filerName": "株式会社あじかん"
+    },
+    {
+      "edinetCode": "E00481",
+      "secCode": "2908",
+      "filerName": "フジッコ株式会社"
+    },
+    {
+      "edinetCode": "E00482",
+      "secCode": "2910",
+      "filerName": "株式会社ロック・フィールド"
+    },
+    {
+      "edinetCode": "E00487",
+      "secCode": "2911",
+      "filerName": "旭松食品株式会社"
+    },
+    {
+      "edinetCode": "E00492",
+      "secCode": "2914",
+      "filerName": "日本たばこ産業株式会社"
+    },
+    {
+      "edinetCode": "E00493",
+      "secCode": "2915",
+      "filerName": "ケンコーマヨネーズ株式会社"
+    },
+    {
+      "edinetCode": "E00494",
+      "secCode": "2916",
+      "filerName": "仙波糖化工業株式会社"
+    },
+    {
+      "edinetCode": "E00495",
+      "secCode": "2917",
+      "filerName": "株式会社大森屋"
+    },
+    {
+      "edinetCode": "E00496",
+      "secCode": "2918",
+      "filerName": "わらべや日洋ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00506",
+      "secCode": "2922",
+      "filerName": "株式会社なとり"
+    },
+    {
+      "edinetCode": "E00510",
+      "secCode": "2923",
+      "filerName": "サトウ食品株式会社"
+    },
+    {
+      "edinetCode": "E00511",
+      "secCode": "2924",
+      "filerName": "イフジ産業株式会社"
+    },
+    {
+      "edinetCode": "E00518",
+      "secCode": "2928",
+      "filerName": "ＲＩＺＡＰグループ株式会社"
+    },
+    {
+      "edinetCode": "E00524",
+      "secCode": "3001",
+      "filerName": "片倉工業株式会社"
+    },
+    {
+      "edinetCode": "E00520",
+      "secCode": "3002",
+      "filerName": "グンゼ株式会社"
+    },
+    {
+      "edinetCode": "E00523",
+      "secCode": "3003",
+      "filerName": "ヒューリック株式会社"
+    },
+    {
+      "edinetCode": "E00521",
+      "secCode": "3010",
+      "filerName": "ポラリス・ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00525",
+      "secCode": "3101",
+      "filerName": "東洋紡株式会社"
+    },
+    {
+      "edinetCode": "E00527",
+      "secCode": "3103",
+      "filerName": "ユニチカ株式会社"
+    },
+    {
+      "edinetCode": "E00543",
+      "secCode": "3104",
+      "filerName": "富士紡ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00544",
+      "secCode": "3105",
+      "filerName": "日清紡ホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00528",
+      "secCode": "3106",
+      "filerName": "倉敷紡績株式会社"
+    },
+    {
+      "edinetCode": "E00529",
+      "secCode": "3107",
+      "filerName": "ダイワボウホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00530",
+      "secCode": "3109",
+      "filerName": "シキボウ株式会社"
+    },
+    {
+      "edinetCode": "E00542",
+      "secCode": "3110",
+      "filerName": "日東紡績株式会社"
+    },
+    {
+      "edinetCode": "E00531",
+      "secCode": "3111",
+      "filerName": "オーミケンシ株式会社"
+    },
+    {
+      "edinetCode": "E00541",
+      "secCode": "3113",
+      "filerName": "株式会社ＵＮＩＶＡ・Ｏａｋホールディングス"
+    },
+    {
+      "edinetCode": "E00540",
+      "secCode": "3116",
+      "filerName": "トヨタ紡織株式会社"
+    },
+    {
+      "edinetCode": "E00545",
+      "secCode": "3121",
+      "filerName": "マーチャント・バンカーズ株式会社"
+    },
+    {
+      "edinetCode": "E00534",
+      "secCode": "3123",
+      "filerName": "サイボー株式会社"
+    },
+    {
+      "edinetCode": "E00552",
+      "secCode": "3201",
+      "filerName": "日本毛織株式会社"
+    },
+    {
+      "edinetCode": "E00547",
+      "secCode": "3202",
+      "filerName": "ダイトウボウ株式会社"
+    },
+    {
+      "edinetCode": "E00550",
+      "secCode": "3205",
+      "filerName": "株式会社ダイドーリミテッド"
+    },
+    {
+      "edinetCode": "E00030",
+      "secCode": "3315",
+      "filerName": "日本コークス工業株式会社"
+    },
+    {
+      "edinetCode": "E00390",
+      "secCode": "3346",
+      "filerName": "ヒロタグループホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00448",
+      "secCode": "4229",
+      "filerName": "群栄化学工業株式会社"
+    },
+    {
+      "edinetCode": "E00024",
+      "secCode": "5706",
+      "filerName": "三井金属鉱業株式会社"
+    },
+    {
+      "edinetCode": "E00021",
+      "secCode": "5711",
+      "filerName": "三菱マテリアル株式会社"
+    },
+    {
+      "edinetCode": "E00023",
+      "secCode": "5713",
+      "filerName": "住友金属鉱山株式会社"
+    },
+    {
+      "edinetCode": "E00028",
+      "secCode": "5714",
+      "filerName": "ＤＯＷＡホールディングス株式会社"
+    },
+    {
+      "edinetCode": "E00032",
+      "secCode": "5715",
+      "filerName": "古河機械金属株式会社"
+    },
+    {
+      "edinetCode": "E00026",
+      "secCode": "5729",
+      "filerName": "日本精鉱株式会社"
+    },
+    {
+      "edinetCode": "E00035",
+      "secCode": "7021",
+      "filerName": "株式会社ニッチツ"
+    },
+    {
+      "edinetCode": "E00456",
+      "secCode": "8006",
+      "filerName": "ユアサ・フナショク株式会社"
+    },
+    {
+      "edinetCode": "E00157",
+      "secCode": "8157",
+      "filerName": "都築電気株式会社"
+    },
+    {
+      "edinetCode": "E00034",
+      "secCode": "8835",
+      "filerName": "太平洋興発株式会社"
+    },
+    {
+      "edinetCode": "E00165",
+      "secCode": "8836",
+      "filerName": "株式会社ＲＩＳＥ"
+    },
+    {
+      "edinetCode": "E00311",
+      "secCode": "8904",
+      "filerName": "株式会社ＡＶＡＮＴＩＡ"
+    },
+    {
+      "edinetCode": "E00033",
+      "secCode": "9675",
+      "filerName": "常磐興産株式会社"
+    },
+    {
+      "edinetCode": "E00208",
+      "secCode": "9743",
+      "filerName": "株式会社丹青社"
+    },
+    {
+      "edinetCode": "E00187",
+      "secCode": "9767",
+      "filerName": "日建工学株式会社"
     }
   ]
 }

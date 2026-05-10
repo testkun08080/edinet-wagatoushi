@@ -77,6 +77,14 @@ Workflow: `.github/workflows/daily-refresh.yml`
   - フロントビルド成功
   - 上記を満たす場合のみ commit/push
 
+## 無料枠運用ポリシー（必須）
+
+- `export_db_to_d1_sql.py` は `--where_doc_ids_file state/touched_doc_ids.txt` を必須にし、差分反映のみを行う。
+- 差分反映対象テーブルは最小化する（`companies,documents,period_financials,raw_files_index,daily_metrics,sec_code_latest_periods`）。
+- `D1_SQL_CHUNK_ROWS=25` を既定にして 1 chunk の失敗コストを抑える。
+- `MAX_D1_CHUNKS_PER_RUN` を設定し、上限超過時は失敗で停止する（無料枠超過リスクの早期検知）。
+- 初回 seed 後のフル seed は禁止し、障害復旧時のみ手動承認で実行する。
+
 ## 運用ルール
 
 - 失敗時はデプロイしない（前回配信を維持）

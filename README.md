@@ -59,6 +59,33 @@ uv run python scripts/frontend/build_screener_data.py --mode sample E02144 E0236
 
 # 全企業分（data-set/ 内の全データから生成）
 uv run python scripts/frontend/build_screener_data.py --mode full
+uv run python scripts/frontend/build_screener_data.py --metrics_only
+
+# D1: 日次取得→DB投入→品質チェック
+uv run python scripts/pipeline/ingest_daily_edinet_to_db.py \
+  --doc_types "annual,quarterly,semiannual,large_holding" \
+  --db_path state/edinet_pipeline.db \
+  --schema_path sql/d1_schema.sql \
+  --raw_root raw \
+  --scope daily-refresh \
+  --touched_doc_ids_out state/touched_doc_ids.txt
+uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
+
+# D1 Production: edinet-wrapper/data を Cloudflare D1 に初期投入
+# production はライブ D1 への一回限りの初期投入時だけ実行
+cd ../edinet-screener
+npm run d1:seed:staging
+npm run d1:seed:production
+
+# data-set 配下が分割コーパス構造でも seed 可能（自動変換）
+DATA_ROOT=../data-set npm run d1:seed:staging
+
+# 無料枠保護: chunk上限/サイズを調整
+MAX_D1_CHUNKS_PER_RUN=250 D1_SQL_CHUNK_ROWS=25 npm run d1:seed:staging
+cd ../edinet-wrapper
+
+# D1: DBから public/data を生成
+uv run python scripts/pipeline/build_public_data_from_db.py --db_path state/edinet_pipeline.db --output ../edinet-screener/public/data
 ```
 
 4. **フロントエンド起動**
@@ -121,6 +148,10 @@ docker-compose.yml       # Docker起動（フロントのみ）
 - [データセット代替案](docs/DATA_SET_ALTERNATIVES.md)
 - [プロジェクト全体フロー](docs/PROJECT_FLOW.md)
 
-## コントリビューション
-
-IssueやPull Requestを歓迎します。
+- 全体フロー: `docs/PROJECT_FLOW.md`
+- 構成ガイド（重複を整理した要約）: `docs/PROJECT_STRUCTURE.md`
+- data-set の運用: `docs/DATA_SET_ALTERNATIVES.md`
+- EDINET API 手動検証: `docs/EDINET_API_POSTMAN.md`
+- wrapper 実運用ガイド: `docs/edinet-wrapper-使い方.md`
+- wrapper 詳細資料: `edinet-wrapper/docs/`
+- screener 詳細資料: `edinet-screener/docs/`

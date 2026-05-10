@@ -43,6 +43,8 @@ SKIPPING=0
 if [ -n "$START_FROM" ]; then
   SKIPPING=1
 fi
+MAX_D1_CHUNKS_PER_RUN="${MAX_D1_CHUNKS_PER_RUN:-0}"
+APPLIED_COUNT=0
 
 while IFS= read -r chunk || [ -n "$chunk" ]; do
   chunk="${chunk%$'\r'}"
@@ -53,6 +55,11 @@ while IFS= read -r chunk || [ -n "$chunk" ]; do
   SKIPPING=0
   echo "[d1] applying $chunk to env=$ENVIRONMENT"
   if "$WRANGLER" d1 execute EDINET_DB --env "$ENVIRONMENT" --remote --file "$SQL_DIR/$chunk"; then
+    APPLIED_COUNT=$((APPLIED_COUNT + 1))
+    if [ "$MAX_D1_CHUNKS_PER_RUN" -gt 0 ] && [ "$APPLIED_COUNT" -ge "$MAX_D1_CHUNKS_PER_RUN" ]; then
+      echo "[d1] reached MAX_D1_CHUNKS_PER_RUN=$MAX_D1_CHUNKS_PER_RUN; stop at chunk=$chunk"
+      exit 0
+    fi
     continue
   else
     status=$?
