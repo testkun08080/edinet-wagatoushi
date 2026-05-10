@@ -158,6 +158,8 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
+          D1_SQL_CHUNK_ROWS: "25"
+          MAX_D1_CHUNKS_PER_RUN: "250"
         run: |
           set -euo pipefail
           rm -rf state/d1-delta-sql
@@ -165,7 +167,13 @@ jobs:
             --db_path state/edinet_pipeline.db \
             --output_dir state/d1-delta-sql \
             --where_doc_ids_file state/touched_doc_ids.txt \
-            --chunk_rows 50
+            --tables companies,documents,period_financials,raw_files_index,daily_metrics,sec_code_latest_periods \
+            --chunk_rows "$D1_SQL_CHUNK_ROWS"
+          CHUNK_COUNT="$(wc -l < state/d1-delta-sql/manifest.txt | tr -d ' ')"
+          if [ "$CHUNK_COUNT" -gt "$MAX_D1_CHUNKS_PER_RUN" ]; then
+            echo "Chunk guard triggered: $CHUNK_COUNT > $MAX_D1_CHUNKS_PER_RUN"
+            exit 1
+          fi
           cd ../edinet-screener
           bash scripts/d1-execute-sql-dir.sh "$D1_ENVIRONMENT" ../edinet-wrapper/state/d1-delta-sql
 

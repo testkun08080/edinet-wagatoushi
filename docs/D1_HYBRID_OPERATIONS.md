@@ -33,6 +33,22 @@ npm run d1:seed:production
 
 事前に `wrangler.jsonc` の `EDINET_DB` binding に実際の D1 `database_id` を設定し、Cloudflare 認証を済ませる。
 
+### data-set が corpus 互換でない場合
+
+`data-set` が `edinet_corpus-annual-2025/.../E00007/S100....tsv` のような分割ディレクトリでも、seed スクリプトは自動で import-root 互換に変換して取り込む。
+
+```bash
+cd edinet-screener
+DATA_ROOT=../data-set npm run d1:seed:staging
+```
+
+必要に応じて以下を調整:
+
+- `IMPORT_ROOT`（デフォルト: `edinet-wrapper/state/import-root`）
+- `DATA_LINK_MODE=symlink|hardlink|copy`（デフォルト: `symlink`）
+- `D1_SQL_CHUNK_ROWS`（デフォルト: `25`）
+- `MAX_D1_CHUNKS_PER_RUN`（デフォルト: `5000`）
+
 ## ローカル日次実行
 
 ```bash
@@ -73,17 +89,24 @@ uv run python scripts/pipeline/build_public_data_from_db.py \
 
 ## Cloudflare 日次反映
 
-1. D1 スキーマ適用（初回・変更時）
+- D1 スキーマ適用（初回・変更時）
   - `cd edinet-screener && npm run d1:apply-schema:staging`
   - `cd edinet-screener && npm run d1:apply-schema:production`
-2. `.github/workflows/daily-refresh.yml` を `data_source=d1` で実行
-3. Workflow は remote D1 を export してローカルSQLiteへ復元し、日次差分を取り込み、差分SQLを D1 にUPSERTする
-4. D1全体から `public/data` を生成し、品質ゲート通過後に commit/push する
-5. 成果物 commit/push 後、Cloudflare Git integration で自動配信
+- `.github/workflows/daily-refresh.yml` を `data_source=d1` で実行
+- Workflow は remote D1 を export してローカルSQLiteへ復元し、日次差分を取り込み、差分SQLを D1 にUPSERTする
+- D1全体から `public/data` を生成し、品質ゲート通過後に commit/push する
+- 成果物 commit/push 後、Cloudflare Git integration で自動配信
+
+## Cloudflare 無料枠を守る運用
+
+- 初回 seed 後はフル再 seed を常用しない（障害復旧時のみ手動承認）。
+- 日次反映は `touched_doc_ids.txt` に基づく差分 UPSERT のみ実行する。
+- 差分 SQL は小チャンク（目安 `25` 行）に分割する。
+- 1 回の更新で適用する chunk 数に上限を持たせる（workflow では `MAX_D1_CHUNKS_PER_RUN=250`）。
+- chunk 上限超過時は失敗として停止し、翌日に繰り越して無料枠の急消費を防ぐ。
 
 ## スケール時の方針
 
 - 生ファイルは R2（`raw/...`）を正本にし、D1 は検索・配信向けメタ/集計を保持
 - 重い集計は `materialize_daily_aggregates.py` による事前計算テーブルへ分離
 - インデックス最適化は `period_financials(sec_code, period_end)` と `documents(doc_type, submit_date_time)` を起点に実施
-

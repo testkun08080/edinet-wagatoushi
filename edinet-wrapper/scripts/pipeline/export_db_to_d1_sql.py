@@ -94,10 +94,21 @@ def read_doc_ids(path: Path | None) -> set[str] | None:
     return {line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()}
 
 
+def related_edinet_codes(conn: sqlite3.Connection, doc_ids: set[str]) -> set[str]:
+    if not doc_ids:
+        return set()
+    placeholders = ",".join("?" for _ in doc_ids)
+    rows = conn.execute(
+        f"SELECT DISTINCT edinet_code FROM documents WHERE doc_id IN ({placeholders})",
+        tuple(doc_ids),
+    ).fetchall()
+    return {str(row[0]) for row in rows if row and row[0]}
+
+
 def iter_rows(conn: sqlite3.Connection, table: str, doc_ids: set[str] | None) -> Iterable[sqlite3.Row]:
     if table not in CONFLICT_COLUMNS:
         raise ValueError(f"Unexpected table: {table}")
-    if doc_ids is None or table not in {"documents", "period_financials", "raw_files_index"}:
+    if doc_ids is None or table not in {"documents", "period_financials", "raw_files_index", "companies"}:
         # The table name is allow-listed above; SELECT cannot bind identifiers.
         yield from conn.execute(f"SELECT * FROM {table}")  # noqa: S608
         return
@@ -105,6 +116,7 @@ def iter_rows(conn: sqlite3.Connection, table: str, doc_ids: set[str] | None) ->
     if not doc_ids:
         return
 
+    edinet_codes = related_edinet_codes(conn, doc_ids)
     placeholders = ",".join("?" for _ in doc_ids)
     if table == "documents":
         yield from conn.execute(f"SELECT * FROM documents WHERE doc_id IN ({placeholders})", tuple(doc_ids))
@@ -112,6 +124,14 @@ def iter_rows(conn: sqlite3.Connection, table: str, doc_ids: set[str] | None) ->
         yield from conn.execute(f"SELECT * FROM period_financials WHERE doc_id IN ({placeholders})", tuple(doc_ids))
     elif table == "raw_files_index":
         yield from conn.execute(f"SELECT * FROM raw_files_index WHERE doc_id IN ({placeholders})", tuple(doc_ids))
+    elif table == "companies":
+        if not edinet_codes:
+            return
+        company_placeholders = ",".join("?" for _ in edinet_codes)
+        yield from conn.execute(
+            f"SELECT * FROM companies WHERE edinet_code IN ({company_placeholders})",
+            tuple(edinet_codes),
+        )
 
 
 def write_chunk(path: Path, statements: list[str]) -> None:

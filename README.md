@@ -62,6 +62,12 @@ uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/e
 cd ../edinet-screener
 npm run d1:seed:staging
 npm run d1:seed:production
+
+# data-set 配下が分割コーパス構造でも seed 可能（自動変換）
+DATA_ROOT=../data-set npm run d1:seed:staging
+
+# 無料枠保護: chunk上限/サイズを調整
+MAX_D1_CHUNKS_PER_RUN=250 D1_SQL_CHUNK_ROWS=25 npm run d1:seed:staging
 cd ../edinet-wrapper
 
 # D1: DBから public/data を生成
@@ -90,4 +96,3 @@ npm run d1:apply-schema:staging
 - wrapper 実運用ガイド: `docs/edinet-wrapper-使い方.md`
 - wrapper 詳細資料: `edinet-wrapper/docs/`
 - screener 詳細資料: `edinet-screener/docs/`
-
