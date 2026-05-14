@@ -866,7 +866,11 @@
       "filerName": "北海道コカ・コーラボトリング株式会社"
     },
     {
-<<<<<<< Updated upstream
+      "edinetCode": "E00417",
+      "secCode": "2579",
+      "filerName": "コカ・コーラボトラーズジャパンホールディングス株式会社"
+    },
+    {
       "edinetCode": "E34285",
       "secCode": "3496",
       "filerName": "株式会社アズーム"
@@ -875,11 +879,6 @@
       "edinetCode": "E33109",
       "secCode": "3565",
       "filerName": "アセンテック株式会社"
-=======
-      "edinetCode": "E00417",
-      "secCode": "2579",
-      "filerName": "コカ・コーラボトラーズジャパンホールディングス株式会社"
->>>>>>> Stashed changes
     },
     {
       "edinetCode": "E00424",
@@ -912,20 +911,9 @@
       "filerName": "日清オイリオグループ株式会社"
     },
     {
-<<<<<<< Updated upstream
-      "edinetCode": "E05233",
-      "secCode": "4320",
-      "filerName": "株式会社ＣＥホールディングス"
-    },
-    {
-      "edinetCode": "E05254",
-      "secCode": "4334",
-      "filerName": "株式会社ユークス"
-=======
       "edinetCode": "E00431",
       "secCode": "2607",
       "filerName": "不二製油グループ本社株式会社"
->>>>>>> Stashed changes
     },
     {
       "edinetCode": "E00433",
@@ -1241,6 +1229,16 @@
       "edinetCode": "E00448",
       "secCode": "4229",
       "filerName": "群栄化学工業株式会社"
+    },
+    {
+      "edinetCode": "E05233",
+      "secCode": "4320",
+      "filerName": "株式会社ＣＥホールディングス"
+    },
+    {
+      "edinetCode": "E05254",
+      "secCode": "4334",
+      "filerName": "株式会社ユークス"
     },
     {
       "edinetCode": "E00024",
