@@ -1,0 +1,373 @@
+{
+  "edinetCode": "E01532",
+  "secCode": "6301",
+  "filerName": "株式会社小松製作所",
+  "periods": [
+    {
+      "periodStart": "2015-04-01",
+      "periodEnd": "2016-03-31",
+      "docID": "S1007SK4",
+      "docDescription": "有価証券報告書－第147期(2015/04/01－2016/03/31)",
+      "submitDateTime": "2016-06-21 10:36",
+      "summary": {
+        "従業員数": "47017",
+        "平均臨時雇用人員": "3479"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S1007SK4.json"
+    },
+    {
+      "periodStart": "2016-04-01",
+      "periodEnd": "2017-03-31",
+      "docID": "S100AFY7",
+      "docDescription": "有価証券報告書－第148期(2016/04/01－2017/03/31)",
+      "submitDateTime": "2017-06-19 10:54",
+      "summary": {
+        "従業員数": "47204",
+        "平均臨時雇用人員": "3410"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100AFY7.json"
+    },
+    {
+      "periodStart": "2017-04-01",
+      "periodEnd": "2018-03-31",
+      "docID": "S100D6J5",
+      "docDescription": "有価証券報告書－第149期(平成29年4月1日－平成30年3月31日)",
+      "submitDateTime": "2018-06-18 11:27",
+      "summary": {
+        "従業員数": "59632",
+        "平均臨時雇用人員": "5385"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100D6J5.json"
+    },
+    {
+      "periodStart": "2018-10-01",
+      "periodEnd": "2018-12-31",
+      "docID": "S100F626",
+      "docDescription": "四半期報告書－第150期第3四半期(2018/10/01－2018/12/31)",
+      "submitDateTime": "2019-02-13 11:12",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100F626.json"
+    },
+    {
+      "periodStart": "2018-04-01",
+      "periodEnd": "2019-03-31",
+      "docID": "S100FZY3",
+      "docDescription": "有価証券報告書－第150期(平成30年4月1日－平成31年3月31日)",
+      "submitDateTime": "2019-06-17 11:15",
+      "summary": {
+        "従業員数": "61908",
+        "平均臨時雇用人員": "6766"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100FZY3.json"
+    },
+    {
+      "periodStart": "2019-04-01",
+      "periodEnd": "2019-06-30",
+      "docID": "S100GO4S",
+      "docDescription": "四半期報告書－第151期第1四半期(2019/04/01－2019/06/30)",
+      "submitDateTime": "2019-08-09 13:19",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100GO4S.json"
+    },
+    {
+      "periodStart": "2019-07-01",
+      "periodEnd": "2019-09-30",
+      "docID": "S100HCTW",
+      "docDescription": "四半期報告書－第151期第2四半期(2019/07/01－2019/09/30)",
+      "submitDateTime": "2019-11-13 10:34",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100HCTW.json"
+    },
+    {
+      "periodStart": "2019-10-01",
+      "periodEnd": "2019-12-31",
+      "docID": "S100HZLN",
+      "docDescription": "四半期報告書－第151期第3四半期(令和1年10月1日－令和1年12月31日)",
+      "submitDateTime": "2020-02-13 10:41",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100HZLN.json"
+    },
+    {
+      "periodStart": "2019-04-01",
+      "periodEnd": "2020-03-31",
+      "docID": "S100J1GM",
+      "docDescription": "有価証券報告書－第151期(平成31年4月1日－令和2年3月31日)",
+      "submitDateTime": "2020-06-29 13:08",
+      "summary": {
+        "従業員数": "62823",
+        "平均臨時雇用人員": "6056"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100J1GM.json"
+    },
+    {
+      "periodStart": "2020-04-01",
+      "periodEnd": "2020-06-30",
+      "docID": "S100JEY8",
+      "docDescription": "四半期報告書－第152期第1四半期(令和2年4月1日－令和2年6月30日)",
+      "submitDateTime": "2020-08-07 10:44",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100JEY8.json"
+    },
+    {
+      "periodStart": "2020-07-01",
+      "periodEnd": "2020-09-30",
+      "docID": "S100K35T",
+      "docDescription": "四半期報告書－第152期第2四半期(令和2年7月1日－令和2年9月30日)",
+      "submitDateTime": "2020-11-11 11:03",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100K35T.json"
+    },
+    {
+      "periodStart": "2020-10-01",
+      "periodEnd": "2020-12-31",
+      "docID": "S100KQZD",
+      "docDescription": "四半期報告書－第152期第3四半期(令和2年10月1日－令和2年12月31日)",
+      "submitDateTime": "2021-02-12 10:41",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100KQZD.json"
+    },
+    {
+      "periodStart": "2020-04-01",
+      "periodEnd": "2021-03-31",
+      "docID": "S100LIWM",
+      "docDescription": "有価証券報告書－第152期(令和2年4月1日－令和3年3月31日)",
+      "submitDateTime": "2021-06-17 10:50",
+      "summary": {
+        "従業員数": "61564",
+        "平均臨時雇用人員": "4056"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100LIWM.json"
+    },
+    {
+      "periodStart": "2021-04-01",
+      "periodEnd": "2021-06-30",
+      "docID": "S100M4TY",
+      "docDescription": "四半期報告書－第153期第1四半期(令和3年4月1日－令和3年6月30日)",
+      "submitDateTime": "2021-08-06 10:10",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100M4TY.json"
+    },
+    {
+      "periodStart": "2021-07-01",
+      "periodEnd": "2021-09-30",
+      "docID": "S100MS2U",
+      "docDescription": "四半期報告書－第153期第2四半期(令和3年7月1日－令和3年9月30日)",
+      "submitDateTime": "2021-11-11 10:37",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100MS2U.json"
+    },
+    {
+      "periodStart": "2021-10-01",
+      "periodEnd": "2021-12-31",
+      "docID": "S100NEUM",
+      "docDescription": "四半期報告書－第153期第3四半期(令和3年10月1日－令和3年12月31日)",
+      "submitDateTime": "2022-02-10 10:47",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100NEUM.json"
+    },
+    {
+      "periodStart": "2021-04-01",
+      "periodEnd": "2022-03-31",
+      "docID": "S100O9ZQ",
+      "docDescription": "有価証券報告書－第153期(令和3年4月1日－令和4年3月31日)",
+      "submitDateTime": "2022-06-20 11:31",
+      "summary": {
+        "従業員数": "62774",
+        "平均臨時雇用人員": "4981"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100O9ZQ.json"
+    },
+    {
+      "periodStart": "2022-04-01",
+      "periodEnd": "2022-06-30",
+      "docID": "S100OXXS",
+      "docDescription": "四半期報告書－第154期第1四半期(令和4年4月1日－令和4年6月30日)",
+      "submitDateTime": "2022-08-10 10:19",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100OXXS.json"
+    },
+    {
+      "periodStart": "2022-07-01",
+      "periodEnd": "2022-09-30",
+      "docID": "S100PK5U",
+      "docDescription": "四半期報告書－第154期第2四半期(令和4年7月1日－令和4年9月30日)",
+      "submitDateTime": "2022-11-11 11:11",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100PK5U.json"
+    },
+    {
+      "periodStart": "2022-10-01",
+      "periodEnd": "2022-12-31",
+      "docID": "S100Q6IJ",
+      "docDescription": "四半期報告書－第154期第3四半期(2022/10/01－2022/12/31)",
+      "submitDateTime": "2023-02-13 11:33",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100Q6IJ.json"
+    },
+    {
+      "periodStart": "2022-04-01",
+      "periodEnd": "2023-03-31",
+      "docID": "S100QYNI",
+      "docDescription": "有価証券報告書－第154期(2022/04/01－2023/03/31)",
+      "submitDateTime": "2023-06-20 15:06",
+      "summary": {
+        "従業員数": "64343",
+        "平均臨時雇用人員": "6265"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100QYNI.json"
+    },
+    {
+      "periodStart": "2023-04-01",
+      "periodEnd": "2023-06-30",
+      "docID": "S100RM5E",
+      "docDescription": "四半期報告書－第155期第1四半期(2023/04/01－2023/06/30)",
+      "submitDateTime": "2023-08-10 10:53",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100RM5E.json"
+    },
+    {
+      "periodStart": "2023-07-01",
+      "periodEnd": "2023-09-30",
+      "docID": "S100S6WO",
+      "docDescription": "四半期報告書－第155期第2四半期(2023/07/01－2023/09/30)",
+      "submitDateTime": "2023-11-10 10:35",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100S6WO.json"
+    },
+    {
+      "periodStart": "2023-10-01",
+      "periodEnd": "2023-12-31",
+      "docID": "S100STIS",
+      "docDescription": "四半期報告書－第155期第3四半期(2023/10/01－2023/12/31)",
+      "submitDateTime": "2024-02-13 11:03",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100STIS.json"
+    },
+    {
+      "periodStart": "2023-04-01",
+      "periodEnd": "2024-03-31",
+      "docID": "S100TLVE",
+      "docDescription": "有価証券報告書－第155期(2023/04/01－2024/03/31)",
+      "submitDateTime": "2024-06-18 10:45",
+      "summary": {
+        "従業員数": "65738",
+        "平均臨時雇用人員": "6136"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100TLVE.json"
+    },
+    {
+      "periodStart": "2024-04-01",
+      "periodEnd": "2025-03-31",
+      "docID": "S100VXAI",
+      "docDescription": "有価証券報告書－第156期(2024/04/01－2025/03/31)",
+      "submitDateTime": "2025-06-16 11:08",
+      "summary": {
+        "従業員数": "66697",
+        "平均臨時雇用人員": "5089"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100VXAI.json"
+    },
+    {
+      "periodStart": "2024-04-01",
+      "periodEnd": "2025-03-31",
+      "docID": "S100UQ6U",
+      "docDescription": "半期報告書－第156期(2024/04/01－2025/03/31)",
+      "submitDateTime": "2024-11-13 11:04",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100UQ6U.json"
+    },
+    {
+      "periodStart": "2025-04-01",
+      "periodEnd": "2026-03-31",
+      "docID": "S100X2FP",
+      "docDescription": "半期報告書－第157期(2025/04/01－2026/03/31)",
+      "submitDateTime": "2025-11-13 15:09",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6301/S100X2FP.json"
+    }
+  ]
+}

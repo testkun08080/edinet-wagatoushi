@@ -1,0 +1,299 @@
+{
+  "edinetCode": "E01738",
+  "secCode": "6502",
+  "filerName": "株式会社　東芝",
+  "periods": [
+    {
+      "periodStart": "2015-04-01",
+      "periodEnd": "2016-03-31",
+      "docID": "S1007RVK",
+      "docDescription": "有価証券報告書－第177期(2015/04/01－2016/03/31)",
+      "submitDateTime": "2016-06-22 15:38",
+      "summary": {
+        "従業員数": "187809"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S1007RVK.json"
+    },
+    {
+      "periodStart": "2016-04-01",
+      "periodEnd": "2017-03-31",
+      "docID": "S100B591",
+      "docDescription": "有価証券報告書－第178期(2016/04/01－2017/03/31)",
+      "submitDateTime": "2017-08-10 12:31",
+      "summary": {
+        "従業員数": "153492"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100B591.json"
+    },
+    {
+      "periodStart": "2017-04-01",
+      "periodEnd": "2018-03-31",
+      "docID": "S100DD6J",
+      "docDescription": "有価証券報告書－第179期(平成29年4月1日－平成30年3月31日)",
+      "submitDateTime": "2018-06-27 15:02",
+      "summary": {
+        "従業員数": "141256"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100DD6J.json"
+    },
+    {
+      "periodStart": "2018-10-01",
+      "periodEnd": "2018-12-31",
+      "docID": "S100F6PJ",
+      "docDescription": "四半期報告書－第180期第3四半期(2018/10/01－2018/12/31)",
+      "submitDateTime": "2019-02-13 14:30",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100F6PJ.json"
+    },
+    {
+      "periodStart": "2018-04-01",
+      "periodEnd": "2019-03-31",
+      "docID": "S100G68E",
+      "docDescription": "有価証券報告書－第180期(平成30年4月1日－平成31年3月31日)",
+      "submitDateTime": "2019-06-25 10:20",
+      "summary": {
+        "従業員数": "128697"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100G68E.json"
+    },
+    {
+      "periodStart": "2019-04-01",
+      "periodEnd": "2019-06-30",
+      "docID": "S100GMYW",
+      "docDescription": "四半期報告書－第181期第1四半期(2019/04/01－2019/06/30)",
+      "submitDateTime": "2019-08-07 14:29",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100GMYW.json"
+    },
+    {
+      "periodStart": "2019-07-01",
+      "periodEnd": "2019-09-30",
+      "docID": "S100HE3O",
+      "docDescription": "四半期報告書－第181期第2四半期(2019/07/01－2019/09/30)",
+      "submitDateTime": "2019-11-13 16:17",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100HE3O.json"
+    },
+    {
+      "periodStart": "2019-10-01",
+      "periodEnd": "2019-12-31",
+      "docID": "S100I1UF",
+      "docDescription": "四半期報告書－第181期第3四半期(令和1年10月1日－令和1年12月31日)",
+      "submitDateTime": "2020-02-14 13:17",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100I1UF.json"
+    },
+    {
+      "periodStart": "2019-04-01",
+      "periodEnd": "2020-03-31",
+      "docID": "S100JBJB",
+      "docDescription": "有価証券報告書－第181期(平成31年4月1日－令和2年3月31日)",
+      "submitDateTime": "2020-07-30 10:33",
+      "summary": {
+        "従業員数": "125648"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100JBJB.json"
+    },
+    {
+      "periodStart": "2020-04-01",
+      "periodEnd": "2020-06-30",
+      "docID": "S100JI0L",
+      "docDescription": "四半期報告書－第182期第1四半期(令和2年4月1日－令和2年6月30日)",
+      "submitDateTime": "2020-08-12 16:13",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100JI0L.json"
+    },
+    {
+      "periodStart": "2020-07-01",
+      "periodEnd": "2020-09-30",
+      "docID": "S100K3VW",
+      "docDescription": "四半期報告書－第182期第2四半期(令和2年7月1日－令和2年9月30日)",
+      "submitDateTime": "2020-11-11 15:52",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100K3VW.json"
+    },
+    {
+      "periodStart": "2020-10-01",
+      "periodEnd": "2020-12-31",
+      "docID": "S100KSTH",
+      "docDescription": "四半期報告書－第182期第3四半期(令和2年10月1日－令和2年12月31日)",
+      "submitDateTime": "2021-02-12 14:50",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100KSTH.json"
+    },
+    {
+      "periodStart": "2020-04-01",
+      "periodEnd": "2021-03-31",
+      "docID": "S100LOQ2",
+      "docDescription": "有価証券報告書－第182期(令和2年4月1日－令和3年3月31日)",
+      "submitDateTime": "2021-06-24 15:26",
+      "summary": {
+        "従業員数": "117300"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100LOQ2.json"
+    },
+    {
+      "periodStart": "2021-04-01",
+      "periodEnd": "2021-06-30",
+      "docID": "S100M97K",
+      "docDescription": "四半期報告書－第183期第1四半期(令和3年4月1日－令和3年6月30日)",
+      "submitDateTime": "2021-08-12 16:20",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100M97K.json"
+    },
+    {
+      "periodStart": "2021-07-01",
+      "periodEnd": "2021-09-30",
+      "docID": "S100MVMD",
+      "docDescription": "四半期報告書－第183期第2四半期(令和3年7月1日－令和3年9月30日)",
+      "submitDateTime": "2021-11-12 17:00",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100MVMD.json"
+    },
+    {
+      "periodStart": "2021-10-01",
+      "periodEnd": "2021-12-31",
+      "docID": "S100NIF3",
+      "docDescription": "四半期報告書－第183期第3四半期(令和3年10月1日－令和3年12月31日)",
+      "submitDateTime": "2022-02-14 16:31",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100NIF3.json"
+    },
+    {
+      "periodStart": "2021-04-01",
+      "periodEnd": "2022-03-31",
+      "docID": "S100OHZX",
+      "docDescription": "有価証券報告書－第183期(令和3年4月1日－令和4年3月31日)",
+      "submitDateTime": "2022-06-27 16:19",
+      "summary": {
+        "従業員数": "116224"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100OHZX.json"
+    },
+    {
+      "periodStart": "2022-04-01",
+      "periodEnd": "2022-06-30",
+      "docID": "S100OVDD",
+      "docDescription": "四半期報告書－第184期第1四半期(令和4年4月1日－令和4年6月30日)",
+      "submitDateTime": "2022-08-10 16:35",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100OVDD.json"
+    },
+    {
+      "periodStart": "2022-07-01",
+      "periodEnd": "2022-09-30",
+      "docID": "S100PKLZ",
+      "docDescription": "四半期報告書－第184期第2四半期(令和4年7月1日－令和4年9月30日)",
+      "submitDateTime": "2022-11-11 15:43",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100PKLZ.json"
+    },
+    {
+      "periodStart": "2022-10-01",
+      "periodEnd": "2022-12-31",
+      "docID": "S100Q8JT",
+      "docDescription": "四半期報告書－第184期第3四半期(2022/10/01－2022/12/31)",
+      "submitDateTime": "2023-02-14 16:56",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100Q8JT.json"
+    },
+    {
+      "periodStart": "2022-04-01",
+      "periodEnd": "2023-03-31",
+      "docID": "S100R88O",
+      "docDescription": "有価証券報告書－第184期(2022/04/01－2023/03/31)",
+      "submitDateTime": "2023-06-28 15:52",
+      "summary": {
+        "従業員数": "106648"
+      },
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100R88O.json"
+    },
+    {
+      "periodStart": "2023-04-01",
+      "periodEnd": "2023-06-30",
+      "docID": "S100RKE0",
+      "docDescription": "四半期報告書－第185期第1四半期(2023/04/01－2023/06/30)",
+      "submitDateTime": "2023-08-07 16:15",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100RKE0.json"
+    },
+    {
+      "periodStart": "2023-07-01",
+      "periodEnd": "2023-09-30",
+      "docID": "S100S6RT",
+      "docDescription": "四半期報告書－第185期第2四半期(2023/07/01－2023/09/30)",
+      "submitDateTime": "2023-11-14 16:16",
+      "summary": {},
+      "pl": {},
+      "bs": {},
+      "cf": {},
+      "rawTsvPath": "raw_tsv/6502/S100S6RT.json"
+    }
+  ]
+}

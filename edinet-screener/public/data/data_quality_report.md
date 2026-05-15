@@ -1,84 +1,84 @@
 # Data quality report
 
-- totalCompanies: 263
+- totalCompanies: 3920
 - totalColumns: 50
 
 ## Missing by column
 
 | key | filled | missing | missingRate |
 |---|---:|---:|---:|
-| payoutRatio | 0 | 263 | 100.0% |
-| payoutRatioComputed | 0 | 263 | 100.0% |
-| dividendPerShare | 0 | 263 | 100.0% |
-| sharesOutstanding | 0 | 263 | 100.0% |
-| PBR | 0 | 263 | 100.0% |
-| dividendYield | 0 | 263 | 100.0% |
-| marketCap | 0 | 263 | 100.0% |
-| netCashRatio | 0 | 263 | 100.0% |
-| dividendGrowthYoY | 0 | 263 | 100.0% |
-| dilutedEPS | 26 | 237 | 90.1% |
-| investmentSecurities | 197 | 66 | 25.1% |
-| epsGrowthYoY | 242 | 21 | 8.0% |
-| salesCagr5y | 245 | 18 | 6.8% |
-| recurringProfit | 246 | 17 | 6.5% |
-| equityRatio | 247 | 16 | 6.1% |
-| EPS | 247 | 16 | 6.1% |
-| netAssets | 247 | 16 | 6.1% |
-| totalAssets | 247 | 16 | 6.1% |
-| comprehensiveIncome | 247 | 16 | 6.1% |
-| roeCalculated | 247 | 16 | 6.1% |
-| roa | 247 | 16 | 6.1% |
-| equityRatioCalculated | 247 | 16 | 6.1% |
-| deRatio | 247 | 16 | 6.1% |
-| salesCagr3y | 248 | 15 | 5.7% |
-| salesGrowthYoY | 252 | 11 | 4.2% |
-| opGrowthYoY | 254 | 9 | 3.4% |
-| piotroskiFScore | 256 | 7 | 2.7% |
-| BPS | 258 | 5 | 1.9% |
-| ROE | 258 | 5 | 1.9% |
-| PER | 258 | 5 | 1.9% |
-| sales | 260 | 3 | 1.1% |
-| operatingProfit | 261 | 2 | 0.8% |
-| roic | 261 | 2 | 0.8% |
-| operatingCF | 262 | 1 | 0.4% |
-| investingCF | 262 | 1 | 0.4% |
-| fcf | 262 | 1 | 0.4% |
-| financingCF | 262 | 1 | 0.4% |
-| cashBalance | 262 | 1 | 0.4% |
-| edinetCode | 263 | 0 | 0.0% |
-| secCode | 263 | 0 | 0.0% |
-| filerName | 263 | 0 | 0.0% |
-| calcDate | 263 | 0 | 0.0% |
-| fiscalMonth | 263 | 0 | 0.0% |
-| netIncome | 263 | 0 | 0.0% |
-| currentAssets | 263 | 0 | 0.0% |
-| currentLiabilities | 263 | 0 | 0.0% |
-| liabilities | 263 | 0 | 0.0% |
-| netCash | 263 | 0 | 0.0% |
-| consecutiveDivIncreases | 263 | 0 | 0.0% |
-| currentRatio | 263 | 0 | 0.0% |
+| payoutRatio | 0 | 3920 | 100.0% |
+| payoutRatioComputed | 0 | 3920 | 100.0% |
+| dividendPerShare | 0 | 3920 | 100.0% |
+| sharesOutstanding | 0 | 3920 | 100.0% |
+| PBR | 0 | 3920 | 100.0% |
+| dividendYield | 0 | 3920 | 100.0% |
+| marketCap | 0 | 3920 | 100.0% |
+| netCashRatio | 0 | 3920 | 100.0% |
+| dividendGrowthYoY | 0 | 3920 | 100.0% |
+| dilutedEPS | 897 | 3023 | 77.1% |
+| investmentSecurities | 2377 | 1543 | 39.4% |
+| salesCagr5y | 2914 | 1006 | 25.7% |
+| salesCagr3y | 3187 | 733 | 18.7% |
+| epsGrowthYoY | 3490 | 430 | 11.0% |
+| salesGrowthYoY | 3491 | 429 | 10.9% |
+| recurringProfit | 3581 | 339 | 8.6% |
+| EPS | 3583 | 337 | 8.6% |
+| equityRatio | 3584 | 336 | 8.6% |
+| roeCalculated | 3584 | 336 | 8.6% |
+| roa | 3584 | 336 | 8.6% |
+| deRatio | 3584 | 336 | 8.6% |
+| netAssets | 3585 | 335 | 8.5% |
+| totalAssets | 3585 | 335 | 8.5% |
+| comprehensiveIncome | 3585 | 335 | 8.5% |
+| equityRatioCalculated | 3585 | 335 | 8.5% |
+| opGrowthYoY | 3603 | 317 | 8.1% |
+| sales | 3656 | 264 | 6.7% |
+| PER | 3704 | 216 | 5.5% |
+| financingCF | 3708 | 212 | 5.4% |
+| investingCF | 3721 | 199 | 5.1% |
+| fcf | 3721 | 199 | 5.1% |
+| operatingCF | 3726 | 194 | 4.9% |
+| cashBalance | 3726 | 194 | 4.9% |
+| ROE | 3744 | 176 | 4.5% |
+| piotroskiFScore | 3747 | 173 | 4.4% |
+| roic | 3766 | 154 | 3.9% |
+| operatingProfit | 3777 | 143 | 3.6% |
+| netCash | 3790 | 130 | 3.3% |
+| currentAssets | 3791 | 129 | 3.3% |
+| currentLiabilities | 3791 | 129 | 3.3% |
+| currentRatio | 3791 | 129 | 3.3% |
+| BPS | 3799 | 121 | 3.1% |
+| liabilities | 3910 | 10 | 0.3% |
+| netIncome | 3912 | 8 | 0.2% |
+| edinetCode | 3920 | 0 | 0.0% |
+| secCode | 3920 | 0 | 0.0% |
+| filerName | 3920 | 0 | 0.0% |
+| calcDate | 3920 | 0 | 0.0% |
+| fiscalMonth | 3920 | 0 | 0.0% |
+| consecutiveDivIncreases | 3920 | 0 | 0.0% |
 
 ## Missing-heavy companies (top 20)
 
 | secCode | filerName | missingCount |
 |---|---|---:|
-| 1375 | 株式会社雪国まいたけ | 28 |
-| 2282 | 日本ハム株式会社 | 28 |
-| 2914 | 日本たばこ産業株式会社 | 25 |
-| 5713 | 住友金属鉱山株式会社 | 25 |
-| 2501 | サッポロホールディングス株式会社 | 22 |
-| 2502 | アサヒグループホールディングス株式会社 | 22 |
-| 2503 | キリンホールディングス株式会社 | 22 |
-| 2579 | コカ・コーラボトラーズジャパンホールディングス株式会社 | 22 |
-| 2802 | 味の素株式会社 | 22 |
-| 2811 | カゴメ株式会社 | 22 |
-| 2897 | 日清食品ホールディングス株式会社 | 22 |
-| 2928 | ＲＩＺＡＰグループ株式会社 | 22 |
-| 3116 | トヨタ紡織株式会社 | 22 |
-| 1605 | 株式会社ＩＮＰＥＸ | 21 |
-| 2607 | 不二製油グループ本社株式会社 | 21 |
-| 2801 | キッコーマン株式会社 | 21 |
-| 3496 | 株式会社アズーム | 19 |
-| 4320 | 株式会社ＣＥホールディングス | 19 |
-| 1764 | 工藤建設株式会社 | 17 |
-| 1739 | 株式会社メルディアＤＣ | 16 |
+| 4901 | 富士フイルムホールディングス株式会社 | 43 |
+| 6301 | 株式会社小松製作所 | 43 |
+| 6502 | 株式会社　東芝 | 43 |
+| 6645 | オムロン株式会社 | 43 |
+| 7751 | キヤノン株式会社 | 43 |
+| 8591 | オリックス株式会社 | 43 |
+| 8604 | 野村ホールディングス株式会社 | 43 |
+| 7157 | ライフネット生命保険株式会社 | 36 |
+| 8251 | 株式会社パルコ | 36 |
+| 8508 | Ｊトラスト株式会社 | 33 |
+| 7198 | アルヒ株式会社 | 32 |
+| 8586 | 日立キャピタル株式会社 | 31 |
+| 254A | ＡＩフュージョンキャピタルグループ株式会社 | 30 |
+| 285A | キオクシアホールディングス株式会社 | 30 |
+| 287A | 黒田グループ株式会社 | 30 |
+| 339A | プログレス・テクノロジーズ　グループ株式会社 | 30 |
+| 367A | プリモグローバルホールディングス株式会社 | 30 |
+| 407A | 株式会社ＵＮＩＣＯＮホールディングス | 30 |
+| 414A | 株式会社オーバーラップホールディングス | 30 |
+| 428A | サイプレス・ホールディングス株式会社 | 30 |

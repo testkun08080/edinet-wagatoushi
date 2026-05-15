@@ -24,13 +24,13 @@
       "id": "calcDate",
       "label": "計算日",
       "category": "basic",
-      "metricsKey": "計算日"
+      "metricsKey": "calcDate"
     },
     {
       "id": "fiscalMonth",
       "label": "決算月",
       "category": "basic",
-      "metricsKey": "決算月"
+      "metricsKey": "fiscalMonth"
     },
     {
       "id": "PBR",
@@ -50,7 +50,7 @@
       "id": "payoutRatio",
       "label": "配当性向（%）",
       "category": "valuation",
-      "metricsKey": "配当性向"
+      "metricsKey": "payoutRatio"
     },
     {
       "id": "payoutRatioComputed",
@@ -63,28 +63,28 @@
       "id": "dividendYield",
       "label": "配当利回り（%）",
       "category": "valuation",
-      "metricsKey": "配当利回り",
+      "metricsKey": "dividendYield",
       "computed": true
     },
     {
       "id": "marketCap",
       "label": "時価総額（百万円）",
       "category": "valuation",
-      "metricsKey": "時価総額",
+      "metricsKey": "marketCap",
       "computed": true
     },
     {
       "id": "netCash",
       "label": "ネットキャッシュ（百万円）",
       "category": "valuation",
-      "metricsKey": "ネットキャッシュ",
+      "metricsKey": "netCash",
       "computed": true
     },
     {
       "id": "netCashRatio",
       "label": "ネットキャッシュ比率（%）",
       "category": "valuation",
-      "metricsKey": "ネットキャッシュ比率",
+      "metricsKey": "netCashRatio",
       "computed": true
     },
     {
@@ -123,7 +123,7 @@
       "id": "equityRatio",
       "label": "自己資本比率（%）",
       "category": "valuation",
-      "metricsKey": "自己資本比率"
+      "metricsKey": "equityRatio"
     },
     {
       "id": "equityRatioCalculated",
@@ -148,109 +148,109 @@
       "id": "sharesOutstanding",
       "label": "発行済株式総数（株）",
       "category": "valuation",
-      "metricsKey": "発行済株式総数"
+      "metricsKey": "sharesOutstanding"
     },
     {
       "id": "sales",
       "label": "売上高（百万円）",
       "category": "performance",
-      "metricsKey": "売上高"
+      "metricsKey": "sales"
     },
     {
       "id": "operatingProfit",
       "label": "営業利益（百万円）",
       "category": "performance",
-      "metricsKey": "営業利益"
+      "metricsKey": "operatingProfit"
     },
     {
       "id": "recurringProfit",
       "label": "経常利益（百万円）",
       "category": "performance",
-      "metricsKey": "経常利益"
+      "metricsKey": "recurringProfit"
     },
     {
       "id": "operatingProfitRatio",
       "label": "営業利益率（%）",
       "category": "performance",
       "computedFrom": [
-        "売上高",
-        "営業利益"
+        "sales",
+        "operatingProfit"
       ]
     },
     {
       "id": "netIncome",
       "label": "当期純利益（百万円）",
       "category": "performance",
-      "metricsKey": "当期純利益"
+      "metricsKey": "netIncome"
     },
     {
       "id": "netProfitRatio",
       "label": "純利益率（%）",
       "category": "performance",
       "computedFrom": [
-        "売上高",
-        "当期純利益"
+        "sales",
+        "netIncome"
       ]
     },
     {
       "id": "comprehensiveIncome",
       "label": "包括利益（百万円）",
       "category": "performance",
-      "metricsKey": "包括利益"
+      "metricsKey": "comprehensiveIncome"
     },
     {
       "id": "liabilities",
       "label": "負債（百万円）",
       "category": "balancesheet",
-      "metricsKey": "負債"
+      "metricsKey": "liabilities"
     },
     {
       "id": "currentLiabilities",
       "label": "流動負債（百万円）",
       "category": "balancesheet",
-      "metricsKey": "流動負債"
+      "metricsKey": "currentLiabilities"
     },
     {
       "id": "currentAssets",
       "label": "流動資産（百万円）",
       "category": "balancesheet",
-      "metricsKey": "流動資産"
+      "metricsKey": "currentAssets"
     },
     {
       "id": "netAssets",
       "label": "純資産額（百万円）",
       "category": "balancesheet",
-      "metricsKey": "純資産額"
+      "metricsKey": "netAssets"
     },
     {
       "id": "totalAssets",
       "label": "総資産額（百万円）",
       "category": "balancesheet",
-      "metricsKey": "総資産額"
+      "metricsKey": "totalAssets"
     },
     {
       "id": "investmentSecurities",
       "label": "投資有価証券（百万円）",
       "category": "balancesheet",
-      "metricsKey": "投資有価証券"
+      "metricsKey": "investmentSecurities"
     },
     {
       "id": "cashBalance",
       "label": "現金及び現金同等物（百万円）",
       "category": "cash",
-      "metricsKey": "現金残高"
+      "metricsKey": "cashBalance"
     },
     {
       "id": "operatingCF",
       "label": "営業CF（百万円）",
       "category": "cash",
-      "metricsKey": "営業CF"
+      "metricsKey": "operatingCF"
     },
     {
       "id": "investingCF",
       "label": "投資CF（百万円）",
       "category": "cash",
-      "metricsKey": "投資CF"
+      "metricsKey": "investingCF"
     },
     {
       "id": "fcf",
@@ -263,7 +263,7 @@
       "id": "financingCF",
       "label": "財務CF（百万円）",
       "category": "cash",
-      "metricsKey": "財務CF"
+      "metricsKey": "financingCF"
     },
     {
       "id": "salesGrowthYoY",
