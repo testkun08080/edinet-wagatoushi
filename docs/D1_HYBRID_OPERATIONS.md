@@ -87,12 +87,30 @@ uv run python scripts/pipeline/build_public_data_from_db.py \
   --output ../edinet-screener/public/data
 ```
 
+### ローカル: リモート D1 エクスポート + コーパス DB をマージ
+
+Cloudflare から復元した `d1_from_remote.db` を **ベース**、data-set / パイプラインの `edinet_pipeline_full_merged.db` を **オーバーレイ**（同一主キーはオーバーレイ＝コーパス優先）として結合し、その後 JSON を生成する。
+
+```bash
+cd edinet-wrapper
+uv run python scripts/pipeline/merge_two_pipeline_dbs.py \
+  --dst state/d1_remote_corpus_merged.db \
+  --base_db state/d1_from_remote.db \
+  --overlay_db state/edinet_pipeline_full_merged.db \
+  --reset
+uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/d1_remote_corpus_merged.db
+uv run python scripts/pipeline/build_public_data_from_db.py \
+  --db_path state/d1_remote_corpus_merged.db \
+  --output ../edinet-screener/public/data
+```
+
 ## Cloudflare 日次反映
 
 - D1 スキーマ適用（初回・変更時）
   - `cd edinet-screener && npm run d1:apply-schema:staging`
   - `cd edinet-screener && npm run d1:apply-schema:production`
-- `.github/workflows/daily-refresh.yml` を `data_source=d1` で実行
+- `.github/workflows/daily-refresh.yml` を `data_source=d1` で実行（手動バックフィルは `workflow_dispatch` の **`target_date`**（空欄＝昨日 JST）を利用）
+- 本番反映の前に staging で同じ日付をローカル検証する手順: [DAILY_REFRESH_LOCAL_DEBUG.md](./DAILY_REFRESH_LOCAL_DEBUG.md) の「5.1 GHA（production）実行前のチェック」
 - Workflow は remote D1 を export してローカルSQLiteへ復元し、日次差分を取り込み、差分SQLを D1 にUPSERTする
 - D1全体から `public/data` を生成し、品質ゲート通過後に commit/push する
 - 成果物 commit/push 後、Cloudflare Git integration で自動配信
