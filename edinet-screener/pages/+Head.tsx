@@ -1,10 +1,11 @@
 // https://vike.dev/Head
 
 import logoUrl from "../assets/logo.svg";
+import { SITE_NAME } from "../lib/brand";
 
 export function Head() {
-  const siteTitle = "EDINET財務スクリーナー";
-  const siteDescription = "EDINETから取得した有価証券報告書等を解析・可視化。10年分の財務データを検索・分析できるWebスクリーナー。個人投資家向けの無料ツール。";
+  const siteTitle = SITE_NAME;
+  const siteDescription = `${SITE_NAME}は、EDINETから取得した有価証券報告書等を解析・可視化。10年分の財務データを検索・分析できるWebスクリーナー。個人投資家向けの無料ツール。`;
   const siteUrl = import.meta.env.PUBLIC_ENV__SITE_URL ?? "";
 
   return (
@@ -15,7 +16,7 @@ export function Head() {
         content="width=device-width, initial-scale=1, viewport-fit=cover"
       />
       <meta name="description" content={siteDescription} />
-      <meta name="keywords" content="EDINET,有価証券報告書,財務データ,スクリーナー,投資,株式分析" />
+      <meta name="keywords" content="エディスク,EDINET,有価証券報告書,財務データ,スクリーナー,投資,株式分析" />
       <meta name="author" content="edinet-wagatoushi" />
       <meta name="robots" content="index, follow" />
 

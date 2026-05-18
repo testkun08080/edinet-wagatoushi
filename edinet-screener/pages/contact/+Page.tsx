@@ -7,6 +7,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Textarea } from "../../components/ui/textarea";
 import { Alert, AlertDescription } from "../../components/ui/alert";
+import { SITE_NAME } from "../../lib/brand";
 
 const CONTACT_EMAIL =
   (typeof import.meta.env.PUBLIC_ENV__CONTACT_EMAIL === "string" && import.meta.env.PUBLIC_ENV__CONTACT_EMAIL) || "";
@@ -23,7 +24,7 @@ export default function Page() {
     }
     const lines = [`お名前: ${name || "（未入力）"}`, "", body].join("\n");
     const q = new URLSearchParams({
-      subject: subject || "【エディー】お問い合わせ",
+      subject: subject || `【${SITE_NAME}】お問い合わせ`,
       body: lines,
     });
     window.location.href = `mailto:${CONTACT_EMAIL}?${q.toString()}`;
@@ -73,7 +74,7 @@ export default function Page() {
                 id="contact-subject"
                 value={subject}
                 onChange={(ev) => setSubject(ev.target.value)}
-                placeholder="【エディー】お問い合わせ"
+                placeholder={`【${SITE_NAME}】お問い合わせ`}
                 disabled={!CONTACT_EMAIL}
               />
             </div>

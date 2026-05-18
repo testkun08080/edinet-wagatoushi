@@ -2,6 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Resvg } from "@resvg/resvg-js";
+import { SITE_NAME, SITE_TAGLINE } from "../lib/brand";
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -41,8 +42,9 @@ const svg = `
   <rect x="930" y="56" width="210" height="52" rx="26" fill="#0EA5E9" fill-opacity="0.22" />
   <text x="1035" y="89" text-anchor="middle" font-size="24" fill="#E0F2FE" font-family="sans-serif">無料Webツール</text>
 
-  <text x="88" y="275" font-size="84" font-weight="700" fill="#F8FAFC" font-family="sans-serif">EDINET財務スクリーナー</text>
-  <text x="88" y="348" font-size="42" fill="#BFDBFE" font-family="sans-serif">有価証券報告書を10年分、検索・分析</text>
+  <text x="88" y="275" font-size="84" font-weight="700" fill="#F8FAFC" font-family="sans-serif">${SITE_NAME}</text>
+  <text x="88" y="348" font-size="36" fill="#BFDBFE" font-family="sans-serif">${SITE_TAGLINE}</text>
+  <text x="88" y="410" font-size="42" fill="#BFDBFE" font-family="sans-serif">有価証券報告書を10年分、検索・分析</text>
 
   <text x="88" y="562" font-size="28" fill="#93C5FD" font-family="sans-serif">edinet-wagatoushi</text>
 </svg>

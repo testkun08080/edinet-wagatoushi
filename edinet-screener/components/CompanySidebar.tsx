@@ -5,7 +5,8 @@ import { usePageContext } from "vike-react/usePageContext";
 import { useFilters } from "./FilterContext.js";
 import { useFavorites } from "./FavoritesContext.js";
 import { useRecentCompanies } from "./RecentCompaniesContext.js";
-import logoUrl from "../assets/logo.svg";
+import logoUrl from "../assets/logo.png";
+import { SITE_NAME, SITE_TAGLINE } from "../lib/brand";
 import {
   Sidebar,
   SidebarContent,
@@ -75,14 +76,16 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton size="lg" asChild tooltip={SITE_NAME}>
               <a href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <img src={logoUrl} height={20} width={20} alt="" className="shrink-0" />
-                </div>
+                <img
+                  src={logoUrl}
+                  alt=""
+                  className="size-8 shrink-0 rounded-lg object-contain"
+                />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-bold">エディー</span>
-                  <span className="truncate text-xs text-muted-foreground">EDINET スクリーナー</span>
+                  <span className="truncate font-bold">{SITE_NAME}</span>
+                  <span className="truncate text-xs text-muted-foreground">{SITE_TAGLINE}</span>
                 </div>
               </a>
             </SidebarMenuButton>

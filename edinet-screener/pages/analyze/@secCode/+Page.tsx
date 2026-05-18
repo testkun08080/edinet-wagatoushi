@@ -24,6 +24,7 @@ import {
   Users,
   CalendarRange,
 } from "lucide-react";
+import { SITE_NAME } from "../../../lib/brand";
 import { MajorShareholdersTimeSeries } from "../../../components/MajorShareholdersTimeSeries.js";
 import { SummaryCharts } from "../../../components/SummaryCharts.js";
 import { ToggleGroup, ToggleGroupItem } from "../../../components/ui/toggle-group";
@@ -300,7 +301,7 @@ export default function Page() {
   const config = useConfig();
   // data() 内では useConfig が使えない（getPageContext が無いと React フックに落ちる）。ページコンポーネントで設定する。
   config({
-    title: company?.filerName ? `${company.filerName} - 企業分析 | エディー` : "企業分析 - エディー",
+    title: company?.filerName ? `${company.filerName} - 企業分析 | ${SITE_NAME}` : `企業分析 - ${SITE_NAME}`,
   });
   const { addRecent } = useRecentCompanies();
   const { isFavorite, toggleFavorite } = useFavorites();

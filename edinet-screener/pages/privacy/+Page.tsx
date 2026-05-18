@@ -1,6 +1,7 @@
 import { DataAttributionBlock } from "../../components/DataAttributionBlock";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
+import { SITE_NAME } from "../../lib/brand";
 
 export default function Page() {
   return (
@@ -8,7 +9,7 @@ export default function Page() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">プライバシーポリシー</h1>
         <p className="text-muted-foreground mt-2 text-sm">
-          本ポリシーは、本サービス（エディー / EDINET スクリーナー）における個人情報・端末情報の取り扱い、および EDINET
+          本ポリシーは、本サービス（{SITE_NAME}）における個人情報・端末情報の取り扱い、および EDINET
           等の開示データを利用する際の留意点を説明します。法令改正やサービス内容の変更に応じて改定される場合があります。
         </p>
       </div>
