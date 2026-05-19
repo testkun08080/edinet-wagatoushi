@@ -52,9 +52,13 @@ class Parser:
 
     @staticmethod
     def filter_by_consolidation(df) -> pl.DataFrame:
-        """Filter elements by consolidation"""
-        filtered_df = df.filter(~pl.col("連結・個別").str.contains("個別"))
-        return filtered_df.filter(~pl.col("コンテキストID").str.contains("NonConsolidatedMember$"))
+        """個別決算行を除外（連結／単体コンテキストはどちらも残す）。"""
+        return df.filter(~pl.col("連結・個別").str.contains("個別"))
+
+    @staticmethod
+    def drop_nonconsolidated_context(df) -> pl.DataFrame:
+        """単体コンテキスト（NonConsolidatedMember）の行を除外。"""
+        return df.filter(~pl.col("コンテキストID").str.contains("NonConsolidatedMember$"))
 
     @staticmethod
     def unique_element_list(df) -> pl.DataFrame:
@@ -68,15 +72,19 @@ class Parser:
         # Iterate through the years
         for year in years:
             filtered_df = self.filter_by_year(df, year)
-            if filtered_df.height == 1:
+            # 連結コンテキストを優先。連結が無い項目（配当・発行済株式総数・
+            # 配当性向など、会社単位でしか開示されない指標）は単体へフォールバック。
+            consolidated_df = self.drop_nonconsolidated_context(filtered_df)
+            year_df = consolidated_df if consolidated_df.height >= 1 else filtered_df
+            if year_df.height == 1:
                 if contain_year:
                     # If contain_year is True, use year as the key
                     if value not in results:
                         results[value] = {}
-                    results[value][year] = filtered_df["値"][0]
+                    results[value][year] = year_df["値"][0]
                 else:
                     # If contain_year is False, just store the value
-                    results[value] = filtered_df["値"][0]
+                    results[value] = year_df["値"][0]
 
         # Remove the value entry from the results if no data was found
         if value in results and not results[value]:
