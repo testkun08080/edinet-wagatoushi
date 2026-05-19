@@ -111,6 +111,14 @@ def _compute_equity_ratio_calculated(net_assets: str | None, total_assets: str |
     return _format_ratio_decimal(na / ta)
 
 
+def _compute_margin(profit: str | None, sales: str | None) -> str | None:
+    p = _parse_number(profit)
+    sa = _parse_number(sales)
+    if p is None or sa is None or sa == 0:
+        return None
+    return _format_ratio_decimal(p / sa)
+
+
 def _compute_fcf(ocf: str | None, icf: str | None) -> str | None:
     o = _parse_number(ocf)
     i = _parse_number(icf)
@@ -370,6 +378,7 @@ _EDINET_VALUATION_FALLBACK_KEYS = (
     "配当性向",
     "１株当たり配当額",
     "１株当たり中間配当額",
+    "発行済株式総数（普通株式）",
 )
 
 
@@ -460,15 +469,42 @@ def collect_tsv_paths(data_set_root: Path, edinet_code: str) -> list[tuple[Path,
     return pairs
 
 
+def build_tsv_path_cache(data_set_root: Path) -> dict[str, list[tuple[Path, Path]]]:
+    """data-set 全体を1回だけ走査し、{edinet_code: [(tsv, json), ...]} のキャッシュを返す。
+    collect_tsv_paths の社ごと rglob を排除するためのもの。"""
+    pattern = re.compile(r"[/\\](E\d{5})[/\\]")
+    cache: dict[str, list[tuple[Path, Path]]] = {}
+    for tsv_path in data_set_root.rglob("*.tsv"):
+        m = pattern.search(str(tsv_path))
+        if not m:
+            continue
+        json_path = tsv_path.with_suffix(".json")
+        if not json_path.exists():
+            continue
+        code = m.group(1)
+        cache.setdefault(code, []).append((tsv_path, json_path))
+
+    def load_period(p: tuple[Path, Path]) -> str:
+        with open(p[1], encoding="utf-8") as f:
+            meta = json.load(f)
+        return meta.get("periodEnd", "")
+
+    for pairs in cache.values():
+        pairs.sort(key=load_period)
+    return cache
+
+
 def process_company(
     data_set_root: Path,
     edinet_code: str,
     *,
     raw_tsv_root: Path | None = None,
     include_raw_tsv: bool = True,
+    prebuilt_pairs: list[tuple[Path, Path]] | None = None,
 ) -> tuple[dict, dict] | None:
-    """1企業分を処理。成功時は (company_entry, summary_data) を返す。"""
-    pairs = collect_tsv_paths(data_set_root, edinet_code)
+    """1企業分を処理。成功時は (company_entry, summary_data) を返す。
+    prebuilt_pairs が指定された場合は rglob を省略してそのまま使う。"""
+    pairs = prebuilt_pairs if prebuilt_pairs is not None else collect_tsv_paths(data_set_root, edinet_code)
     if not pairs:
         return None
 
@@ -542,6 +578,22 @@ def process_company(
         "periods": periods,
     }
     return company_entry, summary_data
+
+
+def _process_company_worker(
+    args: tuple,
+) -> tuple[str, tuple[dict, dict] | None]:
+    """multiprocessing.Pool.map 用のトップレベルワーカー。
+    args = (data_set, edinet_code, raw_tsv_root, include_raw_tsv, prebuilt_pairs)"""
+    data_set, edinet_code, raw_tsv_root, include_raw_tsv, prebuilt_pairs = args
+    result = process_company(
+        data_set,
+        edinet_code,
+        raw_tsv_root=raw_tsv_root,
+        include_raw_tsv=include_raw_tsv,
+        prebuilt_pairs=prebuilt_pairs,
+    )
+    return edinet_code, result
 
 
 def summary_to_metrics_row(summary_data: dict) -> dict:
@@ -633,6 +685,8 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
             return None
         return _format_ratio_decimal(v)
 
+    sales_line = _pick_sales_line(s, pl)
+    operating_profit = pl.get("営業利益")
     return {
         "edinetCode": edinet_code,
         "secCode": sec_code,
@@ -642,7 +696,9 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
         "equityRatio": s.get("自己資本比率"),
         "EPS": eps_raw,
         "dilutedEPS": diluted_eps,
-        "sales": _pick_sales_line(s, pl),
+        "sales": sales_line,
+        "operatingProfitRatio": _compute_margin(operating_profit, sales_line),
+        "netProfitRatio": _compute_margin(net_income, sales_line),
         "recurringProfit": s.get("経常利益"),
         "netIncome": net_income,
         "netAssets": s.get("純資産額"),
@@ -653,7 +709,7 @@ def summary_to_metrics_row(summary_data: dict) -> dict:
         "roeCalculated": _compute_roe_calculated(net_income, s.get("純資産額")),
         "roa": _compute_roa(net_income, s.get("総資産額")),
         "equityRatioCalculated": _compute_equity_ratio_calculated(s.get("純資産額"), s.get("総資産額")),
-        "operatingProfit": pl.get("営業利益"),
+        "operatingProfit": operating_profit,
         "operatingCF": ocf,
         "investingCF": icf,
         "fcf": _compute_fcf(ocf, icf),
@@ -913,6 +969,7 @@ def run_sample(
     include_raw_tsv: bool = True,
     report: bool = True,
     strict: bool = False,
+    prebuilt_cache: dict[str, list[tuple[Path, Path]]] | None = None,
 ) -> None:
     companies_list: list[dict] = []
     metrics_list: list[dict] = []
@@ -925,13 +982,35 @@ def run_sample(
     if include_raw_tsv:
         raw_tsv_root.mkdir(exist_ok=True)
 
-    for edinet_code in edinet_codes:
-        result = process_company(
-            data_set,
-            edinet_code,
-            raw_tsv_root=raw_tsv_root,
-            include_raw_tsv=include_raw_tsv,
-        )
+    # data-set を1回だけ走査してTSVパスキャッシュを構築（社ごとのrglob排除）
+    n_codes = len(edinet_codes)
+    if prebuilt_cache is not None:
+        tsv_cache: dict | None = prebuilt_cache
+    elif n_codes > 10:
+        print(f"TSVパスキャッシュを構築中 ({n_codes} 社対象)...", flush=True)
+        tsv_cache = build_tsv_path_cache(data_set)
+        print(f"キャッシュ完了: {len(tsv_cache)} 社分のTSVを検出", flush=True)
+    else:
+        tsv_cache = None  # 少数社の場合は従来どおり
+
+    import multiprocessing as _mp
+    n_workers = min(_mp.cpu_count(), 8)
+
+    # 並列処理（少数社は逐次、多数社はPool）
+    # _process_company_worker はモジュールレベル関数（spawn pickle対応）
+    worker_args = [
+        (data_set, code, raw_tsv_root, include_raw_tsv,
+         tsv_cache.get(code) if tsv_cache is not None else None)
+        for code in edinet_codes
+    ]
+    if n_codes > 10 and n_workers > 1:
+        print(f"並列処理開始 ({n_workers} プロセス)...", flush=True)
+        with _mp.Pool(processes=n_workers) as pool:
+            all_results = pool.map(_process_company_worker, worker_args)
+    else:
+        all_results = [_process_company_worker(a) for a in worker_args]
+
+    for edinet_code, result in all_results:
         if result is None:
             print(f"⚠ {edinet_code} - データなし、スキップ")
             continue
@@ -978,14 +1057,18 @@ def run_sample(
         print(f"  分析ページ例: http://localhost:3000/analyze/{companies_list[0]['secCode']}")
 
 
-def run_full(data_set: Path, output_dir: Path) -> None:
-    codes = discover_edinet_codes(data_set)
+def run_full(data_set: Path, output_dir: Path, include_raw_tsv: bool = True) -> None:
+    # build_tsv_path_cache で rglob を1回に統合（discover_edinet_codes の2重走査を排除）
+    print("TSVパスキャッシュを構築中（data-set 全体を1回走査）...", flush=True)
+    tsv_cache = build_tsv_path_cache(data_set)
+    codes = sorted(tsv_cache.keys())
     if not codes:
         print("data-set 内に EDINET コード（E?????）が見つかりません。", flush=True)
         raise SystemExit(1)
     print(f"data-set 内で {len(codes)} 社を検出しました。")
     # full はサイズが大きくなるため report はデフォルトで出さない（必要なら sample か report オプションで）
-    run_sample(data_set, output_dir, codes, include_raw_tsv=True, report=False, strict=False)
+    # キャッシュを run_sample に渡して2重rglob を排除
+    run_sample(data_set, output_dir, codes, include_raw_tsv=include_raw_tsv, report=False, strict=False, prebuilt_cache=tsv_cache)
 
 
 def run_metrics_only(output_dir: Path) -> None:
@@ -1082,7 +1165,7 @@ def main() -> None:
     codes = list(dict.fromkeys(codes))  # 重複除去
 
     if args.mode == "full":
-        run_full(data_set, output_dir)
+        run_full(data_set, output_dir, include_raw_tsv=not args.no_raw_tsv)
         return
 
     # mode == sample
