@@ -1,86 +1,86 @@
 # Data quality report
 
-- totalCompanies: 4290
+- totalCompanies: 3920
 - totalColumns: 52
 
 ## Missing by column
 
 | key | filled | missing | missingRate |
 |---|---:|---:|---:|
-| PBR | 0 | 4290 | 100.0% |
-| marketCap | 0 | 4290 | 100.0% |
-| netCashRatio | 0 | 4290 | 100.0% |
-| dilutedEPS | 950 | 3340 | 77.9% |
-| dividendYield | 2190 | 2100 | 49.0% |
-| investmentSecurities | 2659 | 1631 | 38.0% |
-| salesCagr5y | 3098 | 1192 | 27.8% |
-| payoutRatioComputed | 3125 | 1165 | 27.2% |
-| dividendGrowthYoY | 3325 | 965 | 22.5% |
-| salesCagr3y | 3409 | 881 | 20.5% |
-| payoutRatio | 3713 | 577 | 13.4% |
-| dividendPerShare | 3748 | 542 | 12.6% |
-| salesGrowthYoY | 3748 | 542 | 12.6% |
-| secCode | 3846 | 444 | 10.3% |
-| opGrowthYoY | 3887 | 403 | 9.4% |
-| operatingProfitRatio | 3908 | 382 | 8.9% |
-| netProfitRatio | 3929 | 361 | 8.4% |
-| PER | 3937 | 353 | 8.2% |
-| sales | 3938 | 352 | 8.2% |
-| comprehensiveIncome | 3948 | 342 | 8.0% |
-| roeCalculated | 3955 | 335 | 7.8% |
-| roa | 3955 | 335 | 7.8% |
-| recurringProfit | 3961 | 329 | 7.7% |
-| deRatio | 3961 | 329 | 7.7% |
-| EPS | 3962 | 328 | 7.6% |
-| equityRatio | 3964 | 326 | 7.6% |
-| netAssets | 3965 | 325 | 7.6% |
-| totalAssets | 3965 | 325 | 7.6% |
-| equityRatioCalculated | 3965 | 325 | 7.6% |
-| financingCF | 4068 | 222 | 5.2% |
-| epsGrowthYoY | 4071 | 219 | 5.1% |
-| piotroskiFScore | 4075 | 215 | 5.0% |
-| roic | 4084 | 206 | 4.8% |
-| investingCF | 4089 | 201 | 4.7% |
-| fcf | 4089 | 201 | 4.7% |
-| operatingCF | 4093 | 197 | 4.6% |
-| cashBalance | 4093 | 197 | 4.6% |
-| operatingProfit | 4103 | 187 | 4.4% |
-| netCash | 4116 | 174 | 4.1% |
-| currentAssets | 4117 | 173 | 4.0% |
-| currentLiabilities | 4117 | 173 | 4.0% |
-| currentRatio | 4117 | 173 | 4.0% |
-| ROE | 4193 | 97 | 2.3% |
-| sharesOutstanding | 4260 | 30 | 0.7% |
-| BPS | 4265 | 25 | 0.6% |
-| netIncome | 4273 | 17 | 0.4% |
-| liabilities | 4276 | 14 | 0.3% |
-| edinetCode | 4290 | 0 | 0.0% |
-| filerName | 4290 | 0 | 0.0% |
-| calcDate | 4290 | 0 | 0.0% |
-| fiscalMonth | 4290 | 0 | 0.0% |
-| consecutiveDivIncreases | 4290 | 0 | 0.0% |
+| PBR | 0 | 3920 | 100.0% |
+| marketCap | 0 | 3920 | 100.0% |
+| netCashRatio | 0 | 3920 | 100.0% |
+| dilutedEPS | 902 | 3018 | 77.0% |
+| dividendYield | 2032 | 1888 | 48.2% |
+| investmentSecurities | 2384 | 1536 | 39.2% |
+| payoutRatioComputed | 2785 | 1135 | 29.0% |
+| salesCagr5y | 2924 | 996 | 25.4% |
+| dividendGrowthYoY | 3052 | 868 | 22.1% |
+| salesCagr3y | 3197 | 723 | 18.4% |
+| payoutRatio | 3369 | 551 | 14.1% |
+| dividendPerShare | 3392 | 528 | 13.5% |
+| salesGrowthYoY | 3500 | 420 | 10.7% |
+| comprehensiveIncome | 3585 | 335 | 8.5% |
+| recurringProfit | 3592 | 328 | 8.4% |
+| EPS | 3594 | 326 | 8.3% |
+| equityRatio | 3595 | 325 | 8.3% |
+| roeCalculated | 3595 | 325 | 8.3% |
+| roa | 3595 | 325 | 8.3% |
+| deRatio | 3595 | 325 | 8.3% |
+| netAssets | 3596 | 324 | 8.3% |
+| totalAssets | 3596 | 324 | 8.3% |
+| equityRatioCalculated | 3596 | 324 | 8.3% |
+| opGrowthYoY | 3603 | 317 | 8.1% |
+| operatingProfitRatio | 3633 | 287 | 7.3% |
+| netProfitRatio | 3656 | 264 | 6.7% |
+| sales | 3657 | 263 | 6.7% |
+| financingCF | 3708 | 212 | 5.4% |
+| investingCF | 3721 | 199 | 5.1% |
+| fcf | 3721 | 199 | 5.1% |
+| operatingCF | 3726 | 194 | 4.9% |
+| cashBalance | 3726 | 194 | 4.9% |
+| epsGrowthYoY | 3739 | 181 | 4.6% |
+| piotroskiFScore | 3747 | 173 | 4.4% |
+| roic | 3767 | 153 | 3.9% |
+| operatingProfit | 3777 | 143 | 3.6% |
+| netCash | 3790 | 130 | 3.3% |
+| currentAssets | 3791 | 129 | 3.3% |
+| currentLiabilities | 3791 | 129 | 3.3% |
+| currentRatio | 3791 | 129 | 3.3% |
+| PER | 3800 | 120 | 3.1% |
+| sharesOutstanding | 3813 | 107 | 2.7% |
+| ROE | 3840 | 80 | 2.0% |
+| BPS | 3895 | 25 | 0.6% |
+| liabilities | 3910 | 10 | 0.3% |
+| netIncome | 3912 | 8 | 0.2% |
+| edinetCode | 3920 | 0 | 0.0% |
+| secCode | 3920 | 0 | 0.0% |
+| filerName | 3920 | 0 | 0.0% |
+| calcDate | 3920 | 0 | 0.0% |
+| fiscalMonth | 3920 | 0 | 0.0% |
+| consecutiveDivIncreases | 3920 | 0 | 0.0% |
 
 ## Missing-heavy companies (top 20)
 
 | secCode | filerName | missingCount |
 |---|---|---:|
-| 49010 | 富士フイルムホールディングス株式会社 | 37 |
-| 86040 | 野村ホールディングス株式会社 | 37 |
-| 63010 | 株式会社小松製作所 | 34 |
-| 65020 | 株式会社　東芝 | 34 |
-| 66450 | オムロン株式会社 | 34 |
-| 77510 | キヤノン株式会社 | 34 |
-| 85910 | オリックス株式会社 | 34 |
-| 82510 | 株式会社パルコ | 32 |
-| 71570 | ライフネット生命保険株式会社 | 31 |
-| 51280 | 株式会社ＷＯＷ　ＷＯＲＬＤ　ＧＲＯＵＰ | 30 |
-| 85080 | Ｊトラスト株式会社 | 28 |
-| 254A0 | ＡＩフュージョンキャピタルグループ株式会社 | 28 |
-| 93990 | ビート・ホールディングス・リミテッド　（貝德控股有限公司、Ｂｅａｔ　Ｈｏｌｄｉｎｇｓ　Ｌｉｍｉｔｅｄ） | 27 |
-| 285A0 | キオクシアホールディングス株式会社 | 27 |
-| 339A0 | プログレス・テクノロジーズ　グループ株式会社 | 27 |
-| 26510 | 株式会社ローソン | 26 |
-| 85860 | 日立キャピタル株式会社 | 26 |
-| 82530 | 株式会社クレディセゾン | 25 |
-| 86980 | マネックスグループ株式会社 | 25 |
-| 84730 | ＳＢＩホールディングス株式会社 | 25 |
+| 4901 | 富士フイルムホールディングス株式会社 | 37 |
+| 8604 | 野村ホールディングス株式会社 | 37 |
+| 7157 | ライフネット生命保険株式会社 | 35 |
+| 6301 | 株式会社小松製作所 | 34 |
+| 6502 | 株式会社　東芝 | 34 |
+| 6645 | オムロン株式会社 | 34 |
+| 7751 | キヤノン株式会社 | 34 |
+| 8591 | オリックス株式会社 | 34 |
+| 8251 | 株式会社パルコ | 33 |
+| 407A | 株式会社ＵＮＩＣＯＮホールディングス | 30 |
+| 5128 | 株式会社ＷＯＷ　ＷＯＲＬＤ　ＧＲＯＵＰ | 30 |
+| 8303 | 株式会社ＳＢＩ新生銀行 | 29 |
+| 8342 | 株式会社青森銀行 | 29 |
+| 8363 | 株式会社　北國銀行 | 29 |
+| 254A | ＡＩフュージョンキャピタルグループ株式会社 | 28 |
+| 8350 | 株式会社　みちのく銀行 | 28 |
+| 8355 | 株式会社静岡銀行 | 28 |
+| 8382 | 株式会社中国銀行 | 28 |
+| 8508 | Ｊトラスト株式会社 | 28 |
+| 8530 | 株式会社中京銀行 | 28 |
