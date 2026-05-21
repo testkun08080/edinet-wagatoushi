@@ -89,7 +89,7 @@ function DataTable({
   unitCaption,
 }: {
   data: Record<string, string>[];
-  periods: { periodEnd: string }[];
+  periods: { periodEnd: string; docID?: string; docDescription?: string }[];
   unitCaption?: string;
 }) {
   const keys = new Set<string>();
@@ -116,7 +116,20 @@ function DataTable({
                 <TableHead className="sticky left-0 z-20 bg-background font-semibold">項目</TableHead>
                 {periods.map((p) => (
                   <TableHead key={p.periodEnd} className="text-right font-semibold">
-                    {p.periodEnd}
+                    <div className="flex flex-col items-end gap-0.5">
+                      <span>{p.periodEnd}</span>
+                      {p.docID && (
+                        <a
+                          href={`https://disclosure2.edinet-fsa.go.jp/WZEK0040.aspx?${p.docID},,`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={p.docDescription}
+                          className="text-primary text-xs font-normal underline-offset-2 hover:underline"
+                        >
+                          EDINET
+                        </a>
+                      )}
+                    </div>
                   </TableHead>
                 ))}
               </TableRow>

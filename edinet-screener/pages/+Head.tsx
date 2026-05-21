@@ -1,12 +1,24 @@
 // https://vike.dev/Head
 
 import logoUrl from "../assets/logo.svg";
-import { SITE_NAME } from "../lib/brand";
+import {
+  SITE_NAME,
+  SITE_OG_DESCRIPTION,
+  SITE_OG_IMAGE_ALT,
+  SITE_OG_IMAGE_HEIGHT,
+  SITE_OG_IMAGE_PATH,
+  SITE_OG_IMAGE_SQUARE_PATH,
+  SITE_OG_IMAGE_SQUARE_SIZE,
+  SITE_OG_IMAGE_WIDTH,
+  SITE_KEYWORDS,
+} from "../lib/brand";
 
 export function Head() {
   const siteTitle = SITE_NAME;
-  const siteDescription = `${SITE_NAME}は、EDINETから取得した有価証券報告書等を解析・可視化。10年分の財務データを検索・分析できるWebスクリーナー。個人投資家向けの無料ツール。`;
+  const siteDescription = SITE_OG_DESCRIPTION;
   const siteUrl = import.meta.env.PUBLIC_ENV__SITE_URL ?? "";
+  const ogImageUrl = siteUrl ? `${siteUrl}${SITE_OG_IMAGE_PATH}` : "";
+  const ogImageSquareUrl = siteUrl ? `${siteUrl}${SITE_OG_IMAGE_SQUARE_PATH}` : "";
 
   return (
     <>
@@ -16,24 +28,40 @@ export function Head() {
         content="width=device-width, initial-scale=1, viewport-fit=cover"
       />
       <meta name="description" content={siteDescription} />
-      <meta name="keywords" content="エディスク,EDINET,有価証券報告書,財務データ,スクリーナー,投資,株式分析" />
+      <meta name="keywords" content={SITE_KEYWORDS} />
       <meta name="author" content="edinet-wagatoushi" />
       <meta name="robots" content="index, follow" />
 
-      {/* OGP */}
+      {/* OGP — 正方形を先に指定（1:1 クロップする SNS 向け）、横長は標準カード用 */}
       <meta property="og:title" content={siteTitle} />
       <meta property="og:description" content={siteDescription} />
       <meta property="og:type" content="website" />
       {siteUrl && <meta property="og:url" content={siteUrl} />}
-      {siteUrl && <meta property="og:image" content={`${siteUrl}/og-image.png`} />}
+      {ogImageSquareUrl && <meta property="og:image" content={ogImageSquareUrl} />}
+      {ogImageSquareUrl && (
+        <meta property="og:image:width" content={String(SITE_OG_IMAGE_SQUARE_SIZE)} />
+      )}
+      {ogImageSquareUrl && (
+        <meta property="og:image:height" content={String(SITE_OG_IMAGE_SQUARE_SIZE)} />
+      )}
+      {ogImageSquareUrl && <meta property="og:image:alt" content={SITE_OG_IMAGE_ALT} />}
+      {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+      {ogImageUrl && (
+        <meta property="og:image:width" content={String(SITE_OG_IMAGE_WIDTH)} />
+      )}
+      {ogImageUrl && (
+        <meta property="og:image:height" content={String(SITE_OG_IMAGE_HEIGHT)} />
+      )}
+      {ogImageUrl && <meta property="og:image:alt" content={SITE_OG_IMAGE_ALT} />}
       <meta property="og:site_name" content={siteTitle} />
       <meta property="og:locale" content="ja_JP" />
 
-      {/* Twitter Card */}
+      {/* Twitter Card — 横長を優先（summary_large_image） */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={siteTitle} />
       <meta name="twitter:description" content={siteDescription} />
-      {siteUrl && <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />}
+      {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+      {ogImageUrl && <meta name="twitter:image:alt" content={SITE_OG_IMAGE_ALT} />}
 
       {/* Canonical */}
       {siteUrl && <link rel="canonical" href={siteUrl} />}
@@ -54,35 +82,19 @@ export function Head() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": siteTitle,
-            "description": siteDescription,
-            ...(siteUrl ? { "url": siteUrl } : {}),
-            "applicationCategory": "FinanceApplication",
-            "offers": {
+            name: siteTitle,
+            description: siteDescription,
+            ...(siteUrl ? { url: siteUrl } : {}),
+            applicationCategory: "FinanceApplication",
+            offers: {
               "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "JPY"
-            }
-          })
+              price: "0",
+              priceCurrency: "JPY",
+            },
+          }),
         }}
       ></script>
 
-      {/* Google Analytics (template - implementation placeholder) */}
-      <script
-        async
-        src={`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.PUBLIC_ENV__GOOGLE_ANALYTICS}`}
-      ></script>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            // Google Analytics initialization (to be implemented)
-            // window.dataLayer = window.dataLayer || [];
-            // function gtag(){dataLayer.push(arguments);}
-            // gtag('js', new Date());
-            // gtag('config', '${import.meta.env.PUBLIC_ENV__GOOGLE_ANALYTICS}');
-          `,
-        }}
-      ></script>
     </>
   );
 }

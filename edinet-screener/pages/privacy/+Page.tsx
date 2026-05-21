@@ -1,7 +1,7 @@
 import { DataAttributionBlock } from "../../components/DataAttributionBlock";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
-import { SITE_NAME } from "../../lib/brand";
+import { SITE_NAME, DATA_LAST_UPDATED } from "../../lib/brand";
 
 export default function Page() {
   return (
@@ -111,7 +111,7 @@ export default function Page() {
         </CardContent>
       </Card>
 
-      <DataAttributionBlock />
+      <DataAttributionBlock lastUpdated={DATA_LAST_UPDATED} />
     </div>
   );
 }

@@ -5,15 +5,15 @@ export default function Page() {
   if (is404) {
     return (
       <>
-        <h1>Page Not Found</h1>
-        <p>This page could not be found.</p>
+        <h1>ページが見つかりません</h1>
+        <p>お探しのページは見つかりませんでした。</p>
       </>
     );
   }
   return (
     <>
-      <h1>Internal Error</h1>
-      <p>Something went wrong.</p>
+      <h1>エラーが発生しました</h1>
+      <p>申し訳ございません。時間をおいて再度お試しください。</p>
     </>
   );
 }
