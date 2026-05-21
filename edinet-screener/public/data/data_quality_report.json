@@ -35,8 +35,8 @@
       "missingSecCodes": []
     },
     "equityRatio": {
-      "filled": 3595,
-      "missing": 325,
+      "filled": 3596,
+      "missing": 324,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -99,7 +99,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -367,8 +366,8 @@
       ]
     },
     "EPS": {
-      "filled": 3594,
-      "missing": 326,
+      "filled": 3595,
+      "missing": 325,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -432,7 +431,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -4560,8 +4558,8 @@
       ]
     },
     "recurringProfit": {
-      "filled": 3592,
-      "missing": 328,
+      "filled": 3593,
+      "missing": 327,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -4625,7 +4623,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -4910,8 +4907,8 @@
       ]
     },
     "netAssets": {
-      "filled": 3596,
-      "missing": 324,
+      "filled": 3597,
+      "missing": 323,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -4974,7 +4971,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -5241,8 +5237,8 @@
       ]
     },
     "totalAssets": {
-      "filled": 3596,
-      "missing": 324,
+      "filled": 3597,
+      "missing": 323,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -5305,7 +5301,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -6033,8 +6028,8 @@
       ]
     },
     "roeCalculated": {
-      "filled": 3595,
-      "missing": 325,
+      "filled": 3596,
+      "missing": 324,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -6097,7 +6092,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -6365,8 +6359,8 @@
       ]
     },
     "roa": {
-      "filled": 3595,
-      "missing": 325,
+      "filled": 3596,
+      "missing": 324,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -6429,7 +6423,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -6697,8 +6690,8 @@
       ]
     },
     "equityRatioCalculated": {
-      "filled": 3596,
-      "missing": 324,
+      "filled": 3597,
+      "missing": 323,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -6761,7 +6754,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -8769,8 +8761,8 @@
       ]
     },
     "payoutRatioComputed": {
-      "filled": 2785,
-      "missing": 1135,
+      "filled": 2787,
+      "missing": 1133,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -8971,7 +8963,6 @@
         "3385",
         "3387",
         "3390",
-        "3391",
         "3397",
         "339A",
         "3401",
@@ -9237,7 +9228,6 @@
         "4689",
         "4699",
         "4712",
-        "4714",
         "471A",
         "4728",
         "472A",
@@ -10849,8 +10839,8 @@
       ]
     },
     "investmentSecurities": {
-      "filled": 2384,
-      "missing": 1536,
+      "filled": 2387,
+      "missing": 1533,
       "total": 3920,
       "missingSecCodes": [
         "1333",
@@ -10951,7 +10941,6 @@
         "2341",
         "2351",
         "2352",
-        "2354",
         "2359",
         "2362",
         "2371",
@@ -11666,7 +11655,6 @@
         "6074",
         "6078",
         "6080",
-        "6086",
         "6087",
         "6089",
         "6092",
@@ -12044,7 +12032,6 @@
         "7674",
         "7676",
         "7678",
-        "7679",
         "7681",
         "7685",
         "7688",
@@ -16446,8 +16433,8 @@
       ]
     },
     "dividendYield": {
-      "filled": 2032,
-      "missing": 1888,
+      "filled": 2034,
+      "missing": 1886,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -16814,7 +16801,6 @@
         "3385",
         "3387",
         "3390",
-        "3391",
         "3393",
         "3397",
         "339A",
@@ -17201,7 +17187,6 @@
         "4699",
         "4705",
         "4712",
-        "4714",
         "471A",
         "4720",
         "4728",
@@ -30021,8 +30006,8 @@
       ]
     },
     "deRatio": {
-      "filled": 3595,
-      "missing": 325,
+      "filled": 3596,
+      "missing": 324,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -30085,7 +30070,6 @@
         "3543",
         "3563",
         "3591",
-        "3612",
         "3659",
         "3673",
         "3679",
@@ -34836,9 +34820,8 @@
     },
     "2354": {
       "filerName": "株式会社ＹＥ　ＤＩＧＩＴＡＬ",
-      "missingCount": 4,
+      "missingCount": 3,
       "missingKeys": [
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -40876,11 +40859,9 @@
     },
     "3391": {
       "filerName": "株式会社ツルハホールディングス",
-      "missingCount": 5,
+      "missingCount": 3,
       "missingKeys": [
-        "payoutRatioComputed",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio"
       ]
@@ -42296,25 +42277,16 @@
     },
     "3612": {
       "filerName": "株式会社ワールド",
-      "missingCount": 17,
+      "missingCount": 8,
       "missingKeys": [
-        "equityRatio",
-        "EPS",
         "dilutedEPS",
-        "recurringProfit",
-        "netAssets",
-        "totalAssets",
         "comprehensiveIncome",
-        "roeCalculated",
-        "roa",
-        "equityRatioCalculated",
         "payoutRatioComputed",
         "investmentSecurities",
         "PBR",
         "dividendYield",
         "marketCap",
-        "netCashRatio",
-        "deRatio"
+        "netCashRatio"
       ]
     },
     "3622": {
@@ -51262,11 +51234,9 @@
     },
     "4714": {
       "filerName": "株式会社　リソー教育",
-      "missingCount": 5,
+      "missingCount": 3,
       "missingKeys": [
-        "payoutRatioComputed",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio"
       ]
@@ -57603,10 +57573,9 @@
     },
     "6086": {
       "filerName": "シンメンテホールディングス株式会社",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -70115,10 +70084,9 @@
     },
     "7679": {
       "filerName": "株式会社薬王堂ホールディングス",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
