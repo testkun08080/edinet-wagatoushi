@@ -10,11 +10,11 @@
 | PBR | 0 | 3920 | 100.0% |
 | marketCap | 0 | 3920 | 100.0% |
 | netCashRatio | 0 | 3920 | 100.0% |
-| dilutedEPS | 902 | 3018 | 77.0% |
-| dividendYield | 2034 | 1886 | 48.1% |
-| investmentSecurities | 2387 | 1533 | 39.1% |
-| payoutRatioComputed | 2787 | 1133 | 28.9% |
-| salesCagr5y | 2924 | 996 | 25.4% |
+| dilutedEPS | 903 | 3017 | 77.0% |
+| dividendYield | 2036 | 1884 | 48.1% |
+| investmentSecurities | 2390 | 1530 | 39.0% |
+| payoutRatioComputed | 2788 | 1132 | 28.9% |
+| salesCagr5y | 2925 | 995 | 25.4% |
 | dividendGrowthYoY | 3052 | 868 | 22.1% |
 | salesCagr3y | 3197 | 723 | 18.4% |
 | payoutRatio | 3369 | 551 | 14.1% |

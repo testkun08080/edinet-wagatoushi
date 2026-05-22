@@ -698,8 +698,8 @@
       ]
     },
     "dilutedEPS": {
-      "filled": 902,
-      "missing": 3018,
+      "filled": 903,
+      "missing": 3017,
       "total": 3920,
       "missingSecCodes": [
         "1301",
@@ -2248,7 +2248,6 @@
         "6090",
         "6091",
         "6092",
-        "6093",
         "6095",
         "6096",
         "6097",
@@ -8761,8 +8760,8 @@
       ]
     },
     "payoutRatioComputed": {
-      "filled": 2787,
-      "missing": 1133,
+      "filled": 2788,
+      "missing": 1132,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -9383,7 +9382,6 @@
         "6085",
         "6087",
         "6089",
-        "6093",
         "6094",
         "6098",
         "6101",
@@ -10839,8 +10837,8 @@
       ]
     },
     "investmentSecurities": {
-      "filled": 2387,
-      "missing": 1533,
+      "filled": 2390,
+      "missing": 1530,
       "total": 3920,
       "missingSecCodes": [
         "1333",
@@ -10919,7 +10917,6 @@
         "2180",
         "2181",
         "2185",
-        "2186",
         "218A",
         "2191",
         "2193",
@@ -11535,7 +11532,6 @@
         "504A",
         "5070",
         "5076",
-        "5078",
         "5079",
         "5101",
         "5108",
@@ -11658,7 +11654,6 @@
         "6087",
         "6089",
         "6092",
-        "6093",
         "6098",
         "6101",
         "6113",
@@ -16433,8 +16428,8 @@
       ]
     },
     "dividendYield": {
-      "filled": 2034,
-      "missing": 1886,
+      "filled": 2036,
+      "missing": 1884,
       "total": 3920,
       "missingSecCodes": [
         "1375",
@@ -16654,7 +16649,6 @@
         "2675",
         "2676",
         "2678",
-        "2683",
         "2686",
         "2687",
         "2689",
@@ -17422,7 +17416,6 @@
         "6087",
         "6089",
         "6090",
-        "6093",
         "6094",
         "6096",
         "6097",
@@ -28861,8 +28854,8 @@
       ]
     },
     "salesCagr5y": {
-      "filled": 2924,
-      "missing": 996,
+      "filled": 2925,
+      "missing": 995,
       "total": 3920,
       "missingSecCodes": [
         "1352",
@@ -29096,7 +29089,6 @@
         "4011",
         "4012",
         "4015",
-        "4017",
         "4019",
         "402A",
         "4033",
@@ -33952,10 +33944,9 @@
     },
     "2186": {
       "filerName": "ソーバル株式会社",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -36466,11 +36457,10 @@
     },
     "2683": {
       "filerName": "株式会社魚喜",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio"
       ]
@@ -45482,7 +45472,7 @@
     },
     "4017": {
       "filerName": "株式会社クリーマ",
-      "missingCount": 11,
+      "missingCount": 10,
       "missingKeys": [
         "dilutedEPS",
         "payoutRatio",
@@ -45493,8 +45483,7 @@
         "dividendYield",
         "marketCap",
         "netCashRatio",
-        "dividendGrowthYoY",
-        "salesCagr5y"
+        "dividendGrowthYoY"
       ]
     },
     "4019": {
@@ -53280,10 +53269,9 @@
     },
     "5078": {
       "filerName": "株式会社セレコーポレーション",
-      "missingCount": 6,
+      "missingCount": 5,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio",
@@ -57666,13 +57654,9 @@
     },
     "6093": {
       "filerName": "株式会社エスクロー・エージェント・ジャパン",
-      "missingCount": 7,
+      "missingCount": 3,
       "missingKeys": [
-        "dilutedEPS",
-        "payoutRatioComputed",
-        "investmentSecurities",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio"
       ]
