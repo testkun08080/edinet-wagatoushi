@@ -7,6 +7,7 @@ import { useFavorites } from "./FavoritesContext.js";
 import { useRecentCompanies } from "./RecentCompaniesContext.js";
 import logoUrl from "../assets/logo.png";
 import { SITE_NAME, SITE_TAGLINE } from "../lib/brand";
+import { SCREENER, analyzePath } from "../lib/routes";
 import {
   Sidebar,
   SidebarContent,
@@ -42,9 +43,9 @@ export function AppSidebar() {
   const [companyList, setCompanyList] = useState<CompanyItem[]>([]);
   const [analyzeSearchQuery, setAnalyzeSearchQuery] = useState("");
 
-  const isAnalyzePage = urlPathname.startsWith("/analyze/");
-  /** スクリーニング用フィルターは企業一覧トップでのみ表示 */
-  const isCompanyListPage = urlPathname === "/";
+  const isAnalyzePage = urlPathname.startsWith(`${SCREENER}/analyze/`) || urlPathname.startsWith("/analyze/");
+  /** スクリーニング用フィルターは企業一覧でのみ表示 */
+  const isCompanyListPage = urlPathname === SCREENER;
 
   useEffect(() => {
     if (!isAnalyzePage) return;
@@ -77,12 +78,8 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild tooltip={SITE_NAME}>
-              <a href="/">
-                <img
-                  src={logoUrl}
-                  alt=""
-                  className="size-8 shrink-0 rounded-lg object-contain"
-                />
+              <a href={SCREENER}>
+                <img src={logoUrl} alt="" className="size-8 shrink-0 rounded-lg object-contain" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-bold">{SITE_NAME}</span>
                   <span className="truncate text-xs text-muted-foreground">{SITE_TAGLINE}</span>
@@ -102,8 +99,8 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={urlPathname === "/"} tooltip="企業一覧">
-                  <a href="/">
+                <SidebarMenuButton asChild isActive={urlPathname === SCREENER} tooltip="企業一覧">
+                  <a href={SCREENER}>
                     <Home className="size-4" />
                     <span>企業一覧</span>
                   </a>
@@ -139,7 +136,7 @@ export function AppSidebar() {
                         {analyzeSearchResults.map((c) => (
                           <SidebarMenuItem key={c.secCode}>
                             <SidebarMenuButton asChild size="sm">
-                              <a href={`/analyze/${c.secCode}`}>
+                              <a href={analyzePath(c.secCode)}>
                                 <BarChart3 className="size-3.5" />
                                 <span className="truncate">{formatDisplayName(c.filerName)}</span>
                                 <Badge variant="outline" className="ml-auto text-[10px]">
@@ -179,7 +176,7 @@ export function AppSidebar() {
                         .map((c) => (
                           <SidebarMenuItem key={c.secCode}>
                             <SidebarMenuButton asChild size="sm">
-                              <a href={`/analyze/${c.secCode}`}>
+                              <a href={analyzePath(c.secCode)}>
                                 <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
                                 <span className="truncate">{formatDisplayName(c.filerName)}</span>
                               </a>
@@ -191,7 +188,7 @@ export function AppSidebar() {
                         .map((secCode) => (
                           <SidebarMenuItem key={secCode}>
                             <SidebarMenuButton asChild size="sm">
-                              <a href={`/analyze/${secCode}`}>
+                              <a href={analyzePath(secCode)}>
                                 <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
                                 <span>{secCode}</span>
                               </a>
@@ -224,7 +221,7 @@ export function AppSidebar() {
                     recent.map((c) => (
                       <SidebarMenuItem key={c.secCode}>
                         <SidebarMenuButton asChild size="sm">
-                          <a href={`/analyze/${c.secCode}`}>
+                          <a href={analyzePath(c.secCode)}>
                             <Clock className="size-3.5" />
                             <span className="truncate">{formatDisplayName(c.filerName)}</span>
                             <Badge variant="outline" className="ml-auto text-[10px]">

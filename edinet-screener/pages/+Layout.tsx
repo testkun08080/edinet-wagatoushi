@@ -15,6 +15,18 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbPage } from "../c
 import { usePageContext } from "vike-react/usePageContext";
 import { initializeGA, trackPageView } from "../lib/analytics";
 import { DarkModeToggle } from "../components/DarkModeToggle";
+import { SCREENER } from "../lib/routes";
+
+function useSidebarShell(urlPathname: string): boolean {
+  if (urlPathname === "/") return false;
+  return (
+    urlPathname === SCREENER ||
+    urlPathname.startsWith(`${SCREENER}/`) ||
+    urlPathname === "/privacy" ||
+    urlPathname === "/contact" ||
+    urlPathname.startsWith("/analyze/")
+  );
+}
 
 function AppHeader() {
   const pageContext = usePageContext();
@@ -24,8 +36,12 @@ function AppHeader() {
     trackPageView(urlPathname);
   }, [urlPathname]);
 
-  const isAnalyzePage = urlPathname.startsWith("/analyze/");
-  const secCode = isAnalyzePage ? urlPathname.split("/")[2] : null;
+  const isAnalyzePage = urlPathname.startsWith(`${SCREENER}/analyze/`) || urlPathname.startsWith("/analyze/");
+  const secCode = isAnalyzePage
+    ? urlPathname.startsWith(`${SCREENER}/analyze/`)
+      ? urlPathname.split("/")[3]
+      : urlPathname.split("/")[2]
+    : null;
 
   const crumb =
     urlPathname === "/privacy"
@@ -54,11 +70,18 @@ function AppHeader() {
   );
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    initializeGA();
-  }, []);
+function LandingLayout({ children }: { children: React.ReactNode }) {
+  const pageContext = usePageContext();
+  const urlPathname = pageContext?.urlPathname ?? "/";
 
+  useEffect(() => {
+    trackPageView(urlPathname);
+  }, [urlPathname]);
+
+  return <>{children}</>;
+}
+
+function ScreenerShell({ children }: { children: React.ReactNode }) {
   return (
     <FilterProvider>
       <FavoritesProvider>
@@ -78,4 +101,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </FavoritesProvider>
     </FilterProvider>
   );
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const pageContext = usePageContext();
+  const urlPathname = pageContext?.urlPathname ?? "/";
+  const sidebarShell = useSidebarShell(urlPathname);
+
+  useEffect(() => {
+    initializeGA();
+  }, []);
+
+  if (!sidebarShell) {
+    return <LandingLayout>{children}</LandingLayout>;
+  }
+
+  return <ScreenerShell>{children}</ScreenerShell>;
 }

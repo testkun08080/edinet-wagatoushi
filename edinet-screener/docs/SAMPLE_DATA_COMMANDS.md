@@ -112,7 +112,7 @@ uv run python scripts/frontend/build_screener_data.py --mode sample \
   E00004 E03606 E05070 E02843 E03614
 ```
 
-作成後、`npm run dev` で起動し `http://localhost:3000` で確認できます。
+作成後、`npm run dev` で起動し `http://localhost:3000`（LP）と `http://localhost:3000/screener` で確認できます。
 
 ---
 

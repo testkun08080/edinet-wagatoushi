@@ -10,6 +10,7 @@ import { Badge } from "./ui/badge";
 import { Skeleton } from "./ui/skeleton";
 import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { formatRatioDecimalStringAsPercent, formatYenStringAsMillionYen } from "../lib/metricFormat.js";
+import { analyzePath } from "../lib/routes";
 
 export type CompanyMetric = {
   edinetCode: string;
@@ -158,7 +159,7 @@ function getCellValue(
             </Button>
           )}
           <a
-            href={`/analyze/${m.secCode}`}
+            href={analyzePath(m.secCode)}
             className="font-medium text-foreground hover:text-primary hover:underline underline-offset-4"
           >
             {formatDisplayName(m.filerName)}

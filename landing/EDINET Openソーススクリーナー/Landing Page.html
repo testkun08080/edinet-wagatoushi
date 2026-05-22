@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エディスク — オープンソース EDINET スクリーナー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f3f0;
+      --dark: #1a1816;
+      --accent: #3a3734;
+      --accent-g: #7a7570;
+      --accent-b: #b0aca6;
+      --text: #1a1816;
+      --text2: #78746f;
+      --border: #dedad4;
+      --card: #ffffff;
+      --sidebar: #100e0c;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    a { text-decoration: none; color: inherit; }
+    input, select { font-family: inherit; }
+
+    /* NAV */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; transition: background 0.3s, box-shadow 0.3s; }
+    .nav.scrolled { background: rgba(247,247,248,0.95); backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo img { width: 26px; height: 26px; object-fit: contain; transition: filter 0.3s; }
+    .nav:not(.scrolled) .nav-logo img { filter: invert(1); }
+    .nav-logo-name { font-size: 14px; font-weight: 700; letter-spacing: 0.01em; transition: color 0.3s; }
+    .nav:not(.scrolled) .nav-logo-name { color: #fff; }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-link { font-size: 13px; font-weight: 500; transition: opacity 0.2s; }
+    .nav:not(.scrolled) .nav-link { color: rgba(255,255,255,0.7); }
+    .nav-link:hover { opacity: 0.55; }
+    .nav-gh { padding: 7px 18px; border-radius: 7px; font-size: 13px; font-weight: 600; background: var(--dark); color: #fff; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; letter-spacing: 0.01em; }
+    .nav:not(.scrolled) .nav-gh { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); }
+    .nav-gh:hover { opacity: 0.78; }
+
+    /* HERO */
+    .hero { background: var(--dark); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 110px 40px 0; position: relative; overflow: hidden; }
+    .hero-dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 32px 32px; }
+    .hero-glow { position: absolute; top: -10%; left: 50%; transform: translateX(-50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(255,255,255,0.03) 0%, transparent 70%); pointer-events: none; }
+    .hero-content { position: relative; z-index: 1; text-align: center; width: 100%; max-width: 860px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 7px; padding: 4px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.55); letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 28px; }
+    .hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+    .hero-h1 { font-size: clamp(36px, 5.5vw, 66px); font-weight: 700; line-height: 1.18; letter-spacing: -0.025em; margin-bottom: 22px; text-wrap: pretty; }
+    .hero-h1 em { font-style: normal; color: #ffffff; font-weight: 300; letter-spacing: -0.03em; }
+    .hero-sub { font-size: 16px; color: rgba(255,255,255,0.55); max-width: 520px; margin: 0 auto 40px; line-height: 1.85; font-weight: 300; }
+    .hero-ctas { display: flex; gap: 12px; justify-content: center; margin-bottom: 72px; }
+    .btn-p { padding: 12px 30px; background: #ffffff; color: var(--dark); border-radius: 8px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; letter-spacing: 0.01em; }
+    .btn-p:hover { opacity: 0.83; }
+    .btn-s { padding: 12px 28px; background: rgba(255,255,255,0.08); color: #fff; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid rgba(255,255,255,0.16); display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
+    .btn-s:hover { background: rgba(255,255,255,0.13); }
+
+    /* APP MOCKUP */
+    .mockup-wrap { width: 100%; max-width: 860px; margin: 0 auto; position: relative; padding-bottom: 0; }
+    .mockup-shadow { transform: perspective(1600px) rotateX(5deg); transform-origin: top center; border-radius: 12px 12px 0 0; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08); }
+    .mockup-bar { background: #dadada; height: 34px; display: flex; align-items: center; padding: 0 12px; gap: 6px; flex-shrink: 0; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-url-bar { flex: 1; margin: 0 8px; background: rgba(255,255,255,0.65); border-radius: 4px; height: 19px; display: flex; align-items: center; padding: 0 10px; font-size: 9.5px; font-family: 'DM Mono', monospace; color: #555; }
+    .mockup-body { display: flex; height: 400px; background: #fff; }
+    .m-sidebar { width: 148px; background: var(--sidebar); flex-shrink: 0; display: flex; flex-direction: column; padding: 14px 0; }
+    .m-logo-area { padding: 0 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+    .m-logo-area img { width: 20px; height: 20px; filter: invert(1); opacity: 0.85; }
+    .m-logo-text { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); line-height: 1.2; }
+    .m-logo-sub { font-size: 7.5px; color: rgba(255,255,255,0.3); }
+    .m-nav-section { font-size: 7px; font-weight: 600; color: rgba(255,255,255,0.25); letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 14px 4px; }
+    .m-nav-item { display: flex; align-items: center; gap: 7px; padding: 6px 14px; font-size: 10px; color: rgba(255,255,255,0.42); cursor: pointer; transition: color 0.15s; }
+    .m-nav-item.active { color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.06); }
+    .m-nav-item svg { flex-shrink: 0; }
+    .m-history-item { padding: 5px 14px 5px 35px; font-size: 9px; color: rgba(255,255,255,0.3); display: flex; justify-content: space-between; }
+    .m-main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+    .m-topbar { background: #fafafa; border-bottom: 1px solid #f0f0f0; padding: 8px 18px; font-size: 10px; color: #aaa; display: flex; justify-content: space-between; align-items: center; }
+    .m-topbar-title { font-size: 11px; font-weight: 600; color: #555; }
+    .m-header { padding: 14px 18px 0; border-bottom: 1px solid #f0f0f0; }
+    .m-company { font-size: 20px; font-weight: 700; color: #191919; letter-spacing: -0.02em; }
+    .m-company-sub { font-size: 9px; color: #bbb; margin-top: 1px; margin-bottom: 8px; }
+    .m-tabs { display: flex; gap: 0; overflow: hidden; }
+    .m-tab { padding: 7px 12px; font-size: 9px; color: #aaa; border-bottom: 2px solid transparent; white-space: nowrap; }
+    .m-tab.active { color: #191919; border-bottom-color: #191919; font-weight: 600; }
+    .m-content { padding: 12px 18px; flex: 1; overflow: hidden; }
+    .m-period-row { display: flex; gap: 0; margin-bottom: 10px; }
+    .m-period-btn { padding: 3px 8px; font-size: 8px; border: 1px solid #e5e7eb; background: #fff; color: #aaa; border-right: none; }
+    .m-period-btn:first-child { border-radius: 4px 0 0 4px; }
+    .m-period-btn:last-child { border-right: 1px solid #e5e7eb; border-radius: 0 4px 4px 0; }
+    .m-period-btn.active { background: #191919; color: #fff; border-color: #191919; }
+    .m-chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .m-chart-card { border: 1px solid #f0f0f0; border-radius: 6px; padding: 9px 10px; }
+    .m-chart-title { font-size: 8.5px; font-weight: 700; color: #191919; margin-bottom: 2px; }
+    .m-chart-sub { font-size: 7px; color: #ccc; margin-bottom: 6px; }
+    .m-metrics-row { display: flex; border: 1px solid #f0f0f0; border-radius: 6px; overflow: hidden; }
+    .m-metric { flex: 1; padding: 8px 12px; border-right: 1px solid #f0f0f0; }
+    .m-metric:last-child { border-right: none; }
+    .m-metric-l { font-size: 7px; color: #bbb; margin-bottom: 2px; }
+    .m-metric-v { font-size: 13px; font-weight: 700; color: #191919; font-family: 'DM Mono', monospace; }
+
+    /* STATS */
+    .stats { background: var(--dark); }
+    .stats-inner { max-width: 900px; margin: 0 auto; display: flex; }
+    .stat { flex: 1; padding: 36px 20px; text-align: center; border-right: 1px solid rgba(255,255,255,0.06); }
+    .stat:last-child { border-right: none; }
+    .stat-val { font-size: 38px; font-weight: 700; color: #fff; font-family: 'DM Mono', monospace; line-height: 1; margin-bottom: 7px; letter-spacing: -0.02em; }
+    .stat-val span { color: rgba(255,255,255,0.45); font-weight: 300; }
+    .stat-label { font-size: 11px; color: rgba(255,255,255,0.38); }
+
+    /* SECTIONS */
+    .section { padding: 96px 48px; }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+    .s-tag { font-size: 10.5px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px; }
+    .s-h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 700; letter-spacing: -0.022em; line-height: 1.22; margin-bottom: 14px; text-wrap: pretty; }
+    .s-sub { font-size: 15px; color: var(--text2); max-width: 520px; line-height: 1.82; margin-bottom: 52px; font-weight: 300; }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .feat-card { background: var(--card); padding: 32px 26px; transition: background 0.15s; }
+    .feat-card:hover { background: #fafafa; }
+    .feat-num { font-size: 10px; font-weight: 500; font-family: 'DM Mono', monospace; color: var(--text2); margin-bottom: 18px; letter-spacing: 0.05em; }
+    .feat-title { font-size: 14.5px; font-weight: 700; margin-bottom: 9px; letter-spacing: -0.01em; line-height: 1.3; }
+    .feat-desc { font-size: 12.5px; color: var(--text2); line-height: 1.75; }
+
+    /* SCREENER DEMO */
+    .demo-section { background: #eeeae4; padding: 96px 48px; }
+    .demo-inner { max-width: 960px; margin: 0 auto; }
+    .demo-controls { background: var(--card); border: 1px solid var(--border); border-radius: 10px 10px 0 0; padding: 18px 22px; display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; border-bottom: none; }
+    .filter-group { display: flex; flex-direction: column; gap: 6px; }
+    .filter-label { font-size: 9.5px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; }
+    .filter-row { display: flex; align-items: center; gap: 6px; }
+    .filter-input { width: 72px; padding: 6px 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: 'DM Mono', monospace; background: var(--bg); outline: none; color: var(--text); transition: border-color 0.15s; }
+    .filter-input:focus { border-color: var(--accent); }
+    .filter-unit { font-size: 11.5px; color: var(--text2); }
+    .filter-select { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--bg); outline: none; color: var(--text); transition: border-color 0.15s; }
+    .filter-select:focus { border-color: var(--accent); }
+    .filter-reset { padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; color: var(--text2); background: var(--bg); transition: all 0.15s; align-self: flex-end; }
+    .filter-reset:hover { border-color: var(--text2); color: var(--text); }
+    .demo-table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 0 0 10px 10px; overflow: hidden; }
+    .results-bar { padding: 10px 20px; border-bottom: 1px solid var(--border); font-size: 11.5px; color: var(--text2); display: flex; align-items: center; gap: 6px; background: #f8f6f3; }
+    .results-bar strong { color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px; }
+    .demo-table { width: 100%; border-collapse: collapse; }
+    .demo-table th { padding: 9px 16px; font-size: 10px; font-weight: 700; text-align: left; color: var(--text2); background: #fafafa; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+    .demo-table th:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) { text-align: right; }
+    .demo-table td { padding: 11px 16px; font-size: 13px; border-bottom: 1px solid #f5f5f6; }
+    .demo-table td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) { text-align: right; font-family: 'DM Mono', monospace; font-size: 12px; }
+    .demo-table tr:last-child td { border-bottom: none; }
+    .demo-table tr:hover td { background: #fafbff; }
+    .t-code { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); font-weight: 400; }
+    .t-name { font-weight: 600; font-size: 13px; }
+    .t-sector { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 500; background: #f3f4f6; color: #4b5563; }
+    .t-pos { color: var(--dark); font-weight: 600; } .t-neg { color: var(--text2); }
+    .no-results { text-align: center; padding: 52px; color: var(--text2); font-size: 14px; }
+
+    /* OPEN SOURCE */
+    .oss { background: var(--dark); color: #fff; padding: 100px 48px; text-align: center; }
+    .oss-inner { max-width: 620px; margin: 0 auto; }
+    .oss-badge { display: inline-flex; align-items: center; gap: 7px; padding: 4px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; font-size: 10px; color: rgba(255,255,255,0.38); letter-spacing: 0.1em; margin-bottom: 26px; }
+    .oss-h2 { font-size: clamp(28px, 4vw, 46px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 18px; text-wrap: pretty; }
+    .oss-h2 em { font-style: normal; color: rgba(255,255,255,0.55); font-weight: 300; }
+    .oss-desc { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.85; margin-bottom: 42px; font-weight: 300; }
+    .oss-ctas { display: flex; justify-content: center; gap: 12px; }
+    .oss-stats-row { display: flex; justify-content: center; gap: 0; margin-top: 64px; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .oss-stat { flex: 1; max-width: 150px; }
+    .oss-stat-v { font-size: 26px; font-weight: 700; font-family: 'DM Mono', monospace; color: #fff; letter-spacing: -0.02em; }
+    .oss-stat-l { font-size: 10.5px; color: rgba(255,255,255,0.35); margin-top: 5px; }
+
+    /* STACK STRIP */
+    .stack-strip { background: rgba(255,255,255,0.04); border-top: 1px solid rgba(255,255,255,0.06); padding: 28px 48px; }
+    .stack-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    .stack-label { font-size: 11px; color: rgba(255,255,255,0.25); margin-right: 8px; white-space: nowrap; }
+    .stack-item { padding: 4px 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; font-size: 11px; color: rgba(255,255,255,0.45); font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+    /* FOOTER */
+    .footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.06); padding: 28px 48px; }
+    .footer-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; }
+    .footer-logo img { width: 18px; height: 18px; filter: invert(1); opacity: 0.4; }
+    .footer-logo span { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.3); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-link { font-size: 12px; color: rgba(255,255,255,0.27); transition: color 0.15s; }
+    .footer-link:hover { color: rgba(255,255,255,0.6); }
+    .footer-copy { font-size: 11px; color: rgba(255,255,255,0.18); }
+
+    /* TWEAKS */
+    .tweaks-panel { position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: #fff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.14); padding: 20px; width: 240px; display: none; }
+    .tweaks-panel.visible { display: block; }
+    .tweaks-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 16px; letter-spacing: 0.02em; }
+    .tweak-row { margin-bottom: 14px; }
+    .tweak-row-label { font-size: 10px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
+    .tweak-swatches { display: flex; gap: 8px; }
+    .swatch { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; }
+    .swatch.active { border-color: var(--text); transform: scale(1.1); }
+    .tweak-options { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tweak-opt { padding: 5px 11px; border: 1px solid var(--border); border-radius: 6px; font-size: 11px; cursor: pointer; transition: all 0.15s; color: var(--text2); }
+    .tweak-opt.active { border-color: var(--text); color: var(--text); font-weight: 600; background: #f7f7f8; }
+    .tweaks-close { position: absolute; top: 14px; right: 14px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text2); font-size: 14px; border-radius: 4px; }
+    .tweaks-close:hover { background: var(--bg); }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ── DATA ── */
+const COMPANIES = [
+  { code:'7974', name:'任天堂',        sector:'ゲーム',   roe:15.2, div:1.66, per:18.4, cap:8.2  },
+  { code:'6758', name:'ソニーグループ', sector:'電機',    roe:12.8, div:0.84, per:19.2, cap:14.3 },
+  { code:'4502', name:'武田薬品工業',  sector:'製薬',    roe:3.2,  div:5.89, per:52.3, cap:3.8  },
+  { code:'7203', name:'トヨタ自動車',  sector:'輸送機器', roe:13.7, div:2.34, per:10.2, cap:42.1 },
+  { code:'8306', name:'三菱UFJフィナンシャル', sector:'銀行', roe:7.8, div:3.25, per:11.4, cap:15.6 },
+  { code:'9432', name:'NTT',         sector:'通信',    roe:11.2, div:3.08, per:13.7, cap:14.2 },
+  { code:'4519', name:'中外製薬',      sector:'製薬',    roe:22.1, div:2.44, per:28.6, cap:5.9  },
+  { code:'8035', name:'東京エレクトロン', sector:'半導体', roe:28.9, div:2.71, per:25.4, cap:8.7  },
+  { code:'2914', name:'JT',          sector:'食品',    roe:26.4, div:7.12, per:13.1, cap:4.4  },
+  { code:'9020', name:'JR東日本',      sector:'鉄道',   roe:4.8,  div:1.94, per:24.6, cap:3.0  },
+  { code:'6954', name:'ファナック',     sector:'機械',   roe:8.4,  div:2.15, per:32.1, cap:3.8  },
+  { code:'6861', name:'キーエンス',     sector:'電機',   roe:14.9, div:0.66, per:42.8, cap:16.4 },
+];
+
+const SECTORS = ['全て', '電機', '半導体', '製薬', '銀行', '通信', 'ゲーム', '輸送機器', '食品', '機械', '鉄道'];
+
+/* revenue seasonal pattern */
+const REV   = [240,190,580,610,280,240,560,610,310,260,590,650];
+const DIV_D = [40,40,40,60,60,60,80,80,80,90,90,120];
+const PL_OP = [80,30,180,200,70,50,160,190,90,60,180,210];
+const PL_NI = [60,25,140,160,55,40,130,155,75,50,145,175];
+const BS_TA = [2328,2298,2399,2508,2586,2781,2786,2998,3100,3200,3350,3500];
+const BS_LI = [591,494,611,583,550,603,613,636,680,720,760,800];
+const BS_EQ = [1736,1804,1788,1925,2035,2178,2173,2362,2420,2480,2590,2700];
+
+/* ── HELPERS ── */
+const fmt = (n) => n == null ? '—' : n.toFixed(2);
+
+function toPoints(data, w, h, padY = 3) {
+  const mx = Math.max(...data), mn = Math.min(...data);
+  const r = mx - mn || 1;
+  return data.map((v, i) => {
+    const x = (i / (data.length - 1)) * w;
+    const y = h - padY - ((v - mn) / r) * (h - padY * 2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+}
+
+/* ── SPARKLINE ── */
+const Sparkline = ({ data, color = '#d96c2a', w = 190, h = 48 }) => {
+  const pts = toPoints(data, w, h);
+  const area = `0,${h} ${pts} ${w},${h}`;
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{display:'block',overflow:'visible'}}>
+      <defs>
+        <linearGradient id={`g${color.replace('#','')}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.2" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.01" />
+        </linearGradient>
+      </defs>
+      <polygon points={area} fill={`url(#g${color.replace('#','')})`} />
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+};
+
+const MultiSparkline = ({ series, colors, w = 190, h = 48 }) => {
+  const all = series.flatMap(s => s);
+  const mx = Math.max(...all), mn = Math.min(...all), r = mx - mn || 1;
+  const pts = (data) => data.map((v,i)=>{
+    const x=(i/(data.length-1))*w;
+    const y=h-3-((v-mn)/r)*(h-6);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{display:'block'}}>
+      {series.map((d,i)=>(
+        <polyline key={i} points={pts(d)} fill="none" stroke={colors[i]} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      ))}
+    </svg>
+  );
+};
+
+/* ── useCountUp ── */
+function useCountUp(target, duration = 1600) {
+  const [val, setVal] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started.current) {
+        started.current = true;
+        const t0 = Date.now();
+        const tick = () => {
+          const p = Math.min((Date.now() - t0) / duration, 1);
+          const ease = 1 - Math.pow(1 - p, 3);
+          setVal(Math.round(ease * target));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.5 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [target, duration]);
+  return [val, ref];
+}
+
+/* ── NAV ── */
+const Nav = ({ accentColor }) => {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 72);
+    window.addEventListener('scroll', h, { passive: true });
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+  return (
+    <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
+      <a href="#" className="nav-logo">
+        <img src="uploads/logo.svg" alt="エディスク" />
+        <span className="nav-logo-name">エディスク</span>
+      </a>
+      <div className="nav-links">
+        <a href="#features" className="nav-link">機能</a>
+        <a href="#screener" className="nav-link">スクリーナー</a>
+        <a href="#oss" className="nav-link">オープンソース</a>
+        <a href="#" className="nav-gh" style={{background: scrolled ? undefined : 'rgba(255,255,255,0.1)'}}>
+          GitHub&nbsp;↗
+        </a>
+      </div>
+    </nav>
+  );
+};
+
+/* ── APP MOCKUP ── */
+const AppMockup = () => (
+  <div className="mockup-wrap">
+    <div className="mockup-shadow">
+      <div className="mockup-bar">
+        <div className="dot" style={{background:'#ff5f57'}}></div>
+        <div className="dot" style={{background:'#febc2e'}}></div>
+        <div className="dot" style={{background:'#28c840'}}></div>
+        <div className="mockup-url-bar">edinet-screener.workers.dev/analyze/7974</div>
+      </div>
+      <div className="mockup-body">
+        {/* Sidebar */}
+        <div className="m-sidebar">
+          <div className="m-logo-area">
+            <img src="uploads/logo.svg" alt="" />
+            <div>
+              <div className="m-logo-text">エディスク</div>
+              <div className="m-logo-sub">オープンソース EDINETスクリ…</div>
+            </div>
+          </div>
+          <div className="m-nav-section">ナビゲーション</div>
+          <div className="m-nav-item">
+            <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            企業一覧
+          </div>
+          <div className="m-nav-item">
+            <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            企業検索
+          </div>
+          <div className="m-nav-item">
+            <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            お気に入り
+          </div>
+          <div className="m-nav-section" style={{marginTop:4}}>履歴</div>
+          <div className="m-nav-item active">
+            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#d96c2a"/></svg>
+            任天堂
+            <span style={{marginLeft:'auto',fontSize:8,fontFamily:'DM Mono,monospace',color:'rgba(255,255,255,0.3)'}}>7974</span>
+          </div>
+          {[['サカイ引越センター','9039'],['技研ホールディングス','1443'],['ルーデン・ホールディング','1400']].map(([n,c])=>(
+            <div key={c} className="m-history-item">{n}<span style={{fontFamily:'DM Mono,monospace',fontSize:8}}>{c}</span></div>
+          ))}
+        </div>
+        {/* Main */}
+        <div className="m-main">
+          <div className="m-topbar">
+            <span className="m-topbar-title">企業分析 (7974)</span>
+            <svg width="13" height="13" fill="none" stroke="#aaa" strokeWidth="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          </div>
+          <div className="m-header">
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+              <div>
+                <div className="m-company">任天堂</div>
+                <div className="m-company-sub">7974 &nbsp;·&nbsp; EDINET 四半期報告書データ</div>
+              </div>
+              <div style={{fontSize:9,color:'#aaa',display:'flex',alignItems:'center',gap:4,paddingTop:4}}>
+                <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                お気に入りに追加
+              </div>
+            </div>
+            <div className="m-tabs">
+              {['サマリー','指標','大株主','損益計算書','貸借対照表','キャッシュフロー計算書'].map((t,i)=>(
+                <div key={t} className={`m-tab${i===0?' active':''}`}>{t}</div>
+              ))}
+            </div>
+          </div>
+          <div className="m-content">
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
+              <div className="m-period-row">
+                {['四半期','半期','通期'].map((p,i)=>(
+                  <div key={p} className={`m-period-btn${i===0?' active':''}`}>{p}</div>
+                ))}
+              </div>
+              <div className="m-period-row">
+                {['3年','5年','7年','10年'].map((p,i)=>(
+                  <div key={p} className={`m-period-btn${i===2?' active':''}`}>{p}</div>
+                ))}
+              </div>
+            </div>
+            <div className="m-chart-grid">
+              <div className="m-chart-card">
+                <div className="m-chart-title">売上高の推移</div>
+                <div className="m-chart-sub">summary の「売上高」（百万円）</div>
+                <Sparkline data={REV} color="#555555" w={158} h={42} />
+              </div>
+              <div className="m-chart-card">
+                <div className="m-chart-title">配当に関するキャッシュアウト</div>
+                <div className="m-chart-sub">CF「配当金の支払額」（百万円）</div>
+                <Sparkline data={DIV_D} color="#555555" w={158} h={42} />
+              </div>
+              <div className="m-chart-card">
+                <div className="m-chart-title">損益計算書（PL）の推移</div>
+                <div className="m-chart-sub">売上高・営業利益・純利益</div>
+                <MultiSparkline series={[REV,PL_OP,PL_NI]} colors={['#1a1816','#787470','#b8b4ae']} w={158} h={42} />
+              </div>
+              <div className="m-chart-card">
+                <div className="m-chart-title">貸借対照表（BS）の推移</div>
+                <div className="m-chart-sub">総資産・負債・純資産</div>
+                <MultiSparkline series={[BS_TA,BS_LI,BS_EQ]} colors={['#1a1816','#888480','#c4c0ba']} w={158} h={42} />
+              </div>
+            </div>
+            <div className="m-metrics-row">
+              <div className="m-metric"><div className="m-metric-l">1株当たり配当金</div><div className="m-metric-v">120.00</div></div>
+              <div className="m-metric"><div className="m-metric-l">配当利回り</div><div className="m-metric-v">1.66%</div></div>
+              <div className="m-metric"><div className="m-metric-l">配当性向</div><div className="m-metric-v">61.87%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+/* ── HERO ── */
+const Hero = () => (
+  <section className="hero">
+    <div className="hero-dots"></div>
+    <div className="hero-glow"></div>
+    <div className="hero-content">
+      <div className="hero-badge">
+        <span className="hero-badge-dot"></span>
+        MIT License &nbsp;·&nbsp; オープンソース
+      </div>
+      <h1 className="hero-h1">EDINETデータで、<br/><em>日本株を深く読む</em></h1>
+      <p className="hero-sub">
+        金融庁の EDINET に開示された財務データを自動収集・構造化。
+        スクリーニング・企業分析・比較を、誰でも無料で。
+      </p>
+      <div className="hero-ctas">
+        <a href="https://edinet-wagatoushi.testkun-08080.workers.dev" target="_blank" rel="noopener" className="btn-p">デモを試す →</a>
+        <a href="https://github.com" target="_blank" rel="noopener" className="btn-s">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub ↗
+        </a>
+      </div>
+      <AppMockup />
+    </div>
+  </section>
+);
+
+/* ── STATS ── */
+const StatItem = ({ target, suffix, label }) => {
+  const [val, ref] = useCountUp(target);
+  return (
+    <div className="stat" ref={ref}>
+      <div className="stat-val">{val.toLocaleString()}<span>{suffix}</span></div>
+      <div className="stat-label">{label}</div>
+    </div>
+  );
+};
+
+const Stats = () => (
+  <div className="stats">
+    <div className="stats-inner">
+      <StatItem target={4200} suffix="+" label="上場企業データ" />
+      <StatItem target={10}   suffix="年分" label="四半期財務データ" />
+      <StatItem target={20}   suffix="+" label="スクリーニング指標" />
+      <StatItem target={0}    suffix="円" label="無料・MIT License" />
+    </div>
+  </div>
+);
+
+/* ── FEATURES ── */
+const FEATS = [
+  { n:'01', t:'EDINET 自動収集', d:'XBRLパーサーで開示書類から財務データを自動抽出。四半期報告書・有価証券報告書に対応し、最新データを継続的に収集します。' },
+  { n:'02', t:'高精度スクリーニング', d:'ROE・PER・配当利回り・時価総額など20以上の財務指標で銘柄を絞り込み。条件を自由に組み合わせて検索できます。' },
+  { n:'03', t:'時系列チャート', d:'売上高・営業利益・純利益・配当の推移を最大10年分グラフ表示。四半期・半期・通期を切り替えて分析できます。' },
+  { n:'04', t:'財務諸表ビューア', d:'損益計算書・貸借対照表・キャッシュフロー計算書を時系列で横並び比較。EDINET原典へのリンクも完備。' },
+  { n:'05', t:'大株主分析', d:'株主構成・持株比率の変化を追跡。機関投資家・外国人持株比率の動向をレポート単位で確認できます。' },
+  { n:'06', t:'セルフホスト対応', d:'Cloudflare Workers上で動作。自分のアカウントにデプロイして利用可能。無料プランのみで完全に運用できます。' },
+];
+
+const Features = () => (
+  <section className="section" id="features" style={{background: 'var(--card)'}}>
+    <div className="section-inner">
+      <div className="s-tag">機能</div>
+      <h2 className="s-h2">スクリーニングから<br/>深掘り分析まで</h2>
+      <p className="s-sub">EDINETの開示データを活用した、個人投資家向けの本格的な財務分析ツール。</p>
+      <div className="features-grid">
+        {FEATS.map(f => (
+          <div key={f.n} className="feat-card">
+            <div className="feat-num">{f.n}</div>
+            <div className="feat-title">{f.t}</div>
+            <div className="feat-desc">{f.d}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ── SCREENER DEMO ── */
+const ScreenerDemo = () => {
+  const [minRoe, setMinRoe] = useState('');
+  const [minDiv, setMinDiv] = useState('');
+  const [maxPer, setMaxPer] = useState('');
+  const [sector, setSector] = useState('全て');
+
+  const filtered = COMPANIES.filter(c => {
+    if (minRoe !== '' && c.roe < parseFloat(minRoe)) return false;
+    if (minDiv !== '' && c.div < parseFloat(minDiv)) return false;
+    if (maxPer !== '' && c.per > parseFloat(maxPer)) return false;
+    if (sector !== '全て' && c.sector !== sector) return false;
+    return true;
+  }).sort((a, b) => b.roe - a.roe);
+
+  const reset = () => { setMinRoe(''); setMinDiv(''); setMaxPer(''); setSector('全て'); };
+
+  return (
+    <section className="demo-section" id="screener">
+      <div className="demo-inner">
+        <div className="s-tag">スクリーナー デモ</div>
+        <h2 className="s-h2">条件を設定して<br/>銘柄を絞り込む</h2>
+        <p className="s-sub">財務指標をリアルタイムにフィルタリング。以下はサンプルデータによるデモです。</p>
+        <div className="demo-controls">
+          <div className="filter-group">
+            <div className="filter-label">ROE 最小値</div>
+            <div className="filter-row">
+              <input className="filter-input" type="number" min="0" max="100" step="0.1" placeholder="0" value={minRoe} onChange={e=>setMinRoe(e.target.value)} />
+              <span className="filter-unit">%以上</span>
+            </div>
+          </div>
+          <div className="filter-group">
+            <div className="filter-label">配当利回り 最小値</div>
+            <div className="filter-row">
+              <input className="filter-input" type="number" min="0" max="20" step="0.1" placeholder="0" value={minDiv} onChange={e=>setMinDiv(e.target.value)} />
+              <span className="filter-unit">%以上</span>
+            </div>
+          </div>
+          <div className="filter-group">
+            <div className="filter-label">PER 最大値</div>
+            <div className="filter-row">
+              <input className="filter-input" type="number" min="0" max="200" step="1" placeholder="100" value={maxPer} onChange={e=>setMaxPer(e.target.value)} />
+              <span className="filter-unit">倍以下</span>
+            </div>
+          </div>
+          <div className="filter-group">
+            <div className="filter-label">業種</div>
+            <select className="filter-select" value={sector} onChange={e=>setSector(e.target.value)}>
+              {SECTORS.map(s => <option key={s}>{s}</option>)}
+            </select>
+          </div>
+          <button className="filter-reset" onClick={reset}>リセット</button>
+        </div>
+        <div className="demo-table-wrap">
+          <div className="results-bar">
+            <strong>{filtered.length}</strong>社が条件に一致
+            {(minRoe||minDiv||maxPer||sector!=='全て') && (
+              <span style={{marginLeft:8,color:'var(--text)',fontSize:10,fontWeight:600,background:'#eeebe6',padding:'2px 8px',borderRadius:4}}>フィルター適用中</span>
+            )}
+          </div>
+          {filtered.length === 0 ? (
+            <div className="no-results">条件に一致する銘柄がありません</div>
+          ) : (
+            <table className="demo-table">
+              <thead>
+                <tr>
+                  <th>コード</th>
+                  <th>銘柄名</th>
+                  <th>業種</th>
+                  <th>ROE</th>
+                  <th>配当利回り</th>
+                  <th>PER</th>
+                  <th>時価総額</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(c => (
+                  <tr key={c.code}>
+                    <td><span className="t-code">{c.code}</span></td>
+                    <td><span className="t-name">{c.name}</span></td>
+                    <td><span className="t-sector">{c.sector}</span></td>
+                    <td className={c.roe >= 15 ? 't-pos' : c.roe < 5 ? 't-neg' : ''}>{fmt(c.roe)}%</td>
+                    <td className={c.div >= 3 ? 't-pos' : ''}>{fmt(c.div)}%</td>
+                    <td>{c.per ? `${fmt(c.per)}倍` : '—'}</td>
+                    <td>{c.cap.toFixed(1)}兆円</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ── OPEN SOURCE ── */
+const OpenSource = () => (
+  <section className="oss" id="oss">
+    <div className="oss-inner">
+      <div className="oss-badge">MIT LICENSE</div>
+      <h2 className="oss-h2">誰でも無料で使える、<br/><em>完全オープンソース</em></h2>
+      <p className="oss-desc">
+        ソースコードは GitHub で公開中。Cloudflare Workers を使って自分のアカウントにデプロイして、
+        プライベートな環境でご利用いただけます。貢献も歓迎しています。
+      </p>
+      <div className="oss-ctas">
+        <a href="https://github.com" target="_blank" rel="noopener" className="btn-p">GitHub で見る ↗</a>
+        <a href="#" className="btn-s">デプロイガイド →</a>
+      </div>
+      <div className="oss-stats-row">
+        {[['1.2k','GitHub Stars'],['MIT','ライセンス'],['94%','TypeScript'],['週次','データ更新']].map(([v,l])=>(
+          <div key={l} className="oss-stat">
+            <div className="oss-stat-v">{v}</div>
+            <div className="oss-stat-l">{l}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div className="stack-strip">
+      <div className="stack-inner">
+        <span className="stack-label">使用技術</span>
+        {['Cloudflare Workers','EDINET API','XBRL パーサー','React','TypeScript','D3.js'].map(s=>(
+          <span key={s} className="stack-item">{s}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ── FOOTER ── */
+const Footer = () => (
+  <footer className="footer">
+    <div className="footer-inner">
+      <div className="footer-logo">
+        <img src="uploads/logo.svg" alt="" />
+        <span>エディスク</span>
+      </div>
+      <div className="footer-links">
+        <a href="#" className="footer-link">プライバシーポリシー</a>
+        <a href="#" className="footer-link">お問い合わせ</a>
+        <a href="https://github.com" className="footer-link">GitHub</a>
+      </div>
+      <div className="footer-copy">© 2024 エディスク &nbsp;·&nbsp; MIT License</div>
+    </div>
+  </footer>
+);
+
+/* ── TWEAKS PANEL ── */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#3a3734",
+  "heroStyle": "テキストのみ",
+  "tableRows": "5行"
+}/*EDITMODE-END*/;
+
+const TweaksPanel = ({ visible, onClose, tweaks, setTweak }) => {
+  const COLORS = [
+    { v:'#3a3734', label:'チャコール' },
+    { v:'#5a6065', label:'スレート' },
+    { v:'#4a4038', label:'セピア' },
+  ];
+  return (
+    <div className={`tweaks-panel${visible ? ' visible' : ''}`}>
+      <div className="tweaks-title">Tweaks</div>
+      <button className="tweaks-close" onClick={onClose}>✕</button>
+      <div className="tweak-row">
+        <div className="tweak-row-label">アクセントカラー</div>
+        <div className="tweak-swatches">
+          {COLORS.map(c => (
+            <div key={c.v} className={`swatch${tweaks.accentColor===c.v?' active':''}`}
+              style={{background:c.v}}
+              title={c.label}
+              onClick={()=>setTweak('accentColor',c.v)}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="tweak-row">
+        <div className="tweak-row-label">ヒーローモックアップ</div>
+        <div className="tweak-options">
+          {['モックアップあり','テキストのみ'].map(o=>(
+            <div key={o} className={`tweak-opt${tweaks.heroStyle===o?' active':''}`} onClick={()=>setTweak('heroStyle',o)}>{o}</div>
+          ))}
+        </div>
+      </div>
+      <div className="tweak-row">
+        <div className="tweak-row-label">スクリーナー行数</div>
+        <div className="tweak-options">
+          {['5行','10行','全て'].map(o=>(
+            <div key={o} className={`tweak-opt${tweaks.tableRows===o?' active':''}`} onClick={()=>setTweak('tableRows',o)}>{o}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ── APP ── */
+const App = () => {
+  const [tweaks, setTweaksState] = useState(TWEAK_DEFAULTS);
+  const [tweaksVisible, setTweaksVisible] = useState(false);
+
+  const setTweak = (k, v) => {
+    const next = { ...tweaks, [k]: v };
+    setTweaksState(next);
+    document.documentElement.style.setProperty('--accent', next.accentColor);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: next }, '*');
+  };
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--accent', tweaks.accentColor);
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksVisible(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksVisible(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const handleClosePanel = () => {
+    setTweaksVisible(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  return (
+    <>
+      <Nav accentColor={tweaks.accentColor} />
+      <Hero showMockup={tweaks.heroStyle !== 'テキストのみ'} />
+      <Stats />
+      <Features />
+      <ScreenerDemo />
+      <OpenSource />
+      <Footer />
+      <TweaksPanel
+        visible={tweaksVisible}
+        onClose={handleClosePanel}
+        tweaks={tweaks}
+        setTweak={setTweak}
+      />
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
