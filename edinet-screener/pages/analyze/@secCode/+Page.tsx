@@ -23,6 +23,7 @@ import {
   Banknote,
   Users,
   CalendarRange,
+  ExternalLink,
 } from "lucide-react";
 import { SITE_NAME } from "../../../lib/brand";
 import { MajorShareholdersTimeSeries } from "../../../components/MajorShareholdersTimeSeries.js";
@@ -83,13 +84,60 @@ function hasRenderableTableCell(v: unknown): boolean {
   return t !== "" && t !== "－" && t !== "-";
 }
 
+function EdinetLinksCard({
+  periods,
+}: {
+  periods: { periodEnd: string; docID?: string; docDescription?: string; submitDateTime?: string }[];
+}) {
+  const links = periods.filter((p) => p.docID);
+  if (links.length === 0) return null;
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold flex items-center gap-2">
+          <ExternalLink className="size-4 text-muted-foreground" />
+          出典・参考リンク（EDINET 開示書類）
+        </CardTitle>
+        <CardDescription className="text-xs">
+          本ページのデータは、以下の EDINET 開示書類をもとに加工・集計したものです。
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <ul className="divide-y">
+          {links.map((p) => (
+            <li key={p.docID} className="flex items-center justify-between gap-4 py-2 text-sm">
+              <div className="min-w-0">
+                <p className="truncate font-medium">{p.docDescription ?? p.periodEnd}</p>
+                <p className="text-muted-foreground text-xs">
+                  決算期末: {p.periodEnd}
+                  {p.submitDateTime ? `  提出: ${p.submitDateTime}` : ""}
+                </p>
+              </div>
+              <a
+                href={`https://disclosure2.edinet-fsa.go.jp/WZEK0040.aspx?${p.docID},,`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary shrink-0 text-xs underline-offset-2 hover:underline flex items-center gap-1"
+              >
+                EDINET で見る
+                <ExternalLink className="size-3" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  );
+}
+
 function DataTable({
   data,
   periods,
   unitCaption,
 }: {
   data: Record<string, string>[];
-  periods: { periodEnd: string }[];
+  periods: { periodEnd: string; docID?: string; docDescription?: string }[];
   unitCaption?: string;
 }) {
   const keys = new Set<string>();
@@ -552,6 +600,7 @@ export default function Page() {
                 periods={filteredPeriods}
                 unitCaption={tableMillionCaption}
               />
+              <EdinetLinksCard periods={filteredPeriods} />
             </TabsContent>
             <TabsContent value="shihyo" className="min-h-0">
               <IndicatorsTable metrics={metrics} />
