@@ -69,8 +69,10 @@ EDINET API
 - `+Layout.tsx` / `+Head.tsx` - レイアウト・ヘッド
 
 **主要ルート**:
-- `pages/index/` - ホーム（スクリーナーテーブル）
-- `pages/analyze/@secCode/` - 企業詳細分析
+- `pages/index/` - マーケティング LP（サイドバーなし）
+- `pages/screener/` - 企業一覧スクリーナー
+- `pages/screener/analyze/@secCode/` - 企業詳細分析
+- `pages/analyze/@secCode/` - 旧URLから `/screener/analyze/:secCode` へリダイレクト
 
 **グローバル状態（React Context）**:
 - `ColumnVisibilityContext` - テーブルカラム表示切替

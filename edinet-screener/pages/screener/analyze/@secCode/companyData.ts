@@ -12,8 +12,6 @@ export type CompanySummary = {
     pl: Record<string, string>;
     bs: Record<string, string>;
     cf: Record<string, string>;
-    /** e.g. raw_tsv/67030/S100R4I6.json — used for 大株主 extraction */
-    rawTsvPath?: string;
   }>;
 };
 
@@ -116,7 +114,6 @@ export function normalizeCompanySummary(raw: unknown, secCode: string): CompanyS
         pl: typeof p.pl === "object" && p.pl !== null ? (p.pl as Record<string, string>) : {},
         bs: typeof p.bs === "object" && p.bs !== null ? (p.bs as Record<string, string>) : {},
         cf: typeof p.cf === "object" && p.cf !== null ? (p.cf as Record<string, string>) : {},
-        rawTsvPath: typeof p.rawTsvPath === "string" ? p.rawTsvPath : undefined,
       });
     }
   }

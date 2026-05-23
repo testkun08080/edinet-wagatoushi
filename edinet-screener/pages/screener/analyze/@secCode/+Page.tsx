@@ -606,7 +606,11 @@ export default function Page() {
               <IndicatorsTable metrics={metrics} />
             </TabsContent>
             <TabsContent value="shareholders" className="min-h-0">
-              <MajorShareholdersTimeSeries periods={filteredPeriods} active={mainTab === "shareholders"} />
+              <MajorShareholdersTimeSeries
+                secCode={companySecCode}
+                visiblePeriodEnds={filteredPeriods.map((p) => p.periodEnd)}
+                active={mainTab === "shareholders"}
+              />
             </TabsContent>
             <TabsContent value="pl" className="min-h-0">
               <DataTable

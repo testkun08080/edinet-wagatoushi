@@ -30,8 +30,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S1007SWI.json"
+      "cf": {}
     },
     {
       "periodStart": "2016-04-01",
@@ -60,8 +59,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100AKRY.json"
+      "cf": {}
     },
     {
       "periodStart": "2017-04-01",
@@ -90,8 +88,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100D9EX.json"
+      "cf": {}
     },
     {
       "periodStart": "2018-10-01",
@@ -102,8 +99,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100F4EQ.json"
+      "cf": {}
     },
     {
       "periodStart": "2019-04-01",
@@ -114,8 +110,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100GPFW.json"
+      "cf": {}
     },
     {
       "periodStart": "2019-07-01",
@@ -126,8 +121,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100HA12.json"
+      "cf": {}
     },
     {
       "periodStart": "2019-10-01",
@@ -138,8 +132,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100HYQ4.json"
+      "cf": {}
     },
     {
       "periodStart": "2019-04-01",
@@ -168,8 +161,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100J1A2.json"
+      "cf": {}
     },
     {
       "periodStart": "2020-04-01",
@@ -180,8 +172,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100JFDG.json"
+      "cf": {}
     },
     {
       "periodStart": "2020-07-01",
@@ -192,8 +183,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100K2PA.json"
+      "cf": {}
     },
     {
       "periodStart": "2020-10-01",
@@ -204,8 +194,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100KPX6.json"
+      "cf": {}
     },
     {
       "periodStart": "2020-04-01",
@@ -234,8 +223,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100LPV9.json"
+      "cf": {}
     },
     {
       "periodStart": "2021-04-01",
@@ -246,8 +234,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100M4R5.json"
+      "cf": {}
     },
     {
       "periodStart": "2021-07-01",
@@ -258,8 +245,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100MQZX.json"
+      "cf": {}
     },
     {
       "periodStart": "2021-10-01",
@@ -270,8 +256,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100NG4H.json"
+      "cf": {}
     },
     {
       "periodStart": "2021-04-01",
@@ -300,8 +285,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100OJOR.json"
+      "cf": {}
     },
     {
       "periodStart": "2022-04-01",
@@ -312,8 +296,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100OVSX.json"
+      "cf": {}
     },
     {
       "periodStart": "2022-07-01",
@@ -324,8 +307,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100PHK2.json"
+      "cf": {}
     },
     {
       "periodStart": "2022-10-01",
@@ -336,8 +318,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100Q5FH.json"
+      "cf": {}
     },
     {
       "periodStart": "2022-04-01",
@@ -366,8 +347,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/6981/S100R773.json"
+      "cf": {}
     },
     {
       "periodStart": "2023-04-01",
@@ -415,8 +395,7 @@
         "財務キャッシュフロー": "-49688000000",
         "現金及び現金同等物の増減額": "-46440000000",
         "現金及び現金同等物": "422966000000"
-      },
-      "rawTsvPath": "raw_tsv/6981/S100RKAD.json"
+      }
     },
     {
       "periodStart": "2023-07-01",
@@ -464,8 +443,7 @@
         "財務キャッシュフロー": "-53115000000",
         "現金及び現金同等物の増減額": "52395000000",
         "現金及び現金同等物": "521801000000"
-      },
-      "rawTsvPath": "raw_tsv/6981/S100S6V6.json"
+      }
     },
     {
       "periodStart": "2023-10-01",
@@ -513,8 +491,7 @@
         "財務キャッシュフロー": "-102705000000",
         "現金及び現金同等物の増減額": "63619000000",
         "現金及び現金同等物": "533025000000"
-      },
-      "rawTsvPath": "raw_tsv/6981/S100SUBB.json"
+      }
     },
     {
       "periodStart": "2023-04-01",
@@ -583,8 +560,7 @@
         "財務キャッシュフロー": "-165321000000",
         "現金及び現金同等物の増減額": "152601000000",
         "現金及び現金同等物": "622007000000"
-      },
-      "rawTsvPath": "raw_tsv/6981/S100TSIJ.json"
+      }
     },
     {
       "periodStart": "2024-04-01",
@@ -653,8 +629,7 @@
         "財務キャッシュフロー": "-242733000000",
         "現金及び現金同等物の増減額": "3141000000",
         "現金及び現金同等物": "625148000000"
-      },
-      "rawTsvPath": "raw_tsv/6981/S100W2ZR.json"
+      }
     },
     {
       "periodStart": "2024-04-01",
@@ -703,8 +678,7 @@
         "財務キャッシュフロー": "-155745000000",
         "現金及び現金同等物の増減額": "-50305000000",
         "現金及び現金同等物": "571702000000"
-      },
-      "rawTsvPath": "raw_tsv/6981/S100UQDX.json"
+      }
     },
     {
       "periodStart": "2025-04-01",
@@ -753,8 +727,7 @@
         "財務キャッシュフロー": "-138553000000",
         "現金及び現金同等物の増減額": "-42754000000",
         "現金及び現金同等物": "582394000000"
-      },
-      "rawTsvPath": "raw_tsv/6981/S100X1ME.json"
+      }
     }
   ]
 }

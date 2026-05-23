@@ -30,8 +30,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S1009YTU.json"
+      "cf": {}
     },
     {
       "periodStart": "2017-01-01",
@@ -60,8 +59,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100CN71.json"
+      "cf": {}
     },
     {
       "periodStart": "2018-01-01",
@@ -90,8 +88,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100FHHS.json"
+      "cf": {}
     },
     {
       "periodStart": "2019-01-01",
@@ -102,8 +99,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100FRLV.json"
+      "cf": {}
     },
     {
       "periodStart": "2019-04-01",
@@ -114,8 +110,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100GNRM.json"
+      "cf": {}
     },
     {
       "periodStart": "2019-07-01",
@@ -126,8 +121,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100HCUH.json"
+      "cf": {}
     },
     {
       "periodStart": "2019-01-01",
@@ -156,8 +150,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100IB70.json"
+      "cf": {}
     },
     {
       "periodStart": "2020-01-01",
@@ -168,8 +161,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100IKV5.json"
+      "cf": {}
     },
     {
       "periodStart": "2020-04-01",
@@ -180,8 +172,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100JDEP.json"
+      "cf": {}
     },
     {
       "periodStart": "2020-07-01",
@@ -192,8 +183,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100K4DL.json"
+      "cf": {}
     },
     {
       "periodStart": "2020-01-01",
@@ -222,8 +212,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100L2I7.json"
+      "cf": {}
     },
     {
       "periodStart": "2021-01-01",
@@ -234,8 +223,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100LBQG.json"
+      "cf": {}
     },
     {
       "periodStart": "2021-04-01",
@@ -246,8 +234,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100M90R.json"
+      "cf": {}
     },
     {
       "periodStart": "2021-07-01",
@@ -258,8 +245,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100MR5F.json"
+      "cf": {}
     },
     {
       "periodStart": "2021-01-01",
@@ -288,8 +274,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100NRAM.json"
+      "cf": {}
     },
     {
       "periodStart": "2022-01-01",
@@ -300,8 +285,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100O0LP.json"
+      "cf": {}
     },
     {
       "periodStart": "2022-04-01",
@@ -312,8 +296,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100OWSH.json"
+      "cf": {}
     },
     {
       "periodStart": "2022-07-01",
@@ -324,8 +307,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100PIGW.json"
+      "cf": {}
     },
     {
       "periodStart": "2022-01-01",
@@ -354,8 +336,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100QHVI.json"
+      "cf": {}
     },
     {
       "periodStart": "2023-01-01",
@@ -366,8 +347,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100QPGA.json"
+      "cf": {}
     },
     {
       "periodStart": "2023-04-01",
@@ -378,8 +358,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100RL9M.json"
+      "cf": {}
     },
     {
       "periodStart": "2023-07-01",
@@ -390,8 +369,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100S70M.json"
+      "cf": {}
     },
     {
       "periodStart": "2023-01-01",
@@ -420,8 +398,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100T58N.json"
+      "cf": {}
     },
     {
       "periodStart": "2024-01-01",
@@ -432,8 +409,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100TE70.json"
+      "cf": {}
     },
     {
       "periodStart": "2024-01-01",
@@ -462,8 +438,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100VHZZ.json"
+      "cf": {}
     },
     {
       "periodStart": "2024-01-01",
@@ -474,8 +449,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100U6E9.json"
+      "cf": {}
     },
     {
       "periodStart": "2025-01-01",
@@ -504,8 +478,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100XTLJ.json"
+      "cf": {}
     },
     {
       "periodStart": "2025-01-01",
@@ -516,8 +489,7 @@
       "summary": {},
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/7751/S100WH4C.json"
+      "cf": {}
     }
   ]
 }
