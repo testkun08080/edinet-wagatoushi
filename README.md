@@ -26,7 +26,7 @@ cd edinet-wagatoushi
 docker compose up
 ```
 
-http://localhost:3000 でサンプルデータ付きのスクリーナーが起動します。
+http://localhost:3000 でランディングページが開き、スクリーナーは http://localhost:3000/screener で利用できます（Docker 起動時も同様）。
 
 ### B: ローカル（フロントエンドのみ）
 

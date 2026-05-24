@@ -45,8 +45,7 @@
       },
       "cf": {
         "投資キャッシュフロー": "-11241000000"
-      },
-      "rawTsvPath": "raw_tsv/8251/S100D0UQ.json"
+      }
     },
     {
       "periodStart": "2018-03-01",
@@ -90,8 +89,7 @@
       },
       "cf": {
         "投資キャッシュフロー": "-7612000000"
-      },
-      "rawTsvPath": "raw_tsv/8251/S100FUPA.json"
+      }
     },
     {
       "periodStart": "2019-09-01",
@@ -107,8 +105,7 @@
       },
       "pl": {},
       "bs": {},
-      "cf": {},
-      "rawTsvPath": "raw_tsv/8251/S100HPH1.json"
+      "cf": {}
     }
   ]
 }

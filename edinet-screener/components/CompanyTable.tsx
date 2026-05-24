@@ -40,6 +40,8 @@ export type CompanyMetric = {
   /** 営業CF＋投資CF */
   fcf?: string | null;
   operatingProfit: string | null;
+  operatingProfitRatio?: string | null;
+  netProfitRatio?: string | null;
   operatingCF: string | null;
   investingCF: string | null;
   financingCF: string | null;

@@ -25,7 +25,7 @@ export const DOCUMENTED_EDINET_ENDPOINTS = [
 export const RUNTIME_STATIC_DATA_PATHS = [
   { path: "/data/company_metrics.json", description: "企業一覧用の指標サマリー" },
   { path: "/data/summaries/{証券コード}.json", description: "企業ごとの四半期サマリー・財務テーブル" },
-  { path: "/data/raw_tsv/{証券コード}/{docID}.json", description: "大株主など抽出用の生 TSV 相当データ" },
+  { path: "/data/shareholders/{証券コード}.json", description: "大株主の時系列データ（ビルド時に TSV から抽出済み）" },
 ] as const;
 
 export const LICENSE_AND_GUIDELINES = {

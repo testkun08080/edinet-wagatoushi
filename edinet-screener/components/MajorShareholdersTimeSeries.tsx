@@ -1,42 +1,40 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { parseMajorShareholdersFromRaw, formatMajorShareholderCell } from "@/lib/parse-major-shareholders";
+import { formatMajorShareholderCell } from "@/lib/parse-major-shareholders";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Skeleton } from "./ui/skeleton";
 import { AlertCircle } from "lucide-react";
 
-export type PeriodWithRaw = {
-  periodEnd: string;
-  docID?: string;
-  rawTsvPath?: string;
+type ShareholderEntry = {
+  rank: number;
+  name: string;
+  shares: string | null;
+  ratio: string | null;
 };
 
-type PeriodParsed = {
+type PeriodData = {
   periodEnd: string;
   docID: string;
   byName: Map<string, { shares: string | null; ratio: string | null }>;
 };
 
-export function MajorShareholdersTimeSeries({ periods, active }: { periods: PeriodWithRaw[]; active: boolean }) {
-  const safePeriods = periods ?? [];
+export function MajorShareholdersTimeSeries({
+  secCode,
+  visiblePeriodEnds,
+  active,
+}: {
+  secCode: string;
+  visiblePeriodEnds: string[];
+  active: boolean;
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [parsed, setParsed] = useState<PeriodParsed[]>([]);
-
-  const periodsWithPath = useMemo(() => safePeriods.filter((p) => p.rawTsvPath?.trim()), [safePeriods]);
+  const [allPeriods, setAllPeriods] = useState<PeriodData[]>([]);
 
   useEffect(() => {
-    if (periodsWithPath.length === 0) {
-      setParsed([]);
-      setError(null);
-      setLoading(false);
-      return;
-    }
-    if (!active) {
-      return;
-    }
+    if (!active || !secCode) return;
 
     let cancelled = false;
     setLoading(true);
@@ -44,46 +42,30 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
 
     (async () => {
       try {
-        const results = await Promise.all(
-          periodsWithPath.map(async (p) => {
-            const path = p.rawTsvPath!.trim();
-            const url = `/data/${path}`;
-            try {
-              const res = await fetch(url);
-              if (!res.ok) {
-                return {
-                  periodEnd: p.periodEnd,
-                  docID: p.docID ?? "",
-                  byName: new Map<string, { shares: string | null; ratio: string | null }>(),
-                  failed: true as const,
-                };
-              }
-              const raw = (await res.json()) as { rows?: string[][] };
-              const list = parseMajorShareholdersFromRaw(raw);
-              const byName = new Map<string, { shares: string | null; ratio: string | null }>();
-              for (const e of list) {
-                byName.set(e.name, { shares: e.shares, ratio: e.ratio });
-              }
-              return { periodEnd: p.periodEnd, docID: p.docID ?? "", byName, failed: false as const };
-            } catch {
-              return {
-                periodEnd: p.periodEnd,
-                docID: p.docID ?? "",
-                byName: new Map<string, { shares: string | null; ratio: string | null }>(),
-                failed: true as const,
-              };
+        const res = await fetch(`/data/shareholders/${secCode}.json`);
+        if (!res.ok) {
+          if (res.status === 404) {
+            if (!cancelled) {
+              setAllPeriods([]);
+              setError("大株主の明細が含まれる提出書類が見つかりませんでした（四半期報告書などでは記載がない場合があります）。");
             }
-          }),
-        );
-
-        if (cancelled) return;
-
-        setParsed(results.map(({ periodEnd, docID, byName }) => ({ periodEnd, docID, byName })));
-
-        const anyData = results.some((r) => r.byName.size > 0);
-        if (!anyData) {
-          setError(
-            "大株主の明細が含まれる提出書類が見つかりませんでした（四半期報告書などでは記載がない場合があります）。",
+            return;
+          }
+          throw new Error(`HTTP ${res.status}`);
+        }
+        const data = (await res.json()) as {
+          secCode: string;
+          periods: { periodEnd: string; docID: string; shareholders: ShareholderEntry[] }[];
+        };
+        if (!cancelled) {
+          setAllPeriods(
+            data.periods.map((p) => {
+              const byName = new Map<string, { shares: string | null; ratio: string | null }>();
+              for (const s of p.shareholders) {
+                byName.set(s.name, { shares: s.shares, ratio: s.ratio });
+              }
+              return { periodEnd: p.periodEnd, docID: p.docID, byName };
+            }),
           );
         }
       } catch (e) {
@@ -95,35 +77,25 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
       }
     })();
 
-    return () => {
-      cancelled = true;
-    };
-  }, [active, periodsWithPath]);
+    return () => { cancelled = true; };
+  }, [active, secCode]);
+
+  // 表示期間でフィルタ
+  const parsed = useMemo(() => {
+    if (!visiblePeriodEnds.length) return allPeriods;
+    const set = new Set(visiblePeriodEnds);
+    return allPeriods.filter((p) => set.has(p.periodEnd));
+  }, [allPeriods, visiblePeriodEnds]);
 
   const rowNames = useMemo(() => {
     const set = new Set<string>();
     for (const col of parsed) {
-      for (const name of col.byName.keys()) {
-        set.add(name);
-      }
+      for (const name of col.byName.keys()) set.add(name);
     }
     return Array.from(set).sort((a, b) => a.localeCompare(b, "ja"));
   }, [parsed]);
 
-  if (!periodsWithPath.length) {
-    return (
-      <Alert>
-        <AlertCircle className="size-4" />
-        <AlertDescription>
-          この企業の開示データに大株主抽出用の生データパス（rawTsvPath）が含まれていません。
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (!active) {
-    return null;
-  }
+  if (!active) return null;
 
   if (loading) {
     return (
@@ -139,6 +111,15 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
       <Alert>
         <AlertCircle className="size-4" />
         <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!loading && rowNames.length === 0) {
+    return (
+      <Alert>
+        <AlertCircle className="size-4" />
+        <AlertDescription>大株主データがありません。</AlertDescription>
       </Alert>
     );
   }
@@ -173,9 +154,7 @@ export function MajorShareholdersTimeSeries({ periods, active }: { periods: Peri
             {rowNames.map((name) => (
               <TableRow key={name}>
                 <TableCell className="sticky left-0 z-10 max-w-[280px] bg-background font-medium align-top">
-                  <span className="line-clamp-3" title={name}>
-                    {name}
-                  </span>
+                  <span className="line-clamp-3" title={name}>{name}</span>
                 </TableCell>
                 {parsed.map((col) => {
                   const cell = col.byName.get(name);
