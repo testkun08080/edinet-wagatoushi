@@ -21,7 +21,7 @@ export function LandingStats() {
     <div className="bg-foreground">
       <div className="mx-auto flex max-w-4xl flex-col sm:flex-row">
         <StatItem target={4200} suffix="+" label="上場企業データ" />
-        <StatItem target={10} suffix="年分" label="四半期財務データ" />
+        <StatItem target={10} suffix="年+" label="四半期財務データ" />
         <StatItem target={20} suffix="+" label="スクリーニング指標" />
         <StatItem target={0} suffix="円" label="無料・MIT License" />
       </div>

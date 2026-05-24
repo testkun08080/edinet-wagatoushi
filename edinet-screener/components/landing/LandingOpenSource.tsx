@@ -5,9 +5,9 @@ import { ArrowRight, Github } from "lucide-react";
 
 const OSS_STATS = [
   { value: "MIT", label: "ライセンス" },
-  { value: "10年", label: "財務データ" },
+  { value: "10年+", label: "財務データ" },
   { value: "TypeScript", label: "フロントエンド" },
-  { value: "週次", label: "データ更新" },
+  { value: "毎日", label: "データ更新" },
 ] as const;
 
 export function LandingOpenSource() {
