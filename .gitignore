@@ -2,6 +2,7 @@ data-set
 node_modules
 __pycache__
 .env
+.env.*.local
 .pytest_cache
 .DS_Store
 dist
@@ -9,11 +10,19 @@ dist
 .vscode
 .idea
 .coverage
+.turbo
+coverage
 
+# v2 monorepo
+data/
+apps/api/wrangler.toml
+apps/web/wrangler.toml
+apps/wrapper/state/
+apps/wrapper/raw/
+
+# legacy paths (kept during migration)
 .agents/*
 edinet-wrapper/state/
 edinet-wrapper/raw/
-
-.DS_Store
 
 .codex/*

@@ -1,0 +1,5 @@
+packages:
+  - "apps/web"
+  - "apps/api"
+  - "packages/*"
+# apps/wrapper は Python (uv 管理) のため pnpm workspace 外
