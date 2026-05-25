@@ -1,0 +1,24 @@
+## Smoke-test the production-ready images locally before pushing to Workers.
+## Intended for CI use; not for daily dev work.
+
+services:
+  api:
+    build:
+      context: ../apps/api
+      target: production
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "8787:8787"
+
+  web:
+    build:
+      context: ../apps/web
+      target: production
+    depends_on:
+      - api
+    environment:
+      - PUBLIC_ENV__API_URL=http://api:8787
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"

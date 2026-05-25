@@ -1,0 +1,59 @@
+## v2 local dev stack.
+## `docker compose -f infra/compose.yml up` will:
+##   1. fetch a sample SQLite from GitHub Release (if missing)
+##   2. start the Hono API on :8787 backed by that SQLite (via miniflare)
+##   3. start the Vike web on :3000 pointing at the local API
+## To run an EDINET ingestion locally:
+##   docker compose -f infra/compose.yml --profile ingest run wrapper
+
+services:
+  db-init:
+    image: alpine:3.20
+    volumes:
+      - ../data:/data
+      - ./init:/init:ro
+    command: sh /init/fetch-sample-data.sh
+
+  api:
+    build:
+      context: ../apps/api
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    volumes:
+      - ../data:/app/data
+      - ../apps/api:/app
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - DB_PATH=/app/data/edinet.db
+    ports:
+      - "8787:8787"
+    command: pnpm dev
+
+  web:
+    build:
+      context: ../apps/web
+    depends_on:
+      - api
+    volumes:
+      - ../apps/web:/app
+    working_dir: /app
+    environment:
+      - PUBLIC_ENV__API_URL=http://localhost:8787
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+    command: pnpm dev
+
+  wrapper:
+    profiles: ["ingest"]
+    build:
+      context: ../apps/wrapper
+    volumes:
+      - ../data:/app/data
+      - ../apps/wrapper:/app
+    env_file:
+      - ../.env
+    working_dir: /app
+    command: uv run python scripts/ingest_daily.py --date $${INGEST_DATE:-$$(date +%F)} --output /app/data/edinet.db
