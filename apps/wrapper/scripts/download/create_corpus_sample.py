@@ -444,7 +444,7 @@ def main() -> None:
     parser.add_argument("--list_output", type=Path, default=None, help="企業リスト JSON の出力先")
     args = parser.parse_args()
 
-    repo_root = Path(__file__).resolve().parent.parent.parent.parent
+    repo_root = Path(__file__).resolve().parent.parent.parent.parent.parent
     data_set = args.data_set or (repo_root / "data-set")
     output_dir = args.output_dir or data_set
     year = args.year
@@ -486,7 +486,7 @@ def main() -> None:
         sec_codes = DEFAULT_SEC_CODES
 
     if sec_codes:
-        csv_path = repo_root / "edinet-wrapper" / "data" / "EdinetcodeDlInfo.csv"
+        csv_path = repo_root / "apps" / "wrapper" / "data" / "EdinetcodeDlInfo.csv"
         if not csv_path.exists():
             print(f"証券コード指定時は EdinetcodeDlInfo.csv が必要です: {csv_path}", file=sys.stderr)
             sys.exit(1)

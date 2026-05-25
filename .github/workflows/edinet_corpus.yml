@@ -140,16 +140,16 @@ jobs:
         run: uv python install 3.12
 
       - name: Install dependencies
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         run: uv sync
 
       # edinet2dataset の Downloader が data/ に EdinetcodeDlInfo を置くため
       - name: Ensure data directory for EDINET code list
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         run: mkdir -p data
 
       - name: Run corpus (one date range)
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           EDINET_REQUEST_DELAY: ${{ inputs.request_delay || '3' }}
@@ -163,5 +163,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: edinet_corpus-${{ inputs.doc_type || 'quarterly' }}-${{ matrix.start }}_to_${{ matrix.end }}
-          path: edinet-wrapper/edinet_corpus/
+          path: apps/wrapper/edinet_corpus/
           retention-days: 7

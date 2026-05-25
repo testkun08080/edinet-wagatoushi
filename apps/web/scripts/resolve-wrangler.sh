@@ -3,7 +3,7 @@
 resolve_wrangler() {
   local screener_root="${1:-}"
   if [ -z "$screener_root" ]; then
-    echo "resolve_wrangler requires the edinet-screener root path" >&2
+    echo "resolve_wrangler requires the apps/web root path" >&2
     return 1
   fi
 
@@ -22,6 +22,6 @@ resolve_wrangler() {
     return 0
   fi
 
-  echo "Wrangler not found. Run npm ci in edinet-screener or set WRANGLER_BIN." >&2
+  echo "Wrangler not found. Run npm ci in apps/web or set WRANGLER_BIN." >&2
   return 1
 }

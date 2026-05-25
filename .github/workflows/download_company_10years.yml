@@ -18,12 +18,12 @@ on:
         default: ""
         type: string
       companies_json:
-        description: "【必須は上3つのいずれか】edinetCode を含む JSON のパス（edinet-wrapper からの相対）。手早い試行: scripts/frontend/sample_companies.json"
+        description: "【必須は上3つのいずれか】edinetCode を含む JSON のパス（apps/wrapper からの相対）。手早い試行: scripts/frontend/sample_companies.json"
         required: false
         default: ""
         type: string
       output_dir:
-        description: "出力ディレクトリ（--output_dir、edinet-wrapper からの相対）"
+        description: "出力ディレクトリ（--output_dir、apps/wrapper からの相対）"
         required: false
         default: "data"
         type: string
@@ -122,11 +122,11 @@ jobs:
         run: uv python install 3.12
 
       - name: Install dependencies
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         run: uv sync
 
       - name: Run download_company_10years.py (one calendar year)
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           EDINET_REQUEST_DELAY: ${{ inputs.request_delay || '3' }}
@@ -186,7 +186,7 @@ jobs:
         with:
           # run_attempt の edinet-company-{run}-{attempt} とパターン衝突しないよう yr を付与
           name: edinet-company-yr-${{ github.run_id }}-${{ matrix.year }}
-          path: edinet-wrapper/${{ inputs.output_dir || 'data' }}
+          path: apps/wrapper/${{ inputs.output_dir || 'data' }}
           retention-days: 7
 
   merge:
@@ -210,16 +210,16 @@ jobs:
           OUT_SUB: ${{ inputs.output_dir || 'data' }}
         run: |
           set -euo pipefail
-          root="merged/edinet-wrapper/$OUT_SUB"
+          root="merged/apps/wrapper/$OUT_SUB"
           if [ ! -d "$root" ]; then
             echo "::error::Expected directory not found: $root"
             exit 1
           fi
-          python3 edinet-wrapper/scripts/download/merge_company_metadata.py "$root"
+          python3 apps/wrapper/scripts/download/merge_company_metadata.py "$root"
 
       - name: Upload combined download artifact
         uses: actions/upload-artifact@v7
         with:
           name: edinet-company-${{ github.run_id }}-${{ github.run_attempt }}
-          path: merged/edinet-wrapper/${{ inputs.output_dir || 'data' }}
+          path: merged/apps/wrapper/${{ inputs.output_dir || 'data' }}
           retention-days: 7

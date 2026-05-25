@@ -37,7 +37,7 @@ def load_builder_functions():
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build public/data JSON files from D1-compatible DB")
     parser.add_argument("--db_path", type=Path, default=Path("state/edinet_pipeline.db"))
-    parser.add_argument("--output", type=Path, default=Path("../edinet-screener/public/data"))
+    parser.add_argument("--output", type=Path, default=Path("../web/public/data"))
     parser.add_argument("--strict", action="store_true")
     parser.add_argument("--no_shareholders", action="store_true", help="shareholders/ の生成をスキップ")
     parser.add_argument("--workers", type=int, default=multiprocessing.cpu_count(),

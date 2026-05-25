@@ -12,7 +12,7 @@ from db_common import normalize_sec_code
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate public/data JSON consistency and production coverage")
-    parser.add_argument("--public_data", type=Path, default=Path("../edinet-screener/public/data"))
+    parser.add_argument("--public_data", type=Path, default=Path("../web/public/data"))
     parser.add_argument("--previous_metrics", type=Path, default=None)
     parser.add_argument("--max_drop_ratio", type=float, default=0.1)
     parser.add_argument(

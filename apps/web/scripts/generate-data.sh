@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCREENER_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(cd "$SCREENER_ROOT/.." && pwd)"
 DATA_SET="${DATA_SET_PATH:-$REPO_ROOT/data-set}"
-WRAPPER="$REPO_ROOT/edinet-wrapper"
+WRAPPER="$REPO_ROOT/apps/wrapper"
 DATA_SOURCE="${DATA_SOURCE:-dataset}"
 
 if [ "$DATA_SOURCE" != "d1" ]; then
@@ -20,11 +20,11 @@ if [ "$DATA_SOURCE" != "d1" ]; then
 fi
 
 if [ "$DATA_SOURCE" = "dataset" ]; then
-  # data-set がない場合は edinet-wrapper/data にフォールバック（ローカル開発用サンプルデータ）
+  # data-set がない場合は apps/wrapper/data にフォールバック（ローカル開発用サンプルデータ）
   if [ ! -d "$DATA_SET" ]; then
     if [ -d "$WRAPPER/data" ] && [ -n "$(ls -A "$WRAPPER/data" 2>/dev/null)" ]; then
       DATA_SET="$WRAPPER/data"
-      echo "[generate-data] data-set が見つからないため edinet-wrapper/data を使用します。"
+      echo "[generate-data] data-set が見つからないため apps/wrapper/data を使用します。"
     else
       if [ "$DATA_SOURCE" = "dataset" ]; then
         echo "[generate-data] data-set がありません ($DATA_SET)。スキップします。"
@@ -40,7 +40,7 @@ if [ "$DATA_SOURCE" != "dataset" ] && [ "$DATA_SOURCE" != "d1" ]; then
 fi
 
 if [ ! -d "$WRAPPER" ] || [ ! -f "$WRAPPER/scripts/frontend/build_screener_data.py" ]; then
-  echo "[generate-data] edinet-wrapper が見つかりません。スキップします。"
+  echo "[generate-data] apps/wrapper が見つかりません。スキップします。"
   exit 0
 fi
 

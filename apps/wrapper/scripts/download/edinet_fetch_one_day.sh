@@ -4,7 +4,7 @@
 # 手動実行、ローカル cron、または GitHub Actions（edinet_fetch_one_day.yml 等）から呼び出す。
 #
 # 使い方:
-#   cd edinet-wrapper
+#   cd apps/wrapper
 #   export EDINET_API_KEY=...
 #   ./scripts/download/edinet_fetch_one_day.sh              # 昨日（Asia/Tokyo）
 #   ./scripts/download/edinet_fetch_one_day.sh 2026-04-11   # 指定日

@@ -1,6 +1,12 @@
 {
+  "name": "@edinet/web",
+  "version": "2.0.0-alpha.0",
+  "private": true,
   "scripts": {
     "dev": "vike dev",
+    "typecheck": "tsc --noEmit",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production",
     "generate:ogp": "tsx scripts/generate-ogp.tsx",
     "generate-data": "bash scripts/generate-data.sh",
     "d1:apply-schema:staging": "bash scripts/d1-apply-schema.sh staging",

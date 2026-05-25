@@ -13,7 +13,7 @@ if [ -z "$ENVIRONMENT" ]; then
   exit 1
 fi
 
-SCHEMA_PATH="$REPO_ROOT/edinet-wrapper/sql/d1_schema.sql"
+SCHEMA_PATH="$REPO_ROOT/apps/wrapper/sql/d1_schema.sql"
 if [ ! -f "$SCHEMA_PATH" ]; then
   echo "Schema not found: $SCHEMA_PATH"
   exit 1

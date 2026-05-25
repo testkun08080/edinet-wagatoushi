@@ -7,7 +7,7 @@ case "$ENVIRONMENT" in
   *)
     echo "Usage: $0 <staging|production>"
     echo "example: $0 staging"
-    echo "WARNING: production seeds the live D1 database from edinet-wrapper/data."
+    echo "WARNING: production seeds the live D1 database from apps/wrapper/data."
     exit 1
     ;;
 esac
@@ -15,7 +15,7 @@ esac
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCREENER_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(cd "$SCREENER_ROOT/.." && pwd)"
-WRAPPER="$REPO_ROOT/edinet-wrapper"
+WRAPPER="$REPO_ROOT/apps/wrapper"
 
 DB_PATH="${DB_PATH:-$WRAPPER/state/edinet_pipeline_seed.db}"
 SQL_DIR="${SQL_DIR:-$WRAPPER/state/d1-seed-sql}"

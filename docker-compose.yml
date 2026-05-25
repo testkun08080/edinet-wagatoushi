@@ -1,9 +1,11 @@
+## Legacy compose for v1 (edinet-screener static-JSON pipeline)
+## v2 monorepo は infra/compose.yml を使用すること。
 services:
   screener:
-    build: ./edinet-screener
+    build: ./apps/web
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=development
     volumes:
-      - ./edinet-screener/public:/app/public:ro
+      - ./apps/web/public:/app/public:ro

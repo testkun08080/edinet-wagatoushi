@@ -925,7 +925,7 @@ def write_column_manifest(output_dir: Path, *, config_path: Path) -> None:
 
     # Emit repo-relative path (avoid leaking absolute paths from the build machine)
     try:
-        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent.parent
         rel_config = config_path.resolve().relative_to(repo_root)
         generated_from = rel_config.as_posix()
     except (ValueError, OSError):
@@ -1148,9 +1148,9 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    project_root = Path(__file__).resolve().parent.parent.parent.parent
+    project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
     data_set = args.data_set or (project_root / "data-set")
-    output_dir = args.output or (project_root / "edinet-screener" / "public" / "data")
+    output_dir = args.output or (project_root / "apps" / "web" / "public" / "data")
 
     if args.metrics_only:
         run_metrics_only(output_dir)

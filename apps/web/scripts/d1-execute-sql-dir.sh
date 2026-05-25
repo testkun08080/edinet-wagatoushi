@@ -11,7 +11,7 @@ SQL_DIR="${2:-}"
 START_FROM="${3:-}"
 if [ -z "$ENVIRONMENT" ] || [ -z "$SQL_DIR" ]; then
   echo "Usage: $0 <staging|production> <sql-dir> [start-from-chunk]"
-  echo "example: $0 production ../edinet-wrapper/state/d1-seed-sql 0003_documents_0001.sql"
+  echo "example: $0 production ../apps/wrapper/state/d1-seed-sql 0003_documents_0001.sql"
   exit 1
 fi
 

@@ -41,15 +41,15 @@ jobs:
         run: uv python install 3.12
 
       - name: Install dependencies
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         run: uv sync
 
       - name: Ensure data directory for EDINET code list
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         run: mkdir -p data
 
       - name: Run one-day fetch (amended types only)
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
@@ -80,5 +80,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: edinet-amended-weekly-${{ github.run_id }}
-          path: edinet-wrapper/edinet_corpus/
+          path: apps/wrapper/edinet_corpus/
           retention-days: 7

@@ -69,14 +69,14 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
-          cache-dependency-path: edinet-screener/package-lock.json
+          cache-dependency-path: apps/web/package-lock.json
 
       - name: Install wrapper dependencies
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         run: uv sync
 
       - name: Install frontend dependencies
-        working-directory: edinet-screener
+        working-directory: apps/web
         run: npm ci
 
       - name: Resolve run parameters
@@ -109,32 +109,32 @@ jobs:
           echo "target_date=$TARGET_DATE" >> "$GITHUB_OUTPUT"
 
       - name: Preserve previous public data metrics
-        working-directory: edinet-screener
+        working-directory: apps/web
         run: |
           set -euo pipefail
-          mkdir -p ../edinet-wrapper/state
+          mkdir -p ../apps/wrapper/state
           if [ -f public/data/company_metrics.json ]; then
-            cp public/data/company_metrics.json ../edinet-wrapper/state/previous_company_metrics.json
+            cp public/data/company_metrics.json ../apps/wrapper/state/previous_company_metrics.json
           fi
 
       - name: Prepare D1 snapshot locally
         if: ${{ steps.params.outputs.source == 'd1' }}
-        working-directory: edinet-screener
+        working-directory: apps/web
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
         run: |
           set -euo pipefail
-          mkdir -p ../edinet-wrapper/state
+          mkdir -p ../apps/wrapper/state
           bash scripts/d1-apply-schema.sh "$D1_ENVIRONMENT"
           WRANGLER_BIN="$(bash -c 'source scripts/resolve-wrangler.sh; resolve_wrangler "$PWD"')"
           "$WRANGLER_BIN" d1 export EDINET_DB \
             --env "$D1_ENVIRONMENT" \
             --remote \
             --no-schema \
-            --output ../edinet-wrapper/state/d1-export.sql
-          cd ../edinet-wrapper
+            --output ../apps/wrapper/state/d1-export.sql
+          cd ../apps/wrapper
           uv run python scripts/pipeline/load_sql_dump_to_sqlite.py \
             --sql_path state/d1-export.sql \
             --db_path state/edinet_pipeline.db \
@@ -143,7 +143,7 @@ jobs:
 
       - name: Ingest daily EDINET into D1-compatible DB
         if: ${{ steps.params.outputs.source == 'd1' }}
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           EDINET_REQUEST_DELAY: "3"
@@ -167,7 +167,7 @@ jobs:
 
       - name: Persist daily delta to Cloudflare D1
         if: ${{ steps.params.outputs.source == 'd1' }}
-        working-directory: edinet-wrapper
+        working-directory: apps/wrapper
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -188,42 +188,42 @@ jobs:
             echo "Chunk guard triggered: $CHUNK_COUNT > $MAX_D1_CHUNKS_PER_RUN"
             exit 1
           fi
-          cd ../edinet-screener
-          bash scripts/d1-execute-sql-dir.sh "$D1_ENVIRONMENT" ../edinet-wrapper/state/d1-delta-sql
+          cd ../apps/web
+          bash scripts/d1-execute-sql-dir.sh "$D1_ENVIRONMENT" ../apps/wrapper/state/d1-delta-sql
 
       - name: Build screener data
-        working-directory: edinet-screener
+        working-directory: apps/web
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
           DATA_SET_URL: ${{ secrets.DATA_SET_URL }}
           DATA_SCOPE: ${{ steps.params.outputs.scope }}
           DATA_SOURCE: ${{ steps.params.outputs.source }}
-          D1_DB_PATH: ../edinet-wrapper/state/edinet_pipeline.db
+          D1_DB_PATH: ../apps/wrapper/state/edinet_pipeline.db
           FORCE_DOWNLOAD: ${{ steps.params.outputs.force_download == 'true' && '1' || '0' }}
         run: npm run generate-data
 
       - name: Validate generated data quality
-        working-directory: edinet-screener
+        working-directory: apps/web
         run: |
           set -euo pipefail
           test -f public/data/company_metrics.json
           test -f public/data/companies.json
           test -d public/data/summaries
-          cd ../edinet-wrapper
+          cd ../apps/wrapper
           uv run python scripts/pipeline/validate_public_data.py \
-            --public_data ../edinet-screener/public/data \
+            --public_data ../apps/web/public/data \
             --previous_metrics state/previous_company_metrics.json \
             --max_drop_ratio 0.1
 
       - name: Test build frontend
-        working-directory: edinet-screener
+        working-directory: apps/web
         run: npm run build:app
 
       - name: Commit and push generated data
         run: |
           set -euo pipefail
           BRANCH="${GITHUB_REF_NAME}"
-          git add edinet-screener/public/data
+          git add apps/web/public/data
           if git diff --cached --quiet; then
             echo "No data changes to commit."
             exit 0
@@ -235,7 +235,7 @@ jobs:
 
       - name: Write run summary
         if: always()
-        working-directory: edinet-screener
+        working-directory: apps/web
         run: |
           {
             echo "## Screener refresh result"
