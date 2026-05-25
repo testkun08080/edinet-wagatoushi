@@ -4,12 +4,14 @@ Schema mirrors packages/db/src/schema.ts (drizzle). Until drizzle-kit
 generates the canonical SQL we keep sql/d1_schema.sql as the source of
 truth; this module reads it on demand to initialise a local DB.
 """
+
 from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 SCHEMA_PATH = Path(__file__).resolve().parent.parent.parent / "sql" / "d1_schema.sql"
 
@@ -161,7 +163,7 @@ def export_inserts_after(conn: sqlite3.Connection, since_ts: str) -> Iterable[st
     """
     for table in ("companies", "documents", "period_financials"):
         cursor = conn.execute(
-            f"SELECT * FROM {table} WHERE updated_at >= ?",  # noqa: S608
+            f"SELECT * FROM {table} WHERE updated_at >= ?",
             (since_ts,),
         )
         cols = [d[0] for d in cursor.description or []]

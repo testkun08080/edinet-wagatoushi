@@ -1,8 +1,4 @@
-import {
-  getCompanyByEdinetCode,
-  getCompanyBySecCode,
-  listCompanies,
-} from "@edinet/db/queries";
+import { getCompanyByEdinetCode, getCompanyBySecCode, listCompanies } from "@edinet/db/queries";
 import type { CompanyListResponse } from "@edinet/types";
 import { Hono } from "hono";
 import type { AppEnv } from "../env.js";

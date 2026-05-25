@@ -8,6 +8,7 @@ Extracted from the monolithic build_screener_data.py so that:
 All inputs are expected to come from the FinancialData blocks defined in
 edinet_wrapper.schema. Missing values return None rather than raising.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass

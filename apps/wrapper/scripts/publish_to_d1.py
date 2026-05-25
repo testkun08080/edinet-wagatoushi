@@ -14,6 +14,7 @@ Usage:
 Apply to D1 separately so this script needs no Cloudflare credentials:
     wrangler d1 execute edinet-production --remote --file /tmp/delta.sql
 """
+
 from __future__ import annotations
 
 import argparse

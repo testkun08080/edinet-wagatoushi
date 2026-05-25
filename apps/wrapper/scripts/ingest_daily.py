@@ -10,6 +10,7 @@ Usage:
         --output data/edinet.db \
         --known-docs /tmp/known_docs.json   # optional, skips re-download
 """
+
 from __future__ import annotations
 
 import argparse

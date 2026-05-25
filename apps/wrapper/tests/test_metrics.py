@@ -1,4 +1,5 @@
 """Smoke tests for edinet_wrapper.metrics."""
+
 from edinet_wrapper.metrics import compute_core_metrics
 
 

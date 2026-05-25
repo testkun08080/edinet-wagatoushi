@@ -7,9 +7,7 @@ export const companies = sqliteTable("companies", {
   filerName: text("filer_name").notNull(),
   listedCategory: text("listed_category"),
   industry: text("industry"),
-  updatedAt: text("updated_at")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const documents = sqliteTable(
@@ -30,9 +28,7 @@ export const documents = sqliteTable(
     withdrawalStatus: text("withdrawal_status"),
     docDescription: text("doc_description"),
     sourceMetaJson: text("source_meta_json").notNull(),
-    updatedAt: text("updated_at")
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   },
   (t) => ({
     submitDateIdx: index("idx_documents_submit_date").on(t.submitDateTime),
@@ -60,9 +56,7 @@ export const periodFinancials = sqliteTable(
     bsJson: text("bs_json").notNull(),
     cfJson: text("cf_json").notNull(),
     rawTsvPath: text("raw_tsv_path"),
-    updatedAt: text("updated_at")
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.edinetCode, t.periodEnd, t.docType] }),
@@ -86,9 +80,7 @@ export const rawFilesIndex = sqliteTable(
     objectKey: text("object_key").notNull(),
     fileHash: text("file_hash"),
     fileSizeBytes: integer("file_size_bytes"),
-    createdAt: text("created_at")
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP`),
+    createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   },
   (t) => ({
     uniqDocFile: unique("uq_raw_files_doc_file").on(t.docId, t.fileType),
@@ -101,9 +93,7 @@ export const pipelineRuns = sqliteTable("pipeline_runs", {
   scope: text("scope").notNull(),
   targetDate: text("target_date").notNull(),
   status: text("status").notNull(),
-  startedAt: text("started_at")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  startedAt: text("started_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   finishedAt: text("finished_at"),
   fetchedDocuments: integer("fetched_documents").notNull().default(0),
   ingestedDocuments: integer("ingested_documents").notNull().default(0),
@@ -117,9 +107,7 @@ export const dailyMetrics = sqliteTable("daily_metrics", {
   companyCount: integer("company_count").notNull(),
   documentCount: integer("document_count").notNull(),
   periodFinancialCount: integer("period_financial_count").notNull(),
-  generatedAt: text("generated_at")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  generatedAt: text("generated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const secCodeLatestPeriods = sqliteTable(
@@ -135,9 +123,7 @@ export const secCodeLatestPeriods = sqliteTable(
       .references(() => documents.docId),
     latestPeriodEnd: text("latest_period_end").notNull(),
     latestSubmitDateTime: text("latest_submit_date_time"),
-    updatedAt: text("updated_at")
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   },
   (t) => ({
     periodEndIdx: index("idx_sec_code_latest_periods_period_end").on(t.latestPeriodEnd),

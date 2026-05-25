@@ -4,6 +4,7 @@ This is a thin wrapper around the legacy download_company_10years.py
 that targets the new SQLite schema. Useful for fork users seeding their
 own D1 from scratch.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -26,7 +27,9 @@ def main() -> int:
 
     to_d = date.fromisoformat(args.to_date) if args.to_date else date.today()
     from_d = (
-        date.fromisoformat(args.from_date) if args.from_date else to_d - timedelta(days=365 * args.years)
+        date.fromisoformat(args.from_date)
+        if args.from_date
+        else to_d - timedelta(days=365 * args.years)
     )
 
     print(f"[backfill] {from_d} → {to_d} into {args.output}")

@@ -1,5 +1,5 @@
 import { getSummaryBySecCode } from "@edinet/db/queries";
-import type { PeriodFinancialView, SummaryResponse } from "@edinet/types";
+import type { FinancialBlock, PeriodFinancialView, SummaryResponse } from "@edinet/types";
 import { Hono } from "hono";
 import type { AppEnv } from "../env.js";
 import { getDb } from "../middleware/db.js";
@@ -32,10 +32,10 @@ export const summariesRoutes = new Hono<AppEnv>().get("/:secCode", async (c) => 
   return c.json(body);
 });
 
-function safeParse(s: string | null): Record<string, unknown> {
+function safeParse(s: string | null): FinancialBlock {
   if (!s) return {};
   try {
-    return JSON.parse(s);
+    return JSON.parse(s) as FinancialBlock;
   } catch {
     return {};
   }

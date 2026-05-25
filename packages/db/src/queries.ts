@@ -1,12 +1,7 @@
 import { and, desc, eq, like, or, sql } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
-import {
-  companies,
-  documents,
-  periodFinancials,
-  secCodeLatestPeriods,
-} from "./schema.js";
-import * as schema from "./schema.js";
+import { companies, documents, periodFinancials, secCodeLatestPeriods } from "./schema.js";
+import type * as schema from "./schema.js";
 
 export type DB = DrizzleD1Database<typeof schema>;
 
@@ -71,14 +66,8 @@ export async function getDocumentIds(db: DB) {
 }
 
 export async function countAll(db: DB) {
-  const [companyCount] = await db
-    .select({ c: sql<number>`count(*)` })
-    .from(companies)
-    .all();
-  const [docCount] = await db
-    .select({ c: sql<number>`count(*)` })
-    .from(documents)
-    .all();
+  const [companyCount] = await db.select({ c: sql<number>`count(*)` }).from(companies).all();
+  const [docCount] = await db.select({ c: sql<number>`count(*)` }).from(documents).all();
   return {
     companies: companyCount?.c ?? 0,
     documents: docCount?.c ?? 0,
