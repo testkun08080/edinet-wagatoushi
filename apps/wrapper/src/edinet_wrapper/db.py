@@ -1,0 +1,179 @@
+"""SQLite UPSERT helpers shared by ingest_daily / backfill / publish_to_d1.
+
+Schema mirrors packages/db/src/schema.ts (drizzle). Until drizzle-kit
+generates the canonical SQL we keep sql/d1_schema.sql as the source of
+truth; this module reads it on demand to initialise a local DB.
+"""
+from __future__ import annotations
+
+import json
+import sqlite3
+from pathlib import Path
+from typing import Any, Iterable
+
+SCHEMA_PATH = Path(__file__).resolve().parent.parent.parent / "sql" / "d1_schema.sql"
+
+
+def open_db(path: Path) -> sqlite3.Connection:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(path))
+    conn.execute("PRAGMA foreign_keys = ON")
+    conn.execute("PRAGMA journal_mode = WAL")
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def apply_schema(conn: sqlite3.Connection, schema_path: Path = SCHEMA_PATH) -> None:
+    if not schema_path.exists():
+        raise FileNotFoundError(f"schema not found: {schema_path}")
+    sql = schema_path.read_text(encoding="utf-8")
+    conn.executescript(sql)
+    conn.commit()
+
+
+def upsert_company(
+    conn: sqlite3.Connection,
+    *,
+    edinet_code: str,
+    sec_code: str | None,
+    filer_name: str,
+    listed_category: str | None = None,
+    industry: str | None = None,
+) -> None:
+    conn.execute(
+        """
+        INSERT INTO companies (edinet_code, sec_code, filer_name, listed_category, industry)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(edinet_code) DO UPDATE SET
+          sec_code=excluded.sec_code,
+          filer_name=excluded.filer_name,
+          listed_category=excluded.listed_category,
+          industry=excluded.industry,
+          updated_at=CURRENT_TIMESTAMP
+        """,
+        (edinet_code, sec_code, filer_name, listed_category, industry),
+    )
+
+
+def upsert_document(conn: sqlite3.Connection, doc: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        INSERT INTO documents (
+          doc_id, edinet_code, sec_code, doc_type, ordinance_code, form_code,
+          doc_type_code, period_start, period_end, submit_date_time,
+          withdrawal_status, doc_description, source_meta_json
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(doc_id) DO UPDATE SET
+          sec_code=excluded.sec_code,
+          doc_type=excluded.doc_type,
+          period_start=excluded.period_start,
+          period_end=excluded.period_end,
+          submit_date_time=excluded.submit_date_time,
+          withdrawal_status=excluded.withdrawal_status,
+          doc_description=excluded.doc_description,
+          source_meta_json=excluded.source_meta_json,
+          updated_at=CURRENT_TIMESTAMP
+        """,
+        (
+            doc["doc_id"],
+            doc["edinet_code"],
+            doc.get("sec_code"),
+            doc["doc_type"],
+            doc.get("ordinance_code"),
+            doc.get("form_code"),
+            doc.get("doc_type_code"),
+            doc.get("period_start"),
+            doc.get("period_end"),
+            doc.get("submit_date_time"),
+            doc.get("withdrawal_status"),
+            doc.get("doc_description"),
+            json.dumps(doc.get("source_meta", {}), ensure_ascii=False),
+        ),
+    )
+
+
+def upsert_period_financial(
+    conn: sqlite3.Connection,
+    *,
+    edinet_code: str,
+    sec_code: str | None,
+    doc_id: str,
+    doc_type: str,
+    period_start: str | None,
+    period_end: str,
+    submit_date_time: str | None,
+    filer_name: str,
+    summary: dict[str, Any],
+    pl: dict[str, Any],
+    bs: dict[str, Any],
+    cf: dict[str, Any],
+    raw_tsv_path: str | None = None,
+) -> None:
+    conn.execute(
+        """
+        INSERT INTO period_financials (
+          edinet_code, sec_code, doc_id, doc_type, period_start, period_end,
+          submit_date_time, filer_name, summary_json, pl_json, bs_json, cf_json, raw_tsv_path
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(edinet_code, period_end, doc_type) DO UPDATE SET
+          sec_code=excluded.sec_code,
+          doc_id=excluded.doc_id,
+          period_start=excluded.period_start,
+          submit_date_time=excluded.submit_date_time,
+          filer_name=excluded.filer_name,
+          summary_json=excluded.summary_json,
+          pl_json=excluded.pl_json,
+          bs_json=excluded.bs_json,
+          cf_json=excluded.cf_json,
+          raw_tsv_path=excluded.raw_tsv_path,
+          updated_at=CURRENT_TIMESTAMP
+        """,
+        (
+            edinet_code,
+            sec_code,
+            doc_id,
+            doc_type,
+            period_start,
+            period_end,
+            submit_date_time,
+            filer_name,
+            json.dumps(summary, ensure_ascii=False),
+            json.dumps(pl, ensure_ascii=False),
+            json.dumps(bs, ensure_ascii=False),
+            json.dumps(cf, ensure_ascii=False),
+            raw_tsv_path,
+        ),
+    )
+
+
+def known_doc_ids(conn: sqlite3.Connection) -> set[str]:
+    rows = conn.execute("SELECT doc_id FROM documents").fetchall()
+    return {r["doc_id"] for r in rows}
+
+
+def export_inserts_after(conn: sqlite3.Connection, since_ts: str) -> Iterable[str]:
+    """Yield SQL INSERT/UPDATE statements for rows updated after `since_ts`.
+
+    Used by publish_to_d1.py to emit a delta SQL file that `wrangler d1 execute`
+    can apply against the remote D1 instance.
+    """
+    for table in ("companies", "documents", "period_financials"):
+        cursor = conn.execute(
+            f"SELECT * FROM {table} WHERE updated_at >= ?",  # noqa: S608
+            (since_ts,),
+        )
+        cols = [d[0] for d in cursor.description or []]
+        for row in cursor.fetchall():
+            values = ", ".join(_sql_literal(row[c]) for c in cols)
+            yield f"INSERT OR REPLACE INTO {table} ({', '.join(cols)}) VALUES ({values});"
+
+
+def _sql_literal(v: Any) -> str:
+    if v is None:
+        return "NULL"
+    if isinstance(v, (int, float)):
+        return str(v)
+    s = str(v).replace("'", "''")
+    return f"'{s}'"
