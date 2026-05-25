@@ -1,257 +1,95 @@
-name: Screener daily refresh
+name: daily-refresh-v2
 
 on:
+  schedule:
+    - cron: "10 20 * * *" # 05:10 JST
   workflow_dispatch:
     inputs:
-      data_scope:
-        description: "データ生成モード"
-        required: true
-        default: "full"
-        type: choice
-        options:
-          - sample
-          - full
-      data_source:
-        description: "データソース(dataset|d1)"
-        required: false
-        default: "d1"
-        type: choice
-        options:
-          - dataset
-          - d1
-      force_dataset_download:
-        description: "既存 data-set があっても再取得する"
-        required: false
-        default: false
-        type: boolean
-      d1_environment:
-        description: "D1 environment for manual runs"
-        required: false
-        default: "staging"
-        type: choice
-        options:
-          - staging
-          - production
       target_date:
-        description: "ingest 対象日 YYYY-MM-DD（提出日ベース）。空欄＝昨日（JST）"
+        description: "Target submission date (YYYY-MM-DD), default = today"
         required: false
-        default: ""
-        type: string
-  schedule:
-    # 毎日 05:10 JST（UTC 20:10）
-    - cron: "10 20 * * *"
 
-env:
-  UV_COMPILE_BYTECODE: 0
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
-permissions:
-  contents: write
+concurrency:
+  group: daily-refresh-v2
+  cancel-in-progress: false
 
 jobs:
-  refresh-and-deploy:
+  ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 60
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v3
+        with: { version: latest }
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: "latest"
-
-      - name: Set up Python
-        run: uv python install 3.12
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: "22"
-          cache: "npm"
-          cache-dependency-path: apps/web/package-lock.json
-
-      - name: Install wrapper dependencies
+      - name: uv sync
         working-directory: apps/wrapper
-        run: uv sync
+        run: uv sync --frozen
 
-      - name: Install frontend dependencies
-        working-directory: apps/web
-        run: npm ci
-
-      - name: Resolve run parameters
-        id: params
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          INPUT_SCOPE: ${{ inputs.data_scope }}
-          INPUT_SOURCE: ${{ inputs.data_source }}
-          INPUT_FORCE_DOWNLOAD: ${{ inputs.force_dataset_download }}
-          INPUT_D1_ENVIRONMENT: ${{ inputs.d1_environment }}
-          INPUT_TARGET_DATE: ${{ inputs.target_date || '' }}
+      - name: Render wrangler.toml from template
         run: |
-          set -euo pipefail
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            SCOPE="${INPUT_SCOPE:-full}"
-            SOURCE="${INPUT_SOURCE:-d1}"
-            FORCE_DL="${INPUT_FORCE_DOWNLOAD:-false}"
-            D1_ENVIRONMENT="${INPUT_D1_ENVIRONMENT:-staging}"
+          sed \
+            -e "s|__STAGING_D1_ID__|${{ secrets.D1_STAGING_ID }}|" \
+            -e "s|__PROD_D1_ID__|${{ secrets.D1_PRODUCTION_ID }}|" \
+            -e "s|__STAGING_KV_ID__|${{ secrets.KV_STAGING_ID }}|" \
+            -e "s|__PROD_KV_ID__|${{ secrets.KV_PRODUCTION_ID }}|" \
+            apps/api/wrangler.toml.template > apps/api/wrangler.toml
+
+      - name: Fetch known doc_ids from D1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx -y wrangler@4 d1 execute edinet-production --remote \
+            --config apps/api/wrangler.toml \
+            --command "SELECT doc_id FROM documents" --json \
+            > /tmp/known.json || echo "[]" > /tmp/known.json
+
+      - name: Ingest new documents
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+        working-directory: apps/wrapper
+        run: |
+          mkdir -p data
+          uv run python scripts/ingest_daily.py \
+            --date "${{ github.event.inputs.target_date || '' }}" \
+            --known-docs /tmp/known.json \
+            --output data/edinet.db || true
+
+      - name: Emit delta SQL
+        working-directory: apps/wrapper
+        run: |
+          ## 25h window: cron runs hourly-ish, +1h slack covers retries.
+          ## INSERT OR REPLACE in publish_to_d1.py makes the small overlap idempotent.
+          since=$(date -u -d "25 hours ago" +%FT%T)
+          uv run python scripts/publish_to_d1.py \
+            --source data/edinet.db \
+            --since "$since" \
+            --output /tmp/delta.sql
+
+      - name: Apply delta to D1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -s /tmp/delta.sql ]; then
+            npx -y wrangler@4 d1 execute edinet-production --remote \
+              --config apps/api/wrangler.toml \
+              --file /tmp/delta.sql
           else
-            SCOPE="full"
-            SOURCE="d1"
-            FORCE_DL="false"
-            D1_ENVIRONMENT="production"
-          fi
-          TARGET_DATE="${INPUT_TARGET_DATE:-}"
-          echo "scope=$SCOPE" >> "$GITHUB_OUTPUT"
-          echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
-          echo "force_download=$FORCE_DL" >> "$GITHUB_OUTPUT"
-          echo "d1_environment=$D1_ENVIRONMENT" >> "$GITHUB_OUTPUT"
-          echo "target_date=$TARGET_DATE" >> "$GITHUB_OUTPUT"
-
-      - name: Preserve previous public data metrics
-        working-directory: apps/web
-        run: |
-          set -euo pipefail
-          mkdir -p ../wrapper/state
-          if [ -f public/data/company_metrics.json ]; then
-            cp public/data/company_metrics.json ../wrapper/state/previous_company_metrics.json
+            echo "No delta to apply"
           fi
 
-      - name: Prepare D1 snapshot locally
-        if: ${{ steps.params.outputs.source == 'd1' }}
-        working-directory: apps/web
+      - name: Snapshot backup to R2
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
         run: |
-          set -euo pipefail
-          mkdir -p ../wrapper/state
-          bash scripts/d1-apply-schema.sh "$D1_ENVIRONMENT"
-          WRANGLER_BIN="$(bash -c 'source scripts/resolve-wrangler.sh; resolve_wrangler "$PWD"')"
-          "$WRANGLER_BIN" d1 export EDINET_DB \
-            --env "$D1_ENVIRONMENT" \
-            --remote \
-            --no-schema \
-            --output ../wrapper/state/d1-export.sql
-          cd ../wrapper
-          uv run python scripts/pipeline/load_sql_dump_to_sqlite.py \
-            --sql_path state/d1-export.sql \
-            --db_path state/edinet_pipeline.db \
-            --schema_path sql/d1_schema.sql \
-            --reset
-
-      - name: Ingest daily EDINET into D1-compatible DB
-        if: ${{ steps.params.outputs.source == 'd1' }}
-        working-directory: apps/wrapper
-        env:
-          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
-          EDINET_REQUEST_DELAY: "3"
-        run: |
-          set -euo pipefail
-          OPTIONAL_TARGET=()
-          TD="${{ steps.params.outputs.target_date }}"
-          if [ -n "$TD" ]; then
-            OPTIONAL_TARGET+=(--target_date "$TD")
+          date_tag=$(date +%F)
+          npx -y wrangler@4 d1 export edinet-production --remote \
+            --config apps/api/wrangler.toml \
+            --output /tmp/snapshot.sql || true
+          if [ -s /tmp/snapshot.sql ]; then
+            npx -y wrangler@4 r2 object put "edinet-data/snapshots/${date_tag}.sql" \
+              --file /tmp/snapshot.sql --remote
           fi
-          uv run python scripts/pipeline/ingest_daily_edinet_to_db.py \
-            --doc_types "annual,quarterly,semiannual,large_holding" \
-            --db_path state/edinet_pipeline.db \
-            --schema_path sql/d1_schema.sql \
-            --raw_root raw \
-            --scope daily-refresh \
-            --touched_doc_ids_out state/touched_doc_ids.txt \
-            "${OPTIONAL_TARGET[@]}"
-          uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
-          echo "Skip daily delta check temporarily (company_count baseline investigation in progress)"
-
-      - name: Persist daily delta to Cloudflare D1
-        if: ${{ steps.params.outputs.source == 'd1' }}
-        working-directory: apps/wrapper
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
-          D1_SQL_CHUNK_ROWS: "25"
-          MAX_D1_CHUNKS_PER_RUN: "250"
-        run: |
-          set -euo pipefail
-          rm -rf state/d1-delta-sql
-          uv run python scripts/pipeline/export_db_to_d1_sql.py \
-            --db_path state/edinet_pipeline.db \
-            --output_dir state/d1-delta-sql \
-            --where_doc_ids_file state/touched_doc_ids.txt \
-            --tables companies,documents,period_financials,raw_files_index,daily_metrics,sec_code_latest_periods \
-            --chunk_rows "$D1_SQL_CHUNK_ROWS"
-          CHUNK_COUNT="$(wc -l < state/d1-delta-sql/manifest.txt | tr -d ' ')"
-          if [ "$CHUNK_COUNT" -gt "$MAX_D1_CHUNKS_PER_RUN" ]; then
-            echo "Chunk guard triggered: $CHUNK_COUNT > $MAX_D1_CHUNKS_PER_RUN"
-            exit 1
-          fi
-          cd ../web
-          bash scripts/d1-execute-sql-dir.sh "$D1_ENVIRONMENT" ../wrapper/state/d1-delta-sql
-
-      - name: Build screener data
-        working-directory: apps/web
-        env:
-          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
-          DATA_SET_URL: ${{ secrets.DATA_SET_URL }}
-          DATA_SCOPE: ${{ steps.params.outputs.scope }}
-          DATA_SOURCE: ${{ steps.params.outputs.source }}
-          D1_DB_PATH: ../wrapper/state/edinet_pipeline.db
-          FORCE_DOWNLOAD: ${{ steps.params.outputs.force_download == 'true' && '1' || '0' }}
-        run: npm run generate-data
-
-      - name: Validate generated data quality
-        working-directory: apps/web
-        run: |
-          set -euo pipefail
-          test -f public/data/company_metrics.json
-          test -f public/data/companies.json
-          test -d public/data/summaries
-          cd ../wrapper
-          uv run python scripts/pipeline/validate_public_data.py \
-            --public_data ../web/public/data \
-            --previous_metrics state/previous_company_metrics.json \
-            --max_drop_ratio 0.1
-
-      - name: Test build frontend
-        working-directory: apps/web
-        run: npm run build:app
-
-      - name: Commit and push generated data
-        run: |
-          set -euo pipefail
-          BRANCH="${GITHUB_REF_NAME}"
-          git add apps/web/public/data
-          if git diff --cached --quiet; then
-            echo "No data changes to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -m "chore(data): refresh screener data (${{ steps.params.outputs.scope }})"
-          git push origin "HEAD:${BRANCH}"
-
-      - name: Write run summary
-        if: always()
-        working-directory: apps/web
-        run: |
-          {
-            echo "## Screener refresh result"
-            echo "- Scope: \`${{ steps.params.outputs.scope }}\`"
-            echo "- Source: \`${{ steps.params.outputs.source }}\`"
-            echo "- D1 environment: \`${{ steps.params.outputs.d1_environment }}\`"
-            echo "- Ingest target_date: \`${{ steps.params.outputs.target_date }}\` (blank = yesterday JST)"
-            echo "- Force download: \`${{ steps.params.outputs.force_download }}\`"
-            echo "- Delivery: \`commit/push (Cloudflare Git integration)\`"
-            if [ -f public/data/company_metrics.json ]; then
-              python3 <<'PY'
-          import json, pathlib
-          p = pathlib.Path("public/data/company_metrics.json")
-          data = json.loads(p.read_text(encoding="utf-8"))
-          metrics = data.get("metrics", [])
-          print(f"- metrics rows: `{len(metrics)}`")
-          PY
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
