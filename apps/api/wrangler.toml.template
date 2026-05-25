@@ -1,0 +1,46 @@
+name = "edinet-api"
+main = "src/index.ts"
+compatibility_date = "2025-09-06"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+CORS_ORIGIN = "*"
+API_VERSION = "2.0.0-alpha.0"
+
+# ─── staging ─────────────────────────────────────────────────────────────
+[env.staging]
+name = "edinet-api-staging"
+
+[env.staging.vars]
+CORS_ORIGIN = "https://edinet-web-staging.workers.dev"
+API_VERSION = "2.0.0-alpha.0"
+
+[[env.staging.d1_databases]]
+binding = "EDINET_DB"
+database_name = "edinet-staging"
+database_id = "__STAGING_D1_ID__"
+
+[[env.staging.kv_namespaces]]
+binding = "EDINET_CACHE"
+id = "__STAGING_KV_ID__"
+
+# ─── production ──────────────────────────────────────────────────────────
+[env.production]
+name = "edinet-api"
+
+[env.production.vars]
+CORS_ORIGIN = "https://edinet-web.workers.dev"
+API_VERSION = "2.0.0-alpha.0"
+
+[[env.production.d1_databases]]
+binding = "EDINET_DB"
+database_name = "edinet-production"
+database_id = "__PROD_D1_ID__"
+
+[[env.production.kv_namespaces]]
+binding = "EDINET_CACHE"
+id = "__PROD_KV_ID__"
+
+[[env.production.r2_buckets]]
+binding = "EDINET_DATA"
+bucket_name = "edinet-data"

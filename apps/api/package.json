@@ -1,0 +1,32 @@
+{
+  "name": "@edinet/api",
+  "version": "2.0.0-alpha.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "build": "wrangler deploy --dry-run --outdir=dist",
+    "typecheck": "tsc --noEmit",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production",
+    "db:migrate:staging": "wrangler d1 migrations apply edinet-staging --remote",
+    "db:migrate:production": "wrangler d1 migrations apply edinet-production --remote"
+  },
+  "dependencies": {
+    "@edinet/db": "workspace:*",
+    "@edinet/types": "workspace:*",
+    "hono": "^4.6.14",
+    "drizzle-orm": "^0.36.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "@cloudflare/vitest-pool-workers": "^0.5.40",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8",
+    "wrangler": "^4.58.0"
+  }
+}
