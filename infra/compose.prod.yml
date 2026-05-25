@@ -1,10 +1,12 @@
 ## Smoke-test the production-ready images locally before pushing to Workers.
-## Intended for CI use; not for daily dev work.
+## Build contexts are the repo root so the multi-stage Dockerfiles can
+## copy the workspace lockfile and packages/* into their builder layer.
 
 services:
   api:
     build:
-      context: ../apps/api
+      context: ..
+      dockerfile: apps/api/Dockerfile
       target: production
     environment:
       - NODE_ENV=production
@@ -13,7 +15,8 @@ services:
 
   web:
     build:
-      context: ../apps/web
+      context: ..
+      dockerfile: apps/web/Dockerfile
       target: production
     depends_on:
       - api

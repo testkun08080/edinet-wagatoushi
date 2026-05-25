@@ -11,6 +11,7 @@ import { Skeleton } from "./ui/skeleton";
 import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { formatRatioDecimalStringAsPercent, formatYenStringAsMillionYen } from "../lib/metricFormat.js";
 import { analyzePath } from "../lib/routes";
+import { loadCompanyMetrics } from "../lib/metricsLoader";
 
 export type CompanyMetric = {
   edinetCode: string;
@@ -427,17 +428,21 @@ export function CompanyTable() {
   const [pageIndex, setPageIndex] = useState(0);
 
   useEffect(() => {
-    fetch("/data/company_metrics.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const { metrics: metricsList } = data as { metrics?: CompanyMetric[] };
-        setMetrics(metricsList ?? []);
+    let cancelled = false;
+    loadCompanyMetrics()
+      .then((list) => {
+        if (cancelled) return;
+        setMetrics(list as CompanyMetric[]);
         setLoading(false);
       })
       .catch(() => {
+        if (cancelled) return;
         setMetrics([]);
         setLoading(false);
       });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = metrics.filter((m) => passesFilter(m, filters, favorites));

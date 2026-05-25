@@ -17,6 +17,7 @@ services:
   api:
     build:
       context: ../apps/api
+      target: dev
     depends_on:
       db-init:
         condition: service_completed_successfully
@@ -34,6 +35,7 @@ services:
   web:
     build:
       context: ../apps/web
+      target: dev
     depends_on:
       - api
     volumes:
