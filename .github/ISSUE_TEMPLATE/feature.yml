@@ -1,0 +1,33 @@
+name: Feature request
+description: 機能要望
+title: "feat: "
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 解決したい課題
+      description: 「○○ができなくて困っている」「△△を知りたいが手段がない」など。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 提案する解決策
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 代替案 / 比較
+  - type: dropdown
+    id: scope
+    attributes:
+      label: 影響範囲
+      multiple: true
+      options:
+        - apps/web (UI)
+        - apps/api (Hono)
+        - apps/wrapper (Python ingestion)
+        - infra / CI
+        - docs

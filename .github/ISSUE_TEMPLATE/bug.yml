@@ -1,0 +1,50 @@
+name: Bug report
+description: 不具合の報告
+title: "bug: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        バグ報告ありがとうございます！再現に必要な情報を埋めてください。
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 何が起きましたか？期待した挙動は？
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: 再現手順
+      description: |
+        例:
+        1. `/screener` を開く
+        2. 業種フィルタで「銀行業」を選ぶ
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: 環境
+      placeholder: "例: macOS 14 / Chrome 124 / Node 22 / pnpm 9.12"
+  - type: dropdown
+    id: scope
+    attributes:
+      label: 影響範囲
+      multiple: true
+      options:
+        - apps/web (UI)
+        - apps/api (Hono)
+        - apps/wrapper (Python ingestion)
+        - infra / CI
+        - docs
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: ログ / スクリーンショット
+      render: text

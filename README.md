@@ -1,157 +1,143 @@
-# EDINET 財務スクリーナー
+# edinet-wagatoushi
 
-EDINETから取得した有価証券報告書等を解析・可視化する財務データシステムです。
-10年分の財務データを検索・比較できるWebスクリーナーを、無料のオープンソースとして提供します。
+[![ci](https://github.com/testkun08080/edinet-wagatoushi/actions/workflows/ci.yml/badge.svg)](https://github.com/testkun08080/edinet-wagatoushi/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-**ライセンス: MIT**
+EDINET から有価証券報告書を取得・解析し、Web スクリーナーで可視化する **オープンソース** の財務データプラットフォーム。Cloudflare Workers の無料枠で動作します。
 
-## システム構成
+> 🚧 **v2 移行中**: モノレポ + Hono API on Workers への全面再設計を進行中です。詳細は [docs/V2_REDESIGN_PLAN.md](./docs/V2_REDESIGN_PLAN.md) を参照。v1 (静的 JSON パイプライン) も並走しています ([docs/LEGACY_README.md](./docs/LEGACY_README.md))。
 
-```text
-EDINET API
-  → edinet-wrapper (Python): データ取得・TSV解析・JSON生成
-  → edinet-screener/public/data/ (静的JSON)
-  → edinet-screener (React/Vike): Webスクリーナー（Cloudflare Workersデプロイ可）
-```
-
-データは静的JSONとして配置され、バックエンドAPIなしで動作します。
-
-## クイックスタート
-
-### A: Docker（最速・サンプルデータ付き）
+## 30 分でフォークから自分のデプロイまで
 
 ```bash
-git clone https://github.com/testkun08080/edinet-wagatoushi.git
+# 1. fork & clone (5 min)
+gh repo fork testkun08080/edinet-wagatoushi --clone
 cd edinet-wagatoushi
-docker compose up
+
+# 2. ローカルでサンプル UI を確認 (5 min)
+docker compose -f infra/compose.yml up
+# → http://localhost:3000
+
+# 3. 自分の Cloudflare アカウントへセットアップ (10 min)
+pnpm install
+npx wrangler login
+bash infra/setup-fork.sh        # D1 + KV + R2 を自動作成 + wrangler.toml 生成
+
+# 4. GitHub Secrets 設定 (5 min)
+gh secret set CLOUDFLARE_API_TOKEN
+gh secret set CLOUDFLARE_ACCOUNT_ID
+gh secret set EDINET_API_KEY
+
+# 5. push → GitHub Actions が自動デプロイ (5 min)
+git add apps/api/wrangler.toml
+git commit -m "chore: setup my fork"
+git push
+# → https://edinet-api-<account>.workers.dev
+# → https://edinet-web-<account>.workers.dev
 ```
 
-http://localhost:3000 でランディングページが開き、スクリーナーは http://localhost:3000/screener で利用できます（Docker 起動時も同様）。
+## アーキテクチャ
 
-### B: ローカル（フロントエンドのみ）
-
-```bash
-cd edinet-screener
-npm install
-npm run dev
+```
+EDINET API
+  ↓
+apps/wrapper (Python: 取得・解析・指標計算)
+  ↓ SQLite delta
+Cloudflare D1
+  ↓ drizzle
+apps/api (Hono on Workers: REST API)
+  ↓ hono/client (type-safe)
+apps/web (Vike + React on Workers: UI)
+  ↓
+ユーザー (https://...workers.dev)
 ```
 
-### C: フルセットアップ（EDINET APIキー取得〜データ生成）
+詳細は [docs/V2_REDESIGN_PLAN.md §12](./docs/V2_REDESIGN_PLAN.md) のレイヤード図を参照。
 
-1. **EDINET APIキーを取得**: https://disclosure2.edinet-fsa.go.jp/
+## モノレポ構成
 
-2. **バックエンド準備**
+```
+edinet-wagatoushi/
+├── apps/
+│   ├── api/        # Hono on Workers (REST API)
+│   ├── web/        # Vike + React on Workers (UI)
+│   └── wrapper/    # Python: EDINET 取得・解析
+├── packages/
+│   ├── db/         # drizzle schema + 共通クエリ
+│   └── types/      # API / Web 共通 TS 型
+├── infra/
+│   ├── compose.yml         # ローカル開発 (api + web + sqlite)
+│   ├── compose.prod.yml    # 本番相当スモーク
+│   ├── init/               # サンプルデータ取得スクリプト
+│   └── setup-fork.sh       # フォーク利用者向けワンショット
+├── docs/           # 設計ドキュメント
+└── .github/workflows/
+    ├── ci.yml              # lint + typecheck + test
+    ├── deploy-v2.yml       # api + web デプロイ
+    ├── daily-refresh-v2.yml  # 日次 EDINET 取り込み
+    └── release.yml         # changesets リリース
+```
+
+## 開発コマンド
 
 ```bash
-cd edinet-wrapper
-cp .env.example .env          # EDINET_API_KEY を設定
+pnpm dev                       # 全 apps を並列起動 (turbo)
+pnpm lint                      # biome check
+pnpm typecheck                 # 全 workspace で tsc --noEmit
+pnpm test                      # turbo test
+pnpm changeset                 # changeset を作成
+```
+
+Python 側:
+
+```bash
+cd apps/wrapper
 uv sync
-```
-
-3. **データ取得**
-
-```bash
-# 単一企業（テスト用）
-uv run python scripts/download/download_company_10years.py --edinet_code E02144 --file_type tsv --years 1
-
-# スクリーナー用JSON生成（サンプル）
-uv run python scripts/frontend/build_screener_data.py --mode sample E02144 E02367
-
-# 全企業分（data-set/ 内の全データから生成）
-uv run python scripts/frontend/build_screener_data.py --mode full
-uv run python scripts/frontend/build_screener_data.py --metrics_only
-
-# D1: 日次取得→DB投入→品質チェック
-uv run python scripts/pipeline/ingest_daily_edinet_to_db.py \
-  --doc_types "annual,quarterly,semiannual,large_holding" \
-  --db_path state/edinet_pipeline.db \
-  --schema_path sql/d1_schema.sql \
-  --raw_root raw \
-  --scope daily-refresh \
-  --touched_doc_ids_out state/touched_doc_ids.txt
-uv run python scripts/pipeline/materialize_daily_aggregates.py --db_path state/edinet_pipeline.db
-
-# D1 Production: edinet-wrapper/data を Cloudflare D1 に初期投入
-# production はライブ D1 への一回限りの初期投入時だけ実行
-cd ../edinet-screener
-npm run d1:seed:staging
-npm run d1:seed:production
-
-# data-set 配下が分割コーパス構造でも seed 可能（自動変換）
-DATA_ROOT=../data-set npm run d1:seed:staging
-
-# 無料枠保護: chunk上限/サイズを調整
-MAX_D1_CHUNKS_PER_RUN=250 D1_SQL_CHUNK_ROWS=25 npm run d1:seed:staging
-cd ../edinet-wrapper
-
-# D1: DBから public/data を生成
-uv run python scripts/pipeline/build_public_data_from_db.py --db_path state/edinet_pipeline.db --output ../edinet-screener/public/data
-```
-
-4. **フロントエンド起動**
-
-```bash
-cd edinet-screener
-npm run dev
+uv run pytest
+uv run python scripts/ingest_daily.py --help
 ```
 
 ## 環境変数
 
-### edinet-wrapper/.env
-
-| 変数名 | 説明 | 必須 |
+| 変数名 | 用途 | 必須 |
 |---|---|---|
-| `EDINET_API_KEY` | EDINET APIキー | ✓ |
-| `EDINET_REQUEST_DELAY` | APIリクエスト間隔（秒）デフォルト3.0 | |
-
-### edinet-screener/.env（オプション）
-
-| 変数名 | 説明 |
-|---|---|
-| `PUBLIC_ENV__SITE_URL` | デプロイ先URL（OGP/canonical用） |
-| `PUBLIC_ENV__GOOGLE_ANALYTICS` | Google Analytics測定ID |
-| `PUBLIC_ENV__SENTRY_DSN` | Sentry DSN |
-| `PUBLIC_ENV__CONTACT_EMAIL` | お問い合わせ先メールアドレス |
-
-`.env.example` をコピーして設定してください。
-
-## Cloudflareデプロイ（オプション）
-
-```bash
-cd edinet-screener
-npm run build
-npm run deploy
-```
-
-デプロイ前に `wrangler.jsonc` の `YOUR_D1_*_DATABASE_ID` を実際のD1データベースIDに置き換えてください。
-
-## リポジトリ構成
-
-```text
-edinet-wrapper/          # Python: データ取得・解析
-  config/screener_columns.json   # カラム定義（バックエンド・フロント共通）
-  scripts/frontend/              # JSON生成スクリプト
-  scripts/download/              # EDINETダウンロード
-edinet-screener/         # React/Vike: Webスクリーナー
-  public/data/           # 生成済みJSON（サンプル付き）
-  components/            # Reactコンポーネント
-  pages/                 # Vikeルート
-docs/                    # 技術ドキュメント
-docker-compose.yml       # Docker起動（フロントのみ）
-```
+| `EDINET_API_KEY` | EDINET API キー | wrapper のみ |
+| `CLOUDFLARE_API_TOKEN` | Workers / D1 デプロイ | CI のみ |
+| `CLOUDFLARE_ACCOUNT_ID` | 同上 | CI のみ |
+| `PUBLIC_ENV__API_URL` | apps/web から見た API URL | web ビルド時 |
+| `PUBLIC_ENV__SENTRY_DSN` | Sentry DSN (任意) | |
 
 ## ドキュメント
 
-- [データパイプラインと計算ロジック](docs/DATA_PIPELINE_AND_CALCULATIONS.md)
-- [edinet-wrapper 使い方ガイド](docs/EDINET_WRAPPER_USAGE_GUIDE.md)
-- [EDINET指標の分類](docs/EDINET_METRICS_CLASSIFICATION.md)
-- [データセット代替案](docs/DATA_SET_ALTERNATIVES.md)
-- [プロジェクト全体フロー](docs/PROJECT_FLOW.md)
+### 設計
 
-- 全体フロー: `docs/PROJECT_FLOW.md`
-- 構成ガイド（重複を整理した要約）: `docs/PROJECT_STRUCTURE.md`
-- data-set の運用: `docs/DATA_SET_ALTERNATIVES.md`
-- EDINET API 手動検証: `docs/EDINET_API_POSTMAN.md`
-- wrapper 実運用ガイド: `docs/edinet-wrapper-使い方.md`
-- wrapper 詳細資料: `edinet-wrapper/docs/`
-- screener 詳細資料: `edinet-screener/docs/`
+- [V2 再設計プラン](./docs/V2_REDESIGN_PLAN.md) — モノレポ + Hono API on Workers の全体図
+- [プロジェクトフロー](./docs/PROJECT_FLOW.md)
+- [データパイプラインと指標計算](./docs/DATA_PIPELINE_AND_CALCULATIONS.md)
+- [EDINET 指標の分類](./docs/EDINET_METRICS_CLASSIFICATION.md)
+- [D1 ハイブリッド運用](./docs/D1_HYBRID_OPERATIONS.md)
+
+### 運用
+
+- [デプロイパイプライン](./docs/DEPLOY_PIPELINE.md)
+- [GitHub Actions セットアップ](./docs/GITHUB_ACTIONS_SETUP.md)
+- [本番 D1 日次チェックリスト](./docs/PRODUCTION_D1_DAILY_CHECKLIST.md)
+
+### v1 (静的 JSON パイプライン)
+
+- [v1 README](./docs/LEGACY_README.md) — Cloudflare 連携前の運用手順
+
+## コントリビュート
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md) — 開発フロー
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- [SECURITY.md](./SECURITY.md) — 脆弱性報告
+
+## ライセンス
+
+[MIT](./LICENSE)
+
+## クレジット
+
+- 財務データソース: [EDINET](https://disclosure2.edinet-fsa.go.jp/) (金融庁)
+- ホスティング: [Cloudflare Workers](https://workers.cloudflare.com/) (無料枠)
