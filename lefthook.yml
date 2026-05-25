@@ -1,18 +1,22 @@
+## Lint-only on pre-commit. Anything that needs auto-fix should be run
+## manually via `pnpm lint:fix` so commits never contain edits the
+## developer didn't explicitly stage.
 pre-commit:
   parallel: true
   commands:
     biome:
       glob: "*.{ts,tsx,js,jsx,json,jsonc}"
-      run: pnpm biome check --write {staged_files} && git add {staged_files}
+      run: pnpm biome check {staged_files}
     ruff-check:
       root: "apps/wrapper/"
       glob: "*.py"
-      run: uv run ruff check --fix {staged_files} && git add {staged_files}
-    ruff-format:
+      run: uv run ruff check {staged_files}
+    ruff-format-check:
       root: "apps/wrapper/"
       glob: "*.py"
-      run: uv run ruff format {staged_files} && git add {staged_files}
+      run: uv run ruff format --check {staged_files}
 
+## pre-push runs typecheck only on changed workspaces (turbo handles caching).
 pre-push:
   commands:
     typecheck:

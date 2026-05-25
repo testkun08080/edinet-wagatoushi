@@ -16,7 +16,7 @@ coverage
 # v2 monorepo
 data/
 apps/api/wrangler.toml
-apps/web/wrangler.toml
+apps/web/wrangler.jsonc
 apps/wrapper/state/
 apps/wrapper/raw/
 

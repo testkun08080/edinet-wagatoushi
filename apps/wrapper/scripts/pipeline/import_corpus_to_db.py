@@ -26,8 +26,8 @@ from db_common import (
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Import edinet-wrapper/data corpus into D1-compatible SQLite DB")
-    parser.add_argument("--data_root", type=Path, default=Path("data"), help="Corpus root, e.g. edinet-wrapper/data")
+    parser = argparse.ArgumentParser(description="Import apps/wrapper/data corpus into D1-compatible SQLite DB")
+    parser.add_argument("--data_root", type=Path, default=Path("data"), help="Corpus root, e.g. apps/wrapper/data")
     parser.add_argument("--db_path", type=Path, default=Path("state/edinet_pipeline.db"))
     parser.add_argument("--schema_path", type=Path, default=Path("sql/d1_schema.sql"))
     parser.add_argument("--doc_types", type=str, default=",".join(DOC_TYPES_DEFAULT))

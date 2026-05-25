@@ -1,9 +1,12 @@
 FROM node:22-slim
+
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN chown -R node:node /app
-USER node
+
+# Copy lockfile + workspace metadata from monorepo root for layer caching.
+# Compose mounts the full repo on top at runtime, so this just primes the store.
+COPY package.json ./
+
 EXPOSE 3000
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["pnpm", "dev", "--host", "0.0.0.0"]

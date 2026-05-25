@@ -4,7 +4,7 @@
 または data-set から条件に合う企業を自動で選んで四半期・半期サンプルを作成する（--auto_pick）。
 
 使い方:
-  cd edinet-wrapper
+  cd apps/wrapper
 
   # --- 企業を指定する場合（従来の create_corpus_sample_11companies_2025.py 相当）---
   # 年度 2025、デフォルト11社でサンプル作成

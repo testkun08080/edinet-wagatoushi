@@ -11,7 +11,7 @@ from pathlib import Path
 from argparse import ArgumentParser
 from loguru import logger
 
-# .env を読み込む（edinet-wrapper/.env）
+# .env を読み込む（apps/wrapper/.env）
 try:
     from dotenv import load_dotenv
 

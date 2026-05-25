@@ -34,9 +34,20 @@ export const summariesRoutes = new Hono<AppEnv>().get("/:secCode", async (c) => 
 
 function safeParse(s: string | null): FinancialBlock {
   if (!s) return {};
+  let parsed: unknown;
   try {
-    return JSON.parse(s) as FinancialBlock;
+    parsed = JSON.parse(s);
   } catch {
     return {};
   }
+  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+    return {};
+  }
+  const out: FinancialBlock = {};
+  for (const [k, v] of Object.entries(parsed)) {
+    if (v === null || typeof v === "number" || typeof v === "string") {
+      out[k] = v;
+    }
+  }
+  return out;
 }

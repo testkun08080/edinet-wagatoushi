@@ -3,7 +3,7 @@ import os
 import json
 from pathlib import Path
 
-# .env を読み込む（edinet-wrapper/.env）
+# .env を読み込む（apps/wrapper/.env）
 try:
     from dotenv import load_dotenv
 

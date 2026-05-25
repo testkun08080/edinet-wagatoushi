@@ -83,18 +83,46 @@ def compute_core_metrics(
     user-friendly Japanese label, then an English label. Adjust the
     fallback lists as the parser exposes new aliases.
     """
-    revenue = _num(pl, "NetSales", "Revenue", "売上高")
-    operating_income = _num(pl, "OperatingIncome", "営業利益")
-    net_income = _num(pl, "ProfitLoss", "NetIncome", "当期純利益")
+    # Keys must match XBRL element IDs emitted by parser.py via element_id_table.
+    # See apps/wrapper/src/edinet_wrapper/element_id_table.py for the full map.
+    revenue = _num(
+        pl,
+        "NetSales",
+        "NetSalesSummaryOfBusinessResults",
+        "Revenue",
+        "RevenueIFRSSummaryOfBusinessResults",
+    )
+    operating_income = _num(pl, "OperatingIncome", "OperatingProfitLoss")
+    net_income = _num(
+        pl,
+        "ProfitLoss",
+        "ProfitLossAttributableToOwnersOfParent",
+        "ProfitLossAttributableToOwnersOfParentSummaryOfBusinessResults",
+        "ProfitLossAttributableToOwnersOfParentIFRSSummaryOfBusinessResults",
+    )
 
-    total_assets = _num(bs, "Assets", "TotalAssets", "資産合計")
-    equity = _num(bs, "Equity", "NetAssets", "純資産合計")
+    total_assets = _num(bs, "Assets", "TotalAssetsSummaryOfBusinessResults")
+    equity = _num(bs, "NetAssets", "NetAssetsSummaryOfBusinessResults", "Equity")
 
-    op_cf = _num(cf, "CashFlowsFromOperatingActivities", "営業活動によるキャッシュ・フロー")
-    inv_cf = _num(cf, "CashFlowsFromInvestingActivities", "投資活動によるキャッシュ・フロー")
+    op_cf = _num(
+        cf,
+        "CashFlowsFromOperatingActivities",
+        "NetCashProvidedByUsedInOperatingActivities",
+    )
+    inv_cf = _num(
+        cf,
+        "CashFlowsFromInvestingActivities",
+        "NetCashProvidedByUsedInInvestingActivities",
+    )
 
-    prior_revenue = _num(prior_pl, "NetSales", "Revenue", "売上高")
-    prior_op = _num(prior_pl, "OperatingIncome", "営業利益")
+    prior_revenue = _num(
+        prior_pl,
+        "NetSales",
+        "NetSalesSummaryOfBusinessResults",
+        "Revenue",
+        "RevenueIFRSSummaryOfBusinessResults",
+    )
+    prior_op = _num(prior_pl, "OperatingIncome", "OperatingProfitLoss")
 
     fcf = None
     if op_cf is not None and inv_cf is not None:

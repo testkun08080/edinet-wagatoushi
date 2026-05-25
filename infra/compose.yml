@@ -56,4 +56,6 @@ services:
     env_file:
       - ../.env
     working_dir: /app
-    command: uv run python scripts/ingest_daily.py --date $${INGEST_DATE:-$$(date +%F)} --output /app/data/edinet.db
+    entrypoint: ["sh", "-c"]
+    command:
+      - 'uv run python scripts/ingest_daily.py --date "$${INGEST_DATE:-$$(date +%F)}" --output /app/data/edinet.db'

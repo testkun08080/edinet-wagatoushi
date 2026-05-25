@@ -19,5 +19,5 @@
       "@edinet/types": ["../../packages/types/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts"]
 }

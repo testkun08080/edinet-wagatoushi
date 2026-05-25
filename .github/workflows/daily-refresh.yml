@@ -112,9 +112,9 @@ jobs:
         working-directory: apps/web
         run: |
           set -euo pipefail
-          mkdir -p ../apps/wrapper/state
+          mkdir -p ../wrapper/state
           if [ -f public/data/company_metrics.json ]; then
-            cp public/data/company_metrics.json ../apps/wrapper/state/previous_company_metrics.json
+            cp public/data/company_metrics.json ../wrapper/state/previous_company_metrics.json
           fi
 
       - name: Prepare D1 snapshot locally
@@ -126,15 +126,15 @@ jobs:
           D1_ENVIRONMENT: ${{ steps.params.outputs.d1_environment }}
         run: |
           set -euo pipefail
-          mkdir -p ../apps/wrapper/state
+          mkdir -p ../wrapper/state
           bash scripts/d1-apply-schema.sh "$D1_ENVIRONMENT"
           WRANGLER_BIN="$(bash -c 'source scripts/resolve-wrangler.sh; resolve_wrangler "$PWD"')"
           "$WRANGLER_BIN" d1 export EDINET_DB \
             --env "$D1_ENVIRONMENT" \
             --remote \
             --no-schema \
-            --output ../apps/wrapper/state/d1-export.sql
-          cd ../apps/wrapper
+            --output ../wrapper/state/d1-export.sql
+          cd ../wrapper
           uv run python scripts/pipeline/load_sql_dump_to_sqlite.py \
             --sql_path state/d1-export.sql \
             --db_path state/edinet_pipeline.db \
@@ -188,8 +188,8 @@ jobs:
             echo "Chunk guard triggered: $CHUNK_COUNT > $MAX_D1_CHUNKS_PER_RUN"
             exit 1
           fi
-          cd ../apps/web
-          bash scripts/d1-execute-sql-dir.sh "$D1_ENVIRONMENT" ../apps/wrapper/state/d1-delta-sql
+          cd ../web
+          bash scripts/d1-execute-sql-dir.sh "$D1_ENVIRONMENT" ../wrapper/state/d1-delta-sql
 
       - name: Build screener data
         working-directory: apps/web
@@ -198,7 +198,7 @@ jobs:
           DATA_SET_URL: ${{ secrets.DATA_SET_URL }}
           DATA_SCOPE: ${{ steps.params.outputs.scope }}
           DATA_SOURCE: ${{ steps.params.outputs.source }}
-          D1_DB_PATH: ../apps/wrapper/state/edinet_pipeline.db
+          D1_DB_PATH: ../wrapper/state/edinet_pipeline.db
           FORCE_DOWNLOAD: ${{ steps.params.outputs.force_download == 'true' && '1' || '0' }}
         run: npm run generate-data
 
@@ -209,9 +209,9 @@ jobs:
           test -f public/data/company_metrics.json
           test -f public/data/companies.json
           test -d public/data/summaries
-          cd ../apps/wrapper
+          cd ../wrapper
           uv run python scripts/pipeline/validate_public_data.py \
-            --public_data ../apps/web/public/data \
+            --public_data ../web/public/data \
             --previous_metrics state/previous_company_metrics.json \
             --max_drop_ratio 0.1
 

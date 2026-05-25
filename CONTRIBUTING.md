@@ -34,6 +34,21 @@ bash infra/setup-fork.sh
 
 詳細は [docs/V2_REDESIGN_PLAN.md](./docs/V2_REDESIGN_PLAN.md) §10「フォーク利用者の最初の 30 分」を参照。
 
+### CI/CD で必要な Secrets / Variables
+
+`infra/setup-fork.sh` を流すと自動セットされますが、手動で設定する場合の一覧:
+
+| 種類 | 名前 | 用途 |
+|---|---|---|
+| Secret | `CLOUDFLARE_API_TOKEN` | Workers / D1 デプロイ |
+| Secret | `CLOUDFLARE_ACCOUNT_ID` | 同上 |
+| Secret | `EDINET_API_KEY` | EDINET 取り込みワークフロー |
+| Secret | `D1_STAGING_ID` | staging D1 database id |
+| Secret | `D1_PRODUCTION_ID` | production D1 database id |
+| Secret | `KV_STAGING_ID` | staging KV namespace id |
+| Secret | `KV_PRODUCTION_ID` | production KV namespace id |
+| Variable | `PUBLIC_API_URL` | apps/web から見た API の公開 URL |
+
 ## ブランチ運用
 
 - `main` — 常にデプロイ可能

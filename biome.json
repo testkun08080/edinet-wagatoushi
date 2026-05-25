@@ -15,8 +15,10 @@
       "**/coverage/**",
       "**/public/data/**",
       "apps/wrapper/**",
+      "packages/db/migrations/**",
       "data/**",
-      ".turbo/**"
+      ".turbo/**",
+      "pnpm-lock.yaml"
     ]
   },
   "formatter": {

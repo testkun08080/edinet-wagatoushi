@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 フロント用データ（companies.json / summaries/*.json / company_metrics.json）を
-一箇所（edinet-screener/public/data/）にまとめて生成する。
+一箇所（apps/web/public/data/）にまとめて生成する。
 
 実行時に「サンプル用（少数社）」か「全件（data-set 内の全企業）」を選択できる。
 
 使い方:
-  cd edinet-wrapper
+  cd apps/wrapper
 
   # サンプル用（デフォルト11社 or 指定した EDINET コード）
   uv run python scripts/frontend/build_screener_data.py --mode sample
@@ -15,12 +15,12 @@
 
   # 全件（data-set 内の全 EDINET コードを走査して一括生成）
   uv run python scripts/frontend/build_screener_data.py --mode full
-  uv run python scripts/frontend/build_screener_data.py --mode full --data_set ../data-set --output ../edinet-screener/public/data
+  uv run python scripts/frontend/build_screener_data.py --mode full --data_set ../data-set --output ../apps/web/public/data
 
   # company_metrics.json のみ再生成（既存の summaries から）
   uv run python scripts/frontend/build_screener_data.py --metrics_only
 
-出力先: edinet-screener/public/data/
+出力先: apps/web/public/data/
   - companies.json
   - summaries/{sec_code}.json
   - company_metrics.json
@@ -1120,7 +1120,7 @@ def main() -> None:
         help="EDINET コードをカンマ区切りで指定（例: E00004,E03606,E05070）",
     )
     parser.add_argument("--data_set", type=Path, default=None, help="data-set のルート（未指定時はリポジトリの data-set）")
-    parser.add_argument("--output", type=Path, default=None, help="出力先（未指定時は edinet-screener/public/data）")
+    parser.add_argument("--output", type=Path, default=None, help="出力先（未指定時は apps/web/public/data）")
     parser.add_argument(
         "--no_raw_tsv",
         action="store_true",

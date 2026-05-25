@@ -1,4 +1,4 @@
-import { and, desc, eq, like, or, sql } from "drizzle-orm";
+import { desc, eq, like, or, sql } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { companies, documents, periodFinancials, secCodeLatestPeriods } from "./schema.js";
 import type * as schema from "./schema.js";
@@ -73,5 +73,3 @@ export async function countAll(db: DB) {
     documents: docCount?.c ?? 0,
   };
 }
-
-export { and, desc, eq, sql };

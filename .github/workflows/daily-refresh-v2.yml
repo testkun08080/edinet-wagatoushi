@@ -59,7 +59,9 @@ jobs:
       - name: Emit delta SQL
         working-directory: apps/wrapper
         run: |
-          since=$(date -u -d "yesterday" +%FT%T)
+          ## 25h window: cron runs hourly-ish, +1h slack covers retries.
+          ## INSERT OR REPLACE in publish_to_d1.py makes the small overlap idempotent.
+          since=$(date -u -d "25 hours ago" +%FT%T)
           uv run python scripts/publish_to_d1.py \
             --source data/edinet.db \
             --since "$since" \

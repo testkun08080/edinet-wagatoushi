@@ -6,6 +6,7 @@ set -eu
 DATA_DIR="${DATA_DIR:-/data}"
 TARGET="$DATA_DIR/edinet.db"
 RELEASE_URL="${SAMPLE_DB_URL:-https://github.com/testkun08080/edinet-wagatoushi/releases/latest/download/sample-edinet.db.gz}"
+EXPECTED_SHA256="${SAMPLE_DB_SHA256:-}"  # set to enforce integrity
 
 mkdir -p "$DATA_DIR"
 
@@ -24,6 +25,17 @@ if ! wget -q -O /tmp/sample.db.gz "$RELEASE_URL"; then
   echo "[fetch-sample-data] WARN: download failed. Creating empty DB so the API can boot."
   : > "$TARGET"
   exit 0
+fi
+
+if [ -n "$EXPECTED_SHA256" ]; then
+  apk add --no-cache coreutils >/dev/null 2>&1 || true
+  actual=$(sha256sum /tmp/sample.db.gz | awk '{print $1}')
+  if [ "$actual" != "$EXPECTED_SHA256" ]; then
+    echo "[fetch-sample-data] FATAL: sha256 mismatch (expected $EXPECTED_SHA256, got $actual)"
+    rm -f /tmp/sample.db.gz
+    exit 1
+  fi
+  echo "[fetch-sample-data] sha256 OK"
 fi
 
 gunzip -c /tmp/sample.db.gz > "$TARGET"
