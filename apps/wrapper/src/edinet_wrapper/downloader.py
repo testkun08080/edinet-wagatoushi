@@ -3,21 +3,22 @@ EDINET API で書類一覧・TSV/PDF 取得を行うダウンローダー。
 リトライ・非JSONレスポンス対応済み。このファイルを編集して維持する。
 """
 
-import json
-import time
-import requests
+import argparse
 import datetime
-import shutil
+import io
+import json
 import os
+import shutil
+import tempfile
+import time
+import zipfile
+
+import polars as pl
+import requests
+from loguru import logger
 from tqdm import tqdm
 
 from edinet_wrapper.schema import Response, Result
-import argparse
-import tempfile
-import zipfile
-import io
-import polars as pl
-from loguru import logger
 
 pl.Config.set_tbl_cols(-1)
 
@@ -41,23 +42,25 @@ def search_company(edinet_code_info: pl.DataFrame, query: str) -> pl.DataFrame |
     result = edinet_code_info.filter(pl.col("提出者名").str.contains(query))
     if result.is_empty():
         return None
-    return result.select([
-        "提出者名",
-        "ＥＤＩＮＥＴコード",
-        "提出者業種",
-    ])
+    return result.select(
+        [
+            "提出者名",
+            "ＥＤＩＮＥＴコード",
+            "提出者業種",
+        ]
+    )
 
 
 # 仕様書の書類種別コード → ラッパー doc_type（機関・書類種別でダウンロード用）
 # 参考: https://disclosure2dl.edinet-fsa.go.jp/guide/static/disclosure/download/ESE140206.pdf
 DOC_TYPE_CODE_MAP = {
-    "120": "annual",           # 有価証券報告書（年次）
-    "130": "annual_amended",    # 訂正有価証券報告書
-    "140": "quarterly",        # 四半期報告書
+    "120": "annual",  # 有価証券報告書（年次）
+    "130": "annual_amended",  # 訂正有価証券報告書
+    "140": "quarterly",  # 四半期報告書
     "150": "quarterly_amended",
-    "160": "semiannual",       # 半期報告書
+    "160": "semiannual",  # 半期報告書
     "170": "semiannual_amended",
-    "350": "large_holding",   # 大量保有報告書（府令060）
+    "350": "large_holding",  # 大量保有報告書（府令060）
     "360": "large_holding_amended",
 }
 
@@ -97,7 +100,7 @@ class Downloader:
         if not os.path.exists(file_path):
             download_edinetinfo_csv()
 
-        with open(file_path, "r", encoding="shift_jis", errors="replace") as f:
+        with open(file_path, encoding="shift_jis", errors="replace") as f:
             content = f.read()
 
         df = pl.read_csv(
@@ -292,7 +295,9 @@ class Downloader:
 
 
 def parse_args():
-    parser = argparse.ArgumentParser("Download annual securities published between start_date and end_date")
+    parser = argparse.ArgumentParser(
+        "Download annual securities published between start_date and end_date"
+    )
     parser.add_argument("--start_date", type=str, default="2024-06-01")
     parser.add_argument("--end_date", type=str, default="2024-06-28")
     parser.add_argument(
@@ -357,10 +362,7 @@ if __name__ == "__main__":
         print(result)
         exit()
 
-    if args.edinet_code:
-        edinet_code = args.edinet_code
-    else:
-        edinet_code = downloader.get_edinet_code(args.company_name)
+    edinet_code = args.edinet_code or downloader.get_edinet_code(args.company_name)
 
     results = downloader.get_results(
         args.start_date, args.end_date, edinet_code, listed_only=args.listed_only

@@ -3,7 +3,7 @@ export const ANALYZE_VISIBLE_YEAR_OPTIONS = [3, 5, 7, 10] as const;
 export type AnalyzeVisibleYears = (typeof ANALYZE_VISIBLE_YEAR_OPTIONS)[number];
 
 function parsePeriodEndLocal(iso: string): Date | null {
-  const [y, m, d] = iso.split("-").map((x) => parseInt(x, 10));
+  const [y, m, d] = iso.split("-").map((x) => Number.parseInt(x, 10));
   if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
   const date = new Date(y, m - 1, d);
   if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) return null;

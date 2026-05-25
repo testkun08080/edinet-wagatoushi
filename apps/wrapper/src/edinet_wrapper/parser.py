@@ -1,8 +1,10 @@
-import polars as pl
 import argparse
-from edinet_wrapper.element_id_table import BS, PL, CF, SUMMARY, META, TEXT
 from dataclasses import dataclass
+
+import polars as pl
 from loguru import logger
+
+from edinet_wrapper.element_id_table import BS, CF, META, PL, SUMMARY, TEXT
 
 
 @dataclass
@@ -47,7 +49,8 @@ class Parser:
     def filter_by_element_id(df, element_id: str) -> pl.DataFrame:
         """Filter elements by element_id"""
         return df.filter(
-            pl.col("要素ID").str.ends_with(f":{element_id}") | pl.col("要素ID").str.ends_with(f":{element_id}IFRS")
+            pl.col("要素ID").str.ends_with(f":{element_id}")
+            | pl.col("要素ID").str.ends_with(f":{element_id}IFRS")
         )
 
     @staticmethod
@@ -63,7 +66,9 @@ class Parser:
     @staticmethod
     def unique_element_list(df) -> pl.DataFrame:
         """Return unique elements"""
-        return df.unique(subset=["要素ID", "コンテキストID", "相対年度", "連結・個別", "期間・時点"])
+        return df.unique(
+            subset=["要素ID", "コンテキストID", "相対年度", "連結・個別", "期間・時点"]
+        )
 
     def to_dict(self, df, value: str, contain_year: bool = True) -> dict:
         years = YEAR_LIST
@@ -131,16 +136,13 @@ def parse_tsv(
         "CF": CF,
     }
     for sheet_name, sheet in sheet_name_map.items():
-        if sheet_name == "META":
-            contain_year = False
-        else:
-            contain_year = True
+        contain_year = sheet_name != "META"
         sheet_data = {}  # シートごとのデータを格納
 
         elements = extract_leaf_elements(sheet)
 
         for element in elements:
-            key, value = list(element.items())[0]
+            key, value = next(iter(element.items()))
             filtered_df = parser.filter_by_element_id(df, key)
             filtered_df = parser.filter_by_consolidation(filtered_df)
             result = parser.to_dict(filtered_df, value, contain_year)

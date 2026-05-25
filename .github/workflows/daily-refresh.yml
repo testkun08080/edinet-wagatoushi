@@ -1,4 +1,4 @@
-name: daily-refresh-v2
+name: daily-refresh
 
 on:
   schedule:
@@ -10,7 +10,7 @@ on:
         required: false
 
 concurrency:
-  group: daily-refresh-v2
+  group: daily-refresh
   cancel-in-progress: false
 
 jobs:

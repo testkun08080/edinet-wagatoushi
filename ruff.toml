@@ -12,8 +12,12 @@ extend-exclude = [
 [lint]
 select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
 ignore = [
-    "E501",  # line-too-long (formatter handles)
-    "B008",  # do not perform function calls in argument defaults
+    "E501",   # line-too-long (formatter handles)
+    "B008",   # function calls in argument defaults
+    "RUF001", # ambiguous unicode in strings (Japanese is intentional)
+    "RUF002", # ambiguous unicode in docstrings
+    "RUF003", # ambiguous unicode in comments
+    "SIM117", # combine nested `with`
 ]
 
 [format]

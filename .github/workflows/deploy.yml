@@ -1,4 +1,4 @@
-name: deploy-v2
+name: deploy
 
 on:
   workflow_dispatch:
@@ -15,10 +15,10 @@ on:
       - "apps/api/**"
       - "apps/web/**"
       - "packages/**"
-      - ".github/workflows/deploy-v2.yml"
+      - ".github/workflows/deploy.yml"
 
 concurrency:
-  group: deploy-v2-${{ github.event.inputs.env || 'staging' }}
+  group: deploy-${{ github.event.inputs.env || 'staging' }}
   cancel-in-progress: false
 
 jobs:

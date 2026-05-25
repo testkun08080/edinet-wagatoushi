@@ -32,7 +32,7 @@ npx wrangler login
 bash infra/setup-fork.sh
 ```
 
-詳細は [docs/V2_REDESIGN_PLAN.md](./docs/V2_REDESIGN_PLAN.md) §10「フォーク利用者の最初の 30 分」を参照。
+詳細は [docs/MIGRATION.md](./docs/MIGRATION.md) の「フォーク利用者の最初の 30 分」を参照。
 
 ### CI/CD で必要な Secrets / Variables
 

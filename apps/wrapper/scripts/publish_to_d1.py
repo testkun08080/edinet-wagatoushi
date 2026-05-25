@@ -1,9 +1,7 @@
-"""Emit a delta SQL file from local SQLite and (optionally) apply it to D1.
+"""Emit a delta SQL file from local SQLite for D1 to apply.
 
-Replaces scripts/pipeline/sqlite_export_d1.py + sqlite_diff_d1.py. The two
-ran D1 export → diff → re-import in a round trip; this version computes
-the delta directly from the locally-ingested SQLite using the updated_at
-column maintained by db.upsert_*.
+Computes the delta directly from the locally-ingested SQLite using the
+updated_at column maintained by db.upsert_*.
 
 Usage:
     uv run python scripts/publish_to_d1.py \

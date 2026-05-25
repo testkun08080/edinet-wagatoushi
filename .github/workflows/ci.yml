@@ -23,8 +23,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      ## v1 (apps/web) is on its own legacy lint; v2 surface is checked strictly.
-      - run: pnpm biome check apps/api packages/db packages/types apps/web/lib/api.ts apps/web/lib/metricsLoader.ts
+      - run: pnpm biome check apps/api packages/db packages/types apps/web/lib
       - run: pnpm turbo typecheck --concurrency=4
       - run: pnpm turbo test --concurrency=4
 
@@ -40,22 +39,6 @@ jobs:
         with:
           version: latest
       - run: uv sync --frozen
-      ## v2 surface only (legacy scripts/{pipeline,download,frontend} are
-      ## checked on best-effort and excluded from blocking CI until rewritten).
-      - run: |
-          uv run ruff check \
-            src/edinet_wrapper/metrics.py \
-            src/edinet_wrapper/db.py \
-            scripts/ingest_daily.py \
-            scripts/publish_to_d1.py \
-            scripts/backfill.py \
-            tests/
-      - run: |
-          uv run ruff format --check \
-            src/edinet_wrapper/metrics.py \
-            src/edinet_wrapper/db.py \
-            scripts/ingest_daily.py \
-            scripts/publish_to_d1.py \
-            scripts/backfill.py \
-            tests/
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
       - run: uv run pytest

@@ -1,97 +1,91 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with code in this repository.
 
 ## プロジェクト概要
 
-EDINETから有価証券報告書等を取得・解析し、Webスクリーナーで可視化する財務データシステム。
-
-- **edinet-wrapper** (Python): EDINETからデータ取得・TSV解析・JSON生成
-- **edinet-screener** (React/Vike): 財務データのWebスクリーナー（Cloudflare Workersデプロイ）
-
-## 開発コマンド
-
-### Backend (edinet-wrapper)
-
-```bash
-cd edinet-wrapper
-uv sync                                      # 依存関係インストール
-
-# データ取得 (要: .envにEDINET_API_KEY)
-uv run python scripts/download/download_company_10years.py --edinet_code E02144 --file_type tsv --years 1
-
-# スクリーナー用JSON生成
-uv run python scripts/frontend/build_screener_data.py --mode sample E00004 E03606  # サンプル
-uv run python scripts/frontend/build_screener_data.py --mode full                   # 全社
-uv run python scripts/frontend/build_screener_data.py --metrics_only               # メトリクスのみ再生成
-```
-
-### Frontend (edinet-screener)
-
-```bash
-cd edinet-screener
-npm install
-
-npm run dev          # 開発サーバー起動
-npm run build        # データ生成 + ビルド (data-set/ が必要)
-npm run build:app    # ビルドのみ (データ生成スキップ)
-npm run preview      # プロダクションビルドのプレビュー
-npm run lint         # ESLint
-npm run deploy       # Cloudflare Workersへデプロイ
-```
+EDINET から有価証券報告書を取得・解析し、Web スクリーナーで可視化する財務データプラットフォーム。Cloudflare Workers で動作する。
 
 ## アーキテクチャ
 
-### データフロー
-
 ```
 EDINET API
-  → edinet-wrapper (Downloader → Parser → build_screener_data.py)
-  → edinet-screener/public/data/ (companies.json, summaries/{secCode}.json, company_metrics.json)
-  → edinet-screener (Vike SSR + React)
+  → apps/wrapper (Python: 取得・解析・指標計算)
+  → Cloudflare D1
+  → apps/api (Hono on Workers: REST API)
+  → apps/web (Vike + React on Workers: UI)
 ```
 
-データは静的JSONとして配置され、バックエンドAPIなしで動作する。`data-set/` はGit管理外（S3/GitHub Releases/Hugging Faceでのホスティングも対応）。
+## モノレポ構成
 
-### edinet-wrapper の構造
+```
+apps/
+  api/        Hono on Workers
+  web/        Vike + React on Workers
+  wrapper/    Python (uv 管理、pnpm workspace 外)
+packages/
+  db/         drizzle schema + 共通クエリ
+  types/      API/Web 共通 TS 型
+infra/
+  compose.yml         ローカル開発
+  compose.prod.yml    本番相当スモーク
+  init/               サンプル DB 取得スクリプト
+  setup-fork.sh       フォーク利用者用ワンショット
+```
 
-- `src/edinet_wrapper/downloader.py` - EDINET API クライアント（リトライ付き）
-- `src/edinet_wrapper/parser.py` - TSV解析（BS/PL/CF）
-- `src/edinet_wrapper/schema.py` - データモデル（`FinancialData`, `Response`, `Result`）
-- `config/screener_columns.json` - フロントエンド向けカラム定義
+## 開発コマンド
 
-### edinet-screener の構造
+```bash
+pnpm install
+pnpm turbo typecheck
+pnpm turbo test
+pnpm dev                                # 全 apps 並列起動
 
-**Vikeのファイルシステムルーティング**:
-- `+Page.tsx` - ルートのReactコンポーネント
-- `+data.ts` - サーバーサイドデータローダー（SSR）
-- `+config.ts` - ルートメタデータ
-- `+Layout.tsx` / `+Head.tsx` - レイアウト・ヘッド
+docker compose -f infra/compose.yml up  # API + Web + サンプル DB
 
-**主要ルート**:
-- `pages/index/` - マーケティング LP（サイドバーなし）
-- `pages/screener/` - 企業一覧スクリーナー
-- `pages/screener/analyze/@secCode/` - 企業詳細分析
-- `pages/analyze/@secCode/` - 旧URLから `/screener/analyze/:secCode` へリダイレクト
+cd apps/wrapper && uv sync && uv run pytest
+```
 
-**グローバル状態（React Context）**:
-- `ColumnVisibilityContext` - テーブルカラム表示切替
-- `FavoritesContext` - お気に入り企業（localStorage）
-- `FilterContext` - フィルタ状態
-- `RecentCompaniesContext` - 閲覧履歴
+## 主要技術
 
-**UIコンポーネント**:
-- `components/ui/` - shadcn/ui（Radix UIベース、32コンポーネント）
-- `components/CompanyTable.tsx` - メインスクリーナーテーブル
-- `components/SummaryCharts.tsx` - 財務チャート（Recharts）
-
-**パスエイリアス**: `@` → プロジェクトルート（`vite.config.ts`で設定）
-
-### 出力JSONの構造
-
-| ファイル | 内容 |
+| 層 | 採用 |
 |---|---|
-| `companies.json` | `{ companies: { secCode, edinetCode, name, ... }[] }` |
-| `summaries/{secCode}.json` | 時系列財務データ（BS/PL/CF） |
-| `company_metrics.json` | テーブル表示用の非正規化メトリクス |
-| `column_manifest.json` | カラムメタデータ（screener_columns.jsonのコピー） |
+| パッケージマネージャ | pnpm |
+| ビルド | Turborepo |
+| Lint/Format | Biome (TS) / Ruff (Py) |
+| ORM | drizzle |
+| API | Hono on Cloudflare Workers |
+| UI | Vike + React + shadcn/ui |
+| DB | Cloudflare D1 |
+| pre-commit | lefthook |
+
+## API エンドポイント
+
+| Method | Path |
+|---|---|
+| GET | `/api/health` |
+| GET | `/api/companies` |
+| GET | `/api/companies/:secCode` |
+| GET | `/api/summaries/:secCode` |
+| GET | `/api/metrics` |
+| GET | `/api/search?q=` |
+| GET | `/api/shareholders/:secCode` |
+| GET | `/api/manifest` |
+
+型は `apps/api/src/index.ts` の `export type AppType = typeof app;` を `apps/web/lib/api.ts` の `hc<AppType>` で参照する。
+
+## グローバル状態 (apps/web)
+
+- `ColumnVisibilityContext` — テーブルカラム表示切替
+- `FavoritesContext` — お気に入り (localStorage)
+- `FilterContext` — フィルタ状態
+- `RecentCompaniesContext` — 閲覧履歴
+
+## デプロイ
+
+- `ci.yml` — PR / push 時に lint + typecheck + test
+- `deploy.yml` — main push で staging/production 自動デプロイ
+- `daily-refresh.yml` — 日次 EDINET 取り込み → D1 → R2 snapshot
+- `release.yml` — changesets による version bump とタグ付け
+
+フォーク利用者は `bash infra/setup-fork.sh` 一発で D1 / KV / R2 を作成し `wrangler.toml` / `wrangler.jsonc` を template から生成できる。

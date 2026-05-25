@@ -1,8 +1,7 @@
-"""Daily EDINET ingestion (v2 simplified).
+"""Daily EDINET ingestion.
 
-Replaces the bidirectional D1↔SQLite sync of scripts/pipeline/ingest_daily_*.
-The local SQLite is treated as ephemeral; we only need it to stage what
-will be UPSERTed into D1 in publish_to_d1.py.
+Local SQLite is treated as ephemeral; it only stages what will be
+UPSERTed into D1 by publish_to_d1.py.
 
 Usage:
     uv run python scripts/ingest_daily.py \

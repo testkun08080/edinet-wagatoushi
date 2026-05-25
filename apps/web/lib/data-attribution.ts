@@ -5,12 +5,13 @@
 
 export const EDINET_API_BASE = "https://disclosure.edinet-fsa.go.jp/api/v1";
 
-/** データ生成パイプライン（edinet-wrapper 等）で一般的に用いられる EDINET Web API の例 */
+/** データ生成パイプラインで一般的に用いられる EDINET Web API の例 */
 export const DOCUMENTED_EDINET_ENDPOINTS = [
   {
     method: "GET" as const,
     path: "/documents.json",
-    description: "提出書類一覧の取得（日付などのクエリパラメータで対象日を指定する形式が一般的です）",
+    description:
+      "提出書類一覧の取得（日付などのクエリパラメータで対象日を指定する形式が一般的です）",
     fullUrlExample: `${EDINET_API_BASE}/documents.json`,
   },
   {
@@ -24,8 +25,14 @@ export const DOCUMENTED_EDINET_ENDPOINTS = [
 /** ブラウザ上の本アプリが読み込む静的データ（ビルド済み JSON） */
 export const RUNTIME_STATIC_DATA_PATHS = [
   { path: "/data/company_metrics.json", description: "企業一覧用の指標サマリー" },
-  { path: "/data/summaries/{証券コード}.json", description: "企業ごとの四半期サマリー・財務テーブル" },
-  { path: "/data/shareholders/{証券コード}.json", description: "大株主の時系列データ（ビルド時に TSV から抽出済み）" },
+  {
+    path: "/data/summaries/{証券コード}.json",
+    description: "企業ごとの四半期サマリー・財務テーブル",
+  },
+  {
+    path: "/data/shareholders/{証券コード}.json",
+    description: "大株主の時系列データ（ビルド時に TSV から抽出済み）",
+  },
 ] as const;
 
 export const LICENSE_AND_GUIDELINES = {

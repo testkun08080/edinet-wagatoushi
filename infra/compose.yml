@@ -1,9 +1,8 @@
-## v2 local dev stack.
-## `docker compose -f infra/compose.yml up` will:
-##   1. fetch a sample SQLite from GitHub Release (if missing)
-##   2. start the Hono API on :8787 backed by that SQLite (via miniflare)
-##   3. start the Vike web on :3000 pointing at the local API
-## To run an EDINET ingestion locally:
+## docker compose -f infra/compose.yml up
+##   - fetches sample SQLite from GitHub Release (db-init)
+##   - starts Hono API on :8787
+##   - starts Vike web on :3000
+## EDINET ingestion:
 ##   docker compose -f infra/compose.yml --profile ingest run wrapper
 
 services:

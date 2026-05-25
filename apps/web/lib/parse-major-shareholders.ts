@@ -13,7 +13,7 @@ const CTX_RANK = /No(\d+)MajorShareholdersMember$/;
 function rankFromContext(contextId: string): number | null {
   const m = contextId.match(CTX_RANK);
   if (!m) return null;
-  return parseInt(m[1], 10);
+  return Number.parseInt(m[1], 10);
 }
 
 export function parseMajorShareholdersFromRaw(raw: { rows?: string[][] }): MajorShareholderEntry[] {
@@ -70,16 +70,16 @@ export function parseMajorShareholdersFromRaw(raw: { rows?: string[][] }): Major
 export function formatMajorShareholderCell(shares: string | null, ratio: string | null): string {
   const parts: string[] = [];
   if (shares) {
-    const n = parseInt(shares.replace(/,/g, ""), 10);
-    if (!isNaN(n)) {
+    const n = Number.parseInt(shares.replace(/,/g, ""), 10);
+    if (!Number.isNaN(n)) {
       parts.push(`${(n / 1000).toLocaleString("ja-JP", { maximumFractionDigits: 0 })}千株`);
     } else {
       parts.push(shares);
     }
   }
   if (ratio) {
-    const r = parseFloat(ratio);
-    if (!isNaN(r)) {
+    const r = Number.parseFloat(ratio);
+    if (!Number.isNaN(r)) {
       parts.push(`(${((r <= 1 ? r : r / 100) * 100).toFixed(2)}%)`);
     } else {
       parts.push(`(${ratio})`);

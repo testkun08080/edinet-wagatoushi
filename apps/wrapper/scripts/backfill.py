@@ -1,8 +1,6 @@
 """Back-fill N years of EDINET submissions into local SQLite.
 
-This is a thin wrapper around the legacy download_company_10years.py
-that targets the new SQLite schema. Useful for fork users seeding their
-own D1 from scratch.
+Useful for fork users seeding their own D1 from scratch.
 """
 
 from __future__ import annotations
