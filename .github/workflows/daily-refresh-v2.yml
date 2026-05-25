@@ -1,0 +1,93 @@
+name: daily-refresh-v2
+
+on:
+  schedule:
+    - cron: "10 20 * * *" # 05:10 JST
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "Target submission date (YYYY-MM-DD), default = today"
+        required: false
+
+concurrency:
+  group: daily-refresh-v2
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v3
+        with: { version: latest }
+
+      - name: uv sync
+        working-directory: apps/wrapper
+        run: uv sync --frozen
+
+      - name: Render wrangler.toml from template
+        run: |
+          sed \
+            -e "s|__STAGING_D1_ID__|${{ secrets.D1_STAGING_ID }}|" \
+            -e "s|__PROD_D1_ID__|${{ secrets.D1_PRODUCTION_ID }}|" \
+            -e "s|__STAGING_KV_ID__|${{ secrets.KV_STAGING_ID }}|" \
+            -e "s|__PROD_KV_ID__|${{ secrets.KV_PRODUCTION_ID }}|" \
+            apps/api/wrangler.toml.template > apps/api/wrangler.toml
+
+      - name: Fetch known doc_ids from D1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx -y wrangler@4 d1 execute edinet-production --remote \
+            --config apps/api/wrangler.toml \
+            --command "SELECT doc_id FROM documents" --json \
+            > /tmp/known.json || echo "[]" > /tmp/known.json
+
+      - name: Ingest new documents
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+        working-directory: apps/wrapper
+        run: |
+          mkdir -p data
+          uv run python scripts/ingest_daily.py \
+            --date "${{ github.event.inputs.target_date || '' }}" \
+            --known-docs /tmp/known.json \
+            --output data/edinet.db || true
+
+      - name: Emit delta SQL
+        working-directory: apps/wrapper
+        run: |
+          since=$(date -u -d "yesterday" +%FT%T)
+          uv run python scripts/publish_to_d1.py \
+            --source data/edinet.db \
+            --since "$since" \
+            --output /tmp/delta.sql
+
+      - name: Apply delta to D1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -s /tmp/delta.sql ]; then
+            npx -y wrangler@4 d1 execute edinet-production --remote \
+              --config apps/api/wrangler.toml \
+              --file /tmp/delta.sql
+          else
+            echo "No delta to apply"
+          fi
+
+      - name: Snapshot backup to R2
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          date_tag=$(date +%F)
+          npx -y wrangler@4 d1 export edinet-production --remote \
+            --config apps/api/wrangler.toml \
+            --output /tmp/snapshot.sql || true
+          if [ -s /tmp/snapshot.sql ]; then
+            npx -y wrangler@4 r2 object put "edinet-data/snapshots/${date_tag}.sql" \
+              --file /tmp/snapshot.sql --remote
+          fi

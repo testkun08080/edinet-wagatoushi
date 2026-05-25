@@ -1,0 +1,67 @@
+name: deploy-v2
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Target environment"
+        required: true
+        type: choice
+        default: staging
+        options: [staging, production]
+  push:
+    branches: [main]
+    paths:
+      - "apps/api/**"
+      - "apps/web/**"
+      - "packages/**"
+      - ".github/workflows/deploy-v2.yml"
+
+concurrency:
+  group: deploy-v2-${{ github.event.inputs.env || 'staging' }}
+  cancel-in-progress: false
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.12.0 }
+      - uses: actions/setup-node@v5
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: Render wrangler.toml from template
+        run: |
+          sed \
+            -e "s|__STAGING_D1_ID__|${{ secrets.D1_STAGING_ID }}|" \
+            -e "s|__PROD_D1_ID__|${{ secrets.D1_PRODUCTION_ID }}|" \
+            -e "s|__STAGING_KV_ID__|${{ secrets.KV_STAGING_ID }}|" \
+            -e "s|__PROD_KV_ID__|${{ secrets.KV_PRODUCTION_ID }}|" \
+            apps/api/wrangler.toml.template > apps/api/wrangler.toml
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/api
+          command: deploy --env ${{ github.event.inputs.env || 'staging' }}
+
+  web:
+    needs: api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.12.0 }
+      - uses: actions/setup-node@v5
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @edinet/web build
+        env:
+          PUBLIC_ENV__API_URL: ${{ vars.PUBLIC_API_URL }}
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/web
+          command: deploy --env ${{ github.event.inputs.env || 'staging' }}
