@@ -1,64 +1,64 @@
 # Data quality report
 
-- totalCompanies: 3920
+- totalCompanies: 3921
 - totalColumns: 52
 
 ## Missing by column
 
 | key | filled | missing | missingRate |
 |---|---:|---:|---:|
-| PBR | 0 | 3920 | 100.0% |
-| marketCap | 0 | 3920 | 100.0% |
-| netCashRatio | 0 | 3920 | 100.0% |
-| dilutedEPS | 903 | 3017 | 77.0% |
-| dividendYield | 2036 | 1884 | 48.1% |
-| investmentSecurities | 2390 | 1530 | 39.0% |
-| payoutRatioComputed | 2788 | 1132 | 28.9% |
-| salesCagr5y | 2925 | 995 | 25.4% |
-| dividendGrowthYoY | 3052 | 868 | 22.1% |
-| salesCagr3y | 3197 | 723 | 18.4% |
-| payoutRatio | 3369 | 551 | 14.1% |
-| dividendPerShare | 3392 | 528 | 13.5% |
-| salesGrowthYoY | 3500 | 420 | 10.7% |
-| comprehensiveIncome | 3585 | 335 | 8.5% |
-| recurringProfit | 3593 | 327 | 8.3% |
-| EPS | 3595 | 325 | 8.3% |
-| equityRatio | 3596 | 324 | 8.3% |
-| roeCalculated | 3596 | 324 | 8.3% |
-| roa | 3596 | 324 | 8.3% |
-| deRatio | 3596 | 324 | 8.3% |
-| netAssets | 3597 | 323 | 8.2% |
-| totalAssets | 3597 | 323 | 8.2% |
-| equityRatioCalculated | 3597 | 323 | 8.2% |
-| opGrowthYoY | 3603 | 317 | 8.1% |
-| operatingProfitRatio | 3633 | 287 | 7.3% |
-| netProfitRatio | 3656 | 264 | 6.7% |
-| sales | 3657 | 263 | 6.7% |
-| financingCF | 3708 | 212 | 5.4% |
-| investingCF | 3721 | 199 | 5.1% |
-| fcf | 3721 | 199 | 5.1% |
-| operatingCF | 3726 | 194 | 4.9% |
-| cashBalance | 3726 | 194 | 4.9% |
-| epsGrowthYoY | 3739 | 181 | 4.6% |
-| piotroskiFScore | 3747 | 173 | 4.4% |
-| roic | 3767 | 153 | 3.9% |
-| operatingProfit | 3777 | 143 | 3.6% |
-| netCash | 3790 | 130 | 3.3% |
-| currentAssets | 3791 | 129 | 3.3% |
-| currentLiabilities | 3791 | 129 | 3.3% |
-| currentRatio | 3791 | 129 | 3.3% |
-| PER | 3800 | 120 | 3.1% |
-| sharesOutstanding | 3813 | 107 | 2.7% |
-| ROE | 3840 | 80 | 2.0% |
-| BPS | 3895 | 25 | 0.6% |
-| liabilities | 3910 | 10 | 0.3% |
-| netIncome | 3912 | 8 | 0.2% |
-| edinetCode | 3920 | 0 | 0.0% |
-| secCode | 3920 | 0 | 0.0% |
-| filerName | 3920 | 0 | 0.0% |
-| calcDate | 3920 | 0 | 0.0% |
-| fiscalMonth | 3920 | 0 | 0.0% |
-| consecutiveDivIncreases | 3920 | 0 | 0.0% |
+| PBR | 0 | 3921 | 100.0% |
+| marketCap | 0 | 3921 | 100.0% |
+| netCashRatio | 0 | 3921 | 100.0% |
+| dilutedEPS | 906 | 3015 | 76.9% |
+| dividendYield | 2042 | 1879 | 47.9% |
+| investmentSecurities | 2396 | 1525 | 38.9% |
+| payoutRatioComputed | 2795 | 1126 | 28.7% |
+| salesCagr5y | 2926 | 995 | 25.4% |
+| dividendGrowthYoY | 3053 | 868 | 22.1% |
+| salesCagr3y | 3197 | 724 | 18.5% |
+| payoutRatio | 3371 | 550 | 14.0% |
+| dividendPerShare | 3395 | 526 | 13.4% |
+| salesGrowthYoY | 3500 | 421 | 10.7% |
+| comprehensiveIncome | 3586 | 335 | 8.5% |
+| recurringProfit | 3597 | 324 | 8.3% |
+| EPS | 3599 | 322 | 8.2% |
+| equityRatio | 3600 | 321 | 8.2% |
+| roeCalculated | 3600 | 321 | 8.2% |
+| roa | 3600 | 321 | 8.2% |
+| deRatio | 3600 | 321 | 8.2% |
+| netAssets | 3601 | 320 | 8.2% |
+| totalAssets | 3601 | 320 | 8.2% |
+| equityRatioCalculated | 3601 | 320 | 8.2% |
+| opGrowthYoY | 3603 | 318 | 8.1% |
+| operatingProfitRatio | 3634 | 287 | 7.3% |
+| netProfitRatio | 3657 | 264 | 6.7% |
+| sales | 3658 | 263 | 6.7% |
+| financingCF | 3709 | 212 | 5.4% |
+| investingCF | 3722 | 199 | 5.1% |
+| fcf | 3722 | 199 | 5.1% |
+| operatingCF | 3727 | 194 | 4.9% |
+| cashBalance | 3727 | 194 | 4.9% |
+| epsGrowthYoY | 3739 | 182 | 4.6% |
+| piotroskiFScore | 3747 | 174 | 4.4% |
+| roic | 3767 | 154 | 3.9% |
+| operatingProfit | 3778 | 143 | 3.6% |
+| netCash | 3791 | 130 | 3.3% |
+| currentAssets | 3792 | 129 | 3.3% |
+| currentLiabilities | 3792 | 129 | 3.3% |
+| currentRatio | 3792 | 129 | 3.3% |
+| PER | 3802 | 119 | 3.0% |
+| sharesOutstanding | 3815 | 106 | 2.7% |
+| ROE | 3842 | 79 | 2.0% |
+| BPS | 3897 | 24 | 0.6% |
+| liabilities | 3911 | 10 | 0.3% |
+| netIncome | 3913 | 8 | 0.2% |
+| edinetCode | 3921 | 0 | 0.0% |
+| secCode | 3921 | 0 | 0.0% |
+| filerName | 3921 | 0 | 0.0% |
+| calcDate | 3921 | 0 | 0.0% |
+| fiscalMonth | 3921 | 0 | 0.0% |
+| consecutiveDivIncreases | 3921 | 0 | 0.0% |
 
 ## Missing-heavy companies (top 20)
 
