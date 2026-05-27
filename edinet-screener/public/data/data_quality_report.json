@@ -35,8 +35,8 @@
       "missingSecCodes": []
     },
     "equityRatio": {
-      "filled": 3604,
-      "missing": 317,
+      "filled": 3607,
+      "missing": 314,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -90,11 +90,9 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -136,7 +134,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4446",
         "4452",
@@ -359,8 +356,8 @@
       ]
     },
     "EPS": {
-      "filled": 3603,
-      "missing": 318,
+      "filled": 3606,
+      "missing": 315,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -414,12 +411,10 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3417",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -461,7 +456,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4446",
         "4452",
@@ -684,8 +678,8 @@
       ]
     },
     "dilutedEPS": {
-      "filled": 907,
-      "missing": 3014,
+      "filled": 909,
+      "missing": 3012,
       "total": 3921,
       "missingSecCodes": [
         "1301",
@@ -1310,7 +1304,6 @@
         "3395",
         "3396",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3407",
@@ -1343,6 +1336,7 @@
         "3474",
         "3484",
         "3489",
+        "3490",
         "3501",
         "3504",
         "3512",
@@ -1358,7 +1352,6 @@
         "3540",
         "3541",
         "3542",
-        "3543",
         "3544",
         "3547",
         "3548",
@@ -1541,6 +1534,7 @@
         "3960",
         "3962",
         "3963",
+        "3967",
         "3970",
         "3974",
         "3976",
@@ -1723,7 +1717,6 @@
         "4406",
         "4409",
         "4410",
-        "4413",
         "4420",
         "4422",
         "4423",
@@ -2271,7 +2264,6 @@
         "6177",
         "6178",
         "6181",
-        "6182",
         "6184",
         "6185",
         "6186",
@@ -4537,8 +4529,8 @@
       ]
     },
     "recurringProfit": {
-      "filled": 3601,
-      "missing": 320,
+      "filled": 3604,
+      "missing": 317,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -4593,11 +4585,9 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -4639,7 +4629,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4427",
         "4446",
@@ -4879,8 +4868,8 @@
       ]
     },
     "netAssets": {
-      "filled": 3605,
-      "missing": 316,
+      "filled": 3608,
+      "missing": 313,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -4934,11 +4923,9 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -4980,7 +4967,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4446",
         "4452",
@@ -5202,8 +5188,8 @@
       ]
     },
     "totalAssets": {
-      "filled": 3605,
-      "missing": 316,
+      "filled": 3608,
+      "missing": 313,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -5257,11 +5243,9 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -5303,7 +5287,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4446",
         "4452",
@@ -5525,8 +5508,8 @@
       ]
     },
     "comprehensiveIncome": {
-      "filled": 3586,
-      "missing": 335,
+      "filled": 3587,
+      "missing": 334,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -5634,7 +5617,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4432",
         "4446",
@@ -5984,8 +5966,8 @@
       ]
     },
     "roeCalculated": {
-      "filled": 3604,
-      "missing": 317,
+      "filled": 3607,
+      "missing": 314,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -6039,11 +6021,9 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -6085,7 +6065,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4446",
         "4452",
@@ -6308,8 +6287,8 @@
       ]
     },
     "roa": {
-      "filled": 3604,
-      "missing": 317,
+      "filled": 3607,
+      "missing": 314,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -6363,11 +6342,9 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -6409,7 +6386,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4446",
         "4452",
@@ -6632,8 +6608,8 @@
       ]
     },
     "equityRatioCalculated": {
-      "filled": 3605,
-      "missing": 316,
+      "filled": 3608,
+      "missing": 313,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -6687,11 +6663,9 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -6733,7 +6707,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4446",
         "4452",
@@ -7105,8 +7078,8 @@
       ]
     },
     "operatingCF": {
-      "filled": 3726,
-      "missing": 195,
+      "filled": 3725,
+      "missing": 196,
       "total": 3921,
       "missingSecCodes": [
         "1352",
@@ -7162,6 +7135,7 @@
         "4355",
         "4364",
         "4399",
+        "4413",
         "4486",
         "4497",
         "4514",
@@ -7307,8 +7281,8 @@
       ]
     },
     "investingCF": {
-      "filled": 3721,
-      "missing": 200,
+      "filled": 3720,
+      "missing": 201,
       "total": 3921,
       "missingSecCodes": [
         "1352",
@@ -7364,6 +7338,7 @@
         "4355",
         "4364",
         "4399",
+        "4413",
         "4486",
         "4497",
         "4514",
@@ -7514,8 +7489,8 @@
       ]
     },
     "fcf": {
-      "filled": 3721,
-      "missing": 200,
+      "filled": 3720,
+      "missing": 201,
       "total": 3921,
       "missingSecCodes": [
         "1352",
@@ -7571,6 +7546,7 @@
         "4355",
         "4364",
         "4399",
+        "4413",
         "4486",
         "4497",
         "4514",
@@ -7721,8 +7697,8 @@
       ]
     },
     "financingCF": {
-      "filled": 3708,
-      "missing": 213,
+      "filled": 3707,
+      "missing": 214,
       "total": 3921,
       "missingSecCodes": [
         "1352",
@@ -7784,6 +7760,7 @@
         "4355",
         "4364",
         "4399",
+        "4413",
         "4429",
         "4486",
         "4497",
@@ -7941,8 +7918,8 @@
       ]
     },
     "cashBalance": {
-      "filled": 3726,
-      "missing": 195,
+      "filled": 3725,
+      "missing": 196,
       "total": 3921,
       "missingSecCodes": [
         "1352",
@@ -7998,6 +7975,7 @@
         "4355",
         "4364",
         "4399",
+        "4413",
         "4486",
         "4497",
         "4514",
@@ -8143,8 +8121,8 @@
       ]
     },
     "payoutRatio": {
-      "filled": 3371,
-      "missing": 550,
+      "filled": 3373,
+      "missing": 548,
       "total": 3921,
       "missingSecCodes": [
         "1400",
@@ -8246,7 +8224,6 @@
         "3372",
         "3385",
         "3390",
-        "339A",
         "3409",
         "3419",
         "343A",
@@ -8361,7 +8338,6 @@
         "4393",
         "4397",
         "4399",
-        "4413",
         "4418",
         "4419",
         "4422",
@@ -8700,8 +8676,8 @@
       ]
     },
     "payoutRatioComputed": {
-      "filled": 2797,
-      "missing": 1124,
+      "filled": 2801,
+      "missing": 1120,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -8902,7 +8878,6 @@
         "3385",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3417",
@@ -8924,7 +8899,6 @@
         "3521",
         "3541",
         "3542",
-        "3543",
         "3548",
         "3556",
         "3563",
@@ -9086,7 +9060,6 @@
         "4393",
         "4397",
         "4399",
-        "4413",
         "4418",
         "4419",
         "4422",
@@ -9632,7 +9605,6 @@
         "8001",
         "8002",
         "8007",
-        "8008",
         "8013",
         "8015",
         "8020",
@@ -9831,8 +9803,8 @@
       ]
     },
     "dividendPerShare": {
-      "filled": 3395,
-      "missing": 526,
+      "filled": 3397,
+      "missing": 524,
       "total": 3921,
       "missingSecCodes": [
         "1400",
@@ -9927,7 +9899,6 @@
         "3372",
         "3385",
         "3390",
-        "339A",
         "3419",
         "343A",
         "3446",
@@ -10037,7 +10008,6 @@
         "4393",
         "4397",
         "4399",
-        "4413",
         "4418",
         "4419",
         "4422",
@@ -10766,8 +10736,8 @@
       ]
     },
     "investmentSecurities": {
-      "filled": 2404,
-      "missing": 1517,
+      "filled": 2413,
+      "missing": 1508,
       "total": 3921,
       "missingSecCodes": [
         "1333",
@@ -10858,7 +10828,6 @@
         "2229",
         "2268",
         "2282",
-        "2305",
         "231A",
         "2321",
         "2326",
@@ -10957,14 +10926,12 @@
         "286A",
         "2877",
         "287A",
-        "2882",
         "2884",
         "2897",
         "2903",
         "290A",
         "2910",
         "2914",
-        "2918",
         "2922",
         "2927",
         "2928",
@@ -11060,7 +11027,6 @@
         "3261",
         "3276",
         "3277",
-        "3280",
         "3284",
         "3286",
         "3288",
@@ -11120,7 +11086,6 @@
         "3484",
         "3486",
         "3489",
-        "3490",
         "3491",
         "3496",
         "3498",
@@ -11332,7 +11297,6 @@
         "4422",
         "4423",
         "4427",
-        "4429",
         "4431",
         "4432",
         "4437",
@@ -11803,7 +11767,6 @@
         "7071",
         "7072",
         "7075",
-        "7077",
         "7080",
         "7085",
         "7086",
@@ -12035,7 +11998,6 @@
         "8225",
         "8251",
         "8253",
-        "8260",
         "8279",
         "8289",
         "8303",
@@ -12285,13 +12247,12 @@
         "9967",
         "9980",
         "9983",
-        "9984",
-        "9993"
+        "9984"
       ]
     },
     "PER": {
-      "filled": 3802,
-      "missing": 119,
+      "filled": 3803,
+      "missing": 118,
       "total": 3921,
       "missingSecCodes": [
         "186A",
@@ -12313,7 +12274,6 @@
         "332A",
         "3358",
         "336A",
-        "339A",
         "3409",
         "343A",
         "3461",
@@ -16344,8 +16304,8 @@
       ]
     },
     "dividendYield": {
-      "filled": 2044,
-      "missing": 1877,
+      "filled": 2051,
+      "missing": 1870,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -16486,7 +16446,6 @@
         "2291",
         "2293",
         "2294",
-        "2305",
         "2309",
         "2315",
         "2321",
@@ -16713,7 +16672,6 @@
         "3390",
         "3393",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3408",
@@ -16749,7 +16707,6 @@
         "3536",
         "3541",
         "3542",
-        "3543",
         "3548",
         "3550",
         "3553",
@@ -16997,7 +16954,6 @@
         "4393",
         "4397",
         "4399",
-        "4413",
         "4418",
         "4419",
         "4422",
@@ -17352,7 +17308,6 @@
         "6173",
         "6177",
         "6181",
-        "6182",
         "6183",
         "6185",
         "6186",
@@ -17891,7 +17846,6 @@
         "8005",
         "8006",
         "8007",
-        "8008",
         "8011",
         "8013",
         "8014",
@@ -17962,7 +17916,6 @@
         "8219",
         "8230",
         "8233",
-        "8237",
         "8249",
         "8251",
         "8253",
@@ -26221,8 +26174,8 @@
       ]
     },
     "salesGrowthYoY": {
-      "filled": 3501,
-      "missing": 420,
+      "filled": 3503,
+      "missing": 418,
       "total": 3921,
       "missingSecCodes": [
         "150A",
@@ -26278,7 +26231,6 @@
         "3366",
         "336A",
         "3385",
-        "339A",
         "343A",
         "3461",
         "350A",
@@ -26391,7 +26343,6 @@
         "7035",
         "7048",
         "7076",
-        "7077",
         "7096",
         "7118",
         "7150",
@@ -26648,8 +26599,8 @@
       ]
     },
     "opGrowthYoY": {
-      "filled": 3604,
-      "missing": 317,
+      "filled": 3606,
+      "missing": 315,
       "total": 3921,
       "missingSecCodes": [
         "150A",
@@ -26697,7 +26648,6 @@
         "3366",
         "336A",
         "3385",
-        "339A",
         "343A",
         "3461",
         "350A",
@@ -26802,7 +26752,6 @@
         "7012",
         "7035",
         "7076",
-        "7077",
         "7096",
         "7118",
         "7150",
@@ -26972,8 +26921,8 @@
       ]
     },
     "epsGrowthYoY": {
-      "filled": 3740,
-      "missing": 181,
+      "filled": 3742,
+      "missing": 179,
       "total": 3921,
       "missingSecCodes": [
         "150A",
@@ -27019,7 +26968,6 @@
         "3366",
         "336A",
         "3385",
-        "339A",
         "343A",
         "3461",
         "350A",
@@ -27110,7 +27058,6 @@
         "6944",
         "7035",
         "7076",
-        "7077",
         "7096",
         "7118",
         "7330",
@@ -28033,8 +27980,8 @@
       ]
     },
     "salesCagr3y": {
-      "filled": 3197,
-      "missing": 724,
+      "filled": 3199,
+      "missing": 722,
       "total": 3921,
       "missingSecCodes": [
         "141A",
@@ -28133,7 +28080,6 @@
         "287A",
         "2892",
         "290A",
-        "2935",
         "2937",
         "2938",
         "2962",
@@ -28245,7 +28191,6 @@
         "438A",
         "4394",
         "4399",
-        "4413",
         "4417",
         "4418",
         "4424",
@@ -29908,8 +29853,8 @@
       ]
     },
     "deRatio": {
-      "filled": 3604,
-      "missing": 317,
+      "filled": 3607,
+      "missing": 314,
       "total": 3921,
       "missingSecCodes": [
         "1375",
@@ -29963,11 +29908,9 @@
         "3323",
         "3390",
         "3397",
-        "339A",
         "3401",
         "3402",
         "3447",
-        "3543",
         "3563",
         "3591",
         "3659",
@@ -30009,7 +29952,6 @@
         "4324",
         "4373",
         "4385",
-        "4413",
         "4423",
         "4446",
         "4452",
@@ -30393,8 +30335,8 @@
       ]
     },
     "piotroskiFScore": {
-      "filled": 3748,
-      "missing": 173,
+      "filled": 3750,
+      "missing": 171,
       "total": 3921,
       "missingSecCodes": [
         "150A",
@@ -30439,7 +30381,6 @@
         "3366",
         "336A",
         "3385",
-        "339A",
         "343A",
         "3461",
         "350A",
@@ -30525,7 +30466,6 @@
         "6944",
         "7035",
         "7076",
-        "7077",
         "7096",
         "7118",
         "7330",
@@ -34350,12 +34290,10 @@
     },
     "2305": {
       "filerName": "株式会社スタジオアリス",
-      "missingCount": 6,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio"
       ]
@@ -37469,9 +37407,8 @@
     },
     "2882": {
       "filerName": "株式会社イートアンドホールディングス",
-      "missingCount": 4,
+      "missingCount": 3,
       "missingKeys": [
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -37728,10 +37665,9 @@
     },
     "2918": {
       "filerName": "わらべや日洋ホールディングス株式会社",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -37895,12 +37831,11 @@
     },
     "2935": {
       "filerName": "株式会社ピックルスホールディングス",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "PBR",
         "marketCap",
         "netCashRatio",
-        "salesCagr3y",
         "salesCagr5y"
       ]
     },
@@ -40087,10 +40022,9 @@
     },
     "3280": {
       "filerName": "株式会社エストラスト",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -40821,35 +40755,16 @@
     },
     "339A": {
       "filerName": "プログレス・テクノロジーズ　グループ株式会社",
-      "missingCount": 27,
+      "missingCount": 8,
       "missingKeys": [
-        "equityRatio",
-        "EPS",
-        "dilutedEPS",
-        "recurringProfit",
-        "netAssets",
-        "totalAssets",
         "comprehensiveIncome",
-        "roeCalculated",
-        "roa",
-        "equityRatioCalculated",
-        "payoutRatio",
-        "payoutRatioComputed",
-        "dividendPerShare",
         "investmentSecurities",
-        "PER",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
         "dividendGrowthYoY",
         "salesCagr3y",
-        "salesCagr5y",
-        "deRatio",
-        "piotroskiFScore"
+        "salesCagr5y"
       ]
     },
     "3401": {
@@ -41484,7 +41399,7 @@
       "filerName": "株式会社アズ企画設計",
       "missingCount": 6,
       "missingKeys": [
-        "investmentSecurities",
+        "dilutedEPS",
         "PBR",
         "marketCap",
         "netCashRatio",
@@ -41767,25 +41682,13 @@
     },
     "3543": {
       "filerName": "株式会社コメダホールディングス",
-      "missingCount": 17,
+      "missingCount": 5,
       "missingKeys": [
-        "equityRatio",
-        "EPS",
-        "dilutedEPS",
-        "recurringProfit",
-        "netAssets",
-        "totalAssets",
         "comprehensiveIncome",
-        "roeCalculated",
-        "roa",
-        "equityRatioCalculated",
-        "payoutRatioComputed",
         "investmentSecurities",
         "PBR",
-        "dividendYield",
         "marketCap",
-        "netCashRatio",
-        "deRatio"
+        "netCashRatio"
       ]
     },
     "3544": {
@@ -44880,8 +44783,9 @@
     },
     "3967": {
       "filerName": "株式会社エルテス",
-      "missingCount": 8,
+      "missingCount": 9,
       "missingKeys": [
+        "dilutedEPS",
         "payoutRatio",
         "payoutRatioComputed",
         "dividendPerShare",
@@ -48446,30 +48350,19 @@
     },
     "4413": {
       "filerName": "株式会社ボードルア",
-      "missingCount": 22,
+      "missingCount": 11,
       "missingKeys": [
-        "equityRatio",
-        "EPS",
-        "dilutedEPS",
-        "recurringProfit",
-        "netAssets",
-        "totalAssets",
-        "comprehensiveIncome",
-        "roeCalculated",
-        "roa",
-        "equityRatioCalculated",
-        "payoutRatio",
-        "payoutRatioComputed",
-        "dividendPerShare",
+        "operatingCF",
+        "investingCF",
+        "fcf",
+        "financingCF",
+        "cashBalance",
         "investmentSecurities",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio",
         "dividendGrowthYoY",
-        "salesCagr3y",
-        "salesCagr5y",
-        "deRatio"
+        "salesCagr5y"
       ]
     },
     "4417": {
@@ -48632,14 +48525,13 @@
     },
     "4429": {
       "filerName": "リックソフト株式会社",
-      "missingCount": 11,
+      "missingCount": 10,
       "missingKeys": [
         "dilutedEPS",
         "financingCF",
         "payoutRatio",
         "payoutRatioComputed",
         "dividendPerShare",
-        "investmentSecurities",
         "PBR",
         "dividendYield",
         "marketCap",
@@ -58133,11 +58025,9 @@
     },
     "6182": {
       "filerName": "株式会社メタリアル",
-      "missingCount": 6,
+      "missingCount": 4,
       "missingKeys": [
-        "dilutedEPS",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio",
         "dividendGrowthYoY"
@@ -65369,24 +65259,19 @@
     },
     "7077": {
       "filerName": "株式会社ＡＬｉＮＫインターネット",
-      "missingCount": 16,
+      "missingCount": 11,
       "missingKeys": [
         "dilutedEPS",
         "payoutRatio",
         "payoutRatioComputed",
         "dividendPerShare",
-        "investmentSecurities",
         "PBR",
         "dividendYield",
         "marketCap",
         "netCashRatio",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
         "dividendGrowthYoY",
         "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
+        "salesCagr5y"
       ]
     },
     "7078": {
@@ -72402,12 +72287,10 @@
     },
     "8008": {
       "filerName": "株式会社ヨンドシーホールディングス",
-      "missingCount": 6,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "payoutRatioComputed",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio"
       ]
@@ -74075,11 +73958,10 @@
     },
     "8237": {
       "filerName": "株式会社松屋",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio"
       ]
@@ -74281,10 +74163,9 @@
     },
     "8260": {
       "filerName": "株式会社井筒屋",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -84261,9 +84142,8 @@
     },
     "9993": {
       "filerName": "株式会社ヤマザワ",
-      "missingCount": 4,
+      "missingCount": 3,
       "missingKeys": [
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
