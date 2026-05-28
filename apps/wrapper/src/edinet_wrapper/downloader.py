@@ -23,18 +23,28 @@ from edinet_wrapper.schema import Response, Result
 pl.Config.set_tbl_cols(-1)
 
 
+def _safe_extract(zf: zipfile.ZipFile, dest: str) -> None:
+    """Extract a zip, refusing entries that escape `dest` (Zip Slip guard)."""
+    dest_root = os.path.realpath(dest)
+    for member in zf.namelist():
+        target = os.path.realpath(os.path.join(dest, member))
+        if target != dest_root and not target.startswith(dest_root + os.sep):
+            raise ValueError(f"unsafe zip entry escapes destination: {member!r}")
+    zf.extractall(dest)
+
+
 def download_edinetinfo_csv(dir: str = "data"):
     url = "https://disclosure2dl.edinet-fsa.go.jp/searchdocument/codelist/Edinetcode.zip"
     if os.path.exists(os.path.join(dir, "EdinetcodeDlInfo.zip")):
         logger.error("File already exists. Skipping download.")
         return
-    with requests.get(url) as res:
+    with requests.get(url, timeout=(10, 60)) as res:
         with open(os.path.join(dir, "EdinetcodeDlInfo.zip"), "wb") as file:
             file.write(res.content)
             logger.info("Downloaded EdinetcodeDlInfo.zip")
     # Unzip
     with zipfile.ZipFile(os.path.join(dir, "EdinetcodeDlInfo.zip"), "r") as existing_zip:
-        existing_zip.extractall(dir)
+        _safe_extract(existing_zip, dir)
 
 
 def search_company(edinet_code_info: pl.DataFrame, query: str) -> pl.DataFrame | None:
@@ -128,7 +138,7 @@ class Downloader:
         # req_type: 1=metadata only, 2=metadata and results
         params = {"date": date, "type": req_type, "Subscription-Key": key}
         for attempt in range(Downloader._GET_RESPONSE_MAX_RETRIES):
-            res = requests.get(url, params=params)
+            res = requests.get(url, params=params, timeout=(10, 60))
             try:
                 if res.status_code != 200:
                     logger.warning(
@@ -241,7 +251,7 @@ class Downloader:
         """Retrieve a specific document from EDINET API. type: 2 for PDF"""
         url = f"{self._doc_base_url}/{doc_id}"
         params = {"type": 2, "Subscription-Key": self.edinet_api_key}
-        with requests.get(url, params=params) as res:
+        with requests.get(url, params=params, timeout=(10, 60)) as res:
             with open(os.path.join(output_dir, f"{doc_id}.pdf"), "wb") as f:
                 f.write(res.content)
         time.sleep(self._request_delay_sec)
@@ -253,7 +263,7 @@ class Downloader:
         params = {"type": 1, "Subscription-Key": self.edinet_api_key}
         # zip download
         try:
-            with requests.get(url, params=params) as res:
+            with requests.get(url, params=params, timeout=(10, 60)) as res:
                 with tempfile.TemporaryDirectory() as tmp_dir:
                     with zipfile.ZipFile(io.BytesIO(res.content)) as z:
                         for file in z.namelist():
@@ -275,7 +285,7 @@ class Downloader:
         url = f"{self._doc_base_url}/{doc_id}"
         params = {"type": 5, "Subscription-Key": self.edinet_api_key}
         try:
-            with requests.get(url, params=params) as res:
+            with requests.get(url, params=params, timeout=(10, 60)) as res:
                 with tempfile.TemporaryDirectory() as tmp_dir:
                     with zipfile.ZipFile(io.BytesIO(res.content)) as z:
                         for file in z.namelist():
