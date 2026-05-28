@@ -11,41 +11,63 @@ services:
     volumes:
       - ../data:/data
       - ./init:/init:ro
+      - ../packages/db/migrations:/migrations:ro
     command: sh /init/fetch-sample-data.sh
+
+  deps:
+    image: node:22-slim
+    volumes:
+      - ..:/workspace
+      - root-node-modules:/workspace/node_modules
+      - api-node-modules:/workspace/apps/api/node_modules
+      - web-node-modules:/workspace/apps/web/node_modules
+      - pnpm-store:/root/.local/share/pnpm/store
+    working_dir: /workspace
+    command: sh -c "corepack enable && corepack prepare pnpm@9.12.0 --activate && pnpm install --frozen-lockfile"
 
   api:
     build:
-      context: ../apps/api
+      context: ..
+      dockerfile: apps/api/Dockerfile
       target: dev
     depends_on:
       db-init:
         condition: service_completed_successfully
+      deps:
+        condition: service_completed_successfully
     volumes:
       - ../data:/app/data
-      - ../apps/api:/app
-    working_dir: /app
+      - ..:/workspace
+      - root-node-modules:/workspace/node_modules
+      - api-node-modules:/workspace/apps/api/node_modules
+      - pnpm-store:/root/.local/share/pnpm/store
+    working_dir: /workspace/apps/api
     environment:
       - NODE_ENV=development
       - DB_PATH=/app/data/edinet.db
     ports:
       - "8787:8787"
-    command: pnpm dev
+    command: sh -c "sh /workspace/infra/init/prepare-local-d1.sh && pnpm exec wrangler dev --ip 0.0.0.0 --port 8787"
 
   web:
     build:
-      context: ../apps/web
+      context: ..
+      dockerfile: apps/web/Dockerfile
       target: dev
     depends_on:
       - api
     volumes:
-      - ../apps/web:/app
-    working_dir: /app
+      - ..:/workspace
+      - root-node-modules:/workspace/node_modules
+      - web-node-modules:/workspace/apps/web/node_modules
+      - pnpm-store:/root/.local/share/pnpm/store
+    working_dir: /workspace/apps/web
     environment:
       - PUBLIC_ENV__API_URL=http://localhost:8787
       - NODE_ENV=development
     ports:
       - "3000:3000"
-    command: pnpm dev
+    command: sh -c "cp -f wrangler.jsonc.template wrangler.jsonc && pnpm dev --host 0.0.0.0 --port 3000"
 
   wrapper:
     profiles: ["ingest"]
@@ -60,3 +82,9 @@ services:
     entrypoint: ["sh", "-c"]
     command:
       - 'uv run python scripts/ingest_daily.py --date "$${INGEST_DATE:-$$(date +%F)}" --output /app/data/edinet.db'
+
+volumes:
+  root-node-modules:
+  api-node-modules:
+  web-node-modules:
+  pnpm-store:

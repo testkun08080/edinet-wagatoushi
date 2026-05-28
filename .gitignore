@@ -26,3 +26,6 @@ edinet-wrapper/state/
 edinet-wrapper/raw/
 
 .codex/*
+
+.cursor/
+.pnpm-store/

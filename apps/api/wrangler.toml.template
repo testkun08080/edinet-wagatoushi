@@ -7,6 +7,11 @@ compatibility_flags = ["nodejs_compat"]
 CORS_ORIGIN = "*"
 API_VERSION = "2.0.0-alpha.0"
 
+[[d1_databases]]
+binding = "EDINET_DB"
+database_name = "edinet-local"
+database_id = "00000000-0000-0000-0000-000000000000"
+
 # ─── staging ─────────────────────────────────────────────────────────────
 [env.staging]
 name = "edinet-api-staging"
