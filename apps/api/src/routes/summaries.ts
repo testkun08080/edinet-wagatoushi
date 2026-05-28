@@ -18,6 +18,7 @@ export const summariesRoutes = new Hono<AppEnv>().get("/:secCode", async (c) => 
     secCode: r.secCode,
     docId: r.docId,
     docType: r.docType,
+    docDescription: r.docDescription ?? null,
     periodStart: r.periodStart,
     periodEnd: r.periodEnd,
     submitDateTime: r.submitDateTime,

@@ -3,7 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useConfig } from "vike-react/useConfig";
 import { usePageContext } from "vike-react/usePageContext";
-import { normalizeCompanySummary, type CompanySummary, type CompanyMetricsRow } from "./companyData.js";
+import {
+  metricsFromPeriods,
+  normalizeCompanySummary,
+  type CompanySummary,
+  type CompanyMetricsRow,
+} from "./companyData.js";
+import { api } from "../../../../lib/api.js";
 import { useRecentCompanies } from "../../../../components/RecentCompaniesContext.js";
 import { useFavorites } from "../../../../components/FavoritesContext.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
@@ -374,12 +380,9 @@ export default function Page() {
         setError(null);
       }
       try {
-        const [companyRes, metricsRes] = await Promise.all([
-          fetch(`/data/summaries/${secCode}.json`),
-          fetch("/data/company_metrics.json"),
-        ]);
-        if (!companyRes.ok) {
-          if (companyRes.status === 404) {
+        const res = await api.api.summaries[":secCode"].$get({ param: { secCode } });
+        if (!res.ok) {
+          if (res.status === 404) {
             if (!cancelled) {
               setCompany(null);
               setMetrics(null);
@@ -388,14 +391,10 @@ export default function Page() {
             }
             return;
           }
-          throw new Error(`HTTP ${companyRes.status}`);
+          throw new Error(`HTTP ${res.status}`);
         }
-        const nextCompany = normalizeCompanySummary(await companyRes.json(), secCode);
-        let nextMetrics: CompanyMetricsRow | null = null;
-        if (metricsRes.ok) {
-          const metricsData = (await metricsRes.json()) as { metrics?: CompanyMetricsRow[] };
-          nextMetrics = metricsData.metrics?.find((m) => m.secCode === secCode) ?? null;
-        }
+        const nextCompany = normalizeCompanySummary(await res.json(), secCode);
+        const nextMetrics = metricsFromPeriods(nextCompany);
         if (!cancelled) {
           setCompany(nextCompany);
           setMetrics(nextMetrics);
@@ -429,8 +428,17 @@ export default function Page() {
   }, [company?.secCode]);
 
   useEffect(() => {
+    if (!company?.periods.length) return;
+    for (const kind of ANALYZE_REPORT_KIND_OPTIONS) {
+      if (company.periods.some((p) => reportMatchesKind(p.docDescription, kind))) {
+        setAnalyzeReportKind(kind);
+        return;
+      }
+    }
+  }, [company?.secCode, company?.periods]);
+
+  useEffect(() => {
     setAnalyzeVisibleYears(3);
-    setAnalyzeReportKind("quarter");
   }, [company?.secCode]);
 
   const periods = company?.periods ?? [];

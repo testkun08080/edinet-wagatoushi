@@ -28,6 +28,7 @@ export interface PeriodFinancialView {
   secCode: string | null;
   docId: string;
   docType: string;
+  docDescription: string | null;
   periodStart: string | null;
   periodEnd: string;
   submitDateTime: string | null;

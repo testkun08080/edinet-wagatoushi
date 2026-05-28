@@ -2,17 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { formatMajorShareholderCell } from "@/lib/parse-major-shareholders";
+import { api } from "@/lib/api";
+import type { ShareholdersResponse } from "@edinet/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Skeleton } from "./ui/skeleton";
 import { AlertCircle } from "lucide-react";
-
-type ShareholderEntry = {
-  rank: number;
-  name: string;
-  shares: string | null;
-  ratio: string | null;
-};
 
 type PeriodData = {
   periodEnd: string;
@@ -42,29 +37,29 @@ export function MajorShareholdersTimeSeries({
 
     (async () => {
       try {
-        const res = await fetch(`/data/shareholders/${secCode}.json`);
+        const res = await api.api.shareholders[":secCode"].$get({ param: { secCode } });
         if (!res.ok) {
-          if (res.status === 404) {
-            if (!cancelled) {
-              setAllPeriods([]);
-              setError("大株主の明細が含まれる提出書類が見つかりませんでした（四半期報告書などでは記載がない場合があります）。");
-            }
-            return;
-          }
           throw new Error(`HTTP ${res.status}`);
         }
-        const data = (await res.json()) as {
-          secCode: string;
-          periods: { periodEnd: string; docID: string; shareholders: ShareholderEntry[] }[];
-        };
+        const data = (await res.json()) as ShareholdersResponse;
         if (!cancelled) {
+          if (!data.snapshots.length) {
+            setAllPeriods([]);
+            setError(
+              "大株主の明細が含まれる提出書類が見つかりませんでした（四半期報告書などでは記載がない場合があります）。",
+            );
+            return;
+          }
           setAllPeriods(
-            data.periods.map((p) => {
+            data.snapshots.map((p) => {
               const byName = new Map<string, { shares: string | null; ratio: string | null }>();
-              for (const s of p.shareholders) {
-                byName.set(s.name, { shares: s.shares, ratio: s.ratio });
+              for (const s of p.entries) {
+                byName.set(s.name, {
+                  shares: s.shares != null ? String(s.shares) : null,
+                  ratio: s.ratio != null ? String(s.ratio) : null,
+                });
               }
-              return { periodEnd: p.periodEnd, docID: p.docID, byName };
+              return { periodEnd: p.periodEnd, docID: p.periodEnd, byName };
             }),
           );
         }

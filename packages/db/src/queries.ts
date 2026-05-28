@@ -24,8 +24,25 @@ export async function getCompanyByEdinetCode(db: DB, edinetCode: string) {
 
 export async function getSummaryBySecCode(db: DB, secCode: string) {
   return db
-    .select()
+    .select({
+      edinetCode: periodFinancials.edinetCode,
+      secCode: periodFinancials.secCode,
+      docId: periodFinancials.docId,
+      docType: periodFinancials.docType,
+      docDescription: documents.docDescription,
+      periodStart: periodFinancials.periodStart,
+      periodEnd: periodFinancials.periodEnd,
+      submitDateTime: periodFinancials.submitDateTime,
+      filerName: periodFinancials.filerName,
+      summaryJson: periodFinancials.summaryJson,
+      plJson: periodFinancials.plJson,
+      bsJson: periodFinancials.bsJson,
+      cfJson: periodFinancials.cfJson,
+      rawTsvPath: periodFinancials.rawTsvPath,
+      updatedAt: periodFinancials.updatedAt,
+    })
     .from(periodFinancials)
+    .innerJoin(documents, eq(periodFinancials.docId, documents.docId))
     .where(eq(periodFinancials.secCode, secCode))
     .orderBy(desc(periodFinancials.periodEnd))
     .all();
