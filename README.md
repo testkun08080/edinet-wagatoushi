@@ -92,7 +92,9 @@ uv run python scripts/ingest_daily.py --help
 
 ## ドキュメント
 
-- [MIGRATION.md](./docs/MIGRATION.md) — 旧構造から現在の構造への移行マップ
+- [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) — 全体構造・依存グラフ・データフロー
+- [docs/modules/](./docs/modules/) — モジュール別ドキュメント (api / web / wrapper / db / types / infra)
+- [docs/MIGRATION.md](./docs/MIGRATION.md) — 旧構造から現在の構造への移行マップ
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — 開発フロー
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - [SECURITY.md](./SECURITY.md) — 脆弱性報告
