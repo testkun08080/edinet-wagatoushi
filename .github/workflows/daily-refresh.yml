@@ -48,11 +48,12 @@ jobs:
       - name: Ingest new documents
         env:
           EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          TARGET_DATE: ${{ github.event.inputs.target_date }}
         working-directory: apps/wrapper
         run: |
           mkdir -p data
           uv run python scripts/ingest_daily.py \
-            --date "${{ github.event.inputs.target_date || '' }}" \
+            --date "${TARGET_DATE:-}" \
             --known-docs /tmp/known.json \
             --output data/edinet.db || true
 

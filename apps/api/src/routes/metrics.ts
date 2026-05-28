@@ -4,9 +4,15 @@ import { Hono } from "hono";
 import type { AppEnv } from "../env.js";
 import { getDb } from "../middleware/db.js";
 
+function clampInt(value: string | undefined, fallback: number, max: number): number {
+  const n = Number.parseInt(value ?? "", 10);
+  if (Number.isNaN(n) || n < 0) return fallback;
+  return Math.min(n, max);
+}
+
 export const metricsRoutes = new Hono<AppEnv>().get("/", async (c) => {
-  const limit = Math.min(Number(c.req.query("limit") ?? "500"), 2000);
-  const offset = Number(c.req.query("offset") ?? "0");
+  const limit = clampInt(c.req.query("limit"), 500, 2000);
+  const offset = clampInt(c.req.query("offset"), 0, 1_000_000);
 
   const db = getDb(c);
   const rows = await getLatestMetrics(db, { limit, offset });

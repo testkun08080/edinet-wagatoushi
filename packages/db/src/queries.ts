@@ -1,4 +1,4 @@
-import { desc, eq, like, or, sql } from "drizzle-orm";
+import { desc, eq, or, sql } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { companies, documents, periodFinancials, secCodeLatestPeriods } from "./schema.js";
 import type * as schema from "./schema.js";
@@ -52,11 +52,19 @@ export async function getLatestMetrics(db: DB, opts: { limit?: number; offset?: 
 }
 
 export async function searchCompanies(db: DB, q: string, limit = 20) {
-  const pattern = `%${q}%`;
+  // Escape LIKE wildcards so a user-supplied "%" / "_" can't match-all or
+  // build pathological patterns. ESCAPE '\' makes the backslash literal.
+  const escaped = q.replace(/[\\%_]/g, (ch) => `\\${ch}`);
+  const pattern = `%${escaped}%`;
   return db
     .select()
     .from(companies)
-    .where(or(like(companies.filerName, pattern), like(companies.secCode, pattern)))
+    .where(
+      or(
+        sql`${companies.filerName} LIKE ${pattern} ESCAPE '\\'`,
+        sql`${companies.secCode} LIKE ${pattern} ESCAPE '\\'`,
+      ),
+    )
     .limit(limit)
     .all();
 }

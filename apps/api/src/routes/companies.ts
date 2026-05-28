@@ -4,10 +4,16 @@ import { Hono } from "hono";
 import type { AppEnv } from "../env.js";
 import { getDb } from "../middleware/db.js";
 
+function clampInt(value: string | undefined, fallback: number, min: number, max: number): number {
+  const n = Number.parseInt(value ?? "", 10);
+  if (Number.isNaN(n) || n < min) return fallback;
+  return Math.min(n, max);
+}
+
 export const companiesRoutes = new Hono<AppEnv>()
   .get("/", async (c) => {
-    const page = Number(c.req.query("page") ?? "1");
-    const pageSize = Math.min(Number(c.req.query("pageSize") ?? "100"), 500);
+    const page = clampInt(c.req.query("page"), 1, 1, 1_000_000);
+    const pageSize = clampInt(c.req.query("pageSize"), 100, 1, 500);
     const industry = c.req.query("industry") ?? undefined;
 
     const db = getDb(c);
