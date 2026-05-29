@@ -33,5 +33,5 @@ pnpm --filter @edinet/api dev
 import { hc } from "hono/client";
 import type { AppType } from "@edinet/api";
 
-export const api = hc<AppType>(import.meta.env.PUBLIC_ENV__API_URL!);
+export const api = hc<AppType>(""); // web BFF same-origin proxy
 ```

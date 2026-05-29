@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { requestId } from "hono/request-id";
 import type { AppEnv } from "./env.js";
+import { apiKeyMiddleware } from "./middleware/apiKey.js";
 import { dbMiddleware } from "./middleware/db.js";
 import { companiesRoutes } from "./routes/companies.js";
 import { healthRoutes } from "./routes/health.js";
@@ -22,6 +23,7 @@ const app = new Hono<AppEnv>()
       maxAge: 600,
     })(c, next),
   )
+  .use("/api/*", apiKeyMiddleware)
   .use("/api/*", dbMiddleware)
   .route("/api/health", healthRoutes)
   .route("/api/companies", companiesRoutes)

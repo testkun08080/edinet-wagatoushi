@@ -31,15 +31,22 @@ jobs:
       - uses: actions/setup-node@v5
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - name: Render wrangler.toml from template
+      - name: Render wrangler configs
+        env:
+          WORKERS_SUBDOMAIN: ${{ secrets.WORKERS_SUBDOMAIN }}
+          STAGING_D1_ID: ${{ secrets.D1_STAGING_ID }}
+          PROD_D1_ID: ${{ secrets.D1_PRODUCTION_ID }}
+          STAGING_KV_ID: ${{ secrets.KV_STAGING_ID }}
+          PROD_KV_ID: ${{ secrets.KV_PRODUCTION_ID }}
         run: |
-          sed \
-            -e "s|__STAGING_D1_ID__|${{ secrets.D1_STAGING_ID }}|" \
-            -e "s|__PROD_D1_ID__|${{ secrets.D1_PRODUCTION_ID }}|" \
-            -e "s|__STAGING_KV_ID__|${{ secrets.KV_STAGING_ID }}|" \
-            -e "s|__PROD_KV_ID__|${{ secrets.KV_PRODUCTION_ID }}|" \
-            apps/api/wrangler.toml.template > apps/api/wrangler.toml
-      - uses: cloudflare/wrangler-action@v3
+          STAGING_API_URL="https://edinet-api-staging.${WORKERS_SUBDOMAIN}.workers.dev"
+          PROD_API_URL="https://edinet-api.${WORKERS_SUBDOMAIN}.workers.dev"
+          STAGING_WEB_URL="https://edinet-web-staging.${WORKERS_SUBDOMAIN}.workers.dev"
+          PROD_WEB_URL="https://edinet-web.${WORKERS_SUBDOMAIN}.workers.dev"
+          export STAGING_API_URL PROD_API_URL STAGING_WEB_URL PROD_WEB_URL
+          bash infra/render-wrangler-config.sh
+      - name: Deploy API Worker
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -56,10 +63,23 @@ jobs:
       - uses: actions/setup-node@v5
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @edinet/web build
+      - name: Render wrangler configs
         env:
-          PUBLIC_ENV__API_URL: ${{ vars.PUBLIC_API_URL }}
-      - uses: cloudflare/wrangler-action@v3
+          WORKERS_SUBDOMAIN: ${{ secrets.WORKERS_SUBDOMAIN }}
+          STAGING_D1_ID: ${{ secrets.D1_STAGING_ID }}
+          PROD_D1_ID: ${{ secrets.D1_PRODUCTION_ID }}
+          STAGING_KV_ID: ${{ secrets.KV_STAGING_ID }}
+          PROD_KV_ID: ${{ secrets.KV_PRODUCTION_ID }}
+        run: |
+          STAGING_API_URL="https://edinet-api-staging.${WORKERS_SUBDOMAIN}.workers.dev"
+          PROD_API_URL="https://edinet-api.${WORKERS_SUBDOMAIN}.workers.dev"
+          STAGING_WEB_URL="https://edinet-web-staging.${WORKERS_SUBDOMAIN}.workers.dev"
+          PROD_WEB_URL="https://edinet-web.${WORKERS_SUBDOMAIN}.workers.dev"
+          export STAGING_API_URL PROD_API_URL STAGING_WEB_URL PROD_WEB_URL
+          bash infra/render-wrangler-config.sh
+      - run: pnpm --filter @edinet/web build
+      - name: Deploy web Worker
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

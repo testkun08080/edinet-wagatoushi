@@ -3,9 +3,12 @@ main = "src/index.ts"
 compatibility_date = "2025-09-06"
 compatibility_flags = ["nodejs_compat"]
 
+# Local `wrangler dev` only. Staging/production vars are under [env.*].
 [vars]
-CORS_ORIGIN = "*"
+CORS_ORIGIN = "http://localhost:3000"
 API_VERSION = "2.0.0-alpha.0"
+NODE_ENV = "development"
+# INTERNAL_API_KEY: apps/api/.dev.vars (local) or `wrangler secret put` (remote)
 
 [[d1_databases]]
 binding = "EDINET_DB"
@@ -17,8 +20,9 @@ database_id = "00000000-0000-0000-0000-000000000000"
 name = "edinet-api-staging"
 
 [env.staging.vars]
-CORS_ORIGIN = "https://edinet-web-staging.workers.dev"
+CORS_ORIGIN = "__STAGING_WEB_URL__"
 API_VERSION = "2.0.0-alpha.0"
+NODE_ENV = "production"
 
 [[env.staging.d1_databases]]
 binding = "EDINET_DB"
@@ -34,8 +38,9 @@ id = "__STAGING_KV_ID__"
 name = "edinet-api"
 
 [env.production.vars]
-CORS_ORIGIN = "https://edinet-web.workers.dev"
+CORS_ORIGIN = "__PROD_WEB_URL__"
 API_VERSION = "2.0.0-alpha.0"
+NODE_ENV = "production"
 
 [[env.production.d1_databases]]
 binding = "EDINET_DB"

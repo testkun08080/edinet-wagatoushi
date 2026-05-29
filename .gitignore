@@ -3,6 +3,7 @@ node_modules
 __pycache__
 .env
 .env.*.local
+.internal-api-key
 .pytest_cache
 .DS_Store
 dist

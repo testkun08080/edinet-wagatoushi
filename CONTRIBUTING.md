@@ -32,11 +32,11 @@ npx wrangler login
 bash infra/setup-fork.sh
 ```
 
-詳細は [docs/MIGRATION.md](./docs/MIGRATION.md) の「フォーク利用者の最初の 30 分」を参照。
+詳細は [docs/FORK.md](./docs/FORK.md) を参照。
 
-### CI/CD で必要な Secrets / Variables
+### CI/CD で必要な Secrets
 
-`infra/setup-fork.sh` を流すと自動セットされますが、手動で設定する場合の一覧:
+`infra/setup-fork.sh` が `gh` で設定します。手動の場合:
 
 | 種類 | 名前 | 用途 |
 |---|---|---|
@@ -47,7 +47,8 @@ bash infra/setup-fork.sh
 | Secret | `D1_PRODUCTION_ID` | production D1 database id |
 | Secret | `KV_STAGING_ID` | staging KV namespace id |
 | Secret | `KV_PRODUCTION_ID` | production KV namespace id |
-| Variable | `PUBLIC_API_URL` | apps/web から見た API の公開 URL |
+| Secret | `WORKERS_SUBDOMAIN` | workers.dev サブドメイン（CI が Worker URL を組み立て） |
+| Secret | `INTERNAL_API_KEY` | 任意・記録用（自分で `apply-internal-api-key.sh` のあと） |
 
 ## ブランチ運用
 

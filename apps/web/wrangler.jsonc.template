@@ -7,6 +7,9 @@
   "env": {
     "staging": {
       "name": "edinet-web-staging",
+      "vars": {
+        "API_UPSTREAM_URL": "__STAGING_API_URL__"
+      },
       "d1_databases": [
         {
           "binding": "EDINET_DB",
@@ -17,6 +20,9 @@
     },
     "production": {
       "name": "edinet-web",
+      "vars": {
+        "API_UPSTREAM_URL": "__PROD_API_URL__"
+      },
       "d1_databases": [
         {
           "binding": "EDINET_DB",

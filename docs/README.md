@@ -4,6 +4,7 @@
 |---|---|
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | 全体構造・レイヤ・依存グラフ・データフロー（**まずここ**） |
 | [MIGRATION.md](./MIGRATION.md) | 旧 (v1) 構造から現在 (v2) 構造への移行マップ |
+| [FORK.md](./FORK.md) | フォーク利用者向けセットアップ・API キー・CI Secrets |
 
 ## モジュール別
 

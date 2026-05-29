@@ -1,0 +1,3 @@
+# Copy to .internal-api-key (gitignored), replace the line below, then:
+#   bash infra/apply-internal-api-key.sh
+your-internal-api-key-change-me

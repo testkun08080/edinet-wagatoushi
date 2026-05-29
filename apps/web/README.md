@@ -11,7 +11,7 @@ pnpm --filter @edinet/web dev
 # http://localhost:3000
 ```
 
-`PUBLIC_ENV__API_URL` points at the API Worker; defaults to `http://localhost:8787`.
+API calls use same-origin `/api/*`; the web Worker proxies to the API Worker using `API_UPSTREAM_URL` and `INTERNAL_API_KEY` from `.dev.vars` (see `.dev.vars.example`).
 
 ## Deploy
 

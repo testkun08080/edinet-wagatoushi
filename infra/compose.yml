@@ -47,7 +47,7 @@ services:
       - DB_PATH=/app/data/edinet.db
     ports:
       - "8787:8787"
-    command: sh -c "sh /workspace/infra/init/prepare-local-d1.sh && pnpm exec wrangler dev --ip 0.0.0.0 --port 8787"
+    command: sh -c "cp -f .dev.vars.example .dev.vars && sh /workspace/infra/init/prepare-local-d1.sh && pnpm exec wrangler dev --ip 0.0.0.0 --port 8787"
 
   web:
     build:
@@ -63,11 +63,10 @@ services:
       - pnpm-store:/root/.local/share/pnpm/store
     working_dir: /workspace/apps/web
     environment:
-      - PUBLIC_ENV__API_URL=http://localhost:8787
       - NODE_ENV=development
     ports:
       - "3000:3000"
-    command: sh -c "cp -f wrangler.jsonc.template wrangler.jsonc && pnpm dev --host 0.0.0.0 --port 3000"
+    command: sh -c "cp -f .dev.vars.example .dev.vars && sed -i 's|^API_UPSTREAM_URL=.*|API_UPSTREAM_URL=http://api:8787|' .dev.vars && cp -f wrangler.jsonc.template wrangler.jsonc && pnpm dev --host 0.0.0.0 --port 3000"
 
   wrapper:
     profiles: ["ingest"]
@@ -77,7 +76,7 @@ services:
       - ../data:/app/data
       - ../apps/wrapper:/app
     env_file:
-      - ../.env
+      - ../apps/wrapper/.env
     working_dir: /app
     entrypoint: ["sh", "-c"]
     command:

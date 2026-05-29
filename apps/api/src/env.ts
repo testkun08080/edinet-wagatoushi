@@ -7,6 +7,8 @@ export interface Bindings {
   EDINET_DATA?: R2Bucket;
   CORS_ORIGIN: string;
   API_VERSION: string;
+  INTERNAL_API_KEY?: string;
+  NODE_ENV?: string;
 }
 
 export type DB = DrizzleD1Database<typeof schema>;

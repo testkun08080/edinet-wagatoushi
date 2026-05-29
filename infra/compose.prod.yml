@@ -12,6 +12,7 @@ services:
       - NODE_ENV=production
     ports:
       - "8787:8787"
+    command: sh -c "cp -f .dev.vars.example .dev.vars && pnpm exec wrangler dev --port 8787 --ip 0.0.0.0"
 
   web:
     build:
@@ -21,7 +22,7 @@ services:
     depends_on:
       - api
     environment:
-      - PUBLIC_ENV__API_URL=http://api:8787
       - NODE_ENV=production
     ports:
       - "3000:3000"
+    command: sh -c "cp -f .dev.vars.example .dev.vars && sed -i 's|^API_UPSTREAM_URL=.*|API_UPSTREAM_URL=http://api:8787|' .dev.vars && pnpm preview --host 0.0.0.0 --port 3000"

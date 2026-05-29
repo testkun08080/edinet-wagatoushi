@@ -70,7 +70,13 @@ pnpm --filter @edinet/api dev             # http://localhost:8787
 pnpm --filter @edinet/api test            # vitest
 ```
 
+## 認証
+
+- `/api/*`（`/api/health` を除く）は `X-Internal-Api-Key` または `Authorization: Bearer` で `INTERNAL_API_KEY` と一致する必要がある。
+- ローカル: `apps/api/.dev.vars`（`INTERNAL_API_KEY=dev-local-key`）。本番: `wrangler secret put INTERNAL_API_KEY`。
+- ブラウザは web Worker の同一オリジン `/api/*` プロキシ経由のみ（`apps/web/server/`）。
+
 ## 注意
 
-- `EDINET_CACHE` (KV), `EDINET_DATA` (R2) は optional binding。未設定でも health/search/manifest は動く。
+- `EDINET_CACHE` (KV), `EDINET_DATA` (R2) は optional binding。未設定でも health は動く。
 - D1 binding 未設定時、`/api/companies` などは `onError` で `500 internal_error` を返す（想定動作）。

@@ -1,0 +1,4 @@
+# Local development only. Copy to .dev.vars — INTERNAL_API_KEY must match apps/api/.dev.vars.
+# Production: use wrangler secret put (see docs/FORK.md) — do not reuse this sample.
+INTERNAL_API_KEY=dev-local-key
+API_UPSTREAM_URL=http://127.0.0.1:8787

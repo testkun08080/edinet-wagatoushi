@@ -26,7 +26,7 @@ docker compose -f infra/compose.yml up
 |---|---|
 | `db-init` | 初回のみ GH Release からサンプル `edinet.db` を `data/` へ展開 |
 | `api` | `apps/api` を dev ターゲットでビルド、`pnpm dev` (wrangler) |
-| `web` | `apps/web` を dev ターゲット、`PUBLIC_ENV__API_URL=http://localhost:8787` |
+| `web` | `apps/web` を dev ターゲット。`.dev.vars` で `API_UPSTREAM_URL=http://api:8787` にプロキシ |
 | `wrapper` | `profiles: [ingest]`。通常は起動せず手動取り込み用 |
 
 ```bash
@@ -55,8 +55,15 @@ bash infra/setup-fork.sh
 | 種類 | 名前 |
 |---|---|
 | Secret | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `EDINET_API_KEY` |
-| Secret | `D1_STAGING_ID`, `D1_PRODUCTION_ID`, `KV_STAGING_ID`, `KV_PRODUCTION_ID` |
-| Variable | `PUBLIC_API_URL` |
+| Secret | `D1_STAGING_ID`, `D1_PRODUCTION_ID`, `KV_STAGING_ID`, `KV_PRODUCTION_ID`, `WORKERS_SUBDOMAIN`, `INTERNAL_API_KEY` |
+
+フォーク利用者向けの詳細は [FORK.md](../FORK.md)。
+
+| スクリプト | 用途 |
+|---|---|
+| `infra/setup-fork.sh` | D1/KV、wrangler 設定（**API キーは作らない**） |
+| `infra/apply-internal-api-key.sh` | `.internal-api-key` を Cloudflare secret に登録 |
+| `.internal-api-key.example` | 本番用キーのサンプル（プレースホルダ） |
 
 ## fetch-sample-data.sh
 

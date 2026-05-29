@@ -100,11 +100,12 @@ docker compose -f infra/compose.yml up
 pnpm install
 npx wrangler login
 bash infra/setup-fork.sh
-# → D1 / KV / R2 を作成し wrangler.{toml,jsonc} を生成
-#   GitHub Secrets と Variables も自動セット
+# → D1 / KV / R2、wrangler.{toml,jsonc}（INTERNAL_API_KEY は自分で設定 — docs/FORK.md）
 
 # 4. push で初回デプロイ
 git push
-# → https://edinet-api-<account>.workers.dev
-# → https://edinet-web-<account>.workers.dev
+# → https://edinet-api-staging.<your-subdomain>.workers.dev
+# → https://edinet-web-staging.<your-subdomain>.workers.dev
+
+詳細: [docs/FORK.md](./FORK.md)
 ```

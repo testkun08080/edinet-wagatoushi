@@ -60,12 +60,18 @@ importers:
       '@photonjs/cloudflare':
         specifier: ^0.1.13
         version: 0.1.13(@cloudflare/workers-types@4.20260525.1)(hono@4.12.23)(srvx@0.11.16)(vite@7.3.3(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.22.3))(workerd@1.20260521.1)(wrangler@4.94.0(@cloudflare/workers-types@4.20260525.1))
+      '@photonjs/srvx':
+        specifier: ^0.1.13
+        version: 0.1.13(@cloudflare/workers-types@4.20260525.1)(hono@4.12.23)(srvx@0.11.16)(vite@7.3.3(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.22.3))
       '@sentry/react':
         specifier: ^10.32.1
         version: 10.53.1(react@19.2.6)
       '@types/react-share':
         specifier: ^3.0.3
         version: 3.0.3
+      '@universal-middleware/core':
+        specifier: ^0.4.15
+        version: 0.4.17(@cloudflare/workers-types@4.20260525.1)(hono@4.12.23)(srvx@0.11.16)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

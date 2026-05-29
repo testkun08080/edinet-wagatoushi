@@ -20,11 +20,13 @@ docker compose -f infra/compose.yml up
 pnpm install
 npx wrangler login
 bash infra/setup-fork.sh
+cp .internal-api-key.example .internal-api-key   # 編集して自分の秘密に
+bash infra/apply-internal-api-key.sh             # Cloudflare に登録
 
 # 4. push → GitHub Actions が自動デプロイ (10 min)
 git push
-# → https://edinet-api-<account>.workers.dev
-# → https://edinet-web-<account>.workers.dev
+# → https://edinet-api-staging.<your-subdomain>.workers.dev
+# → https://edinet-web-staging.<your-subdomain>.workers.dev
 ```
 
 ## アーキテクチャ
@@ -87,13 +89,16 @@ uv run python scripts/ingest_daily.py --help
 | `EDINET_API_KEY` | EDINET API キー | wrapper |
 | `CLOUDFLARE_API_TOKEN` | Workers / D1 デプロイ | CI |
 | `CLOUDFLARE_ACCOUNT_ID` | 同上 | CI |
-| `PUBLIC_ENV__API_URL` | apps/web から見た API URL | web ビルド時 |
+| `INTERNAL_API_KEY` | API 認証（web BFF → api） | 自分で設定（[docs/FORK.md](./docs/FORK.md)） |
+| `API_UPSTREAM_URL` | web がプロキシする API の URL | web Worker vars（setup-fork がアカウント URL で生成） |
+| `WORKERS_SUBDOMAIN` | workers.dev のサブドメイン | GitHub Secret（CI デプロイ用） |
 | `PUBLIC_ENV__SENTRY_DSN` | Sentry DSN (任意) | web |
 
 ## ドキュメント
 
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) — 全体構造・依存グラフ・データフロー
 - [docs/modules/](./docs/modules/) — モジュール別ドキュメント (api / web / wrapper / db / types / infra)
+- [docs/FORK.md](./docs/FORK.md) — フォーク利用者向けセットアップ・セキュリティ
 - [docs/MIGRATION.md](./docs/MIGRATION.md) — 旧構造から現在の構造への移行マップ
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — 開発フロー
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)

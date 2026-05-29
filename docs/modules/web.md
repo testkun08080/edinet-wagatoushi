@@ -51,7 +51,7 @@ apps/web/
 // lib/api.ts
 import { hc } from "hono/client";
 import type { AppType } from "@edinet/api";
-export const api = hc<AppType>(apiBaseUrl);  // PUBLIC_ENV__API_URL or :8787
+export const api = hc<AppType>("");  // same-origin → server/api-proxy → upstream API
 
 // lib/metricsLoader.ts
 const res = await api.api.metrics.$get({ query: { limit: "2000" } });
@@ -63,7 +63,8 @@ const res = await api.api.metrics.$get({ query: { limit: "2000" } });
 
 | 変数 | 用途 |
 |---|---|
-| `PUBLIC_ENV__API_URL` | API Worker の URL（未設定時 `http://localhost:8787`） |
+| `INTERNAL_API_KEY` | BFF が upstream API に付与する共有キー（`.dev.vars` / secret） |
+| `API_UPSTREAM_URL` | プロキシ先 API（ローカル `http://127.0.0.1:8787`、本番は wrangler vars） |
 | `PUBLIC_ENV__SENTRY_DSN` | Sentry (任意) |
 | `PUBLIC_ENV__GOOGLE_ANALYTICS` | GA 測定 ID (任意) |
 | `PUBLIC_ENV__SITE_URL` | OGP / canonical (任意) |

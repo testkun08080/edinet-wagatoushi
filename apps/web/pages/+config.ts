@@ -12,4 +12,8 @@ export default {
   description: "EDINET財務データの検索・分析",
 
   extends: [vikeReact, vikePhoton],
+
+  photon: {
+    server: "../server/index.ts",
+  },
 } satisfies Config;
