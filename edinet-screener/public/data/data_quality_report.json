@@ -1,43 +1,43 @@
 {
   "summary": {
-    "totalCompanies": 3921,
+    "totalCompanies": 3922,
     "totalColumns": 52
   },
   "byColumn": {
     "edinetCode": {
-      "filled": 3921,
+      "filled": 3922,
       "missing": 0,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": []
     },
     "secCode": {
-      "filled": 3921,
+      "filled": 3922,
       "missing": 0,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": []
     },
     "filerName": {
-      "filled": 3921,
+      "filled": 3922,
       "missing": 0,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": []
     },
     "calcDate": {
-      "filled": 3921,
+      "filled": 3922,
       "missing": 0,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": []
     },
     "fiscalMonth": {
-      "filled": 3921,
+      "filled": 3922,
       "missing": 0,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": []
     },
     "equityRatio": {
-      "filled": 3608,
+      "filled": 3609,
       "missing": 313,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -355,9 +355,9 @@
       ]
     },
     "EPS": {
-      "filled": 3607,
+      "filled": 3608,
       "missing": 314,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -676,9 +676,9 @@
       ]
     },
     "dilutedEPS": {
-      "filled": 912,
+      "filled": 913,
       "missing": 3009,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1301",
         "1332",
@@ -2807,6 +2807,7 @@
         "7327",
         "7347",
         "7354",
+        "7357",
         "7360",
         "7362",
         "7365",
@@ -2949,7 +2950,6 @@
         "7713",
         "7715",
         "7717",
-        "7719",
         "7721",
         "7722",
         "7723",
@@ -3692,9 +3692,9 @@
       ]
     },
     "sales": {
-      "filled": 3659,
+      "filled": 3660,
       "missing": 262,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "165A",
         "1950",
@@ -3961,9 +3961,9 @@
       ]
     },
     "operatingProfitRatio": {
-      "filled": 3635,
+      "filled": 3636,
       "missing": 286,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "165A",
         "1950",
@@ -4254,9 +4254,9 @@
       ]
     },
     "netProfitRatio": {
-      "filled": 3658,
+      "filled": 3659,
       "missing": 263,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "165A",
         "1950",
@@ -4524,9 +4524,9 @@
       ]
     },
     "recurringProfit": {
-      "filled": 3605,
+      "filled": 3606,
       "missing": 316,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -4847,9 +4847,9 @@
       ]
     },
     "netIncome": {
-      "filled": 3913,
+      "filled": 3914,
       "missing": 8,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "4901",
         "6301",
@@ -4862,9 +4862,9 @@
       ]
     },
     "netAssets": {
-      "filled": 3609,
+      "filled": 3610,
       "missing": 312,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -5181,9 +5181,9 @@
       ]
     },
     "totalAssets": {
-      "filled": 3609,
+      "filled": 3610,
       "missing": 312,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -5500,9 +5500,9 @@
       ]
     },
     "comprehensiveIncome": {
-      "filled": 3587,
+      "filled": 3588,
       "missing": 334,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -5841,9 +5841,9 @@
       ]
     },
     "BPS": {
-      "filled": 3897,
-      "missing": 24,
-      "total": 3921,
+      "filled": 3899,
+      "missing": 23,
+      "total": 3922,
       "missingSecCodes": [
         "3079",
         "332A",
@@ -5854,7 +5854,6 @@
         "438A",
         "476A",
         "5128",
-        "5900",
         "6049",
         "6836",
         "7096",
@@ -5872,9 +5871,9 @@
       ]
     },
     "ROE": {
-      "filled": 3842,
-      "missing": 79,
-      "total": 3921,
+      "filled": 3844,
+      "missing": 78,
+      "total": 3922,
       "missingSecCodes": [
         "186A",
         "254A",
@@ -5924,7 +5923,6 @@
         "5246",
         "5277",
         "5618",
-        "5900",
         "6049",
         "6232",
         "6574",
@@ -5958,9 +5956,9 @@
       ]
     },
     "roeCalculated": {
-      "filled": 3608,
+      "filled": 3609,
       "missing": 313,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -6278,9 +6276,9 @@
       ]
     },
     "roa": {
-      "filled": 3608,
+      "filled": 3609,
       "missing": 313,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -6598,9 +6596,9 @@
       ]
     },
     "equityRatioCalculated": {
-      "filled": 3609,
+      "filled": 3610,
       "missing": 312,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -6917,9 +6915,9 @@
       ]
     },
     "operatingProfit": {
-      "filled": 3778,
+      "filled": 3779,
       "missing": 143,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "2282",
         "2651",
@@ -7067,9 +7065,9 @@
       ]
     },
     "operatingCF": {
-      "filled": 3725,
+      "filled": 3726,
       "missing": 196,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1352",
         "1400",
@@ -7270,9 +7268,9 @@
       ]
     },
     "investingCF": {
-      "filled": 3720,
+      "filled": 3721,
       "missing": 201,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1352",
         "1400",
@@ -7478,9 +7476,9 @@
       ]
     },
     "fcf": {
-      "filled": 3720,
+      "filled": 3721,
       "missing": 201,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1352",
         "1400",
@@ -7686,9 +7684,9 @@
       ]
     },
     "financingCF": {
-      "filled": 3707,
+      "filled": 3708,
       "missing": 214,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1352",
         "1400",
@@ -7907,9 +7905,9 @@
       ]
     },
     "cashBalance": {
-      "filled": 3725,
+      "filled": 3726,
       "missing": 196,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1352",
         "1400",
@@ -8110,9 +8108,9 @@
       ]
     },
     "payoutRatio": {
-      "filled": 3373,
-      "missing": 548,
-      "total": 3921,
+      "filled": 3375,
+      "missing": 547,
+      "total": 3922,
       "missingSecCodes": [
         "1400",
         "143A",
@@ -8430,7 +8428,6 @@
         "5838",
         "5884",
         "5892",
-        "5900",
         "5912",
         "6025",
         "6027",
@@ -8665,9 +8662,9 @@
       ]
     },
     "payoutRatioComputed": {
-      "filled": 2802,
-      "missing": 1119,
-      "total": 3921,
+      "filled": 2804,
+      "missing": 1118,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1380",
@@ -9248,7 +9245,6 @@
         "5884",
         "5889",
         "5892",
-        "5900",
         "5912",
         "5915",
         "5938",
@@ -9791,9 +9787,9 @@
       ]
     },
     "dividendPerShare": {
-      "filled": 3397,
-      "missing": 524,
-      "total": 3921,
+      "filled": 3399,
+      "missing": 523,
+      "total": 3922,
       "missingSecCodes": [
         "1400",
         "143A",
@@ -10094,7 +10090,6 @@
         "5838",
         "5884",
         "5892",
-        "5900",
         "5912",
         "5981",
         "6025",
@@ -10322,9 +10317,9 @@
       ]
     },
     "sharesOutstanding": {
-      "filled": 3815,
-      "missing": 106,
-      "total": 3921,
+      "filled": 3817,
+      "missing": 105,
+      "total": 3922,
       "missingSecCodes": [
         "1400",
         "1722",
@@ -10365,7 +10360,6 @@
         "5002",
         "5128",
         "5486",
-        "5900",
         "5912",
         "5981",
         "6049",
@@ -10435,9 +10429,9 @@
       ]
     },
     "currentAssets": {
-      "filled": 3792,
+      "filled": 3793,
       "missing": 129,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "4689",
         "4755",
@@ -10571,9 +10565,9 @@
       ]
     },
     "currentLiabilities": {
-      "filled": 3792,
+      "filled": 3793,
       "missing": 129,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "4689",
         "4755",
@@ -10707,9 +10701,9 @@
       ]
     },
     "liabilities": {
-      "filled": 3911,
+      "filled": 3912,
       "missing": 10,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "4901",
         "6301",
@@ -10724,9 +10718,9 @@
       ]
     },
     "investmentSecurities": {
-      "filled": 2417,
-      "missing": 1504,
-      "total": 3921,
+      "filled": 2422,
+      "missing": 1500,
+      "total": 3922,
       "missingSecCodes": [
         "1333",
         "1375",
@@ -10984,7 +10978,6 @@
         "3169",
         "3173",
         "3174",
-        "3177",
         "3178",
         "3180",
         "3183",
@@ -11144,7 +11137,6 @@
         "3815",
         "3823",
         "3824",
-        "3826",
         "3840",
         "3842",
         "3845",
@@ -11489,7 +11481,6 @@
         "5889",
         "5891",
         "5892",
-        "5900",
         "5906",
         "5938",
         "5952",
@@ -11884,7 +11875,6 @@
         "7604",
         "7606",
         "7609",
-        "7610",
         "7612",
         "7615",
         "7616",
@@ -12235,9 +12225,9 @@
       ]
     },
     "PER": {
-      "filled": 3803,
+      "filled": 3804,
       "missing": 118,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "186A",
         "2191",
@@ -12311,7 +12301,6 @@
         "5456",
         "5618",
         "5884",
-        "5900",
         "6049",
         "6085",
         "6177",
@@ -12330,6 +12319,7 @@
         "7135",
         "7157",
         "7330",
+        "7357",
         "7360",
         "7376",
         "7505",
@@ -12361,8 +12351,8 @@
     },
     "PBR": {
       "filled": 0,
-      "missing": 3921,
-      "total": 3921,
+      "missing": 3922,
+      "total": 3922,
       "missingSecCodes": [
         "1301",
         "1332",
@@ -15122,6 +15112,7 @@
         "7351",
         "7352",
         "7354",
+        "7357",
         "7358",
         "7359",
         "7360",
@@ -16289,8 +16280,8 @@
     },
     "dividendYield": {
       "filled": 2057,
-      "missing": 1864,
-      "total": 3921,
+      "missing": 1865,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1380",
@@ -17213,7 +17204,6 @@
         "5884",
         "5889",
         "5892",
-        "5900",
         "5905",
         "5909",
         "5911",
@@ -17668,6 +17658,7 @@
         "7345",
         "7347",
         "7354",
+        "7357",
         "7359",
         "7360",
         "7361",
@@ -17896,6 +17887,7 @@
         "8219",
         "8230",
         "8233",
+        "8247",
         "8249",
         "8251",
         "8253",
@@ -18160,8 +18152,8 @@
     },
     "marketCap": {
       "filled": 0,
-      "missing": 3921,
-      "total": 3921,
+      "missing": 3922,
+      "total": 3922,
       "missingSecCodes": [
         "1301",
         "1332",
@@ -20921,6 +20913,7 @@
         "7351",
         "7352",
         "7354",
+        "7357",
         "7358",
         "7359",
         "7360",
@@ -22087,9 +22080,9 @@
       ]
     },
     "netCash": {
-      "filled": 3791,
+      "filled": 3792,
       "missing": 130,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "4689",
         "4755",
@@ -22225,8 +22218,8 @@
     },
     "netCashRatio": {
       "filled": 0,
-      "missing": 3921,
-      "total": 3921,
+      "missing": 3922,
+      "total": 3922,
       "missingSecCodes": [
         "1301",
         "1332",
@@ -24986,6 +24979,7 @@
         "7351",
         "7352",
         "7354",
+        "7357",
         "7358",
         "7359",
         "7360",
@@ -26152,9 +26146,9 @@
       ]
     },
     "salesGrowthYoY": {
-      "filled": 3503,
+      "filled": 3504,
       "missing": 418,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "150A",
         "155A",
@@ -26222,7 +26216,6 @@
         "377A",
         "378A",
         "3794",
-        "3826",
         "3841",
         "391A",
         "3961",
@@ -26351,6 +26344,7 @@
         "7339",
         "7347",
         "7350",
+        "7357",
         "7360",
         "7365",
         "7376",
@@ -26577,9 +26571,9 @@
       ]
     },
     "opGrowthYoY": {
-      "filled": 3606,
+      "filled": 3607,
       "missing": 315,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "150A",
         "155A",
@@ -26639,7 +26633,6 @@
         "377A",
         "378A",
         "3794",
-        "3826",
         "3841",
         "391A",
         "3938",
@@ -26753,6 +26746,7 @@
         "7337",
         "7339",
         "7350",
+        "7357",
         "7360",
         "7365",
         "7376",
@@ -26899,9 +26893,9 @@
       ]
     },
     "epsGrowthYoY": {
-      "filled": 3742,
+      "filled": 3743,
       "missing": 179,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "150A",
         "155A",
@@ -26959,7 +26953,6 @@
         "377A",
         "378A",
         "3794",
-        "3826",
         "3841",
         "391A",
         "402A",
@@ -27039,6 +27032,7 @@
         "7096",
         "7118",
         "7330",
+        "7357",
         "7360",
         "7365",
         "7376",
@@ -27086,8 +27080,8 @@
     },
     "dividendGrowthYoY": {
       "filled": 3054,
-      "missing": 867,
-      "total": 3921,
+      "missing": 868,
+      "total": 3922,
       "missingSecCodes": [
         "1400",
         "143A",
@@ -27320,7 +27314,6 @@
         "3823",
         "3824",
         "3825",
-        "3826",
         "3840",
         "3841",
         "3845",
@@ -27615,6 +27608,7 @@
         "6205",
         "6208",
         "6217",
+        "6228",
         "6232",
         "6264",
         "6274",
@@ -27746,6 +27740,7 @@
         "7330",
         "7339",
         "7351",
+        "7357",
         "7359",
         "7360",
         "7362",
@@ -27959,9 +27954,9 @@
       ]
     },
     "salesCagr3y": {
-      "filled": 3199,
+      "filled": 3200,
       "missing": 722,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "141A",
         "1430",
@@ -28388,6 +28383,7 @@
         "7339",
         "7347",
         "7350",
+        "7357",
         "7360",
         "7365",
         "7370",
@@ -28635,7 +28631,6 @@
         "9319",
         "9322",
         "9324",
-        "9326",
         "9327",
         "9331",
         "9332",
@@ -28689,8 +28684,8 @@
     },
     "salesCagr5y": {
       "filled": 2926,
-      "missing": 995,
-      "total": 3921,
+      "missing": 996,
+      "total": 3922,
       "missingSecCodes": [
         "1352",
         "1375",
@@ -29322,6 +29317,7 @@
         "7347",
         "7350",
         "7352",
+        "7357",
         "7360",
         "7361",
         "7365",
@@ -29690,15 +29686,15 @@
       ]
     },
     "consecutiveDivIncreases": {
-      "filled": 3921,
+      "filled": 3922,
       "missing": 0,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": []
     },
     "currentRatio": {
-      "filled": 3792,
+      "filled": 3793,
       "missing": 129,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "4689",
         "4755",
@@ -29832,9 +29828,9 @@
       ]
     },
     "deRatio": {
-      "filled": 3608,
+      "filled": 3609,
       "missing": 313,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "1375",
         "1605",
@@ -30152,9 +30148,9 @@
       ]
     },
     "roic": {
-      "filled": 3766,
+      "filled": 3767,
       "missing": 155,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "2282",
         "2651",
@@ -30314,9 +30310,9 @@
       ]
     },
     "piotroskiFScore": {
-      "filled": 3750,
+      "filled": 3751,
       "missing": 171,
-      "total": 3921,
+      "total": 3922,
       "missingSecCodes": [
         "150A",
         "155A",
@@ -30373,7 +30369,6 @@
         "377A",
         "378A",
         "3794",
-        "3826",
         "3841",
         "391A",
         "402A",
@@ -30448,6 +30443,7 @@
         "7096",
         "7118",
         "7330",
+        "7357",
         "7360",
         "7365",
         "7376",
@@ -39297,10 +39293,9 @@
     },
     "3177": {
       "filerName": "株式会社ありがとうサービス",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -43696,20 +43691,14 @@
     },
     "3826": {
       "filerName": "株式会社システムインテグレータ",
-      "missingCount": 12,
+      "missingCount": 6,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio",
-        "salesGrowthYoY",
-        "opGrowthYoY",
-        "epsGrowthYoY",
-        "dividendGrowthYoY",
         "salesCagr3y",
-        "salesCagr5y",
-        "piotroskiFScore"
+        "salesCagr5y"
       ]
     },
     "3830": {
@@ -55895,19 +55884,10 @@
     },
     "5900": {
       "filerName": "株式会社ダイケン",
-      "missingCount": 20,
+      "missingCount": 11,
       "missingKeys": [
         "dilutedEPS",
-        "BPS",
-        "ROE",
-        "payoutRatio",
-        "payoutRatioComputed",
-        "dividendPerShare",
-        "sharesOutstanding",
-        "investmentSecurities",
-        "PER",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio",
         "salesGrowthYoY",
@@ -58386,7 +58366,7 @@
     },
     "6228": {
       "filerName": "株式会社ジェイ・イー・ティ",
-      "missingCount": 8,
+      "missingCount": 9,
       "missingKeys": [
         "dilutedEPS",
         "investmentSecurities",
@@ -58394,6 +58374,7 @@
         "dividendYield",
         "marketCap",
         "netCashRatio",
+        "dividendGrowthYoY",
         "salesCagr3y",
         "salesCagr5y"
       ]
@@ -67709,6 +67690,25 @@
         "deRatio"
       ]
     },
+    "7357": {
+      "filerName": "株式会社ジオコード",
+      "missingCount": 13,
+      "missingKeys": [
+        "dilutedEPS",
+        "PER",
+        "PBR",
+        "dividendYield",
+        "marketCap",
+        "netCashRatio",
+        "salesGrowthYoY",
+        "opGrowthYoY",
+        "epsGrowthYoY",
+        "dividendGrowthYoY",
+        "salesCagr3y",
+        "salesCagr5y",
+        "piotroskiFScore"
+      ]
+    },
     "7358": {
       "filerName": "株式会社ポピンズホールディングス",
       "missingCount": 4,
@@ -69369,10 +69369,9 @@
     },
     "7610": {
       "filerName": "株式会社テイツー",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "dilutedEPS",
-        "investmentSecurities",
         "PBR",
         "marketCap",
         "netCashRatio"
@@ -70014,9 +70013,8 @@
     },
     "7719": {
       "filerName": "株式会社東京衡機",
-      "missingCount": 9,
+      "missingCount": 8,
       "missingKeys": [
-        "dilutedEPS",
         "payoutRatio",
         "payoutRatioComputed",
         "dividendPerShare",
@@ -73959,10 +73957,11 @@
     },
     "8247": {
       "filerName": "株式会社大和",
-      "missingCount": 5,
+      "missingCount": 6,
       "missingKeys": [
         "dilutedEPS",
         "PBR",
+        "dividendYield",
         "marketCap",
         "netCashRatio",
         "dividendGrowthYoY"
@@ -80330,12 +80329,11 @@
     },
     "9326": {
       "filerName": "株式会社関通",
-      "missingCount": 5,
+      "missingCount": 4,
       "missingKeys": [
         "PBR",
         "marketCap",
         "netCashRatio",
-        "salesCagr3y",
         "salesCagr5y"
       ]
     },
