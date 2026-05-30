@@ -15,6 +15,7 @@ cd edinet-wagatoushi
 # 2. ローカルでサンプル UI を確認 (5 min)
 docker compose -f infra/compose.yml up
 # → http://localhost:3000
+# Docker なし: docs/MANUAL_SETUP.md
 
 # 3. 自分の Cloudflare アカウントへセットアップ (10 min)
 pnpm install
@@ -63,10 +64,17 @@ docs/
   MIGRATION.md        旧構造からの移行マップ
 ```
 
+## ローカル開発
+
+| 方法 | 手順 |
+|---|---|
+| Docker Compose（推奨・最速） | `docker compose -f infra/compose.yml up` → http://localhost:3000 |
+| ホスト直接 | [docs/MANUAL_SETUP.md](./docs/MANUAL_SETUP.md) |
+
 ## 開発コマンド
 
 ```bash
-pnpm dev                       # 全 apps を並列起動 (turbo)
+pnpm dev                       # 全 apps を並列起動 (turbo) — 手動セットアップ後
 pnpm lint                      # biome check
 pnpm typecheck                 # 全 workspace で tsc --noEmit
 pnpm test                      # turbo test
@@ -98,6 +106,7 @@ uv run python scripts/ingest_daily.py --help
 
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) — 全体構造・依存グラフ・データフロー
 - [docs/modules/](./docs/modules/) — モジュール別ドキュメント (api / web / wrapper / db / types / infra)
+- [docs/MANUAL_SETUP.md](./docs/MANUAL_SETUP.md) — Docker なしの手動ローカルセットアップ
 - [docs/FORK.md](./docs/FORK.md) — フォーク利用者向けセットアップ・セキュリティ
 - [docs/MIGRATION.md](./docs/MIGRATION.md) — 旧構造から現在の構造への移行マップ
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — 開発フロー

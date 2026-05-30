@@ -1,6 +1,6 @@
 # infra — ローカル開発・デプロイ補助
 
-Docker Compose スタックとフォーク利用者向けセットアップ。
+Docker Compose スタックとフォーク利用者向けセットアップ。Docker なしの手動セットアップは [MANUAL_SETUP.md](../MANUAL_SETUP.md)。
 
 ## ファイル構成
 

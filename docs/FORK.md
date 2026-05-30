@@ -15,13 +15,7 @@ docker compose -f infra/compose.yml up
 # → http://localhost:3000
 ```
 
-ホストで `pnpm dev` する場合は `wrangler.*` もコピー:
-
-```bash
-cp apps/api/wrangler.toml.template apps/api/wrangler.toml
-cp apps/web/wrangler.jsonc.template apps/web/wrangler.jsonc
-pnpm dev
-```
+Docker を使わずホストでセットアップする場合は [MANUAL_SETUP.md](./MANUAL_SETUP.md) を参照。
 
 ## 2. Cloudflare リソースの作成
 

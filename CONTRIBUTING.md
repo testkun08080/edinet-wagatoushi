@@ -23,6 +23,9 @@ cd apps/wrapper && uv sync && cd ../..
 # 最速で動くサンプルを起動
 docker compose -f infra/compose.yml up
 # http://localhost:3000
+
+# Docker なしでホスト直接セットアップする場合
+# → docs/MANUAL_SETUP.md
 ```
 
 ### 自分の Cloudflare へデプロイ
