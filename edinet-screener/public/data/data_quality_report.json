@@ -8108,8 +8108,8 @@
       ]
     },
     "payoutRatio": {
-      "filled": 3375,
-      "missing": 547,
+      "filled": 3376,
+      "missing": 546,
       "total": 3922,
       "missingSecCodes": [
         "1400",
@@ -8186,7 +8186,6 @@
         "302A",
         "3077",
         "3079",
-        "3083",
         "3103",
         "3135",
         "3136",
@@ -8662,8 +8661,8 @@
       ]
     },
     "payoutRatioComputed": {
-      "filled": 2804,
-      "missing": 1118,
+      "filled": 2805,
+      "missing": 1117,
       "total": 3922,
       "missingSecCodes": [
         "1375",
@@ -8824,7 +8823,6 @@
         "302A",
         "3077",
         "3079",
-        "3083",
         "3092",
         "3103",
         "3116",
@@ -9787,8 +9785,8 @@
       ]
     },
     "dividendPerShare": {
-      "filled": 3399,
-      "missing": 523,
+      "filled": 3400,
+      "missing": 522,
       "total": 3922,
       "missingSecCodes": [
         "1400",
@@ -9862,7 +9860,6 @@
         "302A",
         "3077",
         "3079",
-        "3083",
         "3103",
         "3135",
         "3136",
@@ -16279,8 +16276,8 @@
       ]
     },
     "dividendYield": {
-      "filled": 2057,
-      "missing": 1865,
+      "filled": 2058,
+      "missing": 1864,
       "total": 3922,
       "missingSecCodes": [
         "1375",
@@ -16573,7 +16570,6 @@
         "3077",
         "3079",
         "3080",
-        "3083",
         "3089",
         "3092",
         "3103",
@@ -38606,14 +38602,10 @@
     },
     "3083": {
       "filerName": "株式会社シーズメン",
-      "missingCount": 10,
+      "missingCount": 6,
       "missingKeys": [
         "dilutedEPS",
-        "payoutRatio",
-        "payoutRatioComputed",
-        "dividendPerShare",
         "PBR",
-        "dividendYield",
         "marketCap",
         "netCashRatio",
         "dividendGrowthYoY",
