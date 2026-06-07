@@ -87,6 +87,9 @@ curl http://127.0.0.1:8787/api/health
 
 # スクリーナー用メトリクス（認証あり）
 curl -H "X-Internal-Api-Key: dev-local-key" http://127.0.0.1:8787/api/metrics?limit=5
+
+# 企業検索（認証あり）
+curl -H "X-Internal-Api-Key: dev-local-key" "http://127.0.0.1:8787/api/search?q=ライオン"
 ```
 
 Web: http://localhost:3000/screener でサンプル企業が表示されれば OK です。

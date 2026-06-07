@@ -7,6 +7,66 @@ INSERT OR REPLACE INTO companies (
   'E00000', '9999', 'サンプル株式会社', '上場', '情報・通信業'
 );
 
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00001', '1301', 'カブトシステムズ株式会社', '上場', '情報・通信業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00002', '1302', 'ライオンロジスティクス株式会社', '上場', '陸運業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00003', '1303', 'ペンギンソリューションズ株式会社', '上場', 'サービス業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00004', '1304', 'キツネクラウド株式会社', '上場', '情報・通信業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00005', '1305', 'クジラデータバンク株式会社', '上場', '銀行業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00006', '1306', 'ハリネズミファイナンス株式会社', '上場', 'その他金融業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00007', '1307', 'フクロウメディア株式会社', '上場', '情報・通信業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00008', '1308', 'ラッコアセットマネジメント株式会社', '上場', '証券、商品先物取引業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00009', '1309', 'シロクマエナジー株式会社', '上場', '電気・ガス業'
+);
+
+INSERT OR REPLACE INTO companies (
+  edinet_code, sec_code, filer_name, listed_category, industry
+) VALUES (
+  'E00010', '1310', 'ウサギテクノロジーズ株式会社', '上場', '電気機器'
+);
+
 INSERT OR REPLACE INTO documents (
   doc_id, edinet_code, sec_code, doc_type, ordinance_code, form_code, doc_type_code,
   period_start, period_end, submit_date_time, withdrawal_status, doc_description, source_meta_json
@@ -706,6 +766,6 @@ INSERT OR REPLACE INTO sec_code_latest_periods (
 INSERT OR REPLACE INTO daily_metrics (
   snapshot_date, company_count, document_count, period_financial_count
 ) VALUES (
-  '2025-06-28', 1, 30, 30
+  '2025-06-28', 11, 30, 30
 );
 

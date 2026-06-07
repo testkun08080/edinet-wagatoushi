@@ -30,3 +30,5 @@ edinet-wrapper/raw/
 
 .cursor/
 .pnpm-store/
+
+.DS_Store
