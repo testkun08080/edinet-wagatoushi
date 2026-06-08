@@ -26,6 +26,14 @@ jobs:
       - run: pnpm biome check apps/api packages/db packages/types apps/web/lib
       - run: pnpm turbo typecheck --concurrency=4
       - run: pnpm turbo test --concurrency=4
+      - name: Backfill script dry-run (LIMIT=1)
+        run: |
+          sqlite3 /tmp/ci-corpus.db < packages/db/migrations/0000_init.sql
+          sqlite3 /tmp/ci-corpus.db < packages/db/migrations/0001_company_metrics.sql
+          sqlite3 /tmp/ci-corpus.db < infra/init/seed-local-d1.sql
+          LIMIT=1 pnpm --filter @edinet/metrics exec tsx ../../infra/init/build-company-metrics.mjs \
+            /tmp/ci-corpus.db /tmp/ci-company_metrics.sql --limit 1
+          grep -q "INSERT OR REPLACE INTO company_metrics" /tmp/ci-company_metrics.sql
 
   py-lint-test:
     name: uv ruff + pytest (apps/wrapper)

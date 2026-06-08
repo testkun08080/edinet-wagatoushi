@@ -37,8 +37,8 @@ v2:
 
 | 廃止 | 理由 / 後継 |
 |---|---|
-| `edinet-screener/public/data/*.json` (484MB) | D1 + API に移行。git commit は不要 |
-| `edinet-wrapper/scripts/frontend/build_screener_data.py` (1198行) | 指標計算は `metrics.py` に抽出、JSON 生成は API がリアルタイムで行うため不要 |
+| `edinet-screener/public/data/*.json` (484MB) | D1 `company_metrics` + `/api/metrics`（KV 任意） |
+| `edinet-wrapper/scripts/frontend/build_screener_data.py` (1198行) | `infra/init/build-company-metrics.mjs` + `packages/metrics` |
 | `edinet-wrapper/scripts/pipeline/ingest_daily_*` 群 (5 本) | `apps/wrapper/scripts/ingest_daily.py` + `publish_to_d1.py` の 2 本に集約 |
 | D1 export ↔ ローカル SQLite ↔ D1 import の往復同期 | `ingest_daily` がローカル SQLite に書き、`publish_to_d1` が delta だけを D1 へ流す一方通行に |
 | `wrangler.jsonc` のハードコード `database_id` | `wrangler.{toml,jsonc}.template` + `setup-fork.sh` で動的生成 |
@@ -55,10 +55,22 @@ v2:
 | `apps/api/wrangler.toml.template` | D1 / KV / R2 binding を placeholder 化 |
 | `apps/web/wrangler.jsonc.template` | 同上 |
 | `apps/web/lib/api.ts` | `hc<AppType>` の型安全クライアント |
-| `apps/web/lib/metricsLoader.ts` | UI が叩く API 呼び出しの薄いラッパ |
+| `apps/web/lib/metricsLoader.ts` | UI が叩く API 呼び出しの薄いラッパ（`all` / `server` モード） |
 | `packages/db/src/schema.ts` | drizzle で D1 / SQLite 共通の schema |
 | `packages/db/src/queries.ts` | listCompanies / getSummaryBySecCode 等の共通クエリ |
 | `packages/types/src/index.ts` | API レスポンス型 |
+| `packages/metrics/` | **新規**。指標計算・flatten・大株主 TSV パースの単一ソース |
+| `company_metrics` (D1) | **新規**。スクリーナー指標の正本（`metrics_json` + filter 用列） |
+| `shareholder_snapshots` (D1) | **新規**。analyze 大株主タブ用スナップショット |
+
+## v1 静的 JSON → v2 `company_metrics` 対応
+
+| v1 (`public/data/`) | v2 | 備考 |
+|---|---|---|
+| `company_metrics.json`（全社 1 ファイル） | `company_metrics` テーブル 1 行 / sec_code | `metrics_json` に UI 列相当の JSON。filter 用に `sales`, `roe`, `equity_ratio`, `total_assets` を denormalize |
+| 指標計算（web `metricsFromPeriods`） | `packages/metrics` → backfill / analyze 共通 | golden test で固定 |
+| `shareholders/{secCode}.json` | `shareholder_snapshots` + `/api/shareholders/:secCode` | v1 JSON があれば `build-shareholder-snapshots.mjs` で import 可能 |
+| スクリーナー全件クライアント保持 | Phase B: `/api/metrics` chunk / Phase C: `/api/metrics/query` | `VITE_SCREENER_MODE=all\|server` |
 | `apps/wrapper/src/edinet_wrapper/metrics.py` | ROE / ROA / margins / FCF / 成長率 を分離 |
 | `apps/wrapper/src/edinet_wrapper/db.py` | SQLite UPSERT + delta export ヘルパ |
 | `apps/wrapper/scripts/ingest_daily.py` | 日次取得 → ローカル SQLite |

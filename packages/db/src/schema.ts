@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, integer, primaryKey, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, real, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 
 export const companies = sqliteTable("companies", {
   edinetCode: text("edinet_code").primaryKey(),
@@ -130,9 +130,50 @@ export const secCodeLatestPeriods = sqliteTable(
   }),
 );
 
+export const companyMetrics = sqliteTable(
+  "company_metrics",
+  {
+    secCode: text("sec_code").primaryKey(),
+    edinetCode: text("edinet_code")
+      .notNull()
+      .references(() => companies.edinetCode),
+    filerName: text("filer_name").notNull(),
+    calcDate: text("calc_date"),
+    fiscalMonth: text("fiscal_month"),
+    metricsJson: text("metrics_json").notNull(),
+    sales: real("sales"),
+    roe: real("roe"),
+    equityRatio: real("equity_ratio"),
+    totalAssets: real("total_assets"),
+    updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  },
+  (t) => ({
+    filerNameIdx: index("idx_cm_filer_name").on(t.filerName),
+    salesIdx: index("idx_cm_sales").on(t.sales),
+    roeIdx: index("idx_cm_roe").on(t.roe),
+  }),
+);
+
+export const shareholderSnapshots = sqliteTable(
+  "shareholder_snapshots",
+  {
+    secCode: text("sec_code").notNull(),
+    periodEnd: text("period_end").notNull(),
+    docId: text("doc_id"),
+    entriesJson: text("entries_json").notNull(),
+    updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.secCode, t.periodEnd] }),
+    secCodeIdx: index("idx_sh_sec_code").on(t.secCode),
+  }),
+);
+
 export type Company = typeof companies.$inferSelect;
 export type CompanyInsert = typeof companies.$inferInsert;
 export type Document = typeof documents.$inferSelect;
 export type PeriodFinancial = typeof periodFinancials.$inferSelect;
 export type DailyMetric = typeof dailyMetrics.$inferSelect;
 export type SecCodeLatestPeriod = typeof secCodeLatestPeriods.$inferSelect;
+export type CompanyMetric = typeof companyMetrics.$inferSelect;
+export type ShareholderSnapshot = typeof shareholderSnapshots.$inferSelect;

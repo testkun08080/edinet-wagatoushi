@@ -16,6 +16,7 @@ void (async () => {
   await client.api.companies[":secCode"].$get({ param: { secCode: "73180" } });
   await client.api.summaries[":secCode"].$get({ param: { secCode: "73180" } });
   await client.api.metrics.$get({ query: { limit: "100" } });
+  await client.api.metrics.query.$get({ query: { page: "1", pageSize: "50" } });
   await client.api.search.$get({ query: { q: "トヨタ" } });
   await client.api.shareholders[":secCode"].$get({ param: { secCode: "73180" } });
   await client.api.manifest.$get();

@@ -1,6 +1,13 @@
-import { desc, eq, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, lte, or, sql } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
-import { companies, documents, periodFinancials, secCodeLatestPeriods } from "./schema.js";
+import {
+  companies,
+  companyMetrics,
+  documents,
+  periodFinancials,
+  secCodeLatestPeriods,
+  shareholderSnapshots,
+} from "./schema.js";
 import type * as schema from "./schema.js";
 
 export type DB = DrizzleD1Database<typeof schema>;
@@ -48,23 +55,119 @@ export async function getSummaryBySecCode(db: DB, secCode: string) {
     .all();
 }
 
-export async function getLatestMetrics(db: DB, opts: { limit?: number; offset?: number } = {}) {
-  const { limit = 200, offset = 0 } = opts;
+export async function getCompanyMetrics(db: DB, opts: { limit?: number; offset?: number } = {}) {
+  const { limit = 500, offset = 0 } = opts;
   return db
-    .select({
-      secCode: secCodeLatestPeriods.secCode,
-      edinetCode: secCodeLatestPeriods.edinetCode,
-      filerName: secCodeLatestPeriods.filerName,
-      latestPeriodEnd: secCodeLatestPeriods.latestPeriodEnd,
-      latestSubmitDateTime: secCodeLatestPeriods.latestSubmitDateTime,
-      industry: companies.industry,
-      listedCategory: companies.listedCategory,
-    })
-    .from(secCodeLatestPeriods)
-    .leftJoin(companies, eq(secCodeLatestPeriods.edinetCode, companies.edinetCode))
-    .orderBy(desc(secCodeLatestPeriods.latestPeriodEnd))
+    .select()
+    .from(companyMetrics)
+    .orderBy(companyMetrics.filerName)
     .limit(limit)
     .offset(offset)
+    .all();
+}
+
+export async function getAllCompanyMetrics(db: DB) {
+  return db.select().from(companyMetrics).orderBy(companyMetrics.filerName).all();
+}
+
+export async function countCompanyMetrics(db: DB) {
+  const [row] = await db.select({ c: sql<number>`count(*)` }).from(companyMetrics).all();
+  return row?.c ?? 0;
+}
+
+const METRICS_SORT_COLUMNS = {
+  roe: companyMetrics.roe,
+  sales: companyMetrics.sales,
+  total_assets: companyMetrics.totalAssets,
+  filer_name: companyMetrics.filerName,
+  calc_date: companyMetrics.calcDate,
+  equity_ratio: companyMetrics.equityRatio,
+} as const;
+
+export type CompanyMetricsSortField = keyof typeof METRICS_SORT_COLUMNS;
+
+export type CompanyMetricsQueryFilters = {
+  q?: string;
+  minRoe?: number;
+  maxRoe?: number;
+  minSales?: number;
+  maxSales?: number;
+  minEquityRatio?: number;
+  maxEquityRatio?: number;
+  minTotalAssets?: number;
+  maxTotalAssets?: number;
+};
+
+function likePattern(q: string): string {
+  const escaped = q.replace(/[\\%_]/g, (ch) => `\\${ch}`);
+  return `%${escaped}%`;
+}
+
+export async function queryCompanyMetrics(
+  db: DB,
+  filters: CompanyMetricsQueryFilters,
+  sort: { field: CompanyMetricsSortField; order: "asc" | "desc" },
+  pagination: { page: number; pageSize: number },
+) {
+  const conditions = [];
+
+  const q = filters.q?.trim();
+  if (q) {
+    const pattern = likePattern(q);
+    conditions.push(
+      or(
+        sql`${companyMetrics.filerName} LIKE ${pattern} ESCAPE '\\'`,
+        sql`${companyMetrics.secCode} LIKE ${pattern} ESCAPE '\\'`,
+      ),
+    );
+  }
+
+  if (filters.minRoe != null) conditions.push(gte(companyMetrics.roe, filters.minRoe));
+  if (filters.maxRoe != null) conditions.push(lte(companyMetrics.roe, filters.maxRoe));
+  if (filters.minSales != null) conditions.push(gte(companyMetrics.sales, filters.minSales));
+  if (filters.maxSales != null) conditions.push(lte(companyMetrics.sales, filters.maxSales));
+  if (filters.minEquityRatio != null) conditions.push(gte(companyMetrics.equityRatio, filters.minEquityRatio));
+  if (filters.maxEquityRatio != null) conditions.push(lte(companyMetrics.equityRatio, filters.maxEquityRatio));
+  if (filters.minTotalAssets != null) conditions.push(gte(companyMetrics.totalAssets, filters.minTotalAssets));
+  if (filters.maxTotalAssets != null) conditions.push(lte(companyMetrics.totalAssets, filters.maxTotalAssets));
+
+  const where = conditions.length > 0 ? and(...conditions) : undefined;
+
+  const [countRow] = await db.select({ c: sql<number>`count(*)` }).from(companyMetrics).where(where).all();
+  const total = countRow?.c ?? 0;
+
+  const sortCol = METRICS_SORT_COLUMNS[sort.field];
+  const orderBy = sort.order === "desc" ? desc(sortCol) : asc(sortCol);
+
+  const page = Math.max(1, pagination.page);
+  const pageSize = Math.min(Math.max(1, pagination.pageSize), 500);
+  const offset = (page - 1) * pageSize;
+
+  const rows = await db
+    .select()
+    .from(companyMetrics)
+    .where(where)
+    .orderBy(orderBy)
+    .limit(pageSize)
+    .offset(offset)
+    .all();
+
+  return { rows, total, page, pageSize };
+}
+
+export async function countCompanies(db: DB, opts: { industry?: string } = {}) {
+  const { industry } = opts;
+  const where = industry ? eq(companies.industry, industry) : undefined;
+  const [row] = await db.select({ c: sql<number>`count(*)` }).from(companies).where(where).all();
+  return row?.c ?? 0;
+}
+
+export async function getShareholdersBySecCode(db: DB, secCode: string) {
+  return db
+    .select()
+    .from(shareholderSnapshots)
+    .where(eq(shareholderSnapshots.secCode, secCode))
+    .orderBy(desc(shareholderSnapshots.periodEnd))
     .all();
 }
 

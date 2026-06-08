@@ -31,4 +31,8 @@ edinet-wrapper/raw/
 .cursor/
 .pnpm-store/
 
+# generated backfill SQL (infra/init/build-*.mjs)
+infra/init/company_metrics.sql
+infra/init/shareholder_snapshots.sql
+
 .DS_Store

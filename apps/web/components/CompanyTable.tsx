@@ -11,71 +11,15 @@ import { Skeleton } from "./ui/skeleton";
 import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { formatRatioDecimalStringAsPercent, formatYenStringAsMillionYen } from "../lib/metricFormat.js";
 import { analyzePath } from "../lib/routes";
-import { loadCompanyMetrics } from "../lib/metricsLoader";
+import { loadCompanyMetrics, getScreenerMode, buildMetricsQueryParams, queryCompanyMetricsPage, type CompanyMetric } from "../lib/metricsLoader";
 
-export type CompanyMetric = {
-  edinetCode: string;
-  secCode: string;
-  filerName: string;
-  calcDate: string | null;
-  fiscalMonth: string | null;
-  equityRatio: string | null;
-  EPS: string | null;
-  sales: string | null;
-  recurringProfit: string | null;
-  netIncome: string | null;
-  netAssets: string | null;
-  totalAssets: string | null;
-  comprehensiveIncome: string | null;
-  BPS: string | null;
-  ROE: string | null;
-  /** 親会社純利益÷純資産額（開示ROEと別） */
-  roeCalculated?: string | null;
-  /** 親会社純利益÷総資産額 */
-  roa?: string | null;
-  /** 純資産額÷総資産額（開示の自己資本比率と別） */
-  equityRatioCalculated?: string | null;
-  dilutedEPS?: string | null;
-  /** DPS÷EPS（200%超は欠損扱い） */
-  payoutRatioComputed?: string | null;
-  /** 営業CF＋投資CF */
-  fcf?: string | null;
-  operatingProfit: string | null;
-  operatingProfitRatio?: string | null;
-  netProfitRatio?: string | null;
-  operatingCF: string | null;
-  investingCF: string | null;
-  financingCF: string | null;
-  cashBalance: string | null;
-  payoutRatio: string | null;
-  dividendPerShare: string | null;
-  sharesOutstanding: string | null;
-  currentAssets: string | null;
-  currentLiabilities: string | null;
-  liabilities: string | null;
-  investmentSecurities: string | null;
-  PER: number | null;
-  PBR: number | null;
-  dividendYield: number | null;
-  marketCap?: number | null;
-  netCash?: number | null;
-  netCashRatio?: number | null;
-  salesGrowthYoY?: string | null;
-  opGrowthYoY?: string | null;
-  epsGrowthYoY?: string | null;
-  dividendGrowthYoY?: string | null;
-  salesCagr3y?: string | null;
-  salesCagr5y?: string | null;
-  consecutiveDivIncreases?: number | null;
-  currentRatio?: number | null;
-  deRatio?: number | null;
-  roic?: number | null;
-  piotroskiFScore?: number | null;
-};
+export type { CompanyMetric };
 
 const formatSales = formatYenStringAsMillionYen;
 const formatRatio = formatRatioDecimalStringAsPercent;
 const ROW_LIMIT_OPTIONS = ["50", "100", "200", "500"] as const;
+const SERVER_MODE = getScreenerMode() === "server";
+const SERVER_SORT_COLUMNS = new Set<ColumnId>(["filerName", "calcDate", "sales", "ROE", "totalAssets", "equityRatio"]);
 
 function parseMetricNumber(value: string | number | null | undefined): number {
   if (typeof value === "number") return value;
@@ -423,65 +367,16 @@ export function CompanyTable() {
   const { visibility, columnIds, columnLabel } = useColumnVisibility();
   const [metrics, setMetrics] = useState<CompanyMetric[]>([]);
   const [loading, setLoading] = useState(true);
+  const [serverTotal, setServerTotal] = useState(0);
   const [sortColumn, setSortColumn] = useState<ColumnId | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
   const [pageIndex, setPageIndex] = useState(0);
 
-  useEffect(() => {
-    let cancelled = false;
-    loadCompanyMetrics()
-      .then((list) => {
-        if (cancelled) return;
-        setMetrics(list as CompanyMetric[]);
-        setLoading(false);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setMetrics([]);
-        setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const filtered = metrics.filter((m) => passesFilter(m, filters, favorites));
-  const visibleColumns = columnIds.filter((id) => visibility[id]);
-  const hasColumns = visibleColumns.length > 0;
-
-  const handleSort = (colId: ColumnId) => {
-    if (sortColumn === colId) {
-      setSortAsc((prev) => !prev);
-    } else {
-      setSortColumn(colId);
-      setSortAsc(true);
-    }
-  };
-
-  const sorted =
-    sortColumn == null
-      ? filtered
-      : [...filtered].sort((a, b) => {
-          const va = getSortValue(a, sortColumn);
-          const vb = getSortValue(b, sortColumn);
-          const isNumA = typeof va === "number";
-          const isNumB = typeof vb === "number";
-          if (isNumA && isNumB) {
-            const diff = (va as number) - (vb as number);
-            return sortAsc ? diff : -diff;
-          }
-          const sa = String(va);
-          const sb = String(vb);
-          const cmp = sa.localeCompare(sb, "ja");
-          return sortAsc ? cmp : -cmp;
-        });
   const parsedLimit = Number.parseInt(filters.itemCount, 10);
   const pageSize = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 50;
   const itemCountSelectValue = ROW_LIMIT_OPTIONS.includes(filters.itemCount as (typeof ROW_LIMIT_OPTIONS)[number])
     ? filters.itemCount
     : "50";
-  const totalRows = sorted.length;
-  const pageCount = Math.max(1, Math.ceil(totalRows / pageSize));
 
   const filterSignature = useMemo(
     () =>
@@ -499,6 +394,7 @@ export function CompanyTable() {
         minTotalAssets: filters.minTotalAssets,
         maxTotalAssets: filters.maxTotalAssets,
         showOnlyFavorites: filters.showOnlyFavorites,
+        itemCount: filters.itemCount,
       }),
     [
       filters.searchName,
@@ -514,8 +410,110 @@ export function CompanyTable() {
       filters.minTotalAssets,
       filters.maxTotalAssets,
       filters.showOnlyFavorites,
+      filters.itemCount,
     ],
   );
+
+  const serverQuerySignature = useMemo(
+    () =>
+      JSON.stringify({
+        filterSignature,
+        sortColumn,
+        sortAsc,
+        pageIndex,
+        pageSize,
+      }),
+    [filterSignature, sortColumn, sortAsc, pageIndex, pageSize],
+  );
+
+  useEffect(() => {
+    if (SERVER_MODE) return;
+    let cancelled = false;
+    loadCompanyMetrics()
+      .then((list) => {
+        if (cancelled) return;
+        setMetrics(list as CompanyMetric[]);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setMetrics([]);
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!SERVER_MODE) return;
+    let cancelled = false;
+    setLoading(true);
+    const timer = window.setTimeout(() => {
+      const params = buildMetricsQueryParams(filters, sortColumn, sortAsc, pageIndex, pageSize);
+      queryCompanyMetricsPage(params)
+        .then((body) => {
+          if (cancelled) return;
+          setMetrics((body?.rows ?? []) as unknown as CompanyMetric[]);
+          setServerTotal(body?.total ?? 0);
+          setLoading(false);
+        })
+        .catch(() => {
+          if (cancelled) return;
+          setMetrics([]);
+          setServerTotal(0);
+          setLoading(false);
+        });
+    }, 300);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [serverQuerySignature, filters, sortColumn, sortAsc, pageIndex, pageSize]);
+
+  const filtered = SERVER_MODE
+    ? metrics.filter((m) => {
+        if (filters.showOnlyFavorites && !favorites.has(m.secCode)) return false;
+        if (filters.searchCode.trim() && !m.secCode.includes(filters.searchCode.trim())) return false;
+        if (filters.minEps || filters.maxEps) {
+          const eps = parseMetricNumber(m.EPS);
+          if (filters.minEps && !isNaN(eps) && eps < parseFloat(filters.minEps)) return false;
+          if (filters.maxEps && !isNaN(eps) && eps > parseFloat(filters.maxEps)) return false;
+        }
+        return true;
+      })
+    : metrics.filter((m) => passesFilter(m, filters, favorites));
+  const visibleColumns = columnIds.filter((id) => visibility[id]);
+  const hasColumns = visibleColumns.length > 0;
+
+  const handleSort = (colId: ColumnId) => {
+    if (sortColumn === colId) {
+      setSortAsc((prev) => !prev);
+    } else {
+      setSortColumn(colId);
+      setSortAsc(true);
+    }
+  };
+
+  const sorted =
+    sortColumn == null || (SERVER_MODE && SERVER_SORT_COLUMNS.has(sortColumn))
+      ? filtered
+      : [...filtered].sort((a, b) => {
+          const va = getSortValue(a, sortColumn);
+          const vb = getSortValue(b, sortColumn);
+          const isNumA = typeof va === "number";
+          const isNumB = typeof vb === "number";
+          if (isNumA && isNumB) {
+            const diff = (va as number) - (vb as number);
+            return sortAsc ? diff : -diff;
+          }
+          const sa = String(va);
+          const sb = String(vb);
+          const cmp = sa.localeCompare(sb, "ja");
+          return sortAsc ? cmp : -cmp;
+        });
+  const totalRows = SERVER_MODE ? serverTotal : sorted.length;
+  const pageCount = Math.max(1, Math.ceil(totalRows / pageSize));
 
   useEffect(() => {
     setPageIndex(0);
@@ -528,7 +526,7 @@ export function CompanyTable() {
   const safePageIndex = Math.min(pageIndex, pageCount - 1);
   const rangeStart = totalRows === 0 ? 0 : safePageIndex * pageSize + 1;
   const rangeEnd = Math.min((safePageIndex + 1) * pageSize, totalRows);
-  const displayed = sorted.slice(safePageIndex * pageSize, safePageIndex * pageSize + pageSize);
+  const displayed = SERVER_MODE ? sorted : sorted.slice(safePageIndex * pageSize, safePageIndex * pageSize + pageSize);
 
   if (loading) {
     return (
@@ -540,7 +538,7 @@ export function CompanyTable() {
     );
   }
 
-  if (filtered.length === 0) {
+  if (filtered.length === 0 && !loading) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
         <p className="text-muted-foreground text-sm">該当する企業がありません。フィルターを緩めてください。</p>

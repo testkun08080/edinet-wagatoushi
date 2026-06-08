@@ -6,6 +6,7 @@ import { useFilters } from "./FilterContext.js";
 import { useFavorites } from "./FavoritesContext.js";
 import { useRecentCompanies } from "./RecentCompaniesContext.js";
 import logoUrl from "../assets/logo.png";
+import { api } from "../lib/api";
 import { SITE_NAME, SITE_TAGLINE } from "../lib/brand";
 import { SCREENER, analyzePath } from "../lib/routes";
 import {
@@ -40,7 +41,7 @@ export function AppSidebar() {
   const { filters, setFilter, clearFilters } = useFilters();
   const { favorites } = useFavorites();
   const { recent } = useRecentCompanies();
-  const [companyList, setCompanyList] = useState<CompanyItem[]>([]);
+  const [searchResults, setSearchResults] = useState<CompanyItem[]>([]);
   const [analyzeSearchQuery, setAnalyzeSearchQuery] = useState("");
 
   const isAnalyzePage = urlPathname.startsWith(`${SCREENER}/analyze/`) || urlPathname.startsWith("/analyze/");
@@ -49,28 +50,35 @@ export function AppSidebar() {
 
   useEffect(() => {
     if (!isAnalyzePage) return;
-    fetch("/data/company_metrics.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const d = data as { metrics?: Array<{ secCode: string; filerName: string }> };
-        const list = (d.metrics ?? []).map((m) => ({
-          secCode: m.secCode,
-          filerName: m.filerName,
-        }));
-        setCompanyList(list);
-      })
-      .catch(() => setCompanyList([]));
-  }, [isAnalyzePage]);
+    const q = analyzeSearchQuery.trim();
+    if (q.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(() => {
+      api.api.search
+        .$get({ query: { q } })
+        .then(async (res) => {
+          if (!res.ok) {
+            setSearchResults([]);
+            return;
+          }
+          const data = (await res.json()) as {
+            results: Array<{ secCode: string | null; filerName: string }>;
+          };
+          setSearchResults(
+            (data.results ?? [])
+              .filter((r) => r.secCode)
+              .map((r) => ({ secCode: r.secCode!, filerName: r.filerName }))
+              .slice(0, 15),
+          );
+        })
+        .catch(() => setSearchResults([]));
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [isAnalyzePage, analyzeSearchQuery]);
 
-  const analyzeSearchResults = analyzeSearchQuery.trim()
-    ? companyList
-        .filter(
-          (c) =>
-            c.filerName.toLowerCase().includes(analyzeSearchQuery.trim().toLowerCase()) ||
-            c.secCode.includes(analyzeSearchQuery.trim()),
-        )
-        .slice(0, 15)
-    : [];
+  const analyzeSearchResults = searchResults;
 
   return (
     <Sidebar collapsible="icon" variant="inset">
@@ -170,32 +178,16 @@ export function AppSidebar() {
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ) : (
-                    <>
-                      {companyList
-                        .filter((c) => favorites.has(c.secCode))
-                        .map((c) => (
-                          <SidebarMenuItem key={c.secCode}>
-                            <SidebarMenuButton asChild size="sm">
-                              <a href={analyzePath(c.secCode)}>
-                                <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
-                                <span className="truncate">{formatDisplayName(c.filerName)}</span>
-                              </a>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        ))}
-                      {Array.from(favorites)
-                        .filter((s) => !companyList.find((c) => c.secCode === s))
-                        .map((secCode) => (
-                          <SidebarMenuItem key={secCode}>
-                            <SidebarMenuButton asChild size="sm">
-                              <a href={analyzePath(secCode)}>
-                                <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
-                                <span>{secCode}</span>
-                              </a>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        ))}
-                    </>
+                    Array.from(favorites).map((secCode) => (
+                      <SidebarMenuItem key={secCode}>
+                        <SidebarMenuButton asChild size="sm">
+                          <a href={analyzePath(secCode)}>
+                            <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
+                            <span>{secCode}</span>
+                          </a>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))
                   )}
                 </SidebarMenu>
               </SidebarGroupContent>

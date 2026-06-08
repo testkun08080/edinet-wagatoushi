@@ -17,7 +17,7 @@ apps/api/
 │       ├── health.ts       GET /api/health
 │       ├── companies.ts    GET /api/companies, /api/companies/:secCode
 │       ├── summaries.ts    GET /api/summaries/:secCode
-│       ├── metrics.ts      GET /api/metrics
+│       ├── metrics.ts      GET /api/metrics, /api/metrics/query
 │       ├── search.ts       GET /api/search?q=
 │       ├── shareholders.ts GET /api/shareholders/:secCode
 │       └── manifest.ts     GET /api/manifest
@@ -38,6 +38,7 @@ apps/api/
 | GET | `/api/companies/:secCode` | secCode or edinetCode | `{ company }` / 404 |
 | GET | `/api/summaries/:secCode` | — | `SummaryResponse` / 404 |
 | GET | `/api/metrics` | `limit`, `offset` | `MetricsResponse` |
+| GET | `/api/metrics/query` | `q`, `minRoe`, `maxRoe`, `minSales`, `maxSales`, `minEquityRatio`, `maxEquityRatio`, `minTotalAssets`, `maxTotalAssets`, `sort`, `order`, `page`, `pageSize` | `MetricsQueryResponse` |
 | GET | `/api/search` | `q` (2 文字以上) | `SearchResponse` |
 | GET | `/api/shareholders/:secCode` | — | `ShareholdersResponse` |
 | GET | `/api/manifest` | — | `ManifestResponse` |
@@ -60,6 +61,17 @@ export type AppType = typeof app;
 ```
 
 `apps/web/lib/api.ts` が `hc<AppType>` で受けることで、ルート追加・シグネチャ変更がコンパイル時に web へ伝播する。`test/types.test-d.ts` がこの推論を担保する。
+
+## `/api/metrics` vs `/api/metrics/query`
+
+| エンドポイント | 用途 | レスポンス |
+|---|---|---|
+| `GET /api/metrics` | Phase B: 全件 chunk 取得（KV snapshot または D1 slice） | `{ rows, total, columns, generatedAt, schemaVersion }` |
+| `GET /api/metrics/query` | Phase C: サーバー側 filter / sort / page | `{ rows, total, page, pageSize, generatedAt, schemaVersion }` |
+
+`sort` は allowlist のみ: `roe`, `sales`, `total_assets`, `filer_name`, `calc_date`, `equity_ratio`。数値 filter は `company_metrics` の denormalized 列（`sales`, `roe`, `equity_ratio`, `total_assets`）と `filer_name` / `sec_code` の `q` 検索に対応。
+
+Web は `VITE_SCREENER_MODE=all|server` で切替。`all` は `/api/metrics` 全件、`server` は `/api/metrics/query` の 1 ページのみ取得。
 
 ## ローカル起動
 

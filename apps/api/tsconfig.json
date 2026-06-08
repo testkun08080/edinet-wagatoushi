@@ -16,7 +16,9 @@
     "paths": {
       "@edinet/db": ["../../packages/db/src/index.ts"],
       "@edinet/db/*": ["../../packages/db/src/*"],
-      "@edinet/types": ["../../packages/types/src/index.ts"]
+      "@edinet/types": ["../../packages/types/src/index.ts"],
+      "@edinet/metrics": ["../../packages/metrics/src/index.ts"],
+      "@edinet/metrics/*": ["../../packages/metrics/src/*"]
     }
   },
   "include": ["src/**/*.ts", "test/**/*.ts"]

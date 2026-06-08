@@ -60,6 +60,17 @@ export interface MetricsResponse {
   rows: MetricsRow[];
   columns: ColumnDefinition[];
   generatedAt: string;
+  total: number;
+  schemaVersion: string;
+}
+
+export interface MetricsQueryResponse {
+  rows: MetricsRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  generatedAt: string;
+  schemaVersion: string;
 }
 
 export interface ColumnDefinition {

@@ -1,5 +1,9 @@
 """Financial metric calculations.
 
+DEPRECATED for screener / analyze display metrics: use `packages/metrics` (TypeScript)
+as the single source of truth. This module remains for legacy ingest-side helpers
+until ingest is wired to skip duplicate metric computation on write.
+
 Extracted from the monolithic build_screener_data.py so that:
 - ingest_daily.py can compute metrics per-period and store them in SQLite/D1
 - the API layer never re-computes from raw BS/PL/CF on request

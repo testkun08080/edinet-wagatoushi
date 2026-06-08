@@ -11,6 +11,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate:local": "drizzle-kit migrate --config=drizzle.local.config.ts"
   },
@@ -18,10 +19,12 @@
     "drizzle-orm": "^0.45.2"
   },
   "devDependencies": {
+    "@edinet/metrics": "workspace:*",
     "@cloudflare/workers-types": "^4.20250109.0",
     "drizzle-kit": "^0.31.1",
     "better-sqlite3": "^11.7.0",
     "@types/better-sqlite3": "^7.6.12",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
   }
 }

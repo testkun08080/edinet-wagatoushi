@@ -11,10 +11,8 @@
     "noEmit": true,
     "isolatedModules": true,
     "paths": {
-      "@edinet/metrics": ["../metrics/src/index.ts"],
       "@edinet/types": ["../types/src/index.ts"]
-    },
-    "types": ["@cloudflare/workers-types"]
+    }
   },
-  "include": ["src/**/*.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts"]
 }

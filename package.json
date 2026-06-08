@@ -20,12 +20,15 @@
     "db:migrate:local": "pnpm --filter @edinet/db db:migrate:local",
     "db:migrate:staging": "pnpm --filter @edinet/api db:migrate:staging",
     "db:migrate:production": "pnpm --filter @edinet/api db:migrate:production",
+    "db:backfill:metrics": "pnpm --filter @edinet/metrics exec tsx ../../infra/init/build-company-metrics.mjs",
+    "db:backfill:shareholders": "pnpm --filter @edinet/metrics exec tsx ../../infra/init/build-shareholder-snapshots.mjs",
     "deploy:api:staging": "pnpm --filter @edinet/api deploy:staging",
     "deploy:api:production": "pnpm --filter @edinet/api deploy:production",
     "deploy:web:staging": "pnpm --filter @edinet/web deploy:staging",
     "deploy:web:production": "pnpm --filter @edinet/web deploy:production"
   },
   "devDependencies": {
+    "better-sqlite3": "^11.7.0",
     "@biomejs/biome": "1.9.4",
     "@changesets/cli": "^2.27.9",
     "turbo": "^2.3.0",

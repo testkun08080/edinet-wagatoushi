@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { useFilters } from "./FilterContext.js";
 import { useColumnVisibility, type ColumnId } from "./ColumnVisibilityContext.js";
 import { useFavorites } from "./FavoritesContext.js";
+import { loadCompanyMetrics } from "../lib/metricsLoader.js";
 import { passesFilter, type CompanyMetric } from "./CompanyTable.js";
 import { Button } from "./ui/button";
 import { Download, Loader2 } from "lucide-react";
@@ -131,9 +132,7 @@ export function TableDownloadButton() {
   const handleDownload = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/data/company_metrics.json");
-      const data = (await res.json()) as { metrics?: CompanyMetric[] };
-      const metrics = data.metrics ?? [];
+      const metrics = await loadCompanyMetrics();
 
       const filtered = metrics.filter((m) => passesFilter(m, filters, favorites));
       const visibleColumns = columnIds.filter((id) => visibility[id]);

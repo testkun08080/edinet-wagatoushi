@@ -1,21 +1,20 @@
-import type { ShareholdersResponse } from "@edinet/types";
+import { getShareholdersBySecCode } from "@edinet/db/queries";
+import type { ShareholderEntry, ShareholdersResponse } from "@edinet/types";
 import { Hono } from "hono";
 import type { AppEnv } from "../env.js";
-import sample9999 from "../sample/shareholders-9999.json";
+import { getDb } from "../middleware/db.js";
 
-const SAMPLE_BY_SEC_CODE: Record<string, ShareholdersResponse> = {
-  "9999": sample9999 as ShareholdersResponse,
-};
-
-export const shareholdersRoutes = new Hono<AppEnv>().get("/:secCode", (c) => {
+export const shareholdersRoutes = new Hono<AppEnv>().get("/:secCode", async (c) => {
   const secCode = c.req.param("secCode");
-  const sample = SAMPLE_BY_SEC_CODE[secCode];
-  if (sample) {
-    return c.json(sample);
-  }
+  const db = getDb(c);
+  const rows = await getShareholdersBySecCode(db, secCode);
+
   const body: ShareholdersResponse = {
     secCode,
-    snapshots: [],
+    snapshots: rows.map((r) => ({
+      periodEnd: r.periodEnd,
+      entries: JSON.parse(r.entriesJson) as ShareholderEntry[],
+    })),
   };
   return c.json(body);
 });
